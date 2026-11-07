@@ -1,3 +1,15 @@
+# SOTN Ultimate 한국어화 (작업 중)
+
+[SOTN Ultimate](https://github.com/renanbianchi/sotn-ultimate)에 한국어를 넣는 포크입니다. 아직 받을 수 있는 한국어판은 없습니다. 계획은 [ROADMAP.md](ROADMAP.md)에 있습니다.
+
+A fork of SOTN Ultimate to add Korean. Nothing to download yet — see [ROADMAP.md](ROADMAP.md). The original mod is by renanbianchi; this fork is unofficial.
+
+- 작업 브랜치: `ko` · 원작 추종 브랜치: `sotn-ultimate`
+- 이 저장소에는 게임 데이터가 없습니다.
+
+---
+
+# SOTN Ultimate (PS1 Version)
 # SOTN Ultimate (PS1 Version)
 
 A mod of *Castlevania: Symphony of the Night* for the PlayStation that brings
