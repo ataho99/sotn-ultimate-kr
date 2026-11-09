@@ -69,10 +69,9 @@ const char* D_800A2D48[] = {
 #if defined(MOD_SATURN)
     // Saturn port: the System screen's "Ultimate settings" row 6 (Alucard
     // games only; mods/sotn-ultimate/src/menu/sysopt.c): its text is in
-    // that code's header. The three unused entries keep g_MenuStr (SEL's
-    // MOD_MENU_STR) where it was
-    (const char*)MOD_SYSOPT_BAR_TEXT,
-    (const char*)MOD_SYSOPT_BAR_TEXT,
+    // that code's header. The unused entry keeps g_MenuStr (SEL's
+    // MOD_MENU_STR) where it was (two more went for the teleport
+    // MOD_TP_NO3_TO_GDN, src/dra/5087C.c)
     (const char*)MOD_SYSOPT_BAR_TEXT,
     (const char*)MOD_SYSOPT_BAR_TEXT,
 #endif

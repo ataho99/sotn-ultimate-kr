@@ -2,6 +2,23 @@
 #include "dra.h"
 #include "dra_bss.h"
 
+#if defined(MOD_GODSPEED)
+// SOTN Ultimate: Soul Steal and Dark Metamorphosis also cast during the God
+// Speed Shoes sprint (its own step). Not on the Saturn (060AEC64 casts from
+// a walk or a stand only), but their input ends in a walk start that the
+// shoes turn into a sprint, so with the shoes on they hardly ever cast.
+// One shared check, for DRA room (MOD_DRA_PAD)
+static s32 ModCastStep(void) {
+    s32 step = PLAYER.step;
+    return step == Player_Walk || step == Player_Stand ||
+           step == Player_FlameWhip;
+}
+#define MOD_CAST_STEP() ModCastStep()
+#else
+#define MOD_CAST_STEP()                                                        \
+    ((PLAYER.step == Player_Walk) || (PLAYER.step == Player_Stand))
+#endif
+
 bool CheckGravityBootsInput(void) {
     switch (g_ButtonCombo[COMBO_GRAVITY_BOOTS].buttonsCorrect) {
     case 0:
@@ -253,8 +270,7 @@ bool CheckDarkMetamorphosisInput(void) {
 
         if ((g_Player.padTapped & (PAD_SQUARE | PAD_CIRCLE)) &&
             !(g_Player.unk46 & 0x8000) &&
-            ((PLAYER.step == Player_Walk) || (PLAYER.step == Player_Stand)) &&
-            (CastSpell(SPELL_DARK_METAMORPHOSIS) != 0)) {
+            MOD_CAST_STEP() && (CastSpell(SPELL_DARK_METAMORPHOSIS) != 0)) {
             PerformDarkMetamorphosis();
             g_ButtonCombo[COMBO_DARK_METAMORPH].buttonsCorrect = 0;
             LearnSpell(SPELL_DARK_METAMORPHOSIS);
@@ -643,8 +659,7 @@ bool CheckSoulStealInput(void) {
         }
         if ((g_Player.padTapped & (PAD_SQUARE | PAD_CIRCLE)) &&
             !(g_Player.unk46 & 0x8000) &&
-            ((PLAYER.step == Player_Walk) || (PLAYER.step == Player_Stand)) &&
-            (CastSpell(SPELL_SOUL_STEAL) != 0)) {
+            MOD_CAST_STEP() && (CastSpell(SPELL_SOUL_STEAL) != 0)) {
             PerformSoulSteal();
             g_ButtonCombo[COMBO_SOUL_STEAL].buttonsCorrect = 0;
             LearnSpell(SPELL_SOUL_STEAL);

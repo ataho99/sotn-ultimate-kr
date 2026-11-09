@@ -868,6 +868,15 @@ void RicEntityFactory(Entity* self) {
             self->posY.val = self->ext.factory.parent->posY.val;
             break;
         }
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+        // Saturn 060AC554: the axe crash's blueprint (row 41) has origin 10:
+        // follow the player and keep FLAG_UNK_20000, so a room change during
+        // its 32-frame delay does not destroy it (func_8011A9D8) before the
+        // axes that end the crash (g_Player.unk4E) are out
+        if (self->params == BP_CRASH_AXE) {
+            self->flags |= FLAG_UNK_20000;
+        }
+#endif
     } else {
         switch (self->ext.factory.origin) {
         case B_ORIGIN_DEFAULT:

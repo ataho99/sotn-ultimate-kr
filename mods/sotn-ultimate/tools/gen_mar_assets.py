@@ -39,6 +39,11 @@ SAT = 0x060A5000
 PHASE = 4  # absolute Saturn column x with x % 5 == PHASE is dropped
 PROF = dict(b.cv.CHARACTER_PROFILES["maria"])
 HITBOX_TABLE = 0x060C37CC  # right after her animations, up to the palettes
+# the Saturn frame table's y is 1 below the PS1's: the Saturn Richter frames
+# (same art as the PS1's) draw 1 px lower than the PS1 Richter ones when put
+# through "centre - h // 2", so her frames move up 1 (she stood 1 px into the
+# floor)
+SAT_Y = -1
 STAND = 0x060C28E8  # her idle (Saturn 060A9210 off a ledge)
 
 # PS1 pl_anims.c symbol -> Saturn Maria animation (see the module doc)
@@ -813,7 +818,7 @@ def main():
         left = x - w // 2
         kept = [c for c in range(left, left + w) if c % 5 != PHASE]
         _, _, x0, y0, _ = sprites[j]
-        fr_out.append((j, mapcol(kept[0]) + x0, y - h // 2 + y0, 0, fl))
+        fr_out.append((j, mapcol(kept[0]) + x0, y - h // 2 + y0 + SAT_Y, 0, fl))
     # hitboxes: 4 signed bytes x, y, w, h up to the palette table
     hb = []
     o = HITBOX_TABLE - SAT

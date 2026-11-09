@@ -8,6 +8,9 @@
 // Saturn rule keeps alive (mods/sotn-ultimate/tools/gen_mod_layouts.py)
 #define MOD_LAYOUT_ID 1
 #endif
+#if defined(MOD_SATURN_CASTLE)
+#include "../../../mods/sotn-ultimate/src/castle/no3/no3_mod_shaft.h"
+#endif
 
 void EntityExplosionVariants(Entity* entity);
 void EntityGreyPuff(Entity* entity);

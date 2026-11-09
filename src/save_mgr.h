@@ -676,7 +676,29 @@ typedef char ModSaveExtraCheck[sizeof(ModSaveExtra) <= 24 - 4 ? 1 : -1];
 #define MOD_SAVE_EXTRA(status)                                                 \
     ((ModSaveExtra*)((u8*)(status) + sizeof(PlayerStatus) - 4 -                \
                      sizeof(ModSaveExtra)))
+// The retail layout's sort order cannot hold the new items, so the load put
+// them at the end of the lists. The mod's whole order (hand then body, as in
+// PlayerStatus) goes after the SaveData, in the rest of the card block that
+// StoreSaveData zeroes and writes anyway (the retail game's own saves zero
+// it too, so it is only there in a save the mod wrote).
+#define MOD_SAVE_ORDER(st)                                                     \
+    ((u8*)(st) - MOD_OFFSETOF(SaveData, status) + sizeof(SaveData))
+#define MOD_SAVE_ORDER_LEN (HAND_ITEMS_CAP + BODY_ITEMS_CAP)
+typedef char ModSaveOrderCheck
+    [MOD_OFFSETOF(PlayerStatus, equipBodyOrder) ==
+             MOD_OFFSETOF(PlayerStatus, equipHandOrder) + HAND_ITEMS_CAP &&
+             sizeof(SaveData) + MOD_SAVE_ORDER_LEN <= CARD_BLOCK_SIZE
+         ? 1
+         : -1];
 #if defined(MOD_SAVE_DRA)
+// main.exe's BIOS memcpy (retail overlays call it too); DRA's link has no
+// symbol for it. Smaller than a copy loop
+#define MOD_MEMCPY ((void* (*)(void*, const void*, s32))0x800160C4)
+typedef char ModRelicsSpellsCheck
+    [MOD_OFFSETOF(PlayerStatus, spells) == NUM_RELICS &&
+             MOD_OFFSETOF(PlayerStatusRetail, spells) == NUM_RELICS
+         ? 1
+         : -1];
 static const u8 g_ModEmptySlot[7] = {
     ITEM_EMPTY_HAND, ITEM_EMPTY_HAND,   ITEM_EMPTY_HEAD,  ITEM_NO_ARMOR,
     ITEM_NO_CAPE,    ITEM_NO_ACCESSORY, ITEM_NO_ACCESSORY};
@@ -684,17 +706,10 @@ static const u8 g_ModEmptySlot[7] = {
 static void ModStoreRetailStatus(PlayerStatusRetail* dst) {
     ModSaveExtra* x = MOD_SAVE_EXTRA(dst);
     u32* eq = dst->equipment;
-    u8* src;
-    u8* d;
     s32 i, n;
 
-    // (dst is zeroed by StoreSaveData)
-    for (i = 0; i < NUM_RELICS; i++) {
-        dst->relics[i] = g_Status.relics[i];
-    }
-    for (i = 0; i < NUM_SPELLS; i++) {
-        dst->spells[i] = g_Status.spells[i];
-    }
+    // (dst is zeroed by StoreSaveData) relics, then spells, in both layouts
+    MOD_MEMCPY(dst->relics, g_Status.relics, NUM_RELICS + NUM_SPELLS);
     for (i = 0, n = 0; i < HAND_ITEMS_CAP; i++) {
         if (i < NUM_HAND_ITEMS) {
             dst->equipHandCount[i] = g_Status.equipHandCount[i];
@@ -728,18 +743,16 @@ static void ModStoreRetailStatus(PlayerStatusRetail* dst) {
         dst->equipBodyOrder[i] = v < NUM_BODY_ITEMS ? v : i;
     }
     // saveName up to the stored familiars: the same layout in both
-    src = (u8*)g_Status.saveName;
-    d = (u8*)dst->saveName;
-    n = (u8*)&g_Status.statsFamiliars[FAMILIARS_STORED] - src;
-    for (i = 0; i < n; i++) {
-        d[i] = src[i];
-    }
+    MOD_MEMCPY(dst->saveName, g_Status.saveName,
+           (u8*)&g_Status.statsFamiliars[FAMILIARS_STORED] -
+               (u8*)g_Status.saveName);
     for (i = 0; i < 7; i++) {
         if (eq[i] >= (i < 2 ? NUM_HAND_ITEMS : NUM_BODY_ITEMS)) {
             x->equip[i] = eq[i];
             eq[i] = g_ModEmptySlot[i];
         }
     }
+    MOD_MEMCPY(MOD_SAVE_ORDER(dst), g_Status.equipHandOrder, MOD_SAVE_ORDER_LEN);
     ModMarkSave((PlayerStatus*)dst);
 }
 #endif
@@ -941,7 +954,8 @@ void StoreSaveData(SaveData* save, s32 block, s32 cardIcon) {
 
         // the Entrance save rooms moved one screen (see ApplySaveData):
         // their retail spot; a mod-only area's save room: the Entrance's
-        if (g_StageId == STAGE_NP3 && g_Tilemap.top == 43) {
+        if ((g_StageId == STAGE_NP3 || g_StageId == STAGE_NO3) &&
+            g_Tilemap.top == 43) {
             dst->info.roomY = 42;
         } else if (g_StageId == STAGE_RNO3 && g_Tilemap.top == 20) {
             dst->info.roomY = 21;
@@ -1007,6 +1021,44 @@ void StoreSaveData(SaveData* save, s32 block, s32 cardIcon) {
 }
 #endif
 
+#if defined(MOD_SATURN) && !defined(MOD_SAVE_DRA)
+// is o[0..n) a whole sort order (each id below n once)?
+static bool ModIsWholeOrder(const u8* o, s32 n) {
+    u8 seen[HAND_ITEMS_CAP];
+    s32 i;
+
+    for (i = 0; i < n; i++) {
+        seen[i] = 0;
+    }
+    for (i = 0; i < n; i++) {
+        if (o[i] >= n || seen[o[i]]) {
+            return false;
+        }
+        seen[o[i]] = 1;
+    }
+    return true;
+}
+
+// the order after the SaveData (MOD_SAVE_ORDER), where the player sorted the
+// new items; without it (an older save, or one the retail game wrote) the
+// rebuilt order stays, new items last
+static void ModLoadSavedOrder(PlayerStatus* status, const u8* o) {
+    const u8* body = o + HAND_ITEMS_CAP;
+    s32 i;
+
+    if (!ModIsWholeOrder(o, HAND_ITEMS_CAP) ||
+        !ModIsWholeOrder(body, BODY_ITEMS_CAP)) {
+        return;
+    }
+    for (i = 0; i < HAND_ITEMS_CAP; i++) {
+        status->equipHandOrder[i] = o[i];
+    }
+    // (the mod's own order already keeps each position's category)
+    ModRegroupBodyOrder(status->equipBodyOrder, body, BODY_ITEMS_CAP,
+                        BODY_ITEMS_CAP, g_api.accessoryDefs);
+}
+#endif
+
 s32 ApplySaveData(SaveData* save) {
     s32 i;
     u32 prevCompletionFlags1;
@@ -1035,8 +1087,10 @@ s32 ApplySaveData(SaveData* save) {
 #if defined(MOD_SATURN) && !defined(MOD_SAVE_DRA)
     // the Castle Entrance save room moved from (3,42) to (3,43), behind the
     // Saturn shaft's alcove (mods/sotn-ultimate/tools/gen_mod_rooms.py): move
-    // saves made in the old spot (retail, SAT1) with it
-    if (g_StageId == STAGE_NP3 && g_Tilemap.left == 3 && g_Tilemap.top == 42) {
+    // saves made in the old spot (retail, SAT1) with it; in the first visit's
+    // Entrance (NO3) too, which has the same shaft now
+    if ((g_StageId == STAGE_NP3 || g_StageId == STAGE_NO3) &&
+        g_Tilemap.left == 3 && g_Tilemap.top == 42) {
         g_Tilemap.top = 43;
     }
     // and the Reverse Entrance's, its mirror, from (60,21) to (60,20)
@@ -1057,6 +1111,7 @@ s32 ApplySaveData(SaveData* save) {
         u32* eq;
 
         ModConvertRetailStatus(&g_Status);
+        ModLoadSavedOrder(&g_Status, MOD_SAVE_ORDER(srcStatus));
         for (i = 0; i < LEN(x.hand); i++) {
             g_Status.equipHandCount[NUM_HAND_ITEMS + i] = x.hand[i];
         }
@@ -1102,6 +1157,14 @@ s32 ApplySaveData(SaveData* save) {
     g_Settings = *settings;
     g_Settings.D_8003CB00 |= prevCompletionFlags1;
     g_Settings.D_8003CB04 |= prevCompletionFlags2;
+#if defined(MOD_SATURN) && !defined(MOD_SAVE_DRA)
+    // Richter and Maria have no menu to leave mono (the retail new-game
+    // default, kept by saves made before stereo became the default): their
+    // saves load in stereo
+    if (g_PlayableCharacter != PLAYER_ALUCARD) {
+        g_Settings.isSoundMono = false;
+    }
+#endif
 
     for (i = 0; i < LEN(g_CastleFlags); i++) {
         g_CastleFlags[i] = savePtr->castleFlags[i];

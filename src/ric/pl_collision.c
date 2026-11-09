@@ -180,8 +180,8 @@ bool RicCheckInput(s32 checks) {
         return false;
     }
 #if !defined(MOD_MARIA_SAT)
-    // (the Saturn Maria has no item crash: 060A9CE8 is a stub; Triangle is
-    // her kick, below)
+    // (the Saturn Maria has no item crash: 060A9CE8 is a stub; her kick and
+    // backdash buttons are below, MAR_PAD_KICK / MAR_PAD_BACKDASH)
     if (checks & CHECK_CRASH && (g_Player.padTapped & PAD_TRIANGLE) &&
         RicDoCrash()) {
         return true;
@@ -208,14 +208,14 @@ bool RicCheckInput(s32 checks) {
         MarSetDoubleJump();
         return true;
     }
-    // Saturn 060AAA68: Square = her shot, Triangle = her kick, releasing a
-    // held Square = the charged shot (mar_attacks.h)
+    // Saturn 060AAA68: Square = her shot, MAR_PAD_KICK = her kick, releasing
+    // a held Square = the charged shot (mar_attacks.h)
     if (checks & CHECK_ATTACK) {
         if (g_Player.padTapped & PAD_SQUARE) {
             if (MarDoAttack(0)) {
                 return true;
             }
-        } else if (g_Player.padTapped & PAD_TRIANGLE) {
+        } else if (g_Player.padTapped & MAR_PAD_KICK) {
             MarDoKick();
             return true;
         } else if ((g_Player.padHeld ^ g_Player.padPressed) & g_Player.padHeld &
@@ -236,10 +236,10 @@ bool RicCheckInput(s32 checks) {
         return true;
     }
 #if defined(MOD_MARIA_SAT)
-    // Saturn 060AAA68's last check: R (PS1 R1), her backdash, unless one
-    // is under way
+    // Saturn 060AAA68's last check: R (here MAR_PAD_BACKDASH), her backdash,
+    // unless one is under way
     if (checks & CHECK_BACKDASH && PLAYER.anim != mar_anim_backdash &&
-        (g_Player.padTapped & PAD_R1)) {
+        (g_Player.padTapped & MAR_PAD_BACKDASH)) {
         MarSetBackdash();
         return true;
     }

@@ -60,6 +60,7 @@ const FILE_SPANS: [string, string][] = [
     ["ST/TE3/F_TE3.BIN", "stage_rgdn"],
     ["ST/TE4/F_TE4.BIN", "stage_rprs"],
     ["ST/NP3/F_NP3.BIN", "mod_rooms"],
+    ["ST/NO3/F_NO3.BIN", "mod_rooms"],
     ["ST/RNO3/F_RNO3.BIN", "mod_rooms"],
     ["ST/WRP/F_WRP.BIN", "mod_rooms"],
     ["ST/RWRP/F_RWRP.BIN", "mod_rooms"],
@@ -84,6 +85,7 @@ const SELF_MAPS: Record<string, [string, number]> = {
 // is used once its gen has a converter in src/build.ts
 const ARRAY_SOURCES: ArraySource[] = [
     { gen: "mod_rooms", disc: "ST/NP3/NP3.BIN", files: ["src/st/np3/mod_rooms.h"], map: "build/us/stnp3.map", base: 0x80180000 },
+    { gen: "mod_rooms", disc: "ST/NO3/NO3.BIN", files: ["src/st/no3/mod_rooms.h"], map: "build/us/stno3.map", base: 0x80180000 },
     { gen: "mod_rooms", disc: "ST/RNO3/RNO3.BIN", files: ["src/st/rno3/mod_rooms.h"], map: "build/us/strno3.map", base: 0x80180000 },
     { gen: "mod_rooms", disc: "ST/WRP/WRP.BIN", files: ["src/st/wrp/mod_rooms.h"], map: "build/us/stwrp.map", base: 0x80180000 },
     { gen: "mod_rooms", disc: "ST/RWRP/RWRP.BIN", files: ["src/st/rwrp/mod_rooms.h"], map: "build/us/strwrp.map", base: 0x80180000 },
@@ -170,12 +172,14 @@ function python(code: string): string {
 
 // gen_saturn_music.py TRACKS / MIN_SECONDS / ONESHOTS, read from the script
 function musicConfig(): { tracks: MusicTrack[]; minSeconds: number; songs: SongStream[] } {
-    const [t, ms, os_, sil, bgm] = python(
+    const [t, ms, fade, os_, sil, bgm] = python(
         "import gen_saturn_music as g; print(json.dumps(g.TRACKS)); print(g.MIN_SECONDS); " +
+        "print(json.dumps([g.jump_fade_ms(p) for _, p, _ in g.TRACKS])); " +
         "print(json.dumps(g.ONESHOTS)); print(g.ONESHOT_SILENCE); print(g.PSP_BGM)").split("\n");
     const bgmPsp = PSP_RES + path.relative(path.join(ROOT, "disks/psp"), bgm);
     return {
-        tracks: JSON.parse(t).map(([name, pcm, gain]: [string, string, number]) => ({ name, pcm, gain })),
+        tracks: JSON.parse(t).map(([name, pcm, gain]: [string, string, number], i: number) =>
+            ({ name, pcm, gain, fadeMs: JSON.parse(fade)[i] })),
         minSeconds: Number(ms),
         songs: JSON.parse(os_).map(([, at3, gain]: [string, string, number]) => ({
             stream: at3, psp: bgmPsp + "/" + at3, gain: python("print(repr(" + gain + "))"), silence: Number(sil),
@@ -640,7 +644,7 @@ async function main(): Promise<void> {
 
     const hollow = path.join(out, "hollow.bin");
     fs.writeFileSync(hollow, img);
-    const name = "SOTN Ultimate (PS1 Version) v1.3";
+    const name = "SOTN Ultimate (PS1 Version) v1.4";
     const patch = path.join(out, name + ".builder.xdelta");
     const usSize = fs.statSync(us).size;
     execFileSync("xdelta3", ["-e", "-f", "-9", "-S", "none", "-B", String(usSize), "-s", us, hollow, patch]);

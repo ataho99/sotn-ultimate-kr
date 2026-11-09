@@ -431,7 +431,12 @@ void RicEntitySubwpnHolyWater(Entity* self) {
                 self, FACTORY(BP_HOLYWATER_FIRE, self->ext.holywater.unk82), 0);
             self->ext.holywater.unk82 += 1;
         }
+#if defined(MOD_MARIA_SAT)
+        // Saturn 060B8F1A: her trail falls with the bottle's gravity
+        self->velocityY += 0x2B00;
+#else
         self->velocityY += FIX(12.0 / 128);
+#endif
         if (self->velocityY > FIX(4)) {
             self->velocityY = FIX(4);
         }

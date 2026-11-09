@@ -10,7 +10,7 @@
 //                 trail, 060B9D88) or level 3 (>300, 60 MP: a laser to the
 //                 screen edge with two sparks, 060B96C0 / 060B99A8). At 370
 //                 frames a guard appears in front of her (060BD150/060BD244).
-//   Triangle      her kick (060A9BC4 -> blueprint 80, entity 70 060AD0E8);
+//   Circle        her kick (060A9BC4 -> blueprint 80, entity 70 060AD0E8);
 //                 while running, the slide kick.
 //   Down + Cross  after both jumps: the dive kick (060A6B90 step_s 0x70,
 //                 blueprint 81, entity 71 060AD248); bounces on a hit.
@@ -329,8 +329,8 @@ s32 MarDoAttack(s32 charged) {
     return 1;
 }
 
-// Saturn 060A9E40: R (PS1 R1), her backdash: a hop back at 4.375 (x 4/5)
-// with a dust puff; RicStepStand step_s 3 ends it
+// Saturn 060A9E40: R (here Triangle or R1), her backdash: a hop back at
+// 4.375 (x 4/5) with a dust puff; RicStepStand step_s 3 ends it
 void MarSetBackdash(void) {
     PLAYER.step = PL_S_STAND;
     PLAYER.step_s = 3;
@@ -342,7 +342,7 @@ void MarSetBackdash(void) {
     g_api.PlaySfx(SFX_SCRAPE_B); // Saturn 0x616, the same common sound
 }
 
-// Saturn 060A9BC4 (in place of RicDoCrash): Triangle
+// Saturn 060A9BC4 (in place of RicDoCrash): MAR_PAD_KICK
 void MarDoKick(void) {
     s32 kind;
 

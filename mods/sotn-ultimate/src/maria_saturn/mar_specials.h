@@ -4,7 +4,7 @@
 //
 // Inputs (060B9FE0..060BA914, run each frame by 060BABE0 in this order:
 // Byakko, Genbu, Seiryuu, Guardian Knuckle, Suzaku, Four Beasts), then
-// Square or Triangle; 20 frames between steps:
+// Square or the kick button (MAR_PAD_KICK); 20 frames between steps:
 //   Guardian Knuckle  D, DF, F                       40 MP  060BADA8
 //   Genbu             B, UB, U, UF, F                80 MP  060BAFF0
 //   Byakko            U, D, DF, F                   100 MP  060BB4AC
@@ -372,7 +372,7 @@ static s32 MarCheckCombo(s32 i) {
         if (move == 5 && g_Player.timers[PL_T_INVINCIBLE_SCENE]) {
             return 0;
         }
-        if (!(g_Player.padTapped & (PAD_SQUARE | PAD_TRIANGLE))) {
+        if (!(g_Player.padTapped & (PAD_SQUARE | MAR_PAD_KICK))) {
             return 0;
         }
         if (mar_sp_cost[move] > g_Status.mp) {

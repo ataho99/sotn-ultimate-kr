@@ -54,11 +54,11 @@ NEW_ACCESSORIES = [
     # 90, Saturn 0x35: CON +6, immune to dark, Saturn icon 231 with its
     # palette 219 colours (copied to the free PSX palette 231). Cape flicker
     # in src/dra/5F60C.c.
-    '{_S("Glaring Cloth"), "%s", 0, 0, 0, 6, 0, 0, 0, 0, '
+    '{_S("Glaring cloth"), "%s", 0, 0, 0, 6, 0, 0, 0, 0, '
     "ELEMENT_DARK, 0, 231, 231, 2}" % desc("Silver shine that tears darkness"),
     # 91, Saturn 0x34: CON +7, Saturn icon and palette 236. Colour cycle in
     # src/dra/4A538.c (ModRainbowCape).
-    '{_S("Rainbow Mantle"), "%s", 0, 0, 0, 7, 0, 0, 0, 0, '
+    '{_S("Rainbow mantle"), "%s", 0, 0, 0, 7, 0, 0, 0, 0, '
     "0, 0, 236, 236, 2}" % desc("Changes color over time"),
     # 92, Saturn 0x4C: an accessory with no stats. Saturn icon 138; its
     # palette 74 is a retail PSX one, so the colours go to the free slot 139.

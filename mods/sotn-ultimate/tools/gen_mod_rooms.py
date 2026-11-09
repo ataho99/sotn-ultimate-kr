@@ -28,6 +28,7 @@
 # 39-42) and the save room's left door (open rows 6-9, floor at 10) moves one
 # tile down to match. Saves made in the old spot are moved by ApplySaveData
 # (src/save_mgr.h).
+import glob
 import os
 import re
 import struct
@@ -345,11 +346,34 @@ def smooth_np3_step(fg, bg, coll):
         fg[n], bg[n], coll[n] = t, b, c
 
 
-def np3():
-    stage, tdef = "np3", "np3_tiledef_np3"
+# The first visit's Castle Entrance (NO3) gets the same shaft: the Saturn's
+# STAGE_0X reads STAGE_01.MAP and has STAGE_01's room table (its first 32
+# 6-byte records are identical, room 17 the shaft to (2,44), 24 the loading
+# room (3,44), 31 the transition (4,44)). To make room, the Saturn puts the
+# opening forest run on row 46 (its rooms 18 (0,46)-(17,46) and 19 (18,46));
+# NO3's rooms 18 and 19 move there likewise (the teleports into the forest
+# name the room, not its cells). NO3's overlay has no room for a 16 KB
+# tileset copy (it must end before 0x801E0000): the shaft's art/collision
+# pairs go into tile slots no NO3 tilemap or tile-writing entity uses, which
+# the stage writes into its own tileset when a room loads (g_ModTiledefPatch,
+# mods/sotn-ultimate/src/castle/no3/no3_mod_shaft.h). Its link to the Garden
+# is MOD_TP_NO3_TO_GDN, which reloads NO3 if the player turns back in the
+# loading room.
+NO3_FOREST = {18: (0, 44, 17, 44, 46), 19: (18, 44, 18, 44, 46)}  # room: old rect, new row
+TP_NO3_TO_GDN = 0x8B  # MOD_TP_NO3_TO_GDN, mods/sotn-ultimate/include/game_mod.h
+
+
+def np3(stage="np3"):
+    tdef = f"{stage}_tiledef_{stage}"
+    patch = stage == "no3"  # tile slots written at run time, no tileset copy
+    tp = TP_NO3_TO_GDN if patch else TP_NP3_TO_GDN
+    tp_name = "MOD_TP_NO3_TO_GDN" if patch else "MOD_TP_NP3_TO_GDN"
     sat = [os.path.join(ROOT, "disks/saturn/STAGE_01.PRG"), os.path.join(ROOT, "disks/saturn/STAGE_01.MAP")]
     externs, layers, roomdefs = parse_layers(stage)
     rooms = parse_rooms(stage)
+    if patch:
+        for i, (l, t, r, b, row) in NO3_FOREST.items():
+            assert rooms[i][:4] == [l, t, r, b], (i, rooms[i])
     shaft = 1
     assert rooms[shaft][:4] == [2, 41, 2, 42], rooms[shaft]
     load = next(i for i, r in enumerate(rooms) if r[:4] == [15, 41, 15, 41])
@@ -360,7 +384,7 @@ def np3():
         d = open(os.path.join(asset_dir(stage), f"{name}.bin"), "rb").read()
         return list(struct.unpack("<%dH" % (len(d) // 2), d))
 
-    work = work_dir("np3")
+    work = work_dir(stage)
     os.makedirs(work, exist_ok=True)
     # foreground art from the PSX shaft's own rock tiles only (the stage-wide
     # pool picks stairs, bricks and grates for the Saturn's diagonal edges)
@@ -382,8 +406,16 @@ def np3():
         if l[1] == tdef:
             stage_used.update(read_tm(l[0]))
     reserved = {0} | set(new_fg) | door_tiles | TRAPDOOR_TILES
-    free = ([i for i in range(1, len(td["cols"])) if i not in reserved and i not in stage_used]
-            + [i for i in range(1, len(td["cols"])) if i not in reserved and i in stage_used])
+    if patch:
+        # NO3 changes its own tileset: only empty slots (all four entries 0),
+        # which neither a tilemap nor a tile-writing entity can use (the rock
+        # and door tiles those write, e.g. 0x6B2.., have their art set)
+        free = [i for i in range(1, len(td["cols"])) if i not in reserved and i not in stage_used
+                and not any(td[k][i] for k in TILEDEF_PARTS)]
+    else:
+        free = ([i for i in range(1, len(td["cols"])) if i not in reserved and i not in stage_used]
+                + [i for i in range(1, len(td["cols"])) if i not in reserved and i in stage_used])
+    retail_td = {k: bytes(v) for k, v in td.items()}
 
     retail_fg, retail_bg = read_tm(fg[0]), read_tm(bg[0])
     n = RETAIL_ROWS * 16
@@ -444,12 +476,13 @@ def np3():
 
     out_layers = [list(l) for l in layers]
     nl = len(out_layers)
-    out_layers.append(["g_ModShaftFg", "(TileDefinition*)&g_ModShaftTiledef", "2", "41", "2", "44", fg[6], fg[7], fg[8]])
+    out_layers.append(["g_ModShaftFg", tdef if patch else "(TileDefinition*)&g_ModShaftTiledef",
+                       "2", "41", "2", "44", fg[6], fg[7], fg[8]])
     out_layers.append(["g_ModShaftBg", bg[1], bg[2], bg[3], bg[4], "44" if bg[5] != "0" else bg[5], bg[6], bg[7], bg[8]])
     lf_name, lf_i, lb_name, lb_i = roomdefs[rooms[load][4]]
     lfg = list(layers[int(lf_i)])
     lfg[2:6] = ["3", "44", "3", "44"]
-    lfg[7] = "0x%02X" % TP_NP3_TO_GDN  # preload the Garden's tiles
+    lfg[7] = "0x%02X" % tp  # preload the Garden's tiles
     out_layers.append(lfg)
     nsave = len(out_layers)
     sl = list(sfg)
@@ -471,7 +504,24 @@ def np3():
     out_rooms[shaft][6] = 9
     lr = rooms[load]
     out_rooms.append([3, 44, 3, 44, new_layer_id, lr[5], lr[6], lr[7]])
-    out_rooms.append([4, 44, 4, 44, TP_NP3_TO_GDN, 0xFF, 0, 0])
+    out_rooms.append([4, 44, 4, 44, tp, 0xFF, 0, 0])
+    if patch:
+        # the forest run to row 46, as on the Saturn, with its layers' rects
+        for i, (l, t, r, b, row) in NO3_FOREST.items():
+            out_rooms[i][1] = out_rooms[i][3] = row
+            for name, idx in (roomdefs[rooms[i][4]][:2], roomdefs[rooms[i][4]][2:]):
+                if name != "layers":
+                    continue
+                lay = out_layers[int(idx)]
+                if lay[2:6] == ["0", "0", "0", "0"]:
+                    continue  # a layer without a rect (the forest's backdrop)
+                assert [lay[3], lay[5]] == [str(t), str(b)], (i, lay)
+                assert sum(1 for r2 in rooms if idx in (roomdefs[r2[4]][1], roomdefs[r2[4]][3])) == 1, \
+                    f"forest layer {idx} shared"
+                lay[3] = lay[5] = str(row)
+        for c in ((2, 43), (2, 44), (3, 44), (4, 44)):
+            assert not any(r[0] <= c[0] <= r[2] and r[1] <= c[1] <= r[3]
+                           for i, r in enumerate(out_rooms) if i != shaft and r[:4] != [c[0], c[1], c[0], c[1]]), c
     sx, sy = SAVE_ROOM
     out_rooms[save][:5] = [sx, sy + 1, sx, sy + 1, save_layer_id]
     real_save = next(r for r in rooms if r[:4] == [*SAVE_ROOM_LAYOUT_FROM, *SAVE_ROOM_LAYOUT_FROM])
@@ -482,7 +532,7 @@ def np3():
     dst = os.path.join(ROOT, f"src/st/{stage}/mod_rooms.h")
     with open(dst, "w") as f:
         f.write("// Generated by mods/sotn-ultimate/tools/gen_mod_rooms.py, do not edit\n// clang-format off\n")
-        f.write("typedef char ModTeleportIdCheck[MOD_TP_NP3_TO_GDN == 0x%02X ? 1 : -1];\n" % TP_NP3_TO_GDN)
+        f.write("typedef char ModTeleportIdCheck[%s == 0x%02X ? 1 : -1];\n" % (tp_name, tp))
         f.write("\n".join(externs) + "\nextern TileDefinition %s[];\n" % tdef)
         for name, data in (("g_ModShaftFg", new_fg), ("g_ModShaftBg", new_bg),
                            ("g_ModSaveFg", save_fg)):
@@ -490,13 +540,25 @@ def np3():
             for i in range(0, len(data), 16):
                 f.write("    " + ", ".join("0x%04X" % v for v in data[i:i + 16]) + ",\n")
             f.write("};\n")
-        for k, name in zip(TILEDEF_PARTS, ("Page", "Index", "Clut", "Coll")):
-            f.write("static const u8 g_ModShaftTd%s[] = {\n" % name)
-            for i in range(0, len(td[k]), 32):
-                f.write("    " + ", ".join("%d" % v for v in td[k][i:i + 32]) + ",\n")
+        if patch:
+            # {slot, gfxPage, gfxIndex, clut, collision} for the stage's tileset
+            changed = [i for i in range(len(td["cols"]))
+                       if any(td[k][i] != retail_td[k][i] for k in TILEDEF_PARTS)]
+            assert changed and not set(changed) & (stage_used | reserved), "patched slots in use"
+            assert all(not any(retail_td[k][i] for k in TILEDEF_PARTS) for i in changed), "patched slots not empty"
+            f.write("#define MOD_TILEDEF_PATCH %s\n" % tdef)
+            f.write("const u16 g_ModTiledefPatch[][5] = {\n")
+            for i in changed:
+                f.write("    {%d, %s},\n" % (i, ", ".join(str(td[k][i]) for k in TILEDEF_PARTS)))
             f.write("};\n")
-        f.write("static const TileDefinition g_ModShaftTiledef = {\n    (u8*)g_ModShaftTdPage, "
-                "(u8*)g_ModShaftTdIndex, (u8*)g_ModShaftTdClut, (u8*)g_ModShaftTdColl};\n")
+        else:
+            for k, name in zip(TILEDEF_PARTS, ("Page", "Index", "Clut", "Coll")):
+                f.write("static const u8 g_ModShaftTd%s[] = {\n" % name)
+                for i in range(0, len(td[k]), 32):
+                    f.write("    " + ", ".join("%d" % v for v in td[k][i:i + 32]) + ",\n")
+                f.write("};\n")
+            f.write("static const TileDefinition g_ModShaftTiledef = {\n    (u8*)g_ModShaftTdPage, "
+                    "(u8*)g_ModShaftTdIndex, (u8*)g_ModShaftTdClut, (u8*)g_ModShaftTdColl};\n")
         f.write("static const LayerDef g_ModLayerEmpty = { NULL, NULL, 0, 0, 0 };\n")
         f.write("static const LayerDef g_ModLayers[] = {\n")
         for l in out_layers:
@@ -511,7 +573,7 @@ def np3():
             f.write("    " + ", ".join(str(v) for v in r) + ",\n")
         f.write("    0x40\n};\n// clang-format on\n")
     print(f"wrote src/st/{stage}/mod_rooms.h: shaft to (2,44), loading room (3,44) "
-          f"layer {new_layer_id}, transition (4,44) -> 0x{TP_NP3_TO_GDN:02X}, "
+          f"layer {new_layer_id}, transition (4,44) -> 0x{tp:02X}, "
           f"save room to ({SAVE_ROOM[0]},{SAVE_ROOM[1] + 1}), "
           f"{len(combos)} art/collision tiles added")
 
@@ -943,6 +1005,7 @@ def wrp(stage="wrp"):
 
 
 np3()
+np3("no3")
 wrp()
 rno3()
 wrp("rwrp")

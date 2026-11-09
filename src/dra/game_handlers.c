@@ -461,7 +461,13 @@ void HandlePlay(void) {
             g_Settings.windowColors[1] = 0;
             g_Settings.windowColors[2] = 8;
             g_Settings.isCloakLiningReversed = 0;
+#if defined(MOD_SATURN)
+            // a new game starts in stereo: Richter and Maria have no menu
+            // to leave the retail default (mono)
+            g_Settings.isSoundMono = false;
+#else
             g_Settings.isSoundMono = true;
+#endif
             func_800E493C();
             for (i = 0; i < LEN(g_Settings.equipOrderTypes); i++) {
                 g_Settings.equipOrderTypes[i] = i;

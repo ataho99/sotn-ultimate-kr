@@ -7,17 +7,27 @@ extern SpriteParts* spriteBanks[];
 extern u_long* cluts[];
 extern RoomDef rooms_layers[];
 extern GfxBank* gfxBanks[];
+#if defined(MOD_SATURN_CASTLE)
+#include "../../../mods/sotn-ultimate/src/castle/no3/header_mod_shaft.h"
+#else
+#define MOD_ROOMS rooms
+#define MOD_ROOMS_LAYERS rooms_layers
+#define MOD_SPRITE_BANKS spriteBanks
+#define MOD_CLUTS cluts
+#define MOD_GFX_BANKS gfxBanks
+#define MOD_INIT_ROOM_ENTITIES InitRoomEntities
+#endif
 
 AbbreviatedOverlay g_Overlay = {
     .Update = Update,
     .HitDetection = HitDetection,
     .UpdateRoomPosition = UpdateRoomPosition,
-    .InitRoomEntities = InitRoomEntities,
-    .rooms = rooms,
-    .spriteBanks = spriteBanks,
-    .cluts = cluts,
+    .InitRoomEntities = MOD_INIT_ROOM_ENTITIES,
+    .rooms = MOD_ROOMS,
+    .spriteBanks = MOD_SPRITE_BANKS,
+    .cluts = MOD_CLUTS,
     .objLayoutHorizontal = &OBJ_LAYOUT_HORIZONTAL,
-    .tileLayers = rooms_layers,
-    .gfxBanks = gfxBanks,
+    .tileLayers = MOD_ROOMS_LAYERS,
+    .gfxBanks = MOD_GFX_BANKS,
     .UpdateStageEntities = UpdateStageEntities,
 };

@@ -212,7 +212,8 @@ function roomArrays(r: GenResult, m: Manifest, gen: string): Map<string, Uint8Ar
 
 // src/mod_tables.ts headers -> the disc file they are compiled into
 const TABLE_DISC: Record<string, string> = {
-    "src/st/np3/mod_sconce.h": "ST/NP3/NP3.BIN", "src/st/rno3/mod_sconce.h": "ST/RNO3/RNO3.BIN",
+    "src/st/np3/mod_sconce.h": "ST/NP3/NP3.BIN", "src/st/no3/mod_sconce.h": "ST/NO3/NO3.BIN",
+    "src/st/rno3/mod_sconce.h": "ST/RNO3/RNO3.BIN",
     "src/st/no3/mod_horse.h": "ST/NO3/NO3.BIN", "src/dra/gen/us/equipment_mod.h": "DRA.BIN",
     "src/dra/gen/us/enemydefs_mod.h": "DRA.BIN", "src/st/lib/mod_bestiary.h": "ST/LIB/LIB.BIN",
 };
@@ -398,8 +399,8 @@ export const CONVERTERS: Record<string, [string, Converter]> = {
         ["BIN/F_GAME2.BIN", await buildMarHud((p) => d.saturn.readFile(p), (p) => d.ps1Fs.readFile(p))]])],
     fmap: ["castle map", async (d) => new Map([
         ["F_MAP.BIN", await buildFmap((p) => d.saturn.readFile(p), (p) => d.ps1Fs.readFile(p))]])],
-    // the Saturn rooms grafted into PS1 stages (src/mod_rooms.ts: NP3, RNO3,
-    // WRP, RWRP's mod_rooms.h and F_ files; src/prs_links.ts: NO0, NO4,
+    // the Saturn rooms grafted into PS1 stages (src/mod_rooms.ts: NP3, NO3,
+    // RNO3, WRP, RWRP's mod_rooms.h and F_ files; src/prs_links.ts: NO0, NO4,
     // RNO0, RNO4's mod_rooms.h and tilemaps edited in place)
     mod_rooms: ["Saturn rooms in PS1 stages", async (d, m) => {
         const r = await buildModRooms((p) => d.saturn.readFile(p), (p) => d.ps1Fs.readFile(p));
@@ -435,7 +436,7 @@ export const CONVERTERS: Record<string, [string, Converter]> = {
         }
         return out;
     }],
-    // Saturn tables: the NP3 / RNO3 sconce, the NO3 horse, the Saturn items,
+    // Saturn tables: the NP3 / NO3 / RNO3 sconce, the NO3 horse, the Saturn items,
     // enemies and bestiary list (src/mod_tables.ts)
     mod_tables: ["Saturn items, enemies and props", async (d) => {
         const sat = (p: string) => d.saturn.readFile(p);

@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Saturn port mod: Saturn SOTN music (SD/SDxx.PCM) -> PS1 XA ADPCM sectors.
 //
-//   satxa enc in.PCM out.xa file channel gain -> one channel's raw 2352-byte
-//       sectors (37800 Hz stereo 4-bit, mode 2 form 2, MSF left at 0) and,
-//       on stdout, "sectors N intro_sectors I loop_seconds L intro_seconds S"
+//   satxa enc in.PCM out.xa file channel gain [min_seconds [fade_ms]] -> one
+//       channel's raw 2352-byte sectors (37800 Hz stereo 4-bit, mode 2 form
+//       2, MSF left at 0) and, on stdout, "sectors N intro_sectors I
+//       loop_seconds L intro_seconds S ...". fade_ms: the seek back's pause
+//       at the loop's quietest stretch, after a fade-out of that length
 //   satxa dec in.xa out.wav file channel   -> decode one channel of an XA
 //       stream (raw 2352 sectors) to a WAV, for checking
 //   satxa wav in.PCM out.wav               -> the Saturn file decoded, 44100 Hz
@@ -226,8 +228,40 @@ static void sector_header(
     sec[19] = sec[23] = coding;
 }
 
+// the quiet-spot jump (enc's fade_ms): the stretch looked for, around the
+// jump point, is the fade-out before it, the seek's pause (measured ~0.47 s
+// in DuckStation) and as long again after it; the fade ends this many output
+// samples (one 59.826 Hz VSync) before the jump, so a VSync-early timer
+// still lands in silence
+#define JUMP_GAP_MS 468
+#define JUMP_EARLY 632
+
+// the loop body's quietest stretch, a whole number of sectors (2352 input
+// samples = 2016 output ones) into it, in sectors; integer sums, so the
+// WebAssembly build picks the same one
+static long quiet_sector(int16_t** pcm, long n, long loop, int fade_ms) {
+    long len = n - loop, fade = 44100L * fade_ms / 1000;
+    long gap = 44100L * JUMP_GAP_MS / 1000, j, best = 0, t;
+    long long* cum = malloc((len + 1) * sizeof(long long));
+    long long e, best_e = 0;
+    cum[0] = 0;
+    for (t = 0; t < len; t++) {
+        long long l = pcm[0][loop + t], r = pcm[1][loop + t];
+        cum[t + 1] = cum[t] + l * l + r * r;
+    }
+    for (j = (fade + 2351) / 2352; j * 2352 + gap + fade <= len; j++) {
+        e = cum[j * 2352 + gap + fade] - cum[j * 2352 - fade];
+        if (!best || e < best_e) {
+            best = j;
+            best_e = e;
+        }
+    }
+    free(cum);
+    return best;
+}
+
 static void cmd_enc(const char* in, const char* out, int file, int channel,
-                    double gain, double min_seconds) {
+                    double gain, double min_seconds, int fade_ms) {
     int16_t* pcm[2];
     long loop, n = saturn_decode(in, pcm, &loop);
     double ratio = 44100.0 / 37800.0;        // input samples per output sample
@@ -239,6 +273,8 @@ static void cmd_enc(const char* in, const char* out, int file, int channel,
     FILE* f;
     long loop_out;
     long reps = 1; // loop bodies in the data (the seek back comes after all)
+    long quiet = 0; // the loop entry, in sectors into the loop body
+    long entry;     // the loop entry's sector: the seek back's target
 
     // output sample m reads input time (m - lead) * ratio
     if (loop >= 0) {
@@ -257,9 +293,18 @@ static void cmd_enc(const char* in, const char* out, int file, int channel,
                min_seconds) {
         reps++;
     }
+    // fade_ms: the seek back's pause goes to the loop's quietest stretch
+    // instead of its end. The loop entry moves that far into the loop body;
+    // the data plays on through the next pass to the same point, faded out
+    // there, then silence (the seek still comes once every reps loops)
+    if (loop >= 0 && fade_ms > 0) {
+        quiet = quiet_sector(pcm, n, loop, fade_ms);
+    }
+    entry = intro_sectors + quiet;
     // where the (last) loop end falls; in_at() continues the loop seamlessly
     loop_out = (long)ceil(
         lead + (n + (reps - 1) * (loop >= 0 ? n - loop : 0)) / ratio);
+    loop_out += quiet * 2016; // the seek point (= the loop end without a jump)
     total_out = loop_out + (loop >= 0 ? 37800 : 0);
     sectors = (total_out + 2015) / 2016;
     total_out = sectors * 2016;
@@ -299,6 +344,19 @@ static void cmd_enc(const char* in, const char* out, int file, int channel,
             res[ch][i] = clamp16((int)lround(acc * gain));
         }
     }
+    if (quiet) {
+        // linear fade-out ending JUMP_EARLY before the seek point, silence
+        // after (integer math: the WebAssembly build matches)
+        long fade = 37800L * fade_ms / 1000, end = loop_out - JUMP_EARLY;
+        int ch;
+        for (i = end - fade; i < total_out; i++) {
+            for (ch = 0; ch < 2; ch++) {
+                res[ch][i] = i < end ? (int)((long long)res[ch][i] *
+                                             (end - i) / fade)
+                                     : 0;
+            }
+        }
+    }
     f = fopen(out, "wb");
     for (s = 0; s < sectors; s++) {
         uint8_t sec[2352];
@@ -313,7 +371,7 @@ static void cmd_enc(const char* in, const char* out, int file, int channel,
                 uint8_t nib[28];
                 int ch = u & 1, k, param;
                 // the start and the loop sector start without history
-                int f0 = g == 0 && (s == 0 || s == intro_sectors);
+                int f0 = g == 0 && (s == 0 || s == entry);
                 for (k = 0; k < 28; k++) {
                     x[k] = res[ch][base + (u >> 1) * 28 + k];
                 }
@@ -329,10 +387,12 @@ static void cmd_enc(const char* in, const char* out, int file, int channel,
         fwrite(sec, 1, 2352, f);
     }
     fclose(f);
+    // intro_sectors / intro_seconds: up to the loop entry (with a jump, the
+    // intro config plays on into the loop body to it, no seek)
     printf("sectors %ld intro_sectors %ld intro_seconds %.6f loop_seconds %.6f "
-           "lead %.3f repeats %ld\n",
-           sectors, intro_sectors, intro_sectors * 2016 / 37800.0,
-           loop >= 0 ? (n - loop) / 44100.0 : n / 44100.0, lead, reps);
+           "lead %.3f repeats %ld quiet_sectors %ld\n",
+           sectors, entry, entry * 2016 / 37800.0,
+           loop >= 0 ? (n - loop) / 44100.0 : n / 44100.0, lead, reps, quiet);
     // (the builder runs every command in one WebAssembly memory)
     free(pcm[0]);
     free(pcm[1]);
@@ -662,9 +722,9 @@ int main(int argc, char** argv) {
         cmd_vag(argv[2], argv[3]);
         return 0;
     }
-    if ((argc == 7 || argc == 8) && !strcmp(argv[1], "enc")) {
+    if (argc >= 7 && argc <= 9 && !strcmp(argv[1], "enc")) {
         cmd_enc(argv[2], argv[3], atoi(argv[4]), atoi(argv[5]), atof(argv[6]),
-                argc == 8 ? atof(argv[7]) : 0);
+                argc >= 8 ? atof(argv[7]) : 0, argc == 9 ? atoi(argv[8]) : 0);
     } else if (argc == 6 && !strcmp(argv[1], "dec")) {
         cmd_dec(argv[2], argv[3], atoi(argv[4]), atoi(argv[5]));
     } else if (argc == 4 && !strcmp(argv[1], "wav")) {

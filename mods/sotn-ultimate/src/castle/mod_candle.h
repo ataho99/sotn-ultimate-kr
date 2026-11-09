@@ -68,7 +68,10 @@ void EntityModCandleRemnant(Entity* self) {
         self->animCurFrame = g_ModCandleRemnantFrames[self->params >> 12];
         self->unk5A = 0;
         self->palette = PAL_NONE;
-        self->zPriority = g_unkGraphicsStruct.g_zEntityCenter - 20;
+        // one below the drops (EntityPrizeDrop: center - 20): this entity is
+        // in slots 224+, drawn after the drops' 160+, so at the same z it
+        // covered a coin bag or heart falling past it
+        self->zPriority = g_unkGraphicsStruct.g_zEntityCenter - 21;
         self->flags &= ~FLAG_DESTROY_IF_OUT_OF_CAMERA;
         self->flags |= FLAG_KEEP_ALIVE_OFFCAMERA;
     }

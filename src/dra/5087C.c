@@ -200,6 +200,10 @@ RoomTeleport D_800A245C[] = {
     /* MOD_TP_PRS_TO_NO4 */ {16, 388, 5 * 8, MOD_STAGE_PRS, STAGE_NO4},
     /* MOD_TP_NO0_TO_PRS */ {16, 132, 1 * 8, STAGE_NO0, MOD_STAGE_PRS},
     /* MOD_TP_PRS_TO_NO0 */ {1520, 644, 0 * 8, MOD_STAGE_PRS, STAGE_NO0},
+    // the first visit's Entrance shaft into the Garden, as NP3's (turning
+    // back in the loading room reloads NO3; the way back leads to NP3, as
+    // every return to the Entrance)
+    /* MOD_TP_NO3_TO_GDN */ {16, 132, 0x0000, STAGE_NO3, MOD_STAGE_GDN},
 #if defined(MOD_SATURN_STAGE_TEST)
     // Test aid: the dialogue warp chain's own arrivals (ModDlgWarp below),
     // at door positions (checked against the rooms' collision)
@@ -892,21 +896,9 @@ void repaintMapTilesOnCastleBlueprint(s32 invertedCastleIndicator) {
     // This function is called whenever a player loads a new stage, but will
     // only result in a noticeable change to the castle blueprint when the
     // player changes castles.
-#if defined(MOD_SATURN)
-    {
-        // Saturn port: the Entrance's old save room (3,42) keeps its door
-        // to the shaft (its left edge, the shaft's right wall) only on the
-        // first visit (NO3); the revisit and the inverted castle moved the
-        // save room to (3,43) / (60,20) and wall the shaft there
-        // (mods/sotn-ultimate/tools/gen_mod_rooms.py), so the door pixel is
-        // wall
-        u8 buffer[4 * 5];
-
-        copyMapTileColorsToBuffer(3, 42, buffer);
-        writeColorToBuffer(buffer, 0, 2, g_StageId == STAGE_NO3 ? 2 : 0);
-        copyBufferToMapTile(3, 42, buffer);
-    }
-#endif
+    // (Saturn port: the Entrance's old save room (3,42) has no door to the
+    // shaft in any stage now, NO3 included; mods/sotn-ultimate/tools/
+    // paint_fmap.py walls it in the map image)
     if (invertedCastleIndicator == 0) {
         // Underground Caverns, Left Ferryman Route
         resetMapTileOnCastleBlueprint(14, 43);
@@ -1426,13 +1418,8 @@ void func_800F2860(void) {
 // themes (game.c func_060727DC: the Entrance plays 0x12A for Richter and
 // 0x12C for Maria). The PS1-costume Richter and the PSP Maria play
 // Alucard's Entrance music, as their own versions did.
-// Also the Entrance's map: the old save room's door is open on it in NO3
-// only (repaintMapTilesOnCastleBlueprint), and the map image is drawn when a
-// game starts (in the prologue, or in NO3 for Richter / Maria) and when the
-// castle flips: drawn again whenever the Entrance loads (NO3 -> NP3 too)
 u32 ModStageMusic(void) {
     if (g_StageId == STAGE_NO3 || g_StageId == STAGE_NP3) {
-        func_800F2120();
         if (MOD_RIC_COSTUME2()) {
             return MU_MOD_RICHTER_ENTRANCE;
         }

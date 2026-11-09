@@ -888,7 +888,8 @@ async function generate(readSaturn: Reader, readPs1?: Reader): Promise<Headers> 
         const im = s.image(j);
         const left = x - fdiv(im.w, 2);
         const [, , x0, y0] = sprites[j];
-        return [j, mapcol(keptCols(left, im.w)[0]) + x0, y - fdiv(im.h, 2) + y0, 0, fl];
+        // SAT_Y (gen_mar_assets.py): the Saturn frame y is 1 below the PS1's
+        return [j, mapcol(keptCols(left, im.w)[0]) + x0, y - fdiv(im.h, 2) + y0 - 1, 0, fl];
     });
     // hitboxes
     const hb: number[] = [];

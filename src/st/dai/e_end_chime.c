@@ -26,7 +26,16 @@ void EntityEndConfessionalChime(Entity* self) {
         self->step = 2;
         if (g_api.func_80131F68()) {
             g_api.PlaySfx(SET_UNK_80);
+#if defined(MOD_SATURN_CASTLE) && !defined(VERSION_PSP)
+            // SOTN Ultimate: retail went on to step 3 (no such step), so the
+            // chapel music never came back if a CD stream was still playing:
+            // never in retail, but the priest's prayer (0x4E7, voiced in
+            // e_confessional.c) still is when Alucard leaves mid-sentence.
+            // Wait for it to stop instead, then start the music.
+            self->step = END_CHIME_WAIT;
+#else
             self->step++;
+#endif
         }
         break;
     case END_CHIME_WAIT: // Probably waiting for the chime sfx to not be going

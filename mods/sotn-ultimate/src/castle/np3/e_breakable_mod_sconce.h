@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// SOTN Ultimate: included by src/st/np3/e_breakable.c (at file scope, in place)
+// SOTN Ultimate: included by src/st/np3/e_breakable.c and src/st/no3/
+// e_breakable.c (at file scope, in place; NO3 names its mod_sconce.h with
+// MOD_SCONCE_H)
 // Saturn port: rodata copies with type 2, the Saturn's tall candelabra of
 // the shaft (STAGE_16 bank 16 frames 1-4 at 5 ticks -> MOD_SCONCE_ANIMSET
 // frames 1-4, its stand 5), which EntityBreakable uses instead
@@ -24,5 +26,9 @@ static const s16 g_ModBreakableHitboxOffY[8] = {0, 0, -40};
 static const u16 g_ModBreakableSfx[8] = {
     SFX_CANDLE_HIT, SFX_CANDLE_HIT, SFX_CANDLE_HIT};
 #define MOD_SCONCE_GLOW
+#if defined(MOD_SCONCE_H) // NO3's (no3_mod_shaft.h)
+#include MOD_SCONCE_H
+#else
 #include "../../../../../src/st/np3/mod_sconce.h"
+#endif
 #include "../mod_candle.h"

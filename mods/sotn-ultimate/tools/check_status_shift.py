@@ -19,7 +19,7 @@ os.chdir(os.path.join(os.path.dirname(__file__), "../../.."))
 # 1 (Knuckles), 4 (Holy Rod), 5 (Star Flail), 14 (Runesword), 31
 # (Basilard), 33 (Nunchaku)
 MODDED_WEAPONS = (0, 1, 4, 5, 14, 17, 21, 31, 33)
-INTENDED = {"DRA.BIN", "TOP.BIN", "SEL.BIN", "NO4.BIN", "BO3.BIN", "NZ1.BIN", "CAT.BIN", "NP3.BIN", "NO3.BIN", "NO0.BIN", "F_NP3.BIN", "WRP.BIN", "F_WRP.BIN", "RNO3.BIN", "F_RNO3.BIN", "RWRP.BIN", "F_RWRP.BIN", "RNO4.BIN", "RNO0.BIN", "NO2.BIN", "ARE.BIN", "TT_005.BIN"}  # changed by the mod beyond offsets
+INTENDED = {"DRA.BIN", "TOP.BIN", "SEL.BIN", "NO4.BIN", "BO3.BIN", "NZ1.BIN", "CAT.BIN", "NP3.BIN", "NO3.BIN", "NO0.BIN", "F_NP3.BIN", "F_NO3.BIN", "WRP.BIN", "F_WRP.BIN", "RNO3.BIN", "F_RNO3.BIN", "RWRP.BIN", "F_RWRP.BIN", "RNO4.BIN", "RNO0.BIN", "NO2.BIN", "ARE.BIN", "TT_005.BIN"}  # changed by the mod beyond offsets
 # Richter: the JP v1.2 flame whip fix (src/ric/pl_whip.c)
 INTENDED |= {"RIC.BIN"}
 # the stages whose red / sealed doors also open while Alucard sprints

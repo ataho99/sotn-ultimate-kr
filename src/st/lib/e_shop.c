@@ -4648,7 +4648,17 @@ const char* func_us_801B7C94(u16 itemId) {
     const char* name;
     if (itemId >= 0x80) {
         itemId -= 0x80;
-        if (itemId < NUM_HAND_ITEMS) {
+#if defined(MOD_SATURN)
+        // Saturn port: the new hand items drop as combined ids from
+        // MOD_DROP_HAND_BASE (Man Eater: Woodland Shield, Gargoyle: Double
+        // Blade Axe); read as body ids they named a string past the list
+        if (itemId >= MOD_DROP_HAND_BASE) {
+            name = g_api.equipDefs[itemId - (MOD_DROP_HAND_BASE -
+                                             NUM_HAND_ITEMS)]
+                       .name;
+        } else
+#endif
+            if (itemId < NUM_HAND_ITEMS) {
             name = g_api.equipDefs[itemId].name;
         } else {
             itemId -= NUM_HAND_ITEMS;

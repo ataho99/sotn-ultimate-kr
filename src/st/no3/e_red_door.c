@@ -11,3 +11,6 @@
 #include "mod_horse.h"
 #include "mod_layout.h"
 #endif
+#if defined(MOD_SATURN_CASTLE)
+#include "../../../mods/sotn-ultimate/src/castle/no3/e_red_door_mod_shaft.h"
+#endif

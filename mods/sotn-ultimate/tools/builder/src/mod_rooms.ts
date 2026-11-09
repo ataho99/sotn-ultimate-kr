@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// The Saturn rooms the mod adds to the Castle Entrance (NP3), the Reverse
-// Entrance (RNO3) and the warp rooms (WRP, RWRP): a byte-exact port of
+// The Saturn rooms the mod adds to the Castle Entrance (NP3, and NO3 for the
+// first visit), the Reverse Entrance (RNO3) and the warp rooms (WRP, RWRP):
+// a byte-exact port of
 // mods/sotn-ultimate/tools/gen_mod_rooms.py (see its header for what each part does).
 //
 // Inputs: the player's Saturn disc (STAGE_01 / RSTAGE01 / WARP / RWARP .PRG
@@ -201,6 +202,10 @@ const anyAlpha = (c: Uint8Array): boolean => {
 // ---------------------------------------------------------------------------
 
 const TP_NP3_TO_GDN = 0x83;
+const TP_NO3_TO_GDN = 0x8b; // MOD_TP_NO3_TO_GDN
+// NO3's forest rooms: room -> old rect, new row
+const NO3_FOREST: [number, [number, number, number, number, number]][] = [
+    [18, [0, 44, 17, 44, 46]], [19, [18, 44, 18, 44, 46]]];
 const SAVE_ROOM = [3, 42];
 const SAVE_ROOM_LAYOUT_FROM = [5, 39];
 const ALCOVE_ROWS = [39, 40, 41, 42];
@@ -629,17 +634,27 @@ async function loadStage(psx: Reader, up: string): Promise<[PsxStage, Uint8Array
     return [st, fbin.slice()];
 }
 
-async function np3(ctx: Ctx, res: GenResult): Promise<void> {
-    const [st, fbin] = await loadStage(ctx.psx, "NP3");
+// stage "np3", or "no3" (the first visit's Entrance: the shaft's tiles go
+// into empty slots of the stage's own tileset, g_ModTiledefPatch, and its
+// forest rooms move to row 46)
+async function np3(ctx: Ctx, res: GenResult, stage: string = "np3"): Promise<void> {
+    const patch = stage === "no3";
+    const tp = patch ? TP_NO3_TO_GDN : TP_NP3_TO_GDN;
+    const [st, fbin] = await loadStage(ctx.psx, stage.toUpperCase());
     const prg = await ctx.sat("STAGE_01.PRG");
     const map = await ctx.sat("STAGE_01.MAP");
     const { rooms, layers, roomdefs } = st;
+    if (patch) {
+        for (const [i, [l, t, r, b]] of NO3_FOREST) {
+            check(rooms[i].slice(0, 4).join() === [l, t, r, b].join(), stage + " forest room " + i);
+        }
+    }
     const shaft = 1;
-    check(rooms[shaft].slice(0, 4).join() === "2,41,2,42", "np3 shaft");
+    check(rooms[shaft].slice(0, 4).join() === "2,41,2,42", stage + " shaft");
     const load = findRoom(rooms, [15, 41, 15, 41]);
     const fg = layers[roomdefs[rooms[shaft][4]][0]];
     const bg = layers[roomdefs[rooms[shaft][4]][1]];
-    const tdAddr = fg.tdAddr; // np3_tiledef_np3
+    const tdAddr = fg.tdAddr; // <s>_tiledef_<s>
     const defs = st.tiledefs.get(tdAddr)!;
 
     const mFg = tilematch(prg, map, 17, 0, fbin, defs, usedTiles([fg.tilemapBytes]), true);
@@ -649,12 +664,16 @@ async function np3(ctx: Ctx, res: GenResult): Promise<void> {
     const fgColl = Array.from(mFg.coll!);
     let fgErr = mFg.errs.slice();
     const fgPx = mFg.cells;
-    check(newFg.length === 1024 && newBg.length === 1024 && fgColl.length === 1024, "np3 shaft size");
+    check(newFg.length === 1024 && newBg.length === 1024 && fgColl.length === 1024, stage + " shaft size");
 
     const td = copyDefs(defs);
     const used = stageUsed(st, tdAddr);
     const reserved = new Set<number>([0, ...newFg, ...DOOR_TILES, ...TRAPDOOR_TILES]);
-    const free = freeTiles(td.cols.length, reserved, used);
+    const emptySlot = (d: TileDefs, i: number): boolean => !d.tiles[i] && !d.pages[i] && !d.cluts[i] && !d.cols[i];
+    // NO3: only slots no tilemap uses whose four entries are all 0
+    const free = patch
+        ? freeTiles(td.cols.length, reserved, used).filter((i) => !used.has(i) && emptySlot(td, i))
+        : freeTiles(td.cols.length, reserved, used);
 
     const retailFg = fg.tilemap;
     const retailBg = bg.tilemap;
@@ -720,7 +739,36 @@ async function np3(ctx: Ctx, res: GenResult): Promise<void> {
     outRooms[shaft][6] = 9;
     const lr = rooms[load];
     outRooms.push([3, 44, 3, 44, newLayerId, lr[5], lr[6], lr[7]]);
-    outRooms.push([4, 44, 4, 44, TP_NP3_TO_GDN, 0xff, 0, 0]);
+    outRooms.push([4, 44, 4, 44, tp, 0xff, 0, 0]);
+    if (patch) {
+        // the forest run to row 46, with its layers' rects (only checked here:
+        // the layers are not among the arrays)
+        for (const [i, [, t, , b, row]] of NO3_FOREST) {
+            outRooms[i][1] = outRooms[i][3] = row;
+            for (const idx of roomdefs[rooms[i][4]]) {
+                if (idx < 0) {
+                    continue;
+                }
+                const lay = layers[idx];
+                if (!lay.left && !lay.top && !lay.right && !lay.bottom) {
+                    continue; // a layer without a rect (the forest's backdrop)
+                }
+                check(lay.top === t && lay.bottom === b, stage + " forest layer rect " + idx);
+                let users = 0;
+                for (const r2 of rooms) {
+                    const rd = roomdefs[r2[4]];
+                    check(rd !== undefined, stage + " room layer id " + r2[4]);
+                    users += rd[0] === idx || rd[1] === idx ? 1 : 0;
+                }
+                check(users === 1, "forest layer " + idx + " shared");
+            }
+        }
+        for (const [cx, cy] of [[2, 43], [2, 44], [3, 44], [4, 44]]) {
+            check(!outRooms.some((r, i) => i !== shaft && r.slice(0, 4).join() !== [cx, cy, cx, cy].join() &&
+                                     r[0] <= cx && cx <= r[2] && r[1] <= cy && cy <= r[3]),
+                  stage + " cell taken " + cx + "," + cy);
+        }
+    }
     const [sx, sy] = SAVE_ROOM;
     outRooms[save].splice(0, 5, sx, sy + 1, sx, sy + 1, saveLayerId);
     const realSave = rooms[findRoom(rooms, [...SAVE_ROOM_LAYOUT_FROM, ...SAVE_ROOM_LAYOUT_FROM])];
@@ -732,10 +780,24 @@ async function np3(ctx: Ctx, res: GenResult): Promise<void> {
     arrays.set("g_ModShaftFg", u16Arr(newFg));
     arrays.set("g_ModShaftBg", u16Arr(newBg));
     arrays.set("g_ModSaveFg", u16Arr(saveFg));
-    tdArrays(arrays, "g_ModShaftTd", td);
+    if (patch) {
+        // {slot, gfxPage, gfxIndex, clut, collision} for the stage's tileset
+        const changed: number[] = [];
+        for (let i = 0; i < td.cols.length; i++) {
+            if (td.tiles[i] !== defs.tiles[i] || td.pages[i] !== defs.pages[i] ||
+                td.cluts[i] !== defs.cluts[i] || td.cols[i] !== defs.cols[i]) {
+                changed.push(i);
+            }
+        }
+        check(changed.length > 0 && !changed.some((i) => used.has(i) || reserved.has(i)), "patched slots in use");
+        check(changed.every((i) => emptySlot(defs, i)), "patched slots not empty");
+        arrays.set("g_ModTiledefPatch", u16Arr(changed.flatMap((i) => [i, td.tiles[i], td.pages[i], td.cluts[i], td.cols[i]])));
+    } else {
+        tdArrays(arrays, "g_ModShaftTd", td);
+    }
     arrays.set("g_ModRooms", roomsArray(outRooms));
-    res.headers.set("src/st/np3/mod_rooms.h", arrays);
-    res.binaries.set("build/us/F_NP3.BIN", fbin);
+    res.headers.set(`src/st/${stage}/mod_rooms.h`, arrays);
+    res.binaries.set(`build/us/F_${stage.toUpperCase()}.BIN`, fbin);
 }
 
 const RNO3_SHAFT = 1;
@@ -1056,6 +1118,7 @@ export async function buildModRooms(sat: Reader, psx: Reader): Promise<GenResult
     const res: GenResult = { headers: new Map(), binaries: new Map() };
     const ctx: Ctx = { sat, psx };
     await np3(ctx, res);
+    await np3(ctx, res, "no3");
     await wrp(ctx, res, "wrp");
     await rno3(ctx, res);
     await wrp(ctx, res, "rwrp");

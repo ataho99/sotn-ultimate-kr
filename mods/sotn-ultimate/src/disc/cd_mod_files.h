@@ -87,7 +87,12 @@ static s32 ModJpSfx(s32 psp) {
 // shots cut them off. Seiryuu's sound (0x889) is a loop for her: channels
 // 22/23, which her dragon releases (src/ric). Death 0x6FF / grab 0x6F6 are
 // 90 in retail too; she never plays 0x705 (collision.h)
-static const u16 g_ModMarSfxPrio[][3] = {
+// (the priorities fit a byte: 4-byte rows, for DRA room)
+static const struct {
+    u16 id;
+    u8 retail;
+    u8 maria;
+} g_ModMarSfxPrio[] = {
     // id, retail, Saturn Maria
     {0x6F9, 80, 90}, {0x6FA, 80, 90}, {0x6FB, 80, 90}, // grunts
     {0x6FC, 80, 90}, {0x702, 81, 90},                  // kick, hurt
@@ -103,8 +108,8 @@ static void ModMarSfxPrio(s32 maria) {
     s32 i;
 
     for (i = 0; i < LEN(g_ModMarSfxPrio); i++) {
-        g_SfxData[g_ModMarSfxPrio[i][0] - SFX_START].unk6 =
-            g_ModMarSfxPrio[i][maria ? 2 : 1];
+        g_SfxData[g_ModMarSfxPrio[i].id - SFX_START].unk6 =
+            maria ? g_ModMarSfxPrio[i].maria : g_ModMarSfxPrio[i].retail;
     }
     g_SfxData[0x889 - SFX_START].mode =
         maria ? SFX_MODE_CHANNELS_22_23 : SFX_MODE_CHANNELS_12_19;

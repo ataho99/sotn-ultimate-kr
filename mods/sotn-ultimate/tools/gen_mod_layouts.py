@@ -207,6 +207,17 @@ STAGES = {
         "add": [],
         "move": [{"x": 0x110, "y": 0xC0, "eid": 0x000B, "params": 5, "slot": 0x18}],
     },
+    # the first visit's Entrance (NO3) gets the same shaft (gen_mod_rooms.py
+    # np3("no3")) and the same list (layout 2 of NO3 too; its first room's
+    # copy above is mod_layout.h, so this one is mod_layout2.h). Filled in
+    # below from "np3"'s entities.
+    "no3#2": {
+        "bin": "disks/us/ST/NO3/NO3.BIN",
+        "tables": (0x8018077C, 0x80180850),
+        "layout": 2,
+        "suffix": "2",
+        "replace": True,
+    },
     "np3": {
         "bin": "disks/us/ST/NP3/NP3.BIN",
         "tables": (0x80180728, 0x801807FC),
@@ -305,6 +316,10 @@ def fmt(rec):
     ident = eid if isinstance(eid, str) else "0x%04X" % eid
     return "    {0x%04X, 0x%04X, %s | 0x%04X, 0x%04X, 0x%04X},\n" % (
         x, y, ident, flags, slot, params)
+
+
+STAGES["no3#2"]["id_check"] = STAGES["np3"]["id_check"]
+STAGES["no3#2"]["add"] = STAGES["np3"]["add"]
 
 
 def write(stage, spec, xs, ys):

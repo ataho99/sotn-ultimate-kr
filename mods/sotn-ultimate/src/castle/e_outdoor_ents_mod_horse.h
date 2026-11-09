@@ -12,7 +12,6 @@ extern u8 g_ModHorseLz[];
 extern ModHorseStrip g_ModHorseStrips[];
 extern s16* g_ModHorseSprites[];
 extern u16 g_ModHorsePals[];
-extern s16** spriteBanks[];
 
 // the Saturn's hoofbeat in NO3's bank, in the slot of the unused
 // SFX_SCIFI_BLAST (mods/sotn-ultimate/tools/gen_no3_sounds.py). The Saturn
@@ -101,8 +100,10 @@ static void ModHorseInit(Entity* self) {
     RECT rect;
     s32 i;
 
-    // the sprite bank (NO3's spriteBanks 10+ are empty)
-    spriteBanks[MOD_HORSE_BANK] = (s16**)g_ModHorseSprites;
+    // the sprite bank (NO3's banks 10+ are empty), in the table the stage
+    // header gives DRA: with the Garden shaft that is the rodata copy
+    // g_ModSpriteBanks (castle/no3/header_mod_shaft.h), not spriteBanks
+    g_api.o.spriteBanks[MOD_HORSE_BANK] = (SpriteParts*)g_ModHorseSprites;
     // the palettes (RAM copy and VRAM)
     for (i = 0; i < MOD_HORSE_NPALS * COLORS_PER_PAL; i++) {
         ((u16*)g_Clut)[MOD_HORSE_PAL * COLORS_PER_PAL + i] = g_ModHorsePals[i];

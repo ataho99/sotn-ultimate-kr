@@ -121,7 +121,7 @@ wraps only one part's include, it is that part's switch.
 | `garden/gdn`, `garden/rgdn` | The Underground Garden and the Hell Garden (stage sources, built by `build_gdn.sh` / `build_rgdn.sh`). | `MOD_SATURN` |
 | `prison/prs`, `prison/rprs` | The Cursed Prison and the Soul Prison (`build_prs.sh` / `build_rprs.sh`). | `MOD_SATURN` |
 | `enemies` | The Saturn enemies the four stages share, the Cave Troll for the Hell Garden, their collision table entries, the bestiary list. | `MOD_SATURN_ENEMIES` |
-| `castle` | Edits to retail stages: the Entrance shaft (`np3`, `rno3`), the candles and sconces, the sixth warp room, the Ghost, the horse ride. | `MOD_SATURN_CASTLE` |
+| `castle` | Edits to retail stages: the Entrance shaft (`np3`, `no3`, `rno3`), the candles and sconces, the sixth warp room, the Ghost, the horse ride. | `MOD_SATURN_CASTLE` |
 | `items` | The Saturn weapons (`weapon/w_060`-`063.c`, built by `build_saturn_weapon.sh`), the capes, the spear's animations, Glaring Cloth, the third hand. | `MOD_SATURN_ITEMS` |
 | `maria_saturn` | The Saturn Maria: her deltas to Richter's code, her HUD, her boss fight. | `MOD_SATURN_MARIA` |
 | `maria_psp` | The PSP Maria on the PS1 (`mar2.c`, `MARIA2.BIN`, `build_mar2.sh`) and the PSP boss glue (`mod_cenp.c`, `build_cenp.sh`). | `MOD_CENP_BOSS` |
@@ -432,8 +432,9 @@ Defined in `src/save_mgr.h` and `include/game.h`.
 - SEL's own saves (the ending's, the file menu's) go through DRA's
   `StoreSaveData`, via `g_ModDub.storeSave`, so they are written in the same
   format.
-- The Castle Entrance save room moved from (3,42) to (3,43), and the Reverse
-  Entrance's from (60,21) to (60,20). Loading moves old saves made there.
+- The Castle Entrance save room moved from (3,42) to (3,43), in both Entrance
+  stages (NO3, the first visit, and NP3), and the Reverse Entrance's from
+  (60,21) to (60,20). Loading moves old saves made there.
 - `src/st/sel/32D6C.c`: the file list shows the real save place of a
   mod-area save.
 
@@ -786,7 +787,7 @@ the included header.
 | `42398.c` | Debug and capture code removed, `MOD_DRA_PAD`, scene-seen bits at boot. |
 | `47BB8.c` | Sim loader removed; its buffers become `g_ModDub`. |
 | `4A538.c` | Rainbow Mantle cape colours; palette-viewer checks removed. |
-| `5087C.c` | New teleports, moved save room door, stage music per character, test warp aid. |
+| `5087C.c` | New teleports, stage music per character, test warp aid. |
 | `5D5BC.c` | Relic 30 outside `relics[]`, JP familiar stats in castle flags, Saturn level-up MP rule. |
 | `5F60C.c` | Glaring Cloth / Rainbow Mantle cape colours, new-game scene bits, `g_ModSubwpnIcons`. |
 | `62DEC.c` | Maria walk-step snap; a write-only reset removed. |
@@ -844,11 +845,11 @@ the included header.
 | `src/st/{np3,rno3}/*` | Entrance shaft extended to the Garden / Hell Garden, sconces and candelabras, moved save room. |
 | `src/st/{wrp,rwrp}/*` | The sixth warp room. |
 | `src/st/no1/*` | The optional cut Ghost (`MOD_OUTER_WALL_GHOST`). |
-| `src/st/no3/*` | Richter's and Maria's horse ride, Death's music, first-room layout. |
+| `src/st/no3/*` | Richter's and Maria's horse ride, Death's music, first-room layout; the Entrance shaft to the Garden on the first visit too (as the Saturn's STAGE_0X), the forest run on row 46, the moved save room. |
 | `src/st/cen/*` | Saturn Maria boss fight; `MOD_CENP` hooks. |
 | `src/st/cen_psp/*` | PS1 build of the PSP boss (`MOD_CENP_BOSS`); its glue is `mods/sotn-ultimate/src/maria_psp/mod_cenp.c`. |
 | `src/st/lib/e_shop.c` | Saturn 164-entry bestiary list. |
-| `src/st/np3/e_breakable.c`, `src/st/rno3/e_breakable.c` | Saturn candle tables (retail tables kept in place). |
+| `src/st/{np3,no3,rno3}/e_breakable.c` | Saturn candle tables (retail tables kept in place). |
 | `src/st/no0/e_slinger.c`, `src/st/rnz0/e_bitterfly.c` | Bodies moved to `src/st/e_slinger.h` / `e_bitterfly.h` so the new stages can share them. |
 | `src/st/sel/2C048.c` | Saturn character select, sound mode, dub and balance rows, JP table copy, menu text. |
 | `src/st/sel/32D6C.c`, `34B30.c` | Save place of mod areas; Maria ending sprite; "STAFF" credits-only ending. |

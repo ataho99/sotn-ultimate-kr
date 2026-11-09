@@ -59,6 +59,18 @@ VOLUME = 80
 # mods/sotn-ultimate/tools/repack_xa.py drops the region's unused interleave slots, so a
 # track costs only its own length (the unpacked region is 8 x the longest)
 MIN_SECONDS = 270  # SD2C x4, SD25 x3, the others x2: a seek every ~4.5 min
+# and that seek goes to the loop's quietest stretch (satxa enc's fade_ms):
+# the loop entry moves there, the data plays on to the same point a pass
+# later and fades out over JUMP_FADE_MS, so the pause falls where the music
+# is already quiet (Cursed Prison: a silent bar) instead of mid-phrase
+JUMP_FADE_MS = 100
+# not for the tracks only the Sound Mode player plays (no game music):
+# they keep the seek at the loop end
+JUMP_SKIP = ("SD24.PCM", "SD28.PCM")
+
+
+def jump_fade_ms(pcm):
+    return 0 if pcm in JUMP_SKIP else JUMP_FADE_MS
 VSYNC_HZ = 53693175 / (3413 * 263)
 
 # (MU_ name, Saturn file, gain): gains bring the Saturn mixes (RMS 9195,
@@ -118,7 +130,7 @@ def build():
         xa = os.path.join(WORK, pcm + ".xa")
         out = subprocess.run([SATXA, "enc", os.path.join(ROOT, "disks/saturn/SD", pcm),
                               xa, str(MOD_XA_FILE + k // 8), str(k % 8), str(gain),
-                              str(MIN_SECONDS)],
+                              str(MIN_SECONDS), str(jump_fade_ms(pcm))],
                              check=True, capture_output=True, text=True).stdout.split()
         info = dict(zip(out[0::2], out[1::2]))
         info["xa"] = xa
@@ -215,8 +227,9 @@ def build():
         f.write("#ifdef MOD_XA_MUSIC_TABLE\n")
         f.write("static const XaMusicConfig g_ModXaMusicConfigs[] = {\n")
         for k, ((name, pcm, gain), info) in enumerate(zip(TRACKS, infos)):
-            f.write("    // %s: intro %.2f s, loop %.2f s x %d\n" % (
-                pcm, float(info["intro_seconds"]), float(info["loop_seconds"]), int(info["repeats"])))
+            f.write("    // %s: to the loop entry %.2f s (%d sectors into the loop), loop %.2f s x %d\n" % (
+                pcm, float(info["intro_seconds"]), int(info["quiet_sectors"]),
+                float(info["loop_seconds"]), int(info["repeats"])))
             for e in entries(k, info):
                 f.write("    {%d, %d, %d, %d, %d, %d, %d},\n" % tuple(e))
         for j, (name, at3, gain, like, vol) in enumerate(ONESHOTS):

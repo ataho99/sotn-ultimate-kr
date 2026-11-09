@@ -72,12 +72,13 @@
 #endif
 
 // z: the tree itself, its hanging faces and its trunk base stand behind
-// Alucard (0x94) as on the Saturn (MOD_TREE_BODY_Z, verified against a Saturn
-// capture); what it throws and sheds, the falling faces and the leaves, flies
+// Alucard (0x94) as on the Saturn, and behind dropped items (center - 0x14,
+// 0x80; e_collect.h), which land in front of it: faces 0x7F, trunk 0x7D,
+// base 0x78. What it throws and sheds, the falling faces and the leaves, flies
 // in front, above room 0's flowers (fg 0xA0 on the PS1, see
 // MOD_GDN_ENEMY_FRONT_Z in gdn.h)
 #ifndef MOD_TREE_BODY_Z
-#define MOD_TREE_BODY_Z 0x8C
+#define MOD_TREE_BODY_Z 0x7F
 #endif
 #ifndef MOD_TREE_Z
 #ifdef MOD_GDN_ENEMY_FRONT_Z

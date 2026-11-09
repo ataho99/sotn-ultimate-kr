@@ -127,6 +127,9 @@ const LAYOUTS: LayoutSpec[] = [
       idCheck: [], add: [], move: ORB_MOVE },
     { key: "np3#2", bin: "ST/NP3/NP3.BIN", tables: [0x80180728, 0x801807fc], layout: 1, suffix: "2",
       idCheck: [], add: [], move: ORB_MOVE },
+    // the first visit's Entrance: the same shaft list as np3's (filled in below)
+    { key: "no3#2", bin: "ST/NO3/NO3.BIN", tables: [0x8018077c, 0x80180850], layout: 2, suffix: "2", replace: true,
+      idCheck: [], add: [] },
     { key: "np3", bin: "ST/NP3/NP3.BIN", tables: [0x80180728, 0x801807fc], layout: 2, replace: true,
       idCheck: [["E_BREAKABLE", 0x01], ["E_RED_DOOR", 0x05]], add: [
           { x: 70, y: 480, id: "E_BREAKABLE", flags: 0xa000, slot: 0x101, params: 0x2000 },
@@ -151,6 +154,12 @@ const LAYOUTS: LayoutSpec[] = [
     { key: "rno0", bin: "ST/RNO0/RNO0.BIN", tables: [0x80180754, 0x80180828], layout: 1,
       idCheck: [["E_RED_DOOR", 0x05]], add: [{ x: 8, y: 97, id: "E_RED_DOOR", slot: 0x90, params: 0 }] },
 ];
+{
+    const no3 = LAYOUTS.find((l) => l.key === "no3#2")!;
+    const np3 = LAYOUTS.find((l) => l.key === "np3")!;
+    no3.idCheck = np3.idCheck;
+    no3.add = np3.add;
+}
 
 // (x, y, entity id, flags, slot, params); the compiled record is x, y,
 // id | flags, slot, params
@@ -246,6 +255,9 @@ interface SconceSpec {
 const SCONCES: SconceSpec[] = [
     { header: "src/st/np3/mod_sconce.h", prg: "STAGE_01", bank16: [0x060f610c, 0x060f60bc], glow: 0x060f8262,
       sclutBase: 0x2f4, glowFlip: 0 },
+    // the first visit's Entrance (NO3): NP3's candelabra, same slots
+    { header: "src/st/no3/mod_sconce.h", prg: "STAGE_01", bank16: [0x060f610c, 0x060f60bc], glow: 0x060f8262,
+      sclutBase: 0x2f4, glowFlip: 0 },
     { header: "src/st/rno3/mod_sconce.h", prg: "RSTAGE01", bank16: [0x060eed94, 0x060eed44], glow: 0x060f0b52,
       sclutBase: 0x2f0, glowFlip: 3 },
 ];
@@ -253,7 +265,7 @@ const SCONCE_FRAMES = [1, 2, 3, 4, 5];
 const GLOW_COLOURS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x8044, 0x8067, 0x808a, 0x80ce, 0x8112, 0];
 const SCONCE_QUADRANT: [number, number] = [18, 0];
 
-// src/st/{np3,rno3}/mod_sconce.h: g_ModSconceArt (u8), g_ModSconceFrame1-5
+// src/st/{np3,no3,rno3}/mod_sconce.h: g_ModSconceArt (u8), g_ModSconceFrame1-5
 // (s16), g_ModSconcePals (u16), g_ModCandleGlow (s16 [4][8]). Reads the
 // Saturn's STAGE_01 / RSTAGE01 .PRG / .CHR and 0.BIN. Also returns the
 // numbers inside the non-parsed tables: the art's rows (GFX_ENTRY) and the

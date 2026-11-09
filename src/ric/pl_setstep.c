@@ -408,6 +408,9 @@ bool RicDoAttack(void) {
 }
 #endif
 
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+extern u32 g_ModCrashWaitTimer; // pl_steps.c
+#endif
 bool RicDoCrash(void) {
     SubweaponDef subWpn;
     Entity* subWpnEnt;
@@ -443,6 +446,10 @@ bool RicDoCrash(void) {
     subWpnID = RicCheckSubweapon(&subWpn, true, true);
     g_Player.unk46 = 4;
     g_Player.unk4E = 0;
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+    // the crash's wait timeout starts over (pl_steps.c)
+    g_ModCrashWaitTimer = 0;
+#endif
     PLAYER.velocityX = PLAYER.velocityY = 0;
     switch (subWpnID) {
     case SUBWPN_NONE:

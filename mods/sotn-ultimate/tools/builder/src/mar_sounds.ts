@@ -90,6 +90,10 @@ const STEPS: Caps[] = [
         ({ spell: n, seiryu: r, sfx: f, long: Math.min(f, 5500), buzz: 14000, roar: 2205 })),
 ];
 const VOICE_PEAK = 29200;
+// her attacks' sounds (class "sfx") as the voice: the synth's half-scale
+// mix (saturn_sfx.MIX_GAIN) left them 6 dB under the Saturn's balance with
+// her voice (the user's pick, 2026-11-07), as far as the headroom allows
+const SFX_GAIN = 2.0;
 const ADSR = [0x80FF, 0x5FC0];
 
 // sfx_config.yaml entries the banks use (PS1 sound id -> entry)
@@ -272,6 +276,7 @@ async function buildBank(a: AudioModule, src: Sources, inp: MarInputs, bank: num
         }
     };
     const shared = new Map<string, [number, number]>();
+    const loops = new Set<number>(); // the looping samples' vag numbers
     const oneShot = (prog: number, vag: number, c: number, f: number): Tone =>
         ({ ...template, prog, vag, vol: 127, pan: 64, center: c, shift: f, min: 0, max: 127, adsr1: ADSR[0], adsr2: ADSR[1] });
     for (const [name, b, ps1, kind0, src0, cls] of SOUNDS) {
@@ -322,6 +327,9 @@ async function buildBank(a: AudioModule, src: Sources, inp: MarInputs, bank: num
             peak = Math.max(peak, Math.abs(v));
         }
         let gain = Math.min(127.0 / e.volume, 32000.0 / peak);
+        if (cls === "sfx") {
+            gain = Math.min(SFX_GAIN * 127.0 / e.volume, 32000.0 / peak);
+        }
         if (cls === "voice" || cls === "spell") {
             gain = Math.min(VOICE_PEAK / peak * 127.0 / e.volume, 32000.0 / peak);
         }
@@ -329,6 +337,7 @@ async function buildBank(a: AudioModule, src: Sources, inp: MarInputs, bank: num
         let vag = satxa(a, "vag", makeWav(out, rate), []);
         if (kind === "loop") {
             vag = setLoop(vag, LOOP_START);
+            loops.add(vab.vags.length + 1);
         }
         vab.vags.push(vag);
         shared.set(key, [vab.vags.length, rate]);
@@ -337,6 +346,22 @@ async function buildBank(a: AudioModule, src: Sources, inp: MarInputs, bank: num
             throw new Error(name + ": centre note out of range");
         }
         tones[e.tone] = oneShot(e.prog, vab.vags.length, c, f);
+    }
+    // the pair voice. The game plays a sound on its tone and the next one
+    // (src/dra/sound.c func_80132A04) and frees its channel group only once both
+    // voices stop. Left as the blank, whose centre note (the template's) is far
+    // above her notes, that voice never stopped: her grunts and hurt sounds held
+    // the groups at priority 90 and the stage's sounds stayed silent until the
+    // next stage. So the pair voice is the sound itself at volume 0, ending with
+    // it (the retail banks pair a tone with its copy). Not the loop's: Seiryuu
+    // plays on channels 22/23, which her dragon releases
+    for (const tl of vab.tones.values()) {
+        const real = tl.map((t) => t.vag > 1 && !loops.has(t.vag));
+        for (let t = 0; t < 15; t++) {
+            if (real[t] && tl[t + 1].vag === 1) {
+                tl[t + 1] = { ...tl[t], vol: 0 };
+            }
+        }
     }
     return vab;
 }

@@ -54,6 +54,18 @@ SCLUT_BASE = 0x2F4
 COMMENT = "the Saturn's tall candelabra (Cursed Prison art) for the shaft's candles"
 GLOW_FLIP = 0
 
+# The first visit's Entrance (NO3) has the same shaft (gen_mod_rooms.py):
+# the same candelabra, from STAGE_01's bank (the Saturn's STAGE_0X draws the
+# same art). Same slots: NO3's gfxBanks 7-19 and spriteBanks 10+ are empty,
+# its stage palettes end at 0x2EF (and the horse ride's, 0x2D9.., are only
+# loaded in the forest run).
+NO3 = {
+    "GEN": os.path.join(ROOT, "src/st/no3/gen"),
+    "OUT": os.path.join(ROOT, "src/st/no3/mod_sconce.h"),
+    "STAGE": "no3",
+    "SPRITE_BANKS_H": os.path.join(ROOT, "src/st/no3/gen/sprite_banks.h"),
+}
+
 # The Reverse Entrance (RNO3)'s shaft, as the Saturn's inverted one
 # (RSTAGE01 candle type 3, config 0x060F0BC4: bank 0x060EED94, frames
 # 0x060EED44, glow 0x060F0B52; its art hangs from the ceiling, the flames
@@ -197,6 +209,8 @@ def main():
 
 
 if __name__ == "__main__":
+    main()
+    globals().update(NO3)
     main()
     globals().update(RNO3)
     main()

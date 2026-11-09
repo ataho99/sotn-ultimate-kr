@@ -288,6 +288,12 @@ h1 {
 @keyframes dots { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
 #notice { margin: 10px 0 0; color: var(--blood); font-size: 14px; }
 #notice:empty { display: none; }
+#added { margin: 10px 0 0; color: var(--dim); font-size: 14px; }
+#added:empty { display: none; }
+.pick1 { font: inherit; font-variant: small-caps; letter-spacing: .12em; font-size: 13px;
+         color: var(--ink); background: transparent; border: 1px solid var(--gold-deep);
+         border-radius: 3px; padding: 2px 10px; margin-left: 10px; cursor: pointer; }
+.pick1:hover, .pick1:focus { color: var(--gold); border-color: var(--gold); }
 
 /* the page takes dropped files anywhere */
 #veil { position: fixed; inset: 0; display: none; place-items: center; z-index: 5;
@@ -362,14 +368,17 @@ footer { text-align: center; color: var(--faint); font-size: 13px; margin-top: 8
     <div class="edition" id="edition">PS1 Version</div>
     <div class="rule">&#x2766;</div>
     <p class="lede">Builds the patched disc from your own three discs. Everything runs in this page,
-      on your PC; nothing is uploaded. Use a PC with Chrome, Edge or Firefox.</p>
+      on your device; nothing is uploaded. Works best on a PC with Chrome, Edge or Firefox. On a phone,
+      add the discs one at a time with their choose buttons; the build holds the whole disc in memory,
+      so it needs a phone with plenty of free memory.</p>
   </header>
 
   <section class="win" id="drop">
     <div class="label">Your discs</div>
     <p class="hint">Drop the disc images anywhere on this page, or
-      <label>pick them<input type="file" id="pick" multiple hidden></label>.</p>
+      <label id="pick" tabindex="0">pick them</label>, or choose each one below.</p>
     <div id="items"></div>
+    <p id="added"></p>
     <p id="notice"></p>
   </section>
 
@@ -434,8 +443,9 @@ function render() {
   for (const kind of ["ps1", "saturn", "psp"]) {
     const d = found[kind];
     const [tag, system] = SLOTS[kind];
-    rows.push(!d ? slot("wait", tag, esc(NEEDED[kind].name), esc(system + " · " + NEEDED[kind].serial), "waiting")
-      : slot(d.ok ? "ready" : "bad", tag, esc(d.note), esc(d.file + " · " + d.serial), d.ok ? "ready" : "wrong disc"));
+    const btn = building ? "" : `<button class="pick1">${d ? "change" : "choose"}</button>`;
+    rows.push(!d ? slot("wait", tag, esc(NEEDED[kind].name), esc(system + " · " + NEEDED[kind].serial), "waiting" + btn)
+      : slot(d.ok ? "ready" : "bad", tag, esc(d.note), esc(d.file + " · " + d.serial), (d.ok ? "ready" : "wrong disc") + btn));
   }
   $("items").innerHTML = rows.join("");
   const missing = ["ps1", "saturn", "psp"].filter((k) => !(found[k] && found[k].ok)).length;
@@ -443,20 +453,46 @@ function render() {
   $("buildSub").textContent = building ? "working…" : missing ? `waiting for ${missing} more` : "all set";
 }
 
+const ROW = { ps1: "PS1", saturn: "Saturn", psp: "PSP" };
+
+// files: a copy (the input's live list changes with the next pick)
 async function add(files) {
-  const notes = [];
+  const notes = [], added = [];
   for (const f of files) {
-    const info = await identify(fileSource(f));
+    let info;
+    try {
+      info = await identify(fileSource(f));
+    } catch (err) {
+      notes.push(f.name + ": could not be read (" + (err && err.message || err) +
+                 "). On a phone, copy the file into the phone's own storage and pick it from there.");
+      continue;
+    }
     info.file = f.name;
     info.source = fileSource(f);
     if (info.kind) {
+      const before = found[info.kind];
+      added.push(before && before.file !== f.name
+        ? f.name + " took the place of " + before.file + " in the " + ROW[info.kind] + " row"
+        : f.name + " → " + ROW[info.kind] + " row");
       found[info.kind] = info;
     } else {
       notes.push(f.name + ": " + info.note);
     }
   }
+  $("added").textContent = added.join(" · ");
   $("notice").textContent = notes.join(" — ");
   render();
+}
+
+// a new input every time: some phone browsers drop or reuse the previous
+// selection when the same input opens again
+function pickFiles() {
+  if (building) return;
+  const input = document.createElement("input");
+  input.type = "file";
+  input.multiple = true;
+  input.onchange = () => add([...input.files]);
+  input.click();
 }
 
 $("build").onclick = async () => {
@@ -521,7 +557,9 @@ $("saveBin").onclick = () => save(MANIFEST.name + ".bin", new Blob([result], { t
 $("saveCue").onclick = () => save(MANIFEST.name + ".cue", new Blob([
   `FILE "${MANIFEST.name}.bin" BINARY\r\n  TRACK 01 MODE2/2352\r\n    INDEX 01 00:00:00\r\n`], { type: "text/plain" }));
 
-$("pick").onchange = (e) => add(e.target.files);
+$("pick").onclick = pickFiles;
+$("pick").onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickFiles(); } };
+$("items").onclick = (e) => { if (e.target.closest(".pick1")) pickFiles(); };
 let depth = 0;
 document.addEventListener("dragenter", (e) => { e.preventDefault(); depth++; document.body.classList.add("dragging"); });
 document.addEventListener("dragleave", () => { if (--depth <= 0) { depth = 0; document.body.classList.remove("dragging"); } });
@@ -531,7 +569,7 @@ document.addEventListener("drop", (e) => {
   depth = 0;
   document.body.classList.remove("dragging");
   if (!building) {
-    add(e.dataTransfer.files);
+    add([...e.dataTransfer.files]);
   }
 });
 render();

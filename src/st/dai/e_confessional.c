@@ -71,6 +71,20 @@ extern EInit g_EInitConfessionalGhost;
 extern EInit g_EInitConfessionalBlades;
 extern bool g_confessionalChimeActive;
 
+#if defined(MOD_SATURN_CASTLE) && !defined(VERSION_PSP)
+// SOTN Ultimate: the PSP's stop of the priest's prayer (UNK_4E7), but sent
+// once: the PSP sends it every frame while the stream still plays, and here
+// the stops piled up in DRA's CD queue while it faded out, then ran after
+// EntityEndConfessionalChime (e_end_chime.c) had restarted the chapel
+// music, cutting it off. activateChime is the PSP's, unused on this path.
+static void ModStopPrayer(Entity* self) {
+    if (!self->ext.confessionalGhost.activateChime && g_api.func_80131F68()) {
+        g_api.PlaySfx(SET_UNK_90);
+        self->ext.confessionalGhost.activateChime = true;
+    }
+}
+#endif
+
 static AnimateEntityFrame anim_priest_move[] = {
     {9, 12}, {15, 13}, {15, 14}, {9, 15}, {15, 14}, {15, 13}, POSE_LOOP(0)};
 static AnimateEntityFrame anim_priest_sit_good[] = {
@@ -171,6 +185,9 @@ void EntityConfessionalGhost(Entity* self) {
         }
         break;
 #else
+#ifdef MOD_SATURN_CASTLE
+        self->ext.confessionalGhost.activateChime = false; // ModStopPrayer
+#endif
         if (self->params & CONFESSIONAL_GHOST_PARISHIONER) {
             g_api.PlaySfx(SET_UNK_90);
             g_api.PlaySfx(MU_SEQ_CONFESSIONAL_BELLS);
@@ -201,7 +218,7 @@ void EntityConfessionalGhost(Entity* self) {
                 SetStep(CONFESSIONAL_GHOST_BAD_SIT);
             } else {
                 SetStep(CONFESSIONAL_GHOST_GOOD_SIT);
-#ifdef VERSION_PSP
+#if defined(VERSION_PSP) || defined(MOD_SATURN_CASTLE)
                 if (!(self->params & CONFESSIONAL_GHOST_PARISHIONER)) {
                     g_api.PlaySfx(UNK_4E7);
                 }
@@ -219,7 +236,7 @@ void EntityConfessionalGhost(Entity* self) {
         if (!(self->params & CONFESSIONAL_GHOST_PARISHIONER)) {
             switch (self->step_s) {
             case CONFESSIONAL_GHOST_GOOD_INIT:
-#ifdef VERSION_PSP
+#if defined(VERSION_PSP) || defined(MOD_SATURN_CASTLE)
                 if (g_api.func_80131F68() == 1) {
                     self->ext.confessionalGhost.timer = 288;
                     self->step_s++;
@@ -243,6 +260,8 @@ void EntityConfessionalGhost(Entity* self) {
                 if (g_api.func_80131F68()) {
                     g_api.PlaySfx(SET_UNK_90);
                 }
+#elif defined(MOD_SATURN_CASTLE)
+                ModStopPrayer(self);
 #endif
                 SetStep(CONFESSIONAL_GHOST_GOOD_DEPART);
             }
@@ -252,6 +271,8 @@ void EntityConfessionalGhost(Entity* self) {
             if (g_api.func_80131F68()) {
                 g_api.PlaySfx(SET_UNK_90);
             }
+#elif defined(MOD_SATURN_CASTLE)
+            ModStopPrayer(self);
 #endif
             SetStep(CONFESSIONAL_GHOST_GOOD_DEPART);
         }
@@ -262,6 +283,10 @@ void EntityConfessionalGhost(Entity* self) {
 #ifdef VERSION_PSP
         if ((self->ext.confessionalGhost.timer) && (g_api.func_80131F68())) {
             g_api.PlaySfx(SET_UNK_90);
+        }
+#elif defined(MOD_SATURN_CASTLE)
+        if (self->ext.confessionalGhost.timer) {
+            ModStopPrayer(self);
         }
 #endif
         if (!(--self->opacity)) {

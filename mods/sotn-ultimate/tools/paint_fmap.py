@@ -37,9 +37,12 @@ PRISON = ([(x, 34) for x in range(32, 37)] + [(x, 35) for x in range(33, 36)]
           + [(x, 36) for x in range(27, 36)])
 
 # PS1-only: the mod's moved save room (gen_mod_rooms.py SAVE_ROOM -> (3,43)),
-# door on its left, into the shaft cell (2,43). (3,42) is kept: NO3 (first
-# visit) and the inverted castle still use it.
+# door on its left, into the shaft cell (2,43). (3,42) is kept (the inverted
+# castle's map mirrors it), but its door to the shaft is wall: both Entrance
+# stages (NO3 and NP3) and the inverted one moved their save room behind the
+# shaft's alcove.
 MOD_SAVE = (3, 43)
+OLD_SAVE_DOOR = (4 * 3, 4 * 42 + 2)  # (X, Y): (3,42)'s left edge, middle row
 
 
 def load_ps(path):
@@ -156,6 +159,7 @@ def main():
     sat = load_sat(sys.argv[2])
     paint(ps, sat, CELLS + PRISON)
     paint_mod_save(ps, 1 if (2, 43) in BOUGHT else 2)
+    ps[OLD_SAVE_DOOR[1], OLD_SAVE_DOOR[0]] = 0
     save_ps(ps, sys.argv[3])
     if len(sys.argv) > 4:
         preview(ps, sys.argv[4], set(CELLS + PRISON) | {MOD_SAVE})

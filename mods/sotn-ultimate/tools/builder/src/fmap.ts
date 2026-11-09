@@ -19,6 +19,9 @@ const PRISON: [number, number][] = [
     ...range(27, 36).map((x): [number, number] => [x, 36]),
 ];
 const MOD_SAVE: [number, number] = [3, 43];
+// (X, Y): the old save room (3,42)'s left edge, middle row: its door to the
+// shaft is wall
+const OLD_SAVE_DOOR: [number, number] = [4 * 3, 4 * 42 + 2];
 // PS1 window column -> Saturn columns
 const COLS: number[][] = [[0], [1], [2, 3], [4], [5]];
 
@@ -101,6 +104,7 @@ export function paintFmap(fmap: Uint8Array, subDisp: Uint8Array): Uint8Array {
             }
         }
     }
+    ps[OLD_SAVE_DOOR[1] * 256 + OLD_SAVE_DOOR[0]] = 0;
     const out = new Uint8Array(0x8000);
     for (let i = 0; i < 0x8000; i++) {
         out[i] = (ps[i * 2] & 15) | (ps[i * 2 + 1] << 4);

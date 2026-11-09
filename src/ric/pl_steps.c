@@ -480,7 +480,7 @@ void RicStepCrouch(void) {
         RicSetJump(1);
         return;
     }
-#if !defined(MOD_MARIA_SAT) // her Triangle is the kick (CHECK_ATTACK)
+#if !defined(MOD_MARIA_SAT) // she has no item crash (pl_collision.c)
     else if (!g_Player.unk72 && !g_Player.unk46 &&
              (g_Player.padTapped & PAD_TRIANGLE) && RicDoCrash()) {
         return;
@@ -1239,6 +1239,14 @@ void RicStepDead(
     }
 }
 
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+// Saturn g_SubwpnCrashTimer (060BEDD0): how long Richter has waited for his
+// item crash to end (g_Player.unk4E). The Saturn gives up after 300 frames,
+// so a crash whose entities a room change destroyed (func_8011A9D8) cannot
+// keep him in the air (the axe / cross crash) or frozen forever. Reset when
+// a crash starts (RicDoCrash)
+u32 g_ModCrashWaitTimer;
+#endif
 void RicStepStandInAir(void) {
     if (PLAYER.step_s == 0) {
         PLAYER.velocityY += 0x3800;
@@ -1246,7 +1254,12 @@ void RicStepStandInAir(void) {
             PLAYER.velocityY = 0;
             PLAYER.step_s = 1;
         }
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+    } else if (g_Player.unk4E || ++g_ModCrashWaitTimer > 300) { // 060A7FD4
+        g_ModCrashWaitTimer = 0;
+#else
     } else if (g_Player.unk4E) {
+#endif
         g_Player.unk46 = 0;
         RicSetStep(PL_S_JUMP);
         RicSetAnimation(D_80155528);
@@ -1304,7 +1317,13 @@ void RicStepHydrostorm(void) {}
 
 #if !defined(MOD_MARIA_SAT)
 void RicStepGenericSubwpnCrash(void) {
+#if defined(MOD_SATURN)
+    // Saturn 060A81C4
+    if (g_Player.unk4E || ++g_ModCrashWaitTimer > 300) {
+        g_ModCrashWaitTimer = 0;
+#else
     if (g_Player.unk4E) {
+#endif
         RicSetStand(0);
         g_Player.unk46 = 0;
     }
@@ -1713,8 +1732,8 @@ void RicStepSlideKick(void) {
     // (as detected in g_Player.unk44), we will bounce back.
 #if defined(MOD_MARIA_SAT)
     // Saturn 060A8C14: she bounces back off an enemy unless the kick button
-    // (Saturn C, PS1 Triangle) is held, which lets her slide through
-    if (!(g_Player.padPressed & PAD_TRIANGLE) && g_Player.unk44 & 0x80) {
+    // (Saturn C, here MAR_PAD_KICK) is held, which lets her slide through
+    if (!(g_Player.padPressed & MAR_PAD_KICK) && g_Player.unk44 & 0x80) {
 #else
     if (g_Player.padPressed & PAD_SQUARE && g_Player.unk44 & 0x80) {
 #endif

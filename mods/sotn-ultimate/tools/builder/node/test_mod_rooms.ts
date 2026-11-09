@@ -21,7 +21,7 @@ const psx = reader("disks/us");
 let bad = 0;
 
 // the overlay tables vs the assets folder: layers.json order and names
-for (const stage of ["np3", "rno3", "wrp", "rwrp", "no0", "no4", "rno0", "rno4"]) {
+for (const stage of ["np3", "no3", "rno3", "wrp", "rwrp", "no0", "no4", "rno0", "rno4"]) {
     const up = stage.toUpperCase();
     const st = parseStage(await psx(`ST/${up}/${up}.BIN`));
     let adir = path.join(ROOT, "assets/st", stage);

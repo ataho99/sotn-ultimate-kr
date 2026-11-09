@@ -202,6 +202,10 @@ STEPS += [dict(spell=n, seiryu=r, sfx=f, long=min(f, 5500), buzz=14000, roar=220
                           (5500, 2756, 8000))]
 # her voice's peak (-1 dB, as Richter's PS1 voices)
 VOICE_PEAK = 29200
+# her attacks' sounds (class "sfx") as the voice: the synth's half-scale
+# mix (saturn_sfx.MIX_GAIN) left them 6 dB under the Saturn's balance with
+# her voice (the user's pick, 2026-11-07), as far as the headroom allows
+SFX_GAIN = 2.0
 # one-shot: full sustain, a short release (as gen_gdn_sounds.py)
 ADSR = (0x80FF, 0x5FC0)
 
@@ -350,6 +354,7 @@ def build_bank(bank, caps, cfg, ctx):
     # one sample for slots that play the same clip at the same level (the
     # PSP dub's pain clips: hurt and boss grab); the tone sets each one's note
     shared = {}
+    loops = set()  # the looping samples' vag numbers
 
     for name, b, ps1, kind, src, cls in SOUNDS:
         if b != bank:
@@ -393,6 +398,8 @@ def build_bank(bank, caps, cfg, ctx):
         # headroom allows (as gen_gdn_sounds.py)
         peak = max(1, max(abs(v) for v in pcm))
         gain = min(127.0 / e["volume"], 32000.0 / peak)
+        if cls == "sfx":
+            gain = min(SFX_GAIN * 127.0 / e["volume"], 32000.0 / peak)
         if cls in ("voice", "spell"):
             # her voice at Richter's PS1 voice level: his SD_RIH voices
             # peak at -1 dB (-13..-19 dB RMS), as does the prologue Maria's
@@ -407,6 +414,7 @@ def build_bank(bank, caps, cfg, ctx):
         vag = open(body, "rb").read()
         if kind == "loop":
             vag = set_loop(vag, LOOP_START)
+            loops.add(len(vab.vags) + 1)
         vab.vags.append(vag)
         shared[key] = (len(vab.vags), rate)
         c, f = G.centre(e["note"], rate)
@@ -414,6 +422,19 @@ def build_bank(bank, caps, cfg, ctx):
         vab.tones[prog][tone] = dict(
             template, prog=prog, vag=len(vab.vags), vol=127, pan=64,
             center=c, shift=f, min=0, max=127, adsr1=ADSR[0], adsr2=ADSR[1])
+    # the pair voice. The game plays a sound on its tone and the next one
+    # (src/dra/sound.c func_80132A04) and frees its channel group only once both
+    # voices stop. Left as the blank, whose centre note (the template's) is far
+    # above her notes, that voice never stopped: her grunts and hurt sounds held
+    # the groups at priority 90 and the stage's sounds stayed silent until the
+    # next stage. So the pair voice is the sound itself at volume 0, ending with
+    # it (the retail banks pair a tone with its copy). Not the loop's: Seiryuu
+    # plays on channels 22/23, which her dragon releases
+    for p, tl in vab.tones.items():
+        real = [t["vag"] > 1 and t["vag"] not in loops for t in tl]
+        for t in range(15):
+            if real[t] and tl[t + 1]["vag"] == 1:
+                tl[t + 1] = dict(tl[t], vol=0)
     return vab
 
 

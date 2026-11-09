@@ -79,6 +79,9 @@
 #define MOD_TP_PRS_TO_NO4 0x88
 #define MOD_TP_NO0_TO_PRS 0x89
 #define MOD_TP_PRS_TO_NO0 0x8A
+// the first visit's Entrance (NO3) shaft into the Garden (the Saturn's
+// STAGE_0X has the shaft too)
+#define MOD_TP_NO3_TO_GDN 0x8B
 // Test aid: the Library card warps along the game's dialogue scenes instead
 // (off normally; src/dra/5087C.c ModDlgWarp, list in test_checklist.md
 // "Dialogue warp chain"). Hold L2 during the card's flash to repeat the last
@@ -86,13 +89,13 @@
 // #define MOD_SATURN_STAGE_TEST // test aids off (warp chain, cards, gift)
 #if defined(MOD_SATURN_STAGE_TEST)
 // its arrival teleports that no retail one covers
-#define MOD_TP_DLG_FERRY1 0x8B // Underground Caverns room 25, west lake
-#define MOD_TP_DLG_FERRY2 0x8C // Underground Caverns room 23, east lake
-#define MOD_TP_DLG_DAI 0x8D    // Royal Chapel room 0 (Maria), right door
-#define MOD_TP_DLG_NZ0 0x8E    // Alchemy Lab room 1 (Maria), right edge
-#define MOD_TP_END 0x8F
+#define MOD_TP_DLG_FERRY1 0x8C // Underground Caverns room 25, west lake
+#define MOD_TP_DLG_FERRY2 0x8D // Underground Caverns room 23, east lake
+#define MOD_TP_DLG_DAI 0x8E    // Royal Chapel room 0 (Maria), right door
+#define MOD_TP_DLG_NZ0 0x8F    // Alchemy Lab room 1 (Maria), right edge
+#define MOD_TP_END 0x90
 #else
-#define MOD_TP_END 0x8B
+#define MOD_TP_END 0x8C
 #endif
 // Test aid: loading a save adds the new items that work so far
 // (src/save_mgr.h ModItemsTestGift). Off for normal builds.

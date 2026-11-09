@@ -2627,6 +2627,9 @@ void ControlBatForm(void) {
     s32 screechDone;
     s16 x_offset;
     u32 directionsPressed;
+#if defined(MOD_SATURN)
+    s32 wingWall;
+#endif
 
     screechDone = 0;
     if (BatFormFinished()) {
@@ -2879,6 +2882,25 @@ void ControlBatForm(void) {
         }
         break;
     case 3:
+#if defined(MOD_SATURN)
+        // Saturn func_060AA23C sets the 0x40 timer but never reads it: the
+        // smash lasts until a wall, R1/another form, or the normal bat MP
+        // drain (1 MP / 60 frames, BatFormFinished) runs out. Saturn
+        // balance only; PS1 balance keeps the retail 0x40 frames. The wall
+        // hit and the timeout share their un-transform (for room); the
+        // order of the calls is retail's.
+        wingWall =
+            !PLAYER.facingLeft && (g_Player.vram_flag & TOUCHING_R_WALL) ||
+            PLAYER.facingLeft && (g_Player.vram_flag & TOUCHING_L_WALL);
+        if (wingWall || MOD_PS1_BALANCE() && --g_WingSmashTimer == 0) {
+            g_Player.padTapped = PAD_R1;
+            BatFormFinished();
+            if (wingWall) {
+                ShakeCamera(SHAKE_X_MEDIUM);
+                PlaySfx(SFX_WALL_DEBRIS_B);
+                PLAYER.velocityX = 0;
+            }
+#else
         if (!PLAYER.facingLeft && (g_Player.vram_flag & TOUCHING_R_WALL) ||
             PLAYER.facingLeft && (g_Player.vram_flag & TOUCHING_L_WALL)) {
             g_Player.padTapped = PAD_R1;
@@ -2891,16 +2913,10 @@ void ControlBatForm(void) {
             break;
         }
         // When wing smash ends, force an un-transform
-#if defined(MOD_SATURN)
-        // Saturn func_060AA23C sets the 0x40 timer but never reads it: the
-        // smash lasts until a wall, R1/another form, or the normal bat MP
-        // drain (1 MP / 60 frames, BatFormFinished) runs out.
-        if (0) {
-#else
         if (--g_WingSmashTimer == 0) {
-#endif
             g_Player.padTapped = PAD_R1;
             BatFormFinished();
+#endif
             g_Player.demo_timer = 32;
             g_Player.padSim = 0;
         } else {
