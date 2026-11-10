@@ -4,7 +4,24 @@
 
 A fork of SOTN Ultimate to add Korean. Nothing to download yet — see [ROADMAP.md](ROADMAP.md). The original mod is by renanbianchi; this fork is unofficial.
 
-- 현재: 원작 v1.4 기준, 번역·삽입 단계(P6) 진행 중 — 메뉴 한글 출력 시험 중
+**[💖 후원](https://litt.ly/smash99)** — 작업 후원입니다. 게임 파일은 배포하지 않습니다.
+
+## 진행 상황 (2026-11-10)
+
+| 단계 | 상태 |
+|---|---|
+| 준비 · 원작 재현 · 조사 · 설계 · 한글 출력 시험 (P0–P4) | 완료 — 원작 v1.4 기준 |
+| 원문 추출 · 용어집 (P5) | 완료 — 원문 1,715행, 용어는 일본판 기준 |
+| **번역 · 삽입 (P6)** | **진행 중** — 메뉴·아이템·유물 이름 한글 표시 시험 중 |
+| 배포 · 원작 추종 · 원작 합류 (P7–P9) | 예정 |
+
+- 번역은 원문에서 새로 합니다. 기존 PS1 한글패치 문장은 쓰지 않고, 제작진은 크레딧에 「참고」로 밝힙니다.
+- 글꼴: [MGalmuri](https://github.com/MonadABXY/mgalmuri-font)(OFL) — 메뉴 12px, 장비·아이템 화면 8px.
+- 남은 큰 일: 컷신·프롤로그 자막(출력 경로가 달라 조사 중), 대사(PS1·PSP 대본), Ultimate 신규 문구.
+- 자세한 계획: [ROADMAP.md](ROADMAP.md)
+
+---
+
 - 작업 브랜치: `ko` · 원작 추종 브랜치: `sotn-ultimate`
 - 이 저장소에는 게임 데이터가 없습니다.
 
