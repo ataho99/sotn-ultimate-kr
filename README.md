@@ -4,6 +4,7 @@
 
 A fork of SOTN Ultimate to add Korean. Nothing to download yet — see [ROADMAP.md](ROADMAP.md). The original mod is by renanbianchi; this fork is unofficial.
 
+- 현재: 원작 v1.4 기준, 번역·삽입 단계(P6) 진행 중 — 메뉴 한글 출력 시험 중
 - 작업 브랜치: `ko` · 원작 추종 브랜치: `sotn-ultimate`
 - 이 저장소에는 게임 데이터가 없습니다.
 
