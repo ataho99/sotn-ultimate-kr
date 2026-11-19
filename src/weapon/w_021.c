@@ -15,6 +15,12 @@ extern s32 g_HandId;
 #define g_Animset w_021_1
 #define g_Animset2 w_021_2
 #include "sfx.h"
+#if defined(MOD_KO)
+/* ko_equip_jp (#182): tail bundle loader (absolute, ARC_KO resident). */
+#define KO_JP_LOAD ((void (*)(s32))0x8009FF40)
+#define KO_JP_BUNDLE_LBA 0x4928F /* trial17d #236B: 2-pass wired (OFF_BIN_KO_JP, disc end) */
+#define KO_JP_BUNDLE_SECTORS 1
+#endif
 
 // Similar to BottomCornerText which exists in many overlays
 // This one seems to process 2 characters at a time, weird.
@@ -493,6 +499,13 @@ s32 func_ptr_80170004(Entity* self) {
                 g_unkGraphicsStruct.BottomCornerTextTimer = 0;
             }
             g_api.PlaySfx(SFX_ITEM_PICKUP);
+#if defined(MOD_KO)
+            /* ko_equip_jp (#182): one boot-load (see shop note re #182-4). */
+            if (*(volatile u32*)0x8009EEDC == 0) {
+                KO_JP_LOAD(KO_JP_BUNDLE_LBA);
+                *(volatile u32*)0x8009EEDC = 1;
+            }
+#endif
             temp_s1 = g_api.equipDefs[upperParams].name;
             g_api.AddToInventory(upperParams, EQUIP_HAND);
             func_97000_8017AB54(temp_s1, 1);
@@ -552,6 +565,13 @@ s32 func_ptr_80170004(Entity* self) {
                 g_unkGraphicsStruct.BottomCornerTextTimer = 0;
             }
             g_api.PlaySfx(SFX_ITEM_PICKUP);
+#if defined(MOD_KO)
+            /* ko_equip_jp (#182): one boot-load (see shop note re #182-4). */
+            if (*(volatile u32*)0x8009EEDC == 0) {
+                KO_JP_LOAD(KO_JP_BUNDLE_LBA);
+                *(volatile u32*)0x8009EEDC = 1;
+            }
+#endif
             temp_s1 = g_api.equipDefs[upperParams].name;
             g_api.AddToInventory(upperParams, EQUIP_HAND);
             func_97000_8017AB54(temp_s1, 1);

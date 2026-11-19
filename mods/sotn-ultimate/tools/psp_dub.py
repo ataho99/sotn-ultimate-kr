@@ -77,6 +77,11 @@ GAIN = 0.70
 JP_AT3_DIR = os.path.join(ROOT, "disks/psp/sound/XA")
 JP_WORK = os.path.join(ROOT, "build/us/jp_dub")
 GAIN_JP = 0.95
+# P148 trial46: PSP_DUB_JP=1 (--set psp only) dubs the PSP slot with the
+# Japanese PSP voices. Source dir / gain / cache follow the switch; the slot
+# set stays the English one (the JP dir is a superset: ungated it would add
+# ~233 non-story slots outside the 239-slot design). Slot 0x3CD takes 202d.
+JP_PSP_WORK = os.path.join(ROOT, "build/us/psp_jp_dub")
 SDF0 = os.path.join(ROOT, "disks/saturn/SD/SDF0.PCM")
 SAT_INDEX = os.path.join(ROOT, "disks/saturn/0.BIN")  # base 0x06004080
 SAT_SLOTS = range(0x3BA, 0x3D0)  # PS1 slots = Saturn ids + 2
@@ -313,22 +318,36 @@ def main():
     ap.add_argument("--set", choices=("psp", "jp"), default="psp")
     if ap.parse_args().set == "jp":
         return main_jp()
-    os.makedirs(WORK, exist_ok=True)
+    # P148 trial46: PSP_DUB_JP=1 -> --set psp encodes the Japanese PSP voices
+    # for the same slots (default off = the old behavior byte for byte)
+    jp_mode = os.environ.get("PSP_DUB_JP") == "1"
+    workdir = JP_PSP_WORK if jp_mode else WORK
+    srcdir = JP_AT3_DIR if jp_mode else AT3_DIR
+    gaindb = GAIN_JP if jp_mode else GAIN
+    ovr = dict(VOICE_OVERRIDE)
+    if jp_mode:
+        ovr[0x3CD] = "202d"  # P146a 보정: PSP id 0x3CB take (EN run used 201d)
+    os.makedirs(workdir, exist_ok=True)
     names = psp_names()
     remap = psp_en_remap()
     assert len(remap) == 5, remap
     retail, _ = repack_xa.read_configs()
     jp = set(repack_xa.JP_IDS)
     have = {f[:-4] for f in os.listdir(AT3_DIR) if f.endswith(".at3")}
+    if jp_mode:
+        have_jp = {f[:-4] for f in os.listdir(JP_AT3_DIR) if f.endswith(".at3")}
     jobs = {}  # config index -> PSP file
     skipped = []
     keep = set(json.load(open(KEEP_JSON))) if os.path.exists(KEEP_JSON) else set()
     for psp in range(FIRST_PSP, LAST_PSP + 1):
         ps1 = psp + 2
-        name = VOICE_OVERRIDE.get(ps1, names[remap.get(psp, psp) - 0x300][:-4])
+        # P168/trial48: the English redirect is for a non-JP voice language
+        # only; jp_mode plays at3FileNames[id] itself (like main_jp, L250)
+        name = ovr.get(ps1, names[(psp if jp_mode else remap.get(psp, psp)) - 0x300][:-4])
         c = ps1 - 0x300
         addr, ln, f, ch, vol, u, mode = retail[c]
-        if name not in have:
+        # (the 5 redirected slots' JP files: elbs10s has no English file)
+        if name not in have and not (jp_mode and psp in remap and name in have_jp):
             continue  # no English file: the PS1 line stays
         if ps1 in jp:
             skipped.append("0x%X %s (JP-only slot)" % (ps1, name))
@@ -341,8 +360,15 @@ def main():
         assert names[psp - 0x300][:-4] in have
     exe, path_of = ffmpeg()
     todo = sorted(set(jobs.values()) | {names[p - 0x300][:-4] for _, p, _ in EXTRA})
+    if jp_mode:
+        # P148 멈춤 조건: a slot with no JP file stops the build (no fallback)
+        missing = sorted(set(todo) - have_jp)
+        assert not missing, "PSP_DUB_JP: no JP .at3 for %s" % missing
     with ThreadPoolExecutor(8) as ex:
-        enc = dict(zip(todo, ex.map(lambda n: encode(n, exe, path_of), todo)))
+        enc = dict(zip(todo, ex.map(
+            lambda n: encode(n, exe, path_of,
+                             src=os.path.join(srcdir, n + ".at3"),
+                             work=workdir, gain=gaindb), todo)))
     replace, durations = {}, {}
     for c, name in sorted(jobs.items()):
         e = enc[name]

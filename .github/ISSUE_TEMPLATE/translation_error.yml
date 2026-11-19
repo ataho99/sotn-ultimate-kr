@@ -1,0 +1,21 @@
+name: 번역 오류·오타
+description: 오역, 오타, 어색한 표현, 영어로 남은 곳
+labels: ["translation"]
+body:
+  - type: markdown
+    attributes:
+      value: "⚠ ROM·디스크 이미지는 절대 첨부하지 마세요."
+  - type: input
+    id: where
+    attributes: {label: 위치(장소·메뉴·장면)}
+    validations: {required: true}
+  - type: textarea
+    id: current
+    attributes: {label: 현재 화면에 나온 문장(스크린샷 첨부 가능)}
+    validations: {required: true}
+  - type: textarea
+    id: suggest
+    attributes: {label: 제안하는 문장과 이유}
+  - type: input
+    id: version
+    attributes: {label: 한글판 버전}

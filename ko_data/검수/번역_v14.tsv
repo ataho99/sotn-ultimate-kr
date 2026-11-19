@@ -1,0 +1,1717 @@
+키	분류	EN	번역(v14 확정본)	v13 번역(원본, 덮어쓰지 않음)	JP 원문	글자수(B,v13)	폭한계	넘침여부	비고	확정 근거
+config_us.h:g_SpellDefs:0:name	주문		다크 메타몰포체			15	144	통과	용어집 채택	
+config_us.h:g_SpellDefs:0:combo	주문		←↖↑↗→			10		-	원문 유지(커맨드 기호)	
+config_us.h:g_SpellDefs:0:desc	주문		피를 뒤집어써 체력 회복			23	144	통과	신규 번역	
+config_us.h:g_SpellDefs:1:name	주문		서몬 스피릿			11	144	통과	용어집 채택	
+config_us.h:g_SpellDefs:1:combo	주문		←→↑↓			8		-	원문 유지(커맨드 기호)	
+config_us.h:g_SpellDefs:1:desc	주문		사나운 정령 소환			16	144	통과	신규 번역	
+config_us.h:g_SpellDefs:2:name	주문		헬파이어			8	144	통과	용어집 채택	
+config_us.h:g_SpellDefs:2:combo	주문		↑↓↘→			8		-	원문 유지(커맨드 기호)	
+config_us.h:g_SpellDefs:2:desc	주문		순간이동 후 화염탄 공격			23	144	통과	신규 번역	
+config_us.h:g_SpellDefs:3:name	주문		테트라 스피릿			13	144	통과	용어집 채택	
+config_us.h:g_SpellDefs:3:combo	주문		↑ため↗→↘↓			14		-	원문 유지(커맨드 기호)	
+config_us.h:g_SpellDefs:3:desc	주문		정령 4체 소환			13	144	통과	신규 번역	
+config_us.h:g_SpellDefs:4:name	주문		액셀 차지			9	144	통과	용어집 채택	
+config_us.h:g_SpellDefs:4:combo	주문		↓↘→			6		-	원문 유지(커맨드 기호)	
+config_us.h:g_SpellDefs:4:desc	주문		늑대 상태 강력 돌진			19	144	통과	신규 번역	
+config_us.h:g_SpellDefs:5:name	주문		소울 스틸			9	144	통과	용어집 채택	
+config_us.h:g_SpellDefs:5:combo	주문		←→↘↓↙←→			14		-	원문 유지(커맨드 기호)	
+config_us.h:g_SpellDefs:5:desc	주문		주변 적 체력 흡수			17	144	통과	신규 번역	
+config_us.h:g_SpellDefs:6:name	주문		윙 스매시			9	144	통과	용어집 채택	
+config_us.h:g_SpellDefs:6:combo	주문		↑↖←↙↓↘→			14		-	원문 유지(커맨드 기호)	
+config_us.h:g_SpellDefs:6:desc	주문		박쥐 상태 강력 돌진			19	144	통과	신규 번역	
+config_us.h:g_SpellDefs:7:name	주문		백성일검			8	144	통과	용어집 채택	
+config_us.h:g_SpellDefs:7:combo	주문		↓↘→↗↑ため↓			16		-	원문 유지(커맨드 기호)	
+config_us.h:g_SpellDefs:7:desc	주문		백성일검 소환			13	144	통과	신규 번역	
+config_us.h:g_SpellDefs:8:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:8:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:8:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:9:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:9:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:9:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:10:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:10:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:10:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:11:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:11:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:11:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:12:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:12:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:12:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:13:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:13:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:13:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:14:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:14:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:14:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:15:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:15:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:15:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:16:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:16:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:16:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:17:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:17:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:17:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:18:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:18:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:18:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:19:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:19:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:19:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:20:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:20:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:20:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:21:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:21:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:21:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:22:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:22:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:22:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:23:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:23:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:23:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:24:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:24:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:24:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:25:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:25:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:25:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:26:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:26:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:26:desc	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:27:name	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:27:combo	주문					0		-	빈 행	
+config_us.h:g_SpellDefs:27:desc	주문					0		-	빈 행	
+config_us.h:g_RelicDefs:0:name	유물		소울 오브 배트			14	60	통과	v2→용어집 채택으로 수정	
+config_us.h:g_RelicDefs:0:desc	유물		박쥐로 변신			11	144	통과	신규 번역	
+config_us.h:g_RelicDefs:1:name	유물		파이어 오브 배트			16	60	통과	v2→용어집 채택으로 수정	
+config_us.h:g_RelicDefs:1:desc	유물		박쥐 상태 화염 발사			19	144	통과	신규 번역	
+config_us.h:g_RelicDefs:2:name	유물		에코 오브 배트			14	60	통과	v2→용어집 채택으로 수정	
+config_us.h:g_RelicDefs:2:desc	유물		박쥐 상태 초음파 탐지			21	144	통과	신규 번역	
+config_us.h:g_RelicDefs:3:name	유물		크레이지 에코			13	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:3:desc	유물		초음파로 공격 가능			18	144	통과	신규 번역	
+config_us.h:g_RelicDefs:4:name	유물		소울 오브 울프			14	60	통과	v2→용어집 채택으로 수정	
+config_us.h:g_RelicDefs:4:desc	유물		늑대로 변신			11	144	통과	신규 번역	
+config_us.h:g_RelicDefs:5:name	유물		파워 오브 울프			14	60	통과	v2→용어집 채택으로 수정	
+config_us.h:g_RelicDefs:5:desc	유물		늑대 상태 고속 질주			19	144	통과	신규 번역	
+config_us.h:g_RelicDefs:6:name	유물		스킬 오브 울프			14	60	통과	v2→용어집 채택으로 수정	
+config_us.h:g_RelicDefs:6:desc	유물		늑대 상태 필살기			16	144	통과	신규 번역	
+config_us.h:g_RelicDefs:7:name	유물		미스트			6	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:7:desc	유물		안개로 변신			11	144	통과	신규 번역	
+config_us.h:g_RelicDefs:8:name	유물		파워 오브 미스트			16	60	통과	v2→용어집 채택으로 수정	
+config_us.h:g_RelicDefs:8:desc	유물		안개 변신 시간 연장			19	144	통과	신규 번역	
+config_us.h:g_RelicDefs:9:name	유물		가스 클라우드			13	60	통과	v2→용어집 채택으로 수정	
+config_us.h:g_RelicDefs:9:desc	유물		독안개로 변신			13	144	통과	신규 번역	
+config_us.h:g_RelicDefs:10:name	유물		마테라이즈 큐브			15	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:10:desc	유물		물건 파괴 시 아이템 출현			24	144	통과	신규 번역	
+config_us.h:g_RelicDefs:11:name	유물		영혼의 오브			11	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:11:desc	유물		적에게 준 피해량 표시			21	144	통과	신규 번역	
+config_us.h:g_RelicDefs:12:name	유물		부신의 부츠			11	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:12:desc	유물		하이점프 가능			13	144	통과	신규 번역	
+config_us.h:g_RelicDefs:13:name	유물		비상석			6	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:13:desc	유물		2단 점프 가능			13	144	통과	신규 번역	
+config_us.h:g_RelicDefs:14:name	유물		홀리 심볼			9	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:14:desc	유물		물에서 피해 없음			16	144	통과	신규 번역	
+config_us.h:g_RelicDefs:15:name	유물		요정의 책			9	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:15:desc	유물		적의 이름 표시			14	144	통과	신규 번역	
+config_us.h:g_RelicDefs:16:name	유물		언록 주얼			9	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:16:desc	유물		푸른 빛의 문을 여는 열쇠			24	144	통과	신규 번역	
+config_us.h:g_RelicDefs:17:name	유물		인어상			6	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:17:desc	유물		뱃사공을 부름			13	144	통과	신규 번역	
+config_us.h:g_RelicDefs:18:name	유물		박쥐의 원료			11	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:18:desc	유물		동료 박쥐 소환			14	144	통과	신규 번역	
+config_us.h:g_RelicDefs:19:name	유물		고스트의 원료			13	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:19:desc	유물		동료 유령 소환			14	144	통과	신규 번역	
+config_us.h:g_RelicDefs:20:name	유물		요정의 원료			11	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:20:desc	유물		동료 요정 소환			14	144	통과	신규 번역	
+config_us.h:g_RelicDefs:21:name	유물		자악마의 원료			13	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:21:desc	유물		동료 아기 악마 소환			19	144	통과	신규 번역	
+config_us.h:g_RelicDefs:22:name	유물		검마의 원료			11	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:22:desc	유물		동료 검마 소환			14	144	통과	신규 번역	
+config_us.h:g_RelicDefs:23:name	유물		반요정의 원료			13	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:23:desc	유물		동료 반요정 소환			16	144	통과	신규 번역	
+config_us.h:g_RelicDefs:24:name	유물		비악마의 원료			13	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:24:desc	유물		동료 코악마 소환			16	144	통과	신규 번역	
+config_us.h:g_RelicDefs:25:name	유물		심장			4	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:25:desc	유물		5대 보물 중 하나, 저주 무효			27	144	통과	신규 번역	
+config_us.h:g_RelicDefs:26:name	유물		발톱			4	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:26:desc	유물		5대 보물 중 하나, 힘+10			23	144	통과	신규 번역	
+config_us.h:g_RelicDefs:27:name	유물		늑골			4	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:27:desc	유물		5대 보물 중 하나, 건강+10			25	144	통과	신규 번역	
+config_us.h:g_RelicDefs:28:name	유물		반지			4	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:28:desc	유물		5대 보물 중 하나, 지능+10			25	144	통과	신규 번역	
+config_us.h:g_RelicDefs:29:name	유물		안구			4	60	통과	용어집 채택	
+config_us.h:g_RelicDefs:29:desc	유물		5대 보물 중 하나, 행운+10			25	144	통과	신규 번역	
+config_us.h:g_RelicDefs:30:name	유물		갓스피드 슈즈			13	60	통과	신규 용어 후보	
+config_us.h:g_RelicDefs:30:desc	유물		방향키 두 번 입력으로 대시			26	144	통과	신규 번역	
+config_us.h:g_RelicDefs:31:name	유물					0		-	빈 행	
+config_us.h:g_RelicDefs:31:desc	유물					0		-	빈 행	
+equipment.h:g_EquipDefs:0x000:name	장비		맨손			4		통과	신규 번역·DUB행 존재(런타임 EN 덮어씀)	
+equipment.h:g_EquipDefs:0x000:desc	장비		무기 없음. 맨손으로 공격한다			28	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x001:name	장비		캡슐 몬스터1			12		통과	신규 번역	
+equipment.h:g_EquipDefs:0x001:desc	장비		머맨 아군 소환 [사용]			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x002:name	장비		캡슐 몬스터2			12		통과	신규 번역	
+equipment.h:g_EquipDefs:0x002:desc	장비		박쥐 아군 소환 [사용]			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x003:name	장비		캡슐 몬스터3			12		통과	신규 번역	
+equipment.h:g_EquipDefs:0x003:desc	장비		스켈레톤 아군 소환 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x004:name	장비		실드 로드			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x004:desc	장비		실드와 함께 쓰면 위력 증가			26	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x005:name	장비		레더 실드			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x005:desc	장비		가죽 실드. 방어 낮다			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x006:name	장비		나이트 실드			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x006:desc	장비		갑옷 기사의 실드			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x007:name	장비		아이언 실드			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x007:desc	장비		단단한 철제 실드			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x008:name	장비		액스 아머의 방패			16		통과	신규 번역	
+equipment.h:g_EquipDefs:0x008:desc	장비		액스 아머가 애용하는 방패			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x009:name	장비		문장의 방패			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x009:desc	장비		하트 문장 새긴 실드			19	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x00A:name	장비		다크 실드			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x00A:desc	장비		부정한 어둠의 방패			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x00B:name	장비		여신의 방패			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x00B:desc	장비		여신상 새긴 실드			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x00C:name	장비		샤먼의 방패			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x00C:desc	장비		마법 의식에 쓰는 실드			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x00D:name	장비		메두사의 방패			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x00D:desc	장비		고르곤 머리 달린 실드			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x00E:name	장비		해골의 방패			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x00E:desc	장비		기사 문장 새긴 실드			19	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x00F:name	장비		플레임 실드			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x00F:desc	장비		불 속성 지닌 실드			17	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x010:name	장비		알카드 실드			11		통과	용어집 채택+신규 혼합	
+equipment.h:g_EquipDefs:0x010:desc	장비		모든 공격에 강하다			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x011:name	장비		새벽의 검			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x011:desc	장비		새벽의 전사 소환 [양손]			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x012:name	장비		바제랄드			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x012:desc	장비		기본 숏 검			10	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x013:name	장비		숏 소드			7		통과	신규 번역	
+equipment.h:g_EquipDefs:0x013:desc	장비		흔한 숏 검			10	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x014:name	장비		컴뱃 나이프			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x014:desc	장비		납작한 전투용 대거			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x015:name	장비		톤파			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x015:desc	장비		적을 두 번 공격한다 [양손]			26	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x016:name	장비		웨어 버스터			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x016:desc	장비		늑대인간류에 효과적이다			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x017:name	장비		레이피어			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x017:desc	장비		긴 날의 검			10	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x018:name	장비		봄버 코인			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x018:desc	장비		두 가지 효과 지닌 동전 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x019:name	장비		매직 미사일			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x019:desc	장비		마법 화살 발사 [사용]			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x01A:name	장비		아카사비			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x01A:desc	장비		녹슨 붉은 검 [양손]			19	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x01B:name	장비		타케미츠			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x01B:desc	장비		죽도 [양손]			11	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x01C:name	장비		쇼텔			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x01C:desc	장비		아비시니아 곡도 검			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x01D:name	장비		귤			2		통과	신규 번역	
+equipment.h:g_EquipDefs:0x01D:desc	장비		새콤달콤한 일본 귤. 체력 회복 [사용]			36	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x01E:name	장비		사과			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x01E:desc	장비		아삭하고 맛있는 사과. 체력 회복 [사용]			38	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x01F:name	장비		바나나			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x01F:desc	장비		거의 썩었을 때 제맛. 체력 회복 [사용]			37	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x020:name	장비		포도			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x020:desc	장비		과즙 많은 씨 없는 포도. 체력 회복 [사용]			40	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x021:name	장비		딸기			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x021:desc	장비		잘 익은 붉은 딸기. 체력 회복 [사용]			35	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x022:name	장비		파인애플			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x022:desc	장비		새콤한 남국 과일. 체력 회복 [사용]			34	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x023:name	장비		땅콩			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x023:desc	장비		먹기 까다로운 열매. 체력 회복 [사용]			36	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x024:name	장비		광대버섯			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x024:desc	장비		광대버섯. 먹으면 위험하다 [사용]			32	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x025:name	장비		맛있는 버섯			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x025:desc	장비		향긋한 일본 버섯. 체력 회복 [사용]			34	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x026:name	장비		치즈 케이크			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x026:desc	장비		초코칩 박힌 쿠키. 체력 회복 [사용]			34	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x027:name	장비		쇼트 케이크			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x027:desc	장비		딸기 쇼트 케이크. 체력 회복 [사용]			34	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x028:name	장비		딸기 타르트			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x028:desc	장비		딸기 딸기 타르트. 체력 회복 [사용]			34	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x029:name	장비		파르페			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x029:desc	장비		생크림 듬뿍 케이크. 체력 회복 [사용]			36	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x02A:name	장비		푸딩			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x02A:desc	장비		아이스크림 곁들인 후식. 체력 회복 [사용]			40	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x02B:name	장비		아이스크림			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x02B:desc	장비		3단 아이스크림. 체력 회복 [사용]			32	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x02C:name	장비		프랑크푸르트			12		통과	신규 번역	
+equipment.h:g_EquipDefs:0x02C:desc	장비		현지 인기 간식. 체력 회복 [사용]			32	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x02D:name	장비		햄버거			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x02D:desc	장비		100% 미국산 A급. 체력 회복 [사용]			33	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x02E:name	장비		피자			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x02E:desc	장비		뉴욕 스타일 치즈 케이크. 체력 회복 [사용]			41	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x02F:name	장비		치즈			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x02F:desc	장비		맛있는 치즈. 체력 회복 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x030:name	장비		햄에그			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x030:desc	장비		콜레스테롤 증가 주의. 체력 회복 [사용]			38	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x031:name	장비		미트 오믈렛			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x031:desc	장비		서양식 미트 오믈렛. 체력 회복 [사용]			36	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x032:name	장비		모닝 세트			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x032:desc	장비		달걀 토스트 커피 정식. 체력 회복 [사용]			39	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x033:name	장비		A런치			5		통과	신규 번역	
+equipment.h:g_EquipDefs:0x033:desc	장비		런치 세트 A. 체력 회복 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x034:name	장비		B런치			5		통과	신규 번역	
+equipment.h:g_EquipDefs:0x034:desc	장비		런치 세트 B. 체력 회복 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x035:name	장비		카레라이스			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x035:desc	장비		코코넛 밀크 조리 요리. 체력 회복 [사용]			39	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x036:name	장비		도리아			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x036:desc	장비		따끈한 도리아. 체력 회복 [사용]			31	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x037:name	장비		스파게티			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x037:desc	장비		까르보나라 스파게티. 체력 회복 [사용]			37	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x038:name	장비		와인			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x038:desc	장비		향긋한 와인. 체력 회복 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x039:name	장비		맥주			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x039:desc	장비		맥주. 체력 회복 [사용]			22	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x03A:name	장비		술			2		통과	신규 번역	
+equipment.h:g_EquipDefs:0x03A:desc	장비		술. 체력 회복 [사용]			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x03B:name	장비		낫토			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x03B:desc	장비		냄새 강한 낫토. 체력 회복 [사용]			32	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x03C:name	장비		라면			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x03C:desc	장비		중국식 라면. 체력 회복 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x03D:name	장비		된장국			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x03D:desc	장비		일본 미소된장국. 체력 회복 [사용]			33	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x03E:name	장비		스시			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x03E:desc	장비		참치뱃살 새우 계란 스시. 체력 회복 [사용]			41	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x03F:name	장비		고기만두			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x03F:desc	장비		중국식 고기만두. 체력 회복 [사용]			33	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x040:name	장비		팥빵			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x040:desc	장비		중국식 팥빵. 체력 회복 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x041:name	장비		간식			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x041:desc	장비		간식 3종 모둠. 체력 회복 [사용]			31	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x042:name	장비		간식 세트			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x042:desc	장비		간식 3종 모둠. 체력 회복 [사용]			31	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x043:name	장비		맛있는 고기			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x043:desc	장비		맛있는 고기. 체력 회복 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x044:name	장비		비프			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x044:desc	장비		등심 스테이크. 체력 회복 [사용]			31	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x045:name	장비		칠면조			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x045:desc	장비		칠면조 구이. 체력 회복 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x046:name	장비		식사권			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x046:desc	장비		무엇이 나올지 모르는 식사권 [사용]			34	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x047:name	장비		뉴트론 봄			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x047:desc	장비		모든 적에 대미지 [사용]			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x048:name	장비		아버지의 위광			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x048:desc	장비		모든 적에 대미지 [사용]			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x049:name	장비		펜타그람			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x049:desc	장비		모든 적에 대미지 [사용]			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x04A:name	장비		배트 펜타그람			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x04A:desc	장비		모든 적에 대미지 [사용]			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x04B:name	장비		수리검			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x04B:desc	장비		일본 수리검 [사용]			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x04C:name	장비		십자 수리검			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x04C:desc	장비		강력한 수리검 [사용]			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x04D:name	장비		야규 수리검			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x04D:desc	장비		예리한 명인 수리검 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x04E:name	장비		화염 수리검			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x04E:desc	장비		불타는 수리검 [사용]			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x04F:name	장비		폭뢰			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x04F:desc	장비		불기둥 생성 [사용]			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x050:name	장비		브와카 나이프			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x050:desc	장비		브와카 투척 나이프 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x051:name	장비		부메랑			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x051:desc	장비		대공용 무기 [사용]			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x052:name	장비		자벨린			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x052:desc	장비		투척용 스피어 [사용]			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x053:name	장비		티르핑			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x053:desc	장비		저주받은 어둠 검			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x054:name	장비		나마쿠라			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x054:desc	장비		조잡하게 만든 검 [양손]			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x055:name	장비		너클			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x055:desc	장비		철 못 박힌 너클			15	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x056:name	장비		글라디우스			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x056:desc	장비		고대 로마의 검			14	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x057:name	장비		시미터			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x057:desc	장비		외날 곡검			9	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x058:name	장비		커틀라스			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x058:desc	장비		영국 해군의 검			14	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x059:name	장비		세이버			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x059:desc	장비		경기병용 검			11	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x05A:name	장비		팔시온			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x05A:desc	장비		노르만 곡검			11	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x05B:name	장비		카츠바르겔			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x05B:desc	장비		평범한 용병의 검			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x05C:name	장비		베카트와			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x05C:desc	장비		평범하고 다루기 쉬운 군용 검			28	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x05D:name	장비		다마스쿠스 소드			15		통과	신규 번역	
+equipment.h:g_EquipDefs:0x05D:desc	장비		면도날처럼 날카롭게 간 검			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x05E:name	장비		쟈드프라테			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x05E:desc	장비		상아 자루 사냥검			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x05F:name	장비		에스톡			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x05F:desc	장비		독일식 찌르기 검 [양손]			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x060:name	장비		바스타드 소드			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x060:desc	장비		표준 검			7	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x061:name	장비		다이아 너클			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x061:desc	장비		보석 박힌 너클			14	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x062:name	장비		클레이모어			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x062:desc	장비		스코틀랜드 양손검			17	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x063:name	장비		타월			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x063:desc	장비		인도식 곡검			11	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x064:name	장비		카타나			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x064:desc	장비		무명 카타나 [양손]			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x065:name	장비		플랑베르제			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x065:desc	장비		불꽃날 검 [양손]			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x066:name	장비		카이저 너클			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x066:desc	장비		가라테 고수가 쓰던 것			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x067:name	장비		츠바이핸더			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x067:desc	장비		독일식 양손검			13	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x068:name	장비		헤르게의 검			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x068:desc	장비		헤르게 가문의 가보			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x069:name	장비		올크리스트			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x069:desc	장비		엘프가 벼린 검			14	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x06A:name	장비		하르파			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x06A:desc	장비		하르파라는 이름의 검			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x06B:name	장비		흑요석의 검			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x06B:desc	장비		양손 흑요석 검			14	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x06C:name	장비		명도 그람			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x06C:desc	장비		그람이라는 이름의 명검			22	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x06D:name	장비		주얼 소드			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x06D:desc	장비		적을 보석으로 바꾼다			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x06E:name	장비		홀리 버스터			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x06E:desc	장비		흑검, 신성에 강하다			19	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x06F:name	장비		아그니의 염검			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x06F:desc	장비		아그니의 불꽃 검			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x070:name	장비		인드라의 뇌검			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x070:desc	장비		인드라의 번개 검			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x071:name	장비		라하브의 빙검			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x071:desc	장비		라하브의 얼음 검			16	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x072:name	장비		밀리컨의 석도			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x072:desc	장비		적을 석화시키기도 한다			22	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x073:name	장비		홀리 소드			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x073:desc	장비		십자 손잡이, 언데드에 강하다			28	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x074:name	장비		후룬팅			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x074:desc	장비		독 바른 처형인의 검			19	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x075:name	장비		레바테인			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x075:desc	장비		강력한 불꽃 검			14	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x076:name	장비		그람드링			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x076:desc	장비		엘프가 벼린 검			14	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x077:name	장비		헤븐즈 소드			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x077:desc	장비		마법으로 떠다니는 검			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x078:name	장비		오리하르콘			10		통과	신규 번역	
+equipment.h:g_EquipDefs:0x078:desc	장비		신의 축복을 받은 너클			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x079:name	장비		다인 슬레이프			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x079:desc	장비		피에 젖으면 강해진다			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x07A:name	장비		몬 블레이드			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x07A:desc	장비		적의 영혼을 먹는다			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x07B:name	장비		알카드 소드			11		통과	용어집 채택+신규 혼합	
+equipment.h:g_EquipDefs:0x07B:desc	장비		어머니 가문의 가보			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x07C:name	장비		레무리아 소드			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x07C:desc	장비		정령검, 방어력이 오른다			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x07D:name	장비		바르자이의 언월도			17		통과	신규 번역	
+equipment.h:g_EquipDefs:0x07D:desc	장비		플레이 시간에 따라 강해진다			27	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x07E:name	장비		사역마의 검			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x07E:desc	장비		의식을 가진 검 사역마			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x07F:name	장비		그레이트 소드			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x07F:desc	장비		오벡의 대검 [양손]			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x080:name	장비		메이스			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x080:desc	장비		쇠 몽둥이			9	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x081:name	장비		모닝스타			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x081:desc	장비		가시 박힌 쇠 방망이			19	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x082:name	장비		홀리 로드			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x082:desc	장비		성별받은 봉			11	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x083:name	장비		스타 플레일			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x083:desc	장비		가시 철구 달린 철퇴			19	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x084:name	장비		문 로드			7		통과	신규 번역	
+equipment.h:g_EquipDefs:0x084:desc	장비		달 무늬 새긴 봉			15	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x085:name	장비		차크람			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x085:desc	장비		시크족 강철 투척 링			19	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x086:name	장비		화염 부메랑			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x086:desc	장비		불타는 부메랑 [사용]			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x087:name	장비		철구			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x087:desc	장비		플레이트 로드의 철구 [사용]			27	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x088:name	장비		재빠른 솜씨의 단도			18		통과	신규 번역	
+equipment.h:g_EquipDefs:0x088:desc	장비		빠르게 위 대각선으로 공격한다			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x089:name	장비		블루 너클			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x089:desc	장비		어퍼컷용 너클			13	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x08A:name	장비		다이너마이트			12		통과	신규 번역	
+equipment.h:g_EquipDefs:0x08A:desc	장비		강력하다! 조심할 것 [사용]			26	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x08B:name	장비		비젠 오사후네			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x08B:desc	장비		비젠 오사후네 [양손]			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x08C:name	장비		마사무네			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x08C:desc	장비		전설의 마사무네 카타나 [양손]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x08D:name	장비		요도 무라마사			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x08D:desc	장비		피에 굶주린 검 [양손]			21	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x08E:name	장비		하트 리페어			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x08E:desc	장비		하트 500 회복한다 [사용]			24	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x08F:name	장비		헤븐즈 룬			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x08F:desc	장비		룬 새긴 비행 검			15	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x090:name	장비		세이람			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x090:desc	장비		독을 치료한다 [사용]			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x091:name	장비		언커즈			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x091:desc	장비		저주를 푼다 [사용]			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x092:name	장비		생명의 영약			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x092:desc	장비		회복한다 [사역마 전용]			22	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x093:name	장비		해머			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x093:desc	장비		석화를 푼다 [사역마 전용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x094:name	장비		힘의 약			7		통과	신규 번역	
+equipment.h:g_EquipDefs:0x094:desc	장비		일시적으로 힘을 올린다 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x095:name	장비		럭키 드러그			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x095:desc	장비		일시적으로 행운을 올린다 [사용]			31	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x096:name	장비		지력의 약			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x096:desc	장비		일시적으로 지능을 올린다 [사용]			31	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x097:name	장비		어택 포션			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x097:desc	장비		일시적으로 공격력을 올린다 [사용]			33	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x098:name	장비		실드 포션			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x098:desc	장비		일시적으로 방어력을 올린다 [사용]			33	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x099:name	장비		레지스트 파이어			15		통과	신규 번역	
+equipment.h:g_EquipDefs:0x099:desc	장비		잠시 불 내성을 얻는다 [사용]			28	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x09A:name	장비		레지스트 썬더			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x09A:desc	장비		번개 내성을 얻는다 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x09B:name	장비		레지스트 아이스			15		통과	신규 번역	
+equipment.h:g_EquipDefs:0x09B:desc	장비		잠시 얼음 내성을 얻는다 [사용]			30	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x09C:name	장비		레지스트 스톤			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x09C:desc	장비		석화 내성을 얻는다 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x09D:name	장비		레지스트 홀리			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x09D:desc	장비		신성 내성을 얻는다 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x09E:name	장비		레지스트 다크			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x09E:desc	장비		어둠 내성을 얻는다 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x09F:name	장비		포션			4		통과	신규 번역	
+equipment.h:g_EquipDefs:0x09F:desc	장비		HP를 조금 회복한다 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A0:name	장비		하이 포션			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A0:desc	장비		HP 절반가량을 회복한다 [사용]			29	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A1:name	장비		엑스 포션			9		통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A1:desc	장비		HP를 전부 회복한다 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A2:name	장비		마나 프리즘			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A2:desc	장비		MP를 전부 회복한다 [사용]			25	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A3:name	장비		소닉 블레이드			13		통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A3:desc	장비		적을 깨끗이 베어낸다			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A4:name	장비		발만웨			6		통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A4:desc	장비		수많은 칼날이 적을 썬다			23	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A5:name	장비		야스츠나			8		통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A5:desc	장비		야스츠나 카타나 [양손]			22	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A6:name	장비		매지컬 티켓			11		통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A6:desc	장비		마법 도서카드 [사용]			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A7:name	장비		알카트 실드			11		통과	용어집 채택+신규 혼합	
+equipment.h:g_EquipDefs:0x0A7:desc	장비		가문의 실드를 닮았다			20	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A8:name	장비		알카트 소드			11		통과	용어집 채택+신규 혼합	
+equipment.h:g_EquipDefs:0x0A8:desc	장비		가문의 검을 닮았다			18	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x0A9:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0A9:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AA:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AA:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AB:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AB:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AC:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AC:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AD:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AD:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AE:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AE:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AF:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0AF:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B0:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B0:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B1:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B1:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B2:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B2:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B3:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B3:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B4:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B4:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B5:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B5:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B6:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B6:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B7:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B7:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B8:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B8:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B9:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0B9:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BA:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BA:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BB:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BB:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BC:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BC:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BD:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BD:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BE:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BE:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BF:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0BF:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C0:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C0:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C1:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C1:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C2:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C2:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C3:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C3:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C4:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C4:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C5:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C5:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C6:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C6:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C7:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C7:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C8:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C8:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C9:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0C9:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CA:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CA:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CB:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CB:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CC:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CC:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CD:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CD:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CE:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CE:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CF:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0CF:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D0:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D0:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D1:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D1:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D2:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D2:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D3:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D3:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D4:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D4:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D5:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D5:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D6:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D6:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D7:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D7:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D8:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment.h:g_EquipDefs:0x0D8:desc	장비					0		통과	unused(원문 빈 문자열)	
+accessories.h:g_AccessoryDefs:0x00:name	장비		----			4		통과	신규 번역·DUB행 존재(런타임 EN 덮어씀)	
+accessories.h:g_AccessoryDefs:0x00:desc	장비		장착 해제한다			13	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x01:name	장비		천 옷			5		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x01:desc	장비		소박한 천 튜닉			14	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x02:name	장비		가죽 흉갑			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x02:desc	장비		무두질 가죽 흉갑			16	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x03:name	장비		구리 흉갑			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x03:desc	장비		구리 흉갑			9	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x04:name	장비		철 흉갑			7		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x04:desc	장비		철 흉갑			7	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x05:name	장비		강철 흉갑			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x05:desc	장비		강철 흉갑			9	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x06:name	장비		실버 체스트			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x06:desc	장비		은 흉갑			7	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x07:name	장비		골드 체스트			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x07:desc	장비		금 흉갑			7	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x08:name	장비		플라티나 체스트			15		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x08:desc	장비		백금 흉갑			9	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x09:name	장비		다이아 브레스트			15		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x09:desc	장비		다이아몬드 흉갑			15	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0A:name	장비		화염 흉갑			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0A:desc	장비		불 공격에 강하다			16	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0B:name	장비		번개 흉갑			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0B:desc	장비		번개 공격에 강하다			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0C:name	장비		얼음 흉갑			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0C:desc	장비		얼음 공격에 강하다			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0D:name	장비		미러 쿠이라스			13		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0D:desc	장비		석화 방지 광택 갑옷			19	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0E:name	장비		스파이크 브레이커			17		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0E:desc	장비		가시를 막는 갑옷			16	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x0F:name	장비		알카드 메일			11		통과	용어집 채택+신규 혼합	
+accessories.h:g_AccessoryDefs:0x0F:desc	장비		불, 번개, 얼음에 내성을 가진다			30	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x10:name	장비		부정한 흉갑			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x10:desc	장비		사악한 공격에 무효하다			22	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x11:name	장비		힐링 메일			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x11:desc	장비		걸으면 HP가 회복된다			20	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x12:name	장비		성스러운 흉갑			13		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x12:desc	장비		신성 공격에 강하다			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x13:name	장비		워크 마스터			11		통과	신규 번역·30b 판정 적용	
+accessories.h:g_AccessoryDefs:0x13:desc	장비		지도 달성률에 따라 방어력이 오른다			34	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x14:name	장비		빛의 흉갑			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x14:desc	장비		서브웨폰 위력을 강화한다			24	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x15:name	장비		어둠의 흉갑			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x15:desc	장비		마법 공격력을 강화한다			22	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x16:name	장비		분노의 흉갑			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x16:desc	장비		대미지를 받으면 방어력이 오른다			31	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x17:name	장비		드라큘라 옷			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x17:desc	장비		자수 놓은 귀족 튜닉			19	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x18:name	장비		가브 오브 갓			12		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x18:desc	장비		모든 갑옷 중 최강이다			21	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x19:name	장비		액스 아머의 갑옷			16		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x19:desc	장비		착용자는 액스 아머가 된다			25	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1A:name	장비		----			4		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1A:desc	장비		장착 해제한다			13	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1B:name	장비		안경			4		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1B:desc	장비		멋진 안경			9	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1C:name	장비		댄스 마스크			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1C:desc	장비		무도회용 가면			13	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1D:name	장비		반다나			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1D:desc	장비		머리 약점을 보호한다			20	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1E:name	장비		펠트의 모자			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1E:desc	장비		펠트의 모자			11	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1F:name	장비		비로드의 모자			13		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x1F:desc	장비		비로드의 모자			13	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x20:name	장비		고글			4		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x20:desc	장비		편안한 눈 보호구			16	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x21:name	장비		가죽 모자			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x21:desc	장비		무두질 가죽 모자			16	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x22:name	장비		성스러운 안경			13		통과	용어집 채택+신규 혼합	
+accessories.h:g_AccessoryDefs:0x22:desc	장비		마법 저주를 꿰뚫어본다			22	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x23:name	장비		떠돌이모자			10		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x23:desc	장비		모험가의 평범한 모자			20	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x24:name	장비		돌가면			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x24:desc	장비		고대 의식용 돌가면			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x25:name	장비		서클렛			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x25:desc	장비		서클렛			6	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x26:name	장비		은의 서클렛			11		통과	신규 번역·30b 판정 적용	
+accessories.h:g_AccessoryDefs:0x26:desc	장비		신성 대미지로 HP를 회복한다			27	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x27:name	장비		홍옥석의 서클렛			15		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x27:desc	장비		불 대미지로 HP를 회복한다			25	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x28:name	장비		청옥석의 서클렛			15		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x28:desc	장비		얼음 대미지로 HP를 회복한다			27	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x29:name	장비		황옥석의 서클렛			15		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x29:desc	장비		독 대미지로 HP를 회복한다			25	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2A:name	장비		녹주석의 서클렛			15		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2A:desc	장비		번개 대미지로 HP를 회복한다			27	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2B:name	장비		묘목석의 서클렛			15		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2B:desc	장비		고양이 대미지로 HP를 크게 회복한다			34	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2C:name	장비		산호의 서클렛			13		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2C:desc	장비		저주를 무효한다			15	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2D:name	장비		에길의 투구			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2D:desc	장비		적을 놀라게 해 방어력을 낮춘다			30	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2E:name	장비		실버 티아라			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2E:desc	장비		지능이 증가한다			15	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2F:name	장비		차양 떠돌이모자			15		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x2F:desc	장비		보호용 챙 넓은 모자			19	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x30:name	장비		----			4		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x30:desc	장비		장착 해제한다			13	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x31:name	장비		천 망토			7		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x31:desc	장비		잘 만들었지만 초라해 보인다			27	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x32:name	장비		리버시블 망토			13		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x32:desc	장비		뒤집어 입는 양면 망토			21	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x33:name	장비		엘프의 로브			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x33:desc	장비		숲 위장에 딱 맞는다			19	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x34:name	장비		인비시블			8		통과	신규 번역·30b 판정 적용	
+accessories.h:g_AccessoryDefs:0x34:desc	장비		마법 반투명 망토			16	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x35:name	장비		블루 망토			9		통과	신규 번역·30b 판정 적용	
+accessories.h:g_AccessoryDefs:0x35:desc	장비		화려한 파란 망토			16	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x36:name	장비		피로 물든 망토			14		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x36:desc	장비		대미지를 하트로 바꾼다			22	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x37:name	장비		오더 메이드			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x37:desc	장비		색을 고른다 [시스템 메뉴]			25	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x38:name	장비		칠흑의 망토			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x38:desc	장비		흡혈귀용 검은 망토			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x39:name	장비		----			4		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x39:desc	장비		장착 해제한다			13	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3A:name	장비		문스톤			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3A:desc	장비		일몰 후 능력이 오른다			21	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3B:name	장비		썬스톤			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3B:desc	장비		일출 후 능력이 오른다			21	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3C:name	장비		블러드스톤			10		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3C:desc	장비		피 회복 능력을 강화한다			23	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3D:name	장비		스타우로라이트			14		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3D:desc	장비		십자가 위력을 강화한다			22	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3E:name	장비		펄의 반지			9		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3E:desc	장비		신성한 힘 깃든 반지			19	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3F:name	장비		지르콘			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x3F:desc	장비		반짝이는 반지 [판매용]			22	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x40:name	장비		아쿠아마린			10		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x40:desc	장비		꽤 귀한 반지 [판매용]			21	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x41:name	장비		터코이즈			8		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x41:desc	장비		꽤 귀한 반지 [판매용]			21	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x42:name	장비		오닉스			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x42:desc	장비		귀한 반지 [판매용]			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x43:name	장비		가넷			4		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x43:desc	장비		귀한 반지 [판매용]			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x44:name	장비		오팔			4		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x44:desc	장비		귀한 반지 [판매용]			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x45:name	장비		다이아몬드			10		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x45:desc	장비		매우 귀한 반지 [판매용]			23	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x46:name	장비		라피스 라줄리			13		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x46:desc	장비		행운을 부르는 보석			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x47:name	장비		라우린의 반지			13		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x47:desc	장비		24인분의 힘을 준다			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x48:name	장비		금 반지			7		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x48:desc	장비		새김말 "..착용..시계.."			23	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x49:name	장비		은 반지			7		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x49:desc	장비		새김말 "..탑..안.."			19	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4A:name	장비		해골 반지			9		통과	신규 번역·30b 판정 적용	
+accessories.h:g_AccessoryDefs:0x4A:desc	장비		모든 것을 지배하는 반지!			24	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4B:name	장비		레어링			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4B:desc	장비		희귀 아이템 출현이 증가한다			27	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4C:name	장비		펜던트			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4C:desc	장비		MP 회복 속도가 증가한다			23	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4D:name	장비		하트 브로치			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4D:desc	장비		하트 소모를 줄인다			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4E:name	장비		네클리스			8		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4E:desc	장비		방어력+5			8	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4F:name	장비		건틀렛			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x4F:desc	장비		공격력+5			8	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x50:name	장비		축복의 앙크			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x50:desc	장비		회복 아이템 효능을 높인다			25	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x51:name	장비		마스터링			8		통과	신규 번역·30b 판정 적용	
+accessories.h:g_AccessoryDefs:0x51:desc	장비		모든 능력이 오른다			18	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x52:name	장비		메달			4		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x52:desc	장비		방어력+1 공격력+1			17	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x53:name	장비		타리스만			8		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x53:desc	장비		받은 대미지를 흡수하기도 한다			29	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x54:name	장비		듀플리케이터			12		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x54:desc	장비		[사용] 아이템을 복제한다			24	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x55:name	장비		킹스톤			6		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x55:desc	장비		보석 버클 힘+10			15	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x56:name	장비		메긴교즈			8		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x56:desc	장비		보석 버클 힘+15			15	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x57:name	장비		브리싱가멘			10		통과	신규 번역·30b 판정 적용	
+accessories.h:g_AccessoryDefs:0x57:desc	장비		드워프 목걸이 방어력+15			23	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x58:name	장비		시크릿 부츠			11		통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x58:desc	장비		몰래 키가 커진다!			17	144	통과	신규 번역	
+accessories.h:g_AccessoryDefs:0x59:name	장비		알카트 메일			11		통과	용어집 채택+신규 혼합	
+accessories.h:g_AccessoryDefs:0x59:desc	장비		불, 번개, 얼음에 내성?			22	144	통과	신규 번역·원문 "?"(불확실)	
+equipment_mod.h:g_EquipDefs:0x0A9:name	장비		스멜리 라이스			13		통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0A9:desc	장비		유통기한이 지났다 [사용]			24	144	통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AA:name	장비		딜리셔스 밀			11		통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AA:desc	장비		별 다섯 코스요리 [사용]			23	144	통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AB:name	장비		사인드 보드			11		통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AB:desc	장비		받았다!!			8	144	통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AC:name	장비		알카드 스피어			13		통과	용어집 채택+신규 혼합	
+equipment_mod.h:g_EquipDefs:0x0AC:desc	장비		그가 아끼던 마창			16	144	통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AD:name	장비		우드랜드 실드			13		통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AD:desc	장비		나무 정령 실드, 장미향			22	144	통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AE:name	장비		아스트랄 대거			13		통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AE:desc	장비		수수께끼 이계 단검			18	144	통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AF:name	장비		더블 블레이드 액스			18		통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0AF:desc	장비		깔끔히 베는 쌍날			16	144	통과	신규 번역	
+equipment_mod.h:g_EquipDefs:0x0E0:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment_mod.h:g_EquipDefs:0x0E0:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment_mod.h:g_EquipDefs:0x0E1:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment_mod.h:g_EquipDefs:0x0E1:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment_mod.h:g_EquipDefs:0x0E2:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment_mod.h:g_EquipDefs:0x0E2:desc	장비					0		통과	unused(원문 빈 문자열)	
+equipment_mod.h:g_EquipDefs:0x0E3:name	장비					0		통과	unused(원문 빈 문자열)	
+equipment_mod.h:g_EquipDefs:0x0E3:desc	장비					0		통과	unused(원문 빈 문자열)	
+accessories_mod.h:g_AccessoryDefs:0x5A:name	장비		글레어링 클로스			15		통과	신규 번역	
+accessories_mod.h:g_AccessoryDefs:0x5A:desc	장비		어둠을 가르는 은빛 섬광			23	144	통과	신규 번역	
+accessories_mod.h:g_AccessoryDefs:0x5B:name	장비		레인보우 맨틀			13		통과	신규 번역	
+accessories_mod.h:g_AccessoryDefs:0x5B:desc	장비		시간 따라 색이 바뀐다			21	144	통과	신규 번역	
+accessories_mod.h:g_AccessoryDefs:0x5C:name	장비		리릭스 카드			11		통과	신규 번역	
+accessories_mod.h:g_AccessoryDefs:0x5C:desc	장비		녹턴의 노랫말			13	144	통과	신규 번역	
+prologue_us_psx:0	대사		전설의 뱀파이어 헌터 리히터 벨몬드가/어둠의 신관 샤프트의 손에 무덤에서 되살아난/흡혈귀의 군주 드라큘라 백작의 위협에/마침내 종지부를 찍었다			140		확인필요	용어집+신규 혼합;BR재생성	
+prologue_us_psx:1	대사		그러나 4년 뒤 어느 밤/보름달의 빛 아래에서/리히터는 홀연히 모습을 감추었다			74		확인필요	용어집+신규 혼합	
+prologue_us_psx:2	대사		어디서부터 찾아야 할지 몰랐던 마리아 르나르는/그를 찾아 길을 떠났다/그때 운명이 개입했다			88		확인필요	용어집+신규 혼합;BR재생성	
+prologue_us_psx:3	대사		백 년에 한 번 나타난다는 소문의/드라큘라의 성 캐슬바니아가/그녀를 인도하듯 갑자기/안개 속에서 모습을 드러냈다			109		확인필요	용어집+신규 혼합;BR재생성	
+prologue_us_psx:4	대사		한편 강대한 힘들이/알카드라는 사내의 영혼을 두고/다투고 있었다/불멸의 아버지 블라드 체페시 드라큘라 백작과 싸우기 위해/랄프 벨몬드와 손을 잡았던/바로 그 알카드였다			163		확인필요	용어집+신규 혼합;BR재생성	
+prologue_us_psx:5	대사		저주받은 자신의 혈통을/이 세상에서 끊기 위해/알카드는 흡혈귀의 힘을 봉인하고/영원한 잠에 들었다/그러나 지금 그는 깨어나/고향에 다시 악이 움직이고 있음을/알게 되었다			164		확인필요	용어집+신규 혼합;BR재생성	
+prologue_us_psx:6	대사		선과 악의 세력이/오래된 싸움을 다시 벌일 때가 왔다/드라큘라의 성이 그대를 부른다...			83		확인필요	용어집+신규 혼합;BR재생성	
+prologue_us_psx:7	대사		그리고 누가 승리할지는/아무도 말할 수 없다			42		확인필요	용어집+신규 혼합	
+prologue_psp_en:0	대사		어둠의 신관 샤프트의 도움으로 부활한/드라큘라 백작이 다시 인류를 위협했다/전설의 뱀파이어 헌터/리히터 벨몬드가 그에 맞서/마침내 그를 쓰러뜨렸다			143		확인필요	용어집+신규 혼합;BR재생성	
+prologue_psp_en:1	대사		그러나 4년 뒤/달빛 밝은 보름밤에/리히터는 홀연히 모습을 감추었다			64		확인필요	용어집+신규 혼합	
+prologue_psp_en:2	대사		마리아 르나르는 그를 찾아 나섰으나/어디서부터 찾아야 할지 몰랐다/그때 운명이 개입했다			85		확인필요	용어집+신규 혼합;BR재생성	
+prologue_psp_en:3	대사		백 년에 한 번 나타난다는 소문의/드라큘라의 성 캐슬바니아가 갑자기/안개 속에서 모습을 드러냈다/마치 그녀를 인도하듯이			116		확인필요	용어집+신규 혼합;BR재생성	
+prologue_psp_en:4	대사		한편 강대한 힘들이/알카드라는 사내의 영혼을 두고 다투었다/불멸의 아버지 드라큘라 백작 그 자신과 싸우기 위해/한때 랄프 벨몬드와 함께 싸웠던/바로 그 알카드였다			157		확인필요	용어집+신규 혼합;BR재생성	
+prologue_psp_en:5	대사		저주받은 자신의 혈통으로 세상을 더럽히지 않기 위해/알카드는 흡혈귀의 힘을 봉인하고/영원한 잠에 들었다/그러나 지금 그는 악의 웃음소리와/무고한 자들의 울부짖음에 눈을 뜬다			169		확인필요	용어집+신규 혼합;BR재생성	
+prologue_psp_en:6	대사		선과 악의 영원한 싸움이			23		확인필요	용어집+신규 혼합	
+prologue_psp_en:7	대사		다시금 되풀이된다/드라큘라의 성이 그대를 부른다...			50		확인필요	용어집+신규 혼합	
+prologue_psp_en:8	대사		그리고 누가 승리할지는/아무도 말할 수 없다...			45		확인필요	용어집+신규 혼합	
+st0_psp_opening:0	대사		드라큘라 백작이 부활했다,			25		확인필요	용어집+신규 혼합	
+st0_richter_dracula:0	대사	#1/1/1	멸망하라!/이곳은 네가 사는 세계가 아니다.			45		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+st0_richter_dracula:1	대사	#1/1/1/1/1/1/1	스스로의 힘으로 되살아난 것이 아니다./욕심 많은 인간들 때문에 되살아나는 것이다./힘만이 유일한 정의이니까.			77		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+st0_richter_dracula:2	대사	#1/1/1/1	그건 네 멋대로 하는 소리다!/사람들은 같은 신념 아래/서로를 구하며 걸어간다.			55		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+st0_richter_dracula:3	대사	#1/1/1	인간들은 욕망으로 발전하고/신앙으로 다스려져 오지 않았느냐.			36		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」
+st0_richter_dracula:4	대사	#1/1/1/1	인간은 힘만으로는 다스릴 수 없다./자애로운 마음이 있기에/다스리는 것이 가능한 것이다.			64		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」
+st0_richter_dracula:5	대사	#1/1/1/1/1	시시하군./어느 쪽이 옳은지/죽음으로 알려 주마.			80		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+sel_ending:0	대사	#1/1/1/1/0/1/1/1/1/1/0/1/1/1/0/1/1/1/1	인류는 계속 싸운다, 하지만 그것은/살아남기 위한 절망적인 싸움이다//그는 아마도 싸움의 삶밖에 몰랐기에/싸움의 삶을 택했겠지//아버지, 당신처럼/그는 파멸의 길을 택했다...//안녕히, 내가 태어난 대지여/다시는 이 눈으로/너의 아름다움을 보지 않으리			240		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:1	대사	#1	무사했군			8		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+sel_ending:2	대사	#1/1	알카드!/리히터는 어때?			22		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+sel_ending:3	대사	#1	미안하다...			11		확인필요	용어집+신규 혼합	확인필요 — 이번 확정 밖
+sel_ending:4	대사	#1/1/1/1/1	그렇구나.../그를 막아줘서 고마워.../이것도 운명일까?			52		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:5	대사	#1/1/1	........./그럼 너의 여정도 끝난 거야?			37		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:6	대사	#1/1/1	아니, 리히터를 미치게 한 원인을/알아내기 전까진 끝나지 않아			59		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:7	대사	#1/1/1/1	알았어.../그럼, 가는 길에 신들의 가호가 있기를/잘 가			52		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:8	대사	#1/1	안녕.			23		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+sel_ending:9	대사	#1	무사했군			8		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+sel_ending:10	대사	#1/1/1	알카드!/무사해서 다행이야!			26		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:11	대사	#1/1/1/1	미안하다/네가 친아버지와 싸우게 된 건/내 탓이다...			50		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:12	대사	#1/1/1	신경 쓰지 마라./내 숙명 때문에/그를 쓰러뜨려야만/했을 뿐이다.			44		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+sel_ending:13	대사	#1/1	그렇게 말해 주니 도움이 된다.			24		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+sel_ending:14	대사	#1/1/1/1/1/1/1	하지만/잘 기억해 둬 줘./이 세상에 파멸을 가져올 수 있는 건/그가 아니라/자기 자신이라는 걸…			107		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+sel_ending:15	대사	#1	알겠다			6		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+sel_ending:16	대사	#1/1	알카드, 이제 어떻게 할 거야?			28		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:17	대사	#1/1/1/1/1/1	내 몸에 흐르는 저주받은 피는/이 세상에는 필요 없다./남의 눈에 띄지 않는 편이 좋겠지.			78		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+sel_ending:18	대사	#1/1	그래.			21		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+sel_ending:19	대사	#1/1	그럼 안녕히/다시는 만나지 않으리			32		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+sel_ending:20	대사	#1/1	........./알카드...			19		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+sel_ending:21	대사	#1/1	…괜찮겠어, 마리아?			19		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:22	대사	#1/1/1/1/1	........./미안해.../그를 내 인생에서 사라지게/둘 순 없어			56		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:23	대사	#1/1/1/1	괜찮다./하지만 스스로 고른 길이다./결코 후회하지 않도록 해라.			15		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+sel_ending:24	대사	#1/1	고마워, 리히터.../잘 있어			25		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+sel_ending:25	대사	#1/1	그대도 부디 잘 지내길, 아가씨			29		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:26	대사	#1/1/1/1/1/1	아니, 이게 최선이야./그의 고통을 덜어줄 순 없어./언젠가 다시 만날 수 있겠지./그날이 오면, 아마...			97		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:27	대사	#1	그렇군...			9		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+sel_ending:28	대사	#1/1	가자. 모두들 기다리고 있어.			27		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+sel_ending:29	대사	#1/1	그래, 여기서 나가자.			20		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+no3_death:0	대사	#1/1/1	이거, 알카드 님이시군요./대체 무슨 일로 오셨습니까?			33		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+no3_death:1	대사	#1/1	뻔한 일이다./거기서 비켜 줘야겠다.			31		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+no3_death:2	대사	#1/1/1/1/1/1	아직도 인간의 편을 드시는군요…/우리 쪽으로 돌아오라고는 하지 않겠습니다./부디 손만이라도 떼 주십시오.			94		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+no3_death:3	대사	#1	그건 불가능한 부탁이다.			11		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19) · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+no3_death:4	대사	#1/1/1	어쩔 수 없군요…/이 자리는 일단 물러나겠습니다./다시 한번 잘 생각해 보십시오.			47		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+cen_maria:0	대사	#1	알카드?			7		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+cen_maria:1	대사	#1	그 목소리는? 마리아인가?			24		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+cen_maria:2	대사	#1/1/1/1	미안해./역시 당신이 말한 대로였어…			53		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+cen_maria:3	대사	#1/1	역시 벨몬드였나...			18		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+cen_maria:4	대사	#1/1/1/1	난 그의 의지라고는 생각되지 않아…/하지만 내 힘으로는/리히터를 막을 수 없어.			75		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+cen_maria:5	대사	#1/1	하지만 그를 막아야만 한다.			26		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+cen_maria:6	대사	#1/1/1	알아./자... 이거./가져가.			25		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+cen_maria:7	대사	#1	이건 뭐지?			10		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+cen_maria:8	대사	#1/1/1	그걸 쓰면 사악한 환영 너머가 보일 거야.			39		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+cen_maria:9	대사	#1/1/1/1	그런가./그럼 그가 죽지 않도록/기도하고 있어라.			58		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+nz0_slogra_gaibon:0	대사	#1/1	또 만났네, 알카드.			18		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+nz0_slogra_gaibon:1	대사	#1	마리아라고 했던가…			13		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+nz0_slogra_gaibon:2	대사	#1/1/1/1/1	여전하네, 매정하기는./이상해. 이 성은 내가 기억하던 모습과 달라.			64		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+nz0_slogra_gaibon:3	대사	#1/1/1/1/1	........./이 성은 카오스의 피조물./여러 모습으로 현현할 수 있지.			64		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+nz0_slogra_gaibon:4	대사	#1/1/1/1	전의 지식은 소용없다는 건가…/생각해 봐야 소용없지./고마워,/그럼.			39		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+lib_librarian:0	대사	#1/1	오랜만이군, 노인...			19		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+lib_librarian:1	대사	#1/1/1	오, 알카드 님이 아니십니까./무엇이 필요하시죠?			46		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+lib_librarian:2	대사	#1	미안하지만 도와줬으면 한다.			19		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+lib_librarian:3	대사	#1/1/1	도련님,/주인님께 거역하는 분은 도울 수 없습니다.			48		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+lib_librarian:4	대사	#1/1	보답은 아끼지 않겠다...			23		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+lib_librarian:5	대사	#1/1/1	정말요? 그렇다면 필요한 걸 말씀만 하시죠.			41		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+no4_ferryman_left:0	대사	#1/1/1	좋은 곳으로 데려가 주지.			38		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+no4_ferryman_right:0	대사	#1/1	당신이 가야 할 곳으로/인도해 드리지요…			34		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+rcen_shaft:0	대사	#1/0	윽… 그, 그러나…			15		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+rcen_shaft:1	대사	#1/1/1/1	제 몸을 버린 자에게/이 세상에 있을 곳은 없다./네놈이 좋아하는 암흑으로 떠나라.			56		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+rcen_shaft:2	대사	#1/1/1/1/1/1/1	내 야망은 이루어졌다…/나의 주군, 드라큘라 백작이여!/썩어 빠진 세상에 파괴와 혼돈을!			104		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+rcen_shaft:3	대사	#1/1/1/1/1	여기까지 오다니/훌륭하다./과연 우리/주군의/아드님이로군.			56		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+rcen_shaft:4	대사	#1/1/1	네가 벨몬드를/조종한 자로군.			28		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+rcen_shaft:5	대사	#1/1/1/1/1	그렇다. 내가 암흑 신관 샤프트./이 세상에 파괴와 혼란을 가져오는 자다.			103		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 행 분리(다음 행 rcen_shaft:5b 신설)
+rcen_shaft:5b	대사		네놈이 샤프트냐?							신설 행(작성자 06:19: rcen_shaft:5 행 분리) — 스크립트 반영 시 행 추가 지원 필요
+rcen_shaft:6	대사	#1	그렇다.			7		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+rcen_shaft:7	대사	#1/1/1	어째서 벨몬드를 이 성의 주인으로 삼았지?			40		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+rcen_shaft:8	대사	#1/1/1/1/1/1/1	수 세기 동안/뱀파이어 헌터들은/성스러운 힘으로/악을 물리쳐 왔다./하지만 두 명의/뱀파이어 헌터가/서로 싸우게 된다면...			117		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+rcen_shaft:9	대사	#1/1/1/1/1	벨몬드의 힘은 다른 누구보다 압도적이다./같은 성질의 힘이라면/쉽게 쓰러뜨릴 수 없을 것이다.			79		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+rcen_shaft:10	대사	#1/1/1/1/1	바로 그거다./그래서 그를/이 성의 주인으로 만들어/위협에서/제거한 것이다.			72		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+rcen_shaft:11	대사	#1/1	하지만 그것도 여기까지인 듯하군.			26		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+rcen_shaft:12	대사	#1/1/1/1/1	과연 그럴까./마지막 제물로서/네놈의 죽어야 할 반쪽을 바치겠다!			64		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19)
+dre_succubus:0	대사	#1/1	!!/어머니!!!			12		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:1	대사	#1/1	그 목소리! 알카드, 너로구나!			28		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:2	대사	#1/1	어머니!/지금 구하러 가겠습니다!			31		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:3	대사	#1/1	안 돼, 알카드!/이리 오지 마!			28		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:4	대사	#1	하지만 어머니!			14		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:5	대사	#1/1/1/1	괜찮아요!/제 목숨으로 모두에게 행복이 찾아온다면/저는 기꺼이 죽음을 맞이하겠어요.			71		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:6	대사	#1/1	안 돼, 그런 건…			33		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:7	대사	#1/1/1/1	미안해요, 알카드./당신에게만 괴로운 짐을…/하지만 내 마지막 말을/마음에 새기고 살아가 주세요…			72		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:8	대사	#1	네, 어머니...			13		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:9	대사	#1/1/1	사람을 증오하세요./그리고/죽이세요.			56		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:10	대사	#1	뭐?!...			7		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:11	대사	#1/1/1/1/1	죄를 거듭하게 두느니/죽는 편이 나아./우선 저기 있는 저자부터/베어렴.			68		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:12	대사	#1/1	아니야…			26		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:13	대사	#1/1	왜 그러시죠?/알카드.			18		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:14	대사	#1/1	어머니는 절대/그런 말씀을 하지 않으셨어...			42		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:15	대사	#1/1/1	무슨 소리야!?/죽여서 행복하게/해주렴.			37		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:16	대사	#1/1/1	단연코 어머니가 아니다!/네놈, 정체가 뭐냐!			47		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:17	대사	#1/1	내 주문에서 풀려나다니./마음에 드는구나.			40		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:18	대사	#1/1	용서 못 한다!/네놈에게는 죽음조차 미지근하다.			35		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:19	대사	#1/1/1	천천히 사로잡아 주지./이리 오렴, 꼬마야.			39		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:20	대사	#1/1/1/1	이 피 냄새…/어째서 밤의 일족의 피 냄새가…/설마…			58		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:21	대사	#1	.........			9		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19)
+dre_succubus:22	대사	#1/1/1	이 강함,/그리고 아름다움…/아아…, 틀림없어…/당신은, 백작님의…			52		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19)
+dre_succubus:23	대사	#1/1/1/1	꿈의 세계에서의 죽음은/네 영혼을 영원히/떠돌게 하리라, 악마야.			62		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19)
+dai_huntinggirl:0	대사	#1/1	어때?/리히터는 찾았어?			23		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19) · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+dai_huntinggirl:1	대사	#1/1/1/1	찾는 남자인지는 모르겠지만/벨몬드 가문 사람이라면 본 적이 있어…			41		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+dai_huntinggirl:2	대사	#1/1	역시…/여기 와 있었구나.			25		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+dai_huntinggirl:3	대사	#1/1/1/1	하지만/그는 적으로서 나타났다./게다가 이 성의 성주로서…			49		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+dai_huntinggirl:4	대사	#1/1/1/0	그, 그럴 리 없어./하지만 만약 그게 사실이라면/분명 이유가 있을 거야./미안해, 가 봐야겠어.			47		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+top_maria_richter:0	대사	#1/1	내가 이런 짓을…./젠장,/이게 무슨 일이냐.			25		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+top_maria_richter:1	대사	#1/1	고마워, 알카드./리히터를 구해 줘서…			34		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19) · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+top_maria_richter:2	대사	#1/1/1/1/1/1/1	알카드…/설마,/내 선조 랄프와 함께/드라큘라를 쓰러뜨린…			87		확인필요	용어집+신규 혼합;BR재생성	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+top_maria_richter:3	대사	#1/1/1/1/1	그런 건 아무래도 좋다./널 조종하던 자는/저 성에 있는 것이냐?			57		확인필요	용어집+신규 혼합;BR재생성	검수 OK — v13 유지(작성자 06:19) · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+top_maria_richter:4	대사	#1	그래, 그럴 거야…/신관 샤프트…/그놈은 이계의 성 중앙에서/드라큘라 부활 의식을 치르고 있다./서둘러 줘!			21		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+top_maria_richter:5	대사	#1/1/1	마리아./리히터를 데리고 성을 나가라./나머지는 내가 맡겠다.			60		확인필요	용어집+신규 혼합	검수 OK — v13 유지(작성자 06:19) · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+top_maria_richter:6	대사	#1/1	응…/알았어./조심해, 알카드./신의 가호가 있기를…			22		확인필요	용어집+신규 혼합	v14 확정(작성자 06:19) · 「통솔」→「다스림」 · 초안 복원(작성자 06:27 「대사를 그 방식으로 전부 처리」, 길이 때문에 바꾼 문장 0)
+mod_maria_boss_data.h:g_MbScriptPre:0	대사	#1	알카드?			7		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPre:1	대사	#1	그 목소리? 마리아?			18		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPre:2	대사	#1/1/1/1	미안해. 네 말이/맞았어. 그가 적과/한패가 되었어...			50		확인필요	용어집+신규 혼합;BR재생성	
+mod_maria_boss_data.h:g_MbScriptPre:3	대사	#1/1	역시 벨몬드가/맞았군...			23		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPre:4	대사	#1/1/1/1	하지만 누군가 그를/조종하고 있을 거야./무슨 일이 있어도/리히터를 해치면 안 돼.			78		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPre:5	대사	#1/1	하지만 그를/막아야만 한다.			26		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPre:6	대사	#1/1/1/1	알아./그래서... 미안하지만/네 실력을 시험해/보겠어.			51		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPost:0	대사	#1/1/1	대... 대단해./이 정도면 분명.../리히터를 부탁해.			48		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPost:1	대사	#1/1/1	약속은 못 한다./하지만 그를 반드시/막아내겠다.			46		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPost:2	대사	#1/1	그것도 어쩔 수/없겠지...			24		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPost:3	대사	#1/1	자... 여기./이걸 가져가.			24		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPost:4	대사	#1	이건 뭐지?			10		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPost:5	대사	#1/1/1	이걸 쓰면/사악한 환영 너머가/보여.			34		확인필요	용어집+신규 혼합	
+mod_maria_boss_data.h:g_MbScriptPost:6	대사	#1/1/1/1	고맙다./그럼 그대는 친구의 영혼을 위해/기도하는 게 좋겠군.			58		확인필요	용어집+신규 혼합;BR재생성	
+config_us.h:g_MenuStr:0	메뉴		알카드			6		통과	용어집 채택	
+config_us.h:g_MenuStr:1	메뉴		힘			2		통과	신규 번역	
+config_us.h:g_MenuStr:2	메뉴		건강			4		통과	신규 번역	
+config_us.h:g_MenuStr:3	메뉴		지능			4		통과	신규 번역	
+config_us.h:g_MenuStr:4	메뉴		행운			4		통과	신규 번역	
+config_us.h:g_MenuStr:5	메뉴		경험치			6		통과	신규 번역	
+config_us.h:g_MenuStr:6	메뉴		다음			4		통과	신규 번역	
+config_us.h:g_MenuStr:7	메뉴		골드			4		통과	신규 번역	
+config_us.h:g_MenuStr:8	메뉴		레벨			4		통과	신규 번역	
+config_us.h:g_MenuStr:9	메뉴		시간			4		통과	신규 번역	
+config_us.h:g_MenuStr:10	메뉴		방			2		통과	신규 번역	
+config_us.h:g_MenuStr:11	메뉴		처치			4		통과	신규 번역	
+config_us.h:g_MenuStr:12	메뉴		체력			4		통과	신규 번역	
+config_us.h:g_MenuStr:13	메뉴		마력			4		통과	신규 번역	
+config_us.h:g_MenuStr:14	메뉴		하트			4		통과	신규 번역	
+config_us.h:g_MenuStr:15	메뉴		상태			4		통과	신규 번역	
+config_us.h:g_MenuStr:16	메뉴		버튼설정			8		통과	신규 번역	
+config_us.h:g_MenuStr:17	메뉴		망토안감			8		통과	신규 번역	
+config_us.h:g_MenuStr:18	메뉴		망토색			6		통과	신규 번역	
+config_us.h:g_MenuStr:19	메뉴		・・・・・			10		통과	신규 번역	
+config_us.h:g_MenuStr:20	메뉴		겉감			4		통과	신규 번역	
+config_us.h:g_MenuStr:21	메뉴		안감			4		통과	신규 번역	
+config_us.h:g_MenuStr:22	메뉴		오른손			6		통과	신규 번역	
+config_us.h:g_MenuStr:23	메뉴		왼손			4		통과	신규 번역	
+config_us.h:g_MenuStr:24	메뉴		점프			4		통과	신규 번역	
+config_us.h:g_MenuStr:25	메뉴		특수			4		통과	신규 번역	
+config_us.h:g_MenuStr:26	메뉴		늑대			4		통과	신규 번역	
+config_us.h:g_MenuStr:27	메뉴		안개			4		통과	신규 번역	
+config_us.h:g_MenuStr:28	메뉴		박쥐			4		통과	신규 번역	
+config_us.h:g_MenuStr:29	메뉴		개발			4		통과	신규 번역	
+config_us.h:g_MenuStr:30	메뉴		일반			4		통과	신규 번역	
+config_us.h:g_MenuStr:31	메뉴		반전			4		통과	신규 번역	
+config_us.h:g_MenuStr:32	메뉴		소리			4		통과	신규 번역	
+config_us.h:g_MenuStr:33	메뉴		스테레오			8		통과	신규 번역	
+config_us.h:g_MenuStr:34	메뉴		모노			4		통과	신규 번역	
+config_us.h:g_MenuStr:35	메뉴		창색상			6		통과	신규 번역	
+config_us.h:g_MenuStr:36	메뉴		타임어택			8		통과	신규 번역	
+config_us.h:g_MenuStr:37	메뉴		정상			4		통과	신규 번역	
+config_us.h:g_MenuStr:38	메뉴		독			2		통과	신규 번역	
+config_us.h:g_MenuStr:39	메뉴		석화			4		통과	신규 번역	
+config_us.h:g_MenuStr:40	메뉴		저주			4		통과	신규 번역	
+config_us.h:g_MenuStr:41	메뉴		------------------------------			30		통과	신규 번역	
+config_us.h:g_MenuStr:42	메뉴		알카트			6		통과	용어집 채택	
+config_us.h:g_MenuStr:43	메뉴		레벨			4		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:44	메뉴		경험치			6		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:45	메뉴		알카트			6		통과	신규 번역	
+config_us.h:g_MenuStr:46	메뉴		박쥐			4		통과	신규 번역	
+config_us.h:g_MenuStr:47	메뉴		고스트			6		통과	신규 번역	
+config_us.h:g_MenuStr:48	메뉴		요정			4		통과	신규 번역	
+config_us.h:g_MenuStr:49	메뉴		아기 악마			9		통과	신규 번역	
+config_us.h:g_MenuStr:50	메뉴		검마			4		통과	신규 번역	
+config_us.h:g_MenuStr:51	메뉴		요정			4		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:52	메뉴		코악마			6		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:53	메뉴		리히터 드라큘라 격파			20		확인필요	신규 번역·용어집 정합 수정·10자 초과(표시폭 실측 필요)	
+config_us.h:g_MenuStr:54	메뉴		올록격파			8		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:55	메뉴		도플갱어10격파			14		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:56	메뉴		레기온격파			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:57	메뉴		미노타우로스·웨어울프격파			26		확인필요	신규 번역·용어집 정합 수정·10자 초과(표시폭 실측 필요)	
+config_us.h:g_MenuStr:58	메뉴		스킬라격파			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:59	메뉴		베리건과 갸이본격파			19		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:60	메뉴		히포그리프격파			14		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:61	메뉴		벨제브브격파			12		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:62	메뉴		서큐버스격파			12		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:63	메뉴		말파스격파			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:64	메뉴		랄프·그랜트·사이파격파			24		확인필요	신규 번역·용어집 정합 수정·10자 초과(표시폭 실측 필요)	
+config_us.h:g_MenuStr:65	메뉴		사신격파			8		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:66	메뉴		케르베로스격파			14		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:67	메뉴		리히터구출			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:68	메뉴		메두사격파			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:69	메뉴		크리처격파			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:70	메뉴		레서데몬격파			12		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:71	메뉴		도플갱어40격파			14		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:72	메뉴		미라남격파			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:73	메뉴		거대박쥐격파			12		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:74	메뉴		갈라모스격파			12		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:75	메뉴		최종세이브			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:76	메뉴		사신과만남			10		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:77	메뉴		성스러운안경입수			16		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:78	메뉴		사서만남			8		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:79	메뉴		마리아첫만남			12		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:80	메뉴					0		통과	unused(원문 빈 문자열)	
+config_us.h:g_MenuStr:81	메뉴					0		통과	unused(원문 빈 문자열)	
+config_us.h:g_MenuStr:82	메뉴					0		통과	unused(원문 빈 문자열)	
+config_us.h:g_MenuStr:83	메뉴					0		통과	unused(원문 빈 문자열)	
+config_us.h:g_MenuStr:84	메뉴					0		통과	unused(원문 빈 문자열)	
+config_us.h:g_MenuStr:85	메뉴		오른손			6		통과	신규 번역	
+config_us.h:g_MenuStr:86	메뉴		왼손			4		통과	신규 번역	
+config_us.h:g_MenuStr:87	메뉴		머리			4		통과	신규 번역	
+config_us.h:g_MenuStr:88	메뉴		몸			2		통과	신규 번역	
+config_us.h:g_MenuStr:89	메뉴		망토			4		통과	신규 번역	
+config_us.h:g_MenuStr:90	메뉴		기타			4		통과	신규 번역	
+config_us.h:g_MenuStr:91	메뉴		기타			4		통과	신규 번역	
+config_us.h:g_MenuStr:92	메뉴		장비			4		통과	신규 번역	
+config_us.h:g_MenuStr:93	메뉴		마법			4		통과	신규 번역	
+config_us.h:g_MenuStr:94	메뉴		유물			4		통과	신규 번역	
+config_us.h:g_MenuStr:95	메뉴		시스템			6		통과	신규 번역	
+config_us.h:g_MenuStr:96	메뉴		사역마			6		통과	신규 번역	
+config_us.h:g_MenuStr:97	메뉴		사역마목록			10		통과	신규 번역	
+config_us.h:g_MenuStr:98	메뉴		필살기목록			10		통과	신규 번역	
+config_us.h:g_MenuStr:99	메뉴		단검			4		통과	신규 번역·원문약어 S.sword(미확인)	
+config_us.h:g_MenuStr:100	메뉴		검			2		통과	신규 번역	
+config_us.h:g_MenuStr:101	메뉴		투척1			5		통과	신규 번역	
+config_us.h:g_MenuStr:102	메뉴		주먹			4		통과	신규 번역	
+config_us.h:g_MenuStr:103	메뉴		곤봉			4		통과	신규 번역	
+config_us.h:g_MenuStr:104	메뉴		양손			4		통과	신규 번역	
+config_us.h:g_MenuStr:105	메뉴		음식			4		통과	신규 번역	
+config_us.h:g_MenuStr:106	메뉴		폭탄			4		통과	신규 번역	
+config_us.h:g_MenuStr:107	메뉴		투척2			5		통과	신규 번역	
+config_us.h:g_MenuStr:108	메뉴		방패			4		통과	신규 번역	
+config_us.h:g_MenuStr:109	메뉴		약			2		통과	신규 번역	
+e_shop.c:D_us_80181310:0	시스템		구입			4		통과	신규 번역	
+e_shop.c:D_us_80181310:1	시스템		전술			4		통과	신규 번역	
+e_shop.c:D_us_80181310:2	시스템		적목록			6		통과	신규 번역	
+e_shop.c:D_us_80181310:3	시스템		사운드테스트			12		통과	신규 번역	
+e_shop.c:D_us_80181310:4	시스템		나가기			6		통과	신규 번역	
+e_shop.c:D_us_80181310:5	시스템		보석매각			8		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:0	시스템		$1			2		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:1	시스템		$25			3		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:2	시스템		$50			3		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:3	시스템		$100			4		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:4	시스템		$250			4		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:5	시스템		$400			4		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:6	시스템		$700			4		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:7	시스템		$1000			5		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:8	시스템		$2000			5		통과	신규 번역	
+e_collect.h:g_goldCollectTexts:9	시스템		$5000			5		통과	신규 번역	
+e_collect.h:g_RelicOrbTexts:0	시스템		획득			4		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:0:title	메뉴		보스 리히터			11		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:0:opts:0	메뉴		PS1			3		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:0:opts:1	메뉴		Saturn			6		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:0:title2	메뉴		보스 마리아			11		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:0:opts2:0	메뉴		Saturn			6		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:0:opts2:1	메뉴		PSP			3		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:1:title	메뉴		의상			4		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:1:opts:0	메뉴		PS1			3		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:1:opts:1	메뉴		Saturn			6		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:2:title	메뉴		버전			4		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:2:opts:0	메뉴		Saturn			6		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharsel:2:opts:1	메뉴		PSP			3		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharselText	메뉴		캐릭터선택			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharselBalTitle	메뉴		밸런스			6		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharselDubTitle	메뉴		더빙			4		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharselDubOpts:0	메뉴		PSP			3		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharselDubOpts:1	메뉴		PS1			3		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharselDubOpts:2	메뉴		JP			2		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharselMarDubOpts:0	메뉴		PSP			3		통과	신규 번역	
+2C048_mod_player_select.h:g_ModCharselMarDubOpts:1	메뉴		JP			2		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:0	메뉴		변신			4		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:1	메뉴		프롤로그			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:2	메뉴		환상의춤			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:3	메뉴		월광야상곡			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:4	메뉴		기도			4		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:5	메뉴		드라큘라성			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:6	메뉴		황금의춤			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:7	메뉴		대리석회랑			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:8	메뉴		안개의탑			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:9	메뉴		야상곡			6		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:10	메뉴		야상곡(일)			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:11	메뉴		목각파르티타			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:12	메뉴		성령의문			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:13	메뉴		하인들의축제			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:14	메뉴		축복의땅			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:15	메뉴		신들의진혼곡			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:16	메뉴		수정의눈물			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:17	메뉴		버려진구덩이			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:18	메뉴		무지개묘지			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:19	메뉴		침묵			4		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:20	메뉴		잃어버린그림			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:21	메뉴		페일스의춤			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:22	메뉴		저주의지대			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:23	메뉴		마법의연회			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:24	메뉴		방황하는유령			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:25	메뉴		비극의왕자			10		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:26	메뉴		심연의문			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:27	메뉴		천상의문			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:28	메뉴		죽음의발라드			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:29	메뉴		혈연			4		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:30	메뉴		변신2			5		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:31	메뉴		최후의토카타			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:32	메뉴		검은연회			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:33	메뉴		변신3			5		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:34	메뉴		늙은사서			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:35	메뉴		샤콘느			6		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:36	메뉴		흡혈귀킬러1			11		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:37	메뉴		흡혈귀킬러2			11		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:38	메뉴		비기닝R1			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:39	메뉴		비기닝R2			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:40	메뉴		블러디티어R1			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:41	메뉴		블러디티어R2			12		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:42	메뉴		마리아전			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundTracks:43	메뉴		나는바람			8		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundText	메뉴		재생중			6		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundHint	메뉴		재생/정지			9		통과	신규 번역	
+2C048_mod_player_select.h:g_ModSoundBack	메뉴		뒤로			4		통과	신규 번역	
+sysopt.c:g_SysOptName:0	메뉴		PS1			3		통과	신규 번역	
+sysopt.c:g_SysOptName:1	메뉴		Saturn			6		통과	신규 번역	
+sysopt.c:g_SysOptName:2	메뉴		PSP			3		통과	신규 번역	
+sysopt.c:g_SysOptName:3	메뉴		JP			2		통과	신규 번역	
+sysopt.c:g_SysOptLabel:0	메뉴		보스 리히터			11		통과	신규 번역	
+sysopt.c:g_SysOptLabel:1	메뉴		보스 마리아			11		통과	신규 번역	
+sysopt.c:g_SysOptLabel:2	메뉴		밸런스			6		통과	신규 번역	
+sysopt.c:g_SysOptLabel:3	메뉴		더빙			4		통과	신규 번역	
+sysopt.c:SYSOPT_NAME	메뉴		추가설정			8		통과	신규 번역	
+sysopt.c:MOD_SYSOPT_BAR_TEXT	메뉴		보스버전,밸런스,음성			20		확인필요	신규 번역·10자 초과(표시폭 실측 필요)	
+menu_mod_equip_rows.h:g_ModHolderStr	메뉴		소지자			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x000	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x001	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x002	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x003	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x004	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x005	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x006	기타		액스 아머			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x007	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x008	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x009	기타		빅토리 아머			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x00A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x00B	기타		부메랑 스켈레톤			15		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x00C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x00D	기타		블러디 좀비			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x00E	기타		플라잉 좀비			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x00F	기타		플라잉 좀비			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x010	기타		암피스바이나			12		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x011	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x012	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x013	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x014	기타		오울 아머			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x015	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x016	기타		올빼미			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x017	기타		레서 데몬			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x018	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x019	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x01A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x01B	기타		반어인			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x01C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x01D	기타		반어인			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x01E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x01F	기타		고곤			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x020	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x021	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x022	기타		그레이트 아머			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x023	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x024	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x025	기타		블랙 팬서			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x026	기타		크레이지 옥토퍼스			17		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x027	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x028	기타		벼룩남			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x029	기타		아머드 벼룩남			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x02A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x02B	기타		화이트 드래곤			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x02C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x02D	기타		고기동 뼈기둥			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x02E	기타		고기동 뼈기둥			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x02F	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x030	기타		벼룩 라이더			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x031	기타		마리오네트			10		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x032	기타		올록			4		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x033	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x034	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x035	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x036	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x037	기타		올록			4		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x038	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x039	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x03A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x03B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x03C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x03D	기타		워팬서 스켈레톤			15		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x03E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x03F	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x040	기타		배트			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x041	기타		슬라임 라지			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x042	기타		슬라임			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x043	기타		플라잉 스컬			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x044	기타		스켈레톤 모닝스타			17		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x045	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x046	기타		레드 스켈레톤			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x047	기타		암두시아스			10		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x048	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x049	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x04A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x04B	기타		스켈레톤			8		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x04C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x04D	기타		디스크 아머			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x04E	기타		디스크 아머			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x04F	기타		플레임 데몬			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x050	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x051	기타		타액해골			8		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x052	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x053	기타		스켈레톤 유인원			15		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x054	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x055	기타		식인꽃			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x056	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x057	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x058	기타		엑토플라즘			10		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x059	기타					0		통과	unused(원문 빈 문자열)·FIXED행	
+enemydefs.h:g_EnemyDefs:0x05A	기타		뼈기둥			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x05B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x05C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x05D	기타		아머 나이트			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x05E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x05F	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x060	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x061	기타		헤비 아머			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x062	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x063	기타		프로즌 셰이드			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x064	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x065	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x066	기타		스켈레톤 건맨			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x067	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x068	기타		도도			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x069	기타		스켈레톤 솔저			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x06A	기타		두꺼비			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x06B	기타		개구리			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x06C	기타		아처 스켈레톤			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x06D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x06E	기타		좀비			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x06F	기타		글레이브 키퍼			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x070	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x071	기타		글레이브			8		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x072	기타		블루 크로우			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x073	기타		블랙 크로우			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x074	기타		스로 마스터			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x075	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x076	기타		스켈레톤 스피어			15		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x077	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x078	기타		사커 보이			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x079	기타		스컬			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x07A	기타		스켈레톤 블레이즈			17		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x07B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x07C	기타		블레이즈 노비스			15		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x07D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x07E	기타		스켈레톤 비마			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x07F	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x080	기타		플라잉 스켈레톤			15		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x081	기타		룰러 소드 LV3			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x082	기타		폴터가이스트			12		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x083	기타		비프론			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x084	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x085	기타		데드 트루퍼			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x086	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x087	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x088	기타		룰러 소드 LV3			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x089	기타		퍼펫 소드			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x08A	기타		룰러 소드 LV3			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x08B	기타		스피어			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x08C	기타		실드			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x08D	기타		오로보로스			10		통과	신규 번역·원문 철자 상이(Orobourous/Oruburos) 통일	
+enemydefs.h:g_EnemyDefs:0x08E	기타		오로보로스			10		통과	신규 번역·원문 철자 상이(Orobourous/Oruburos) 통일·FIXED행	
+enemydefs.h:g_EnemyDefs:0x08F	기타		오로보로스 라이더			17		통과	신규 번역·원문 철자 상이(Orobourous/Oruburos) 통일·FIXED행	
+enemydefs.h:g_EnemyDefs:0x090	기타		화이트 드래곤 라이더			20		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x091	기타		화이트 드래곤 라이더			20		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x092	기타		듀라한 스켈레톤			15		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x093	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x094	기타		펜릴			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x095	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x096	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x097	기타		펜릴 라이더			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x098	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x099	기타		츄파카파브라			12		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x09A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x09B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x09C	기타		고스트			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x09D	기타		우네			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x09E	기타		인면초			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x09F	기타		인면초			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0A0	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0A1	기타		아라 우네			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0A2	기타		아라 우네			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0A3	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0A4	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0A5	기타		봄버 아머			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0A6	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0A7	기타		록 아머			7		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0A8	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0A9	기타		드라큘라			8		통과	용어집 채택·동일명 중복행	
+enemydefs.h:g_EnemyDefs:0x0AA	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0AB	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0AC	기타		그레이터 데몬			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0AD	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0AE	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0AF	기타		워그			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0B0	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0B1	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0B2	기타		스켈레톤 립			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0B3	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0B4	기타		슬란트가다			10		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0B5	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0B6	기타		춍춍			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0B7	기타		뼈기둥			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0B8	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0B9	기타		스파이크드 볼			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0BA	기타		해머 셰이커			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0BB	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0BC	기타		구르카 마스터			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0BD	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0BE	기타		레드 스매셔			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0BF	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0C0	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0C1	기타		턴네이트 테이블			15		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0C2	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0C3	기타		아마라릭 스나이퍼			17		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0C4	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0C5	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0C6	기타		갈라모스			8		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x0C7	기타		갈라모스			8		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x0C8	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0C9	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0CA	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0CB	기타		미노타우로스			12		통과	용어집 채택·DUB행(EN Minotaur 덮어씀)	
+enemydefs.h:g_EnemyDefs:0x0CC	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0CD	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0CE	기타		웨어울프			8		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x0CF	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0D0	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0D1	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0D2	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0D3	기타		빅 해골			7		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0D4	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0D5	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0D6	기타		머드맨			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0D7	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0D8	기타		스켈레톤 점퍼			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0D9	기타		프로즌 하프			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0DA	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0DB	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0DC	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0DD	기타		알리오룸나스			12		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0DE	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0DF	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0E0	기타		블로			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0E1	기타		유코바쿠			8		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0E2	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0E3	기타		네메시스			8		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0E4	기타		아라스톨			8		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0E5	기타		사우지네			8		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0E6	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0E7	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0E8	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0E9	기타		데빌			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0EA	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0EB	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0EC	기타		에빌			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0ED	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0EE	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0EF	기타		하피			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0F0	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0F1	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0F2	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0F3	기타		베리간			6		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x0F4	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0F5	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0F6	기타		액스 아머			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0F7	기타		저주의 법전			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0F8	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0F9	기타		무구의 사전			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0FA	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0FB	기타		무구의 사전			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0FC	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x0FD	기타		도플갱어 LV10			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x0FE	기타		갸이본			6		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x0FF	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x100	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x101	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x102	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x103	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x104	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x105	기타		대망령			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x106	기타		라이온			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x107	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x108	기타		틴맨			4		통과	신규 번역·FIXED행	
+enemydefs.h:g_EnemyDefs:0x109	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x10A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x10B	기타		미라남			6		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x10C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x10D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x10E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x10F	기타		플라잉 아머			11		통과	신규 번역·FIXED행	
+enemydefs.h:g_EnemyDefs:0x110	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x111	기타		큰 박쥐			7		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x112	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x113	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x114	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x115	기타		피쉬 헤드			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x116	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x117	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x118	기타		말파스			6		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x119	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x11A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x11B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x11C	기타		임프			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x11D	기타		벌룬			4		통과	신규 번역·FIXED행	
+enemydefs.h:g_EnemyDefs:0x11E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x11F	기타		스킬라			6		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x120	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x121	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x122	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x123	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x124	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x125	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x126	기타		스킬라 테일			11		통과	신규 번역·FIXED행	
+enemydefs.h:g_EnemyDefs:0x127	기타		레기온			6		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x128	기타		레기온			6		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x129	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x12A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x12B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x12C	기타		히포그리프			10		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x12D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x12E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x12F	기타		메두사 헤드			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x130	기타		메두사 헤드			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x131	기타		아처			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x132	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x133	기타		리히터 벨몬드			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x134	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x135	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x136	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x137	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x138	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x139	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x13A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x13B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x13C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x13D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x13E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x13F	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x140	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x141	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x142	기타		스케어 크로우			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x143	기타		큐우			4		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x144	기타		벨제브브			8		통과	용어집 채택·FIXED행	
+enemydefs.h:g_EnemyDefs:0x145	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x146	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x147	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x148	기타		랄프 페이크			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x149	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x14A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x14B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x14C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x14D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x14E	기타		그랜트 페이크			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x14F	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x150	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x151	기타		사이퍼 페이크			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x152	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x153	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x154	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x155	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x156	기타		서큐버스			8		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x157	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x158	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x159	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x15A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x15B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x15C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x15D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x15E	기타		킬러 피쉬			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x15F	기타		샤프트			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x160	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x161	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x162	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x163	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x164	기타		데스			4		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x165	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x166	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x167	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x168	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x169	기타		데스			4		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x16A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x16B	기타		케르베로스			10		통과	용어집 채택·FIXED행	
+enemydefs.h:g_EnemyDefs:0x16C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x16D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x16E	기타		메두사			6		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x16F	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x170	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x171	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x172	기타		프랑켄			6		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x173	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x174	기타		도플갱어 LV40			13		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x175	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x176	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x177	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x178	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x179	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x17A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x17B	기타		드라큘라			8		통과	용어집 채택·동일명 중복행	
+enemydefs.h:g_EnemyDefs:0x17C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x17D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x17E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x17F	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x180	기타		스핀 헤드			9		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x181	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x182	기타		미노타우로스			12		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x183	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x184	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x185	기타		웨어울프			8		통과	용어집 채택	
+enemydefs.h:g_EnemyDefs:0x186	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x187	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x188	기타		블루 아라 우네			14		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x189	기타		블루 아라 우네			14		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x18A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x18B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x18C	기타		파이널 가드			11		통과	신규 번역	
+enemydefs.h:g_EnemyDefs:0x18D	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x18E	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs.h:g_EnemyDefs:0x18F	기타					0		통과	unused(원문 빈 문자열)	
+e_shop.c:D_us_80180FB4:0	기타		1792년 리히터가 격파했다(5년 전).			33	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:1	기타		피묻은 뼈로@되살아난다.			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:2	기타		흡혈귀 박쥐.@악의 하수인으로 두려움받는다.			42	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:3	기타		파괴 불가 회전 해골.			20	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:4	기타		새 시체에 마법으로@생명을 부여한다.			35	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:5	기타		전설의 괴물.@침입자는 모두 공격한다.			36	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:6	기타		마법으로 움직이는 스켈레톤.			27	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:7	기타		성 입구를 지키는 늑대.			22	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:8	기타		난폭한 스켈레톤 검사			20	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:9	기타		불덩이 뿜는 머맨.@머맨 중 가장 크다.			36	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:10	기타		네 발 스켈레톤.@독을 흘린다.			28	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:11	기타		하급 액스 나이트.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:12	기타		300년 전 파견된 동방교회@병사			29	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:13	기타		뼈를 던지는 스켈레톤.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:14	기타		귀신 들린 위자 테이블.			22	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:15	기타		부메랑 쓰는 스켈레톤.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:16	기타		잎이 면도날처럼 날카로운 식물			29	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:17	기타		불 뿜고 나는 데몬.			18	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:18	기타		하급 불꽃 유령.			15	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:19	기타		지옥의 꼭두각시 데몬.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:20	기타		마창을 든 데몬			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:21	기타		두 머리 역겨운@야수. 어느 쪽이 머리?			36	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:22	기타		기묘한 인간형 생물.@벼룩처럼 뛴다.			34	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:23	기타		메두사 머리카락에서 태어난다.			29	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:24	기타		쌍날 검술의 초심자			18	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:25	기타		소총 든@스켈레톤.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:26	기타		메두사의 머리카락.@석화시킨다.			30	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:27	기타		철구 든 중장 나이트.			20	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:28	기타		변이 식물. 씨앗에@석화 효과가 있다.			35	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:29	기타		중무장 액스 나이트.			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:30	기타		불과 얼음의 데몬.@싸우기를 싫어한다.			36	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:31	기타		활 든 스켈레톤 궁수.			20	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:32	기타		드래곤 해골로 만든 기둥			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:33	기타		백색 드래곤 해골@대포.			22	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:34	기타		변신하는 데몬.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:35	기타		성의 힘에 변이된 올빼미.			24	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:36	기타		처형된 병사의 머리. 복수를@노린다.			34	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:37	기타		스킬라에 붙어사는 뱀.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:38	기타		움직이는 원숭이 스켈레톤.@나무통을 던진다.			42	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:39	기타		나기나타 든 무사.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:40	기타		초보자용 마도서			15	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:41	기타		느리게 나는 스켈레톤 전사.			26	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:42	기타		육체 없는 고통받는 영혼의@실체.			31	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:43	기타		대검 든 나이트.			15	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:44	기타		악마의 세례로 거대해진 두꺼비			29	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:45	기타		중무장 언데드@전사.			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:46	기타		갑옷 경비.@험지에서 강하다.			27	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:47	기타		레이피어 쓰는 목@없는 스켈레톤.			31	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:48	기타		동굴에 사는 개구리			18	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:49	기타		얼음 쓰는 여자 유령.			20	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:50	기타		고대 무기의 서.			15	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:51	기타		거대 해골 영혼.			15	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:52	기타		육식성 까마귀			13	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:53	기타		죽은 지 오래된 푸른@까마귀 영혼.			32	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:54	기타		잎이 면도날처럼 날카로운 식물.			30	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:55	기타		철퇴 든 스켈레톤.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:56	기타		훈련된 군용 거위 탄 플리 맨			27	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:57	기타		사악한 마검.@폴터가이스트를 일으킨다.			37	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:58	기타		나기나타 든 스켈레톤.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:59	기타		신화의 바다 괴물.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:60	기타		투명한 여사냥꾼 영혼			20	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:61	기타		움직이는 진흙 골렘.			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:62	기타		중무장 나이트.@훈련된 올빼미와 공격한다.			40	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:63	기타		사악한 마검.@폴터가이스트를 일으킨다.			37	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:64	기타		쫓겨나도 검을 휘두르는 소드 로드			32	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:65	기타		도끼와 실드로@무장한 플리 맨.			29	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:66	기타		말, 사자, 독수리의 합성수.			26	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:67	기타		거대 스켈레톤.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:68	기타		젤로 된 몬스터			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:69	기타		쌍날 전투의@달인.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:70	기타		팬서 스켈레톤.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:71	기타		무덤지기. 맨손 격투@달인.			25	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:72	기타		불을 좋아하는 그렘린			20	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:73	기타		여인 머리에 새 몸의@괴물.			25	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:74	기타		소머리 괴물.			12	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:75	기타		둔갑하는 라이칸스로프.			22	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:76	기타		스켈레톤 사제가 든 해골 제단			28	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:77	기타		싸움을 영원히 갈구하는@피에 굶주린 언데드 나이트.			49	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:78	기타		수수께끼의 망토 검객.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:79	기타		어인 머리 수호자.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:80	기타		작은 마법 데몬. 동료를@소환한다.			32	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:81	기타		무덤가를 헤매며@온갖 지혜를 안다.			33	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:82	기타		세일럼의 유령 마녀.			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:83	기타		거인 형제의 맏이.@거대한 단검 두 자루를 쓴다.			45	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:84	기타		거인 형제.@구르카 나이프를 쓴다.			32	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:85	기타		거인 형제.@커다란 강철 망치를 쓴다.			35	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:86	기타		원반 든 갑옷@나이트.			20	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:87	기타		까마귀의 마왕.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:88	기타		점액질 젤로 태어난 몬스터			25	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:89	기타		번개 쓰는 데몬.@“지옥의 악사”라 불린다.			41	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:90	기타		지옥의 파수견.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:91	기타		어인 우두머리.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:92	기타		마법 쓰는 흡혈귀.@성 상층을 지배한다.			37	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:93	기타		여자 데몬.@남자의 꿈에 침입한다.			32	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:94	기타		죽은 자의 사령 든@묘석.			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:95	기타		인혈로 키운 식물.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:96	기타		겁쟁이 사자.			12	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:97	기타		뇌를 노리는 꿰뚫린 남자.			24	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:98	기타		뇌를 찾는 꿰뚫린 남자.			22	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:99	기타		여럿이 모인 악몽의@생명체.			26	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:100	기타		슈무라는 별명의 몬스터.			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:101	기타		심장 없는 양철 나무꾼.			22	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:102	기타		수많은 독씨를 품는다.			21	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:103	기타		자기 해골 쫓는 스켈레톤.			24	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:104	기타		폭탄 던지는 아머@나이트			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:105	기타		반으로 잘려도 덤비는@좀비.			26	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:106	기타		돌연변이 곤충.@마법사만 볼 수 있다.			35	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:107	기타		투척 무기 달인.			15	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:108	기타		무섭도록 정확한 궁수.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:109	기타		반은 인간, 반은 늑대.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:110	기타		액체 생물.@흑표범 모습이 된다.			30	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:111	기타		거대 흡혈 박쥐.			15	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:112	기타		플리 맨이 타는 백룡			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:113	기타		반은 인간, 반은 소.			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:114	기타		무서운 빔@무기를 쓴다.			22	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:115	기타		플리맨이 조종하는 비룡.			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:116	기타		거대 드래곤의 해골			18	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:117	기타		불덩이 뿜는 늑대.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:118	기타		돌 던지는 갑옷@나이트.			22	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:119	기타		천사 궁수.@고트족의 아말라리크를 죽였다.			40	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:120	기타		사악한 마검.@폴터가이스트를 일으킨다.			37	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:121	기타		뛰어올라 공격하는 스켈레톤.			27	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:122	기타		워그 탄 스켈레톤.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:123	기타		긴 혀로 피@빠는 흡혈충.			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:124	기타		사악한 변이 문어			16	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:125	기타		불꽃 데몬.			10	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:126	기타		장갑 전투야수.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:127	기타		지옥의 잔혹 데몬.			17	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:128	기타		고대 이집트 미라			16	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:129	기타		진화한 비너스 위드.@데몬의 피로 자랐다.			39	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:130	기타		변신하는 데몬.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:131	기타		보면 돌 되는@뱀머리 마녀.			25	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:132	기타		강한 전사들의 몸을@이어 붙여 만들었다.			38	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:133	기타		그랜트를 가장한 좀비.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:134	기타		랄프를 가장한 좀비.			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:135	기타		장난꾸러기 꼬마 데몬.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:136	기타		사이파를 가장한 좀비.			21	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:137	기타		파리의 왕 벨제브브.			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:138	기타		지옥의 처형자.			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:139	기타		갈라모스 부하 얼음 정령.			24	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:140	기타		젊은 여자 마녀			14	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:141	기타		흡혈귀 사냥의 달인.			19	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:142	기타		희귀 조류.@사람 보면 도망친다.			30	105	통과	v13 평서체 통일	
+e_shop.c:D_us_80180FB4:143	기타		사람 보면 도망치는@희귀 새.			27	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:144	기타		마계 지배 노리는 마도사			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:145	기타		상급 아머 로드.			15	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:146	기타		드라큘라의 측근.			16	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:147	기타		드라큘라의 어둠의 신관.			23	105	통과	신규 번역	
+e_shop.c:D_us_80180FB4:148	기타		왈라키아 영주. 알카드의 아버지			30	105	통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x190	기타		가고일			6		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x191	기타		코퍼 아머			9		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x192	기타		이프리트			8		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x193	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs_mod.h:g_EnemyDefs:0x194	기타		스켈레톤 리더			13		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x195	기타		가드너			6		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x196	기타		휴먼 페이스 트리			16		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x197	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs_mod.h:g_EnemyDefs:0x198	기타		마리아			6		통과	용어집 채택	
+enemydefs_mod.h:g_EnemyDefs:0x199	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs_mod.h:g_EnemyDefs:0x19A	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs_mod.h:g_EnemyDefs:0x19B	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs_mod.h:g_EnemyDefs:0x19C	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs_mod.h:g_EnemyDefs:0x19D	기타		워터 리퍼			9		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x19E	기타		맨이터			6		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x19F	기타		가고일			6		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x1A0	기타		가고일			6		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x1A1	기타		스펙터			6		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x1A2	기타		윌 오 위스프			12		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x1A3	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs_mod.h:g_EnemyDefs:0x1A4	기타		스켈레톤 브리더			15		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x1A5	기타		스켈레톤 비스트			15		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x1A6	기타					0		통과	unused(원문 빈 문자열)	
+enemydefs_mod.h:g_EnemyDefs:0x1A7	기타		와이트			6		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x1A8	기타		레이스			6		통과	신규 번역	
+enemydefs_mod.h:g_EnemyDefs:0x1A9	기타		스켈레톤 가디언			15		통과	신규 번역	

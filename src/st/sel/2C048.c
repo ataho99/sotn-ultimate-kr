@@ -12,6 +12,25 @@ extern s32 g_MemCardSelectorX;
 extern s32 g_MemCardSelectorY;
 extern char g_InputSaveName[12];
 
+// File-select confirm/cancel buttons. US retail: CROSS confirm, TRIANGLE
+// cancel. MOD_KO (Japanese layout): CIRCLE confirm, CROSS cancel.
+#if defined(MOD_KO)
+#define SEL_CONFIRM PAD_CIRCLE
+#define SEL_CANCEL PAD_CROSS
+#else
+#define SEL_CONFIRM PAD_CROSS
+#define SEL_CANCEL PAD_TRIANGLE
+#endif
+#if defined(MOD_KO)
+#define SEL_DECIDEV 0x60 /* trial26: red circle slot (F_SEL patched), was 0x80 = right-arrow */
+#define SEL_CANCELV 0x70
+#define SEL_CANCELCLUT 0x200
+#else
+#define SEL_DECIDEV 0x70
+#define SEL_CANCELV 0x60
+#define SEL_CANCELCLUT 0x202
+#endif
+
 // BSS
 static s32 D_801BAF08; // block icon animation index
 static s32 D_801BAF0C;
@@ -64,29 +83,85 @@ static s32 g_MenuUnk084U1[] = {0x28, 0x28, 0x08, 0x18, 0x08, 0x08, 0x08, 0x08};
 static s32 g_MenuUnk084V1[] = {0x10, 0x10, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08};
 
 StageName D_80180128[80] = {
+    #if defined(MOD_KO)
+    {"\xF0\x4A\xF0\x50\xF0\x62\x20\xF0\xCD\xF1\x41\x00\x00\x00", ""}, /* 0 대리석 복도 */
+#else
     {_S("Marble"), _S("Gallery")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF1\x96\xF1\x58\x20\xF2\xFE\x20\xF1\xD3\xF1\x96", ""}, /* 1 벽랑 측 외벽 (한패 표기, 이전 외벽) */
+#else
     {_S("Outer"), _S("Wall")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\x80\xF0\x61\xF0\xBD\x00\x00\x00\x00\x00\x00", ""}, /* 2 장서고 (한패 표기, 이전 긴 도서관) */
+#else
     {_S("Long"), _S("Library")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\x85\xF0\xA3\xF2\xA4\xF0\x85\x00\x00", ""}, /* 3 지하묘지 (한패 표기, 이전 카타콤베) */
+#else
     {_S("Catacombs"), _S("")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF1\xCF\xF0\x4E\xF0\x7C\x20\xF0\xCA\x00\x00\x00\x00\x00\x00\x00", ""}, /* 4 올록의 방 */
+#else
     {_S("Olrox's"), _S("Quarters")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\xD8\xF1\x41\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 5 연도 (한패 표기, 이전 버려진 광산) */
+#else
     {_S("Abandoned"), _S("Mine")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF1\xCD\xF0\xA8\xF2\x7A\x00\x00\x00\x00\x00\x00", ""}, /* 6 예배당 (한패 표기, 이전 왕실 예배당) */
+#else
     {_S("Royal"), _S("Chapel")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\x63\x20\xF0\xDD\xF0\x44\x00\x00", ""}, /* 7/65 shared */
+#else
     {_S("Entrance"), _S("")},
+#endif,
     {_S(""), _S("")},
+    #if defined(MOD_KO)
+    {"\xF0\x85\xF0\xA3\xF0\xD2\xF3\x2C\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 9 지하수맥 (한패 표기, 이전 지하 동굴) */
+#else
     {_S("Underground"), _S("Caverns")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF2\x26\xF0\x46\xF0\x80\x00\x00\x00\x00", ""}, /* 10 투기장 */
+#else
     {_S("Colosseum"), _S("")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\x6D\xF0\x52\xF0\x63\x20\xF1\xFF\xF0\x60\xF0\x5C", ""}, /* 11 악마성 최상부 (한패 표기, 이전 성 본관) */
+#else
     {_S("Castle"), _S("Keep")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\xD8\xF1\x0A\xF0\xD8\xF0\x44\xF0\x9C\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 12 연금연구동 (한패 표기, 이전 연금연구실) */
+#else
     {_S("Alchemy"), _S("Laboratory")},
+#endif,
     {_S(""), _S("")},
     {_S(""), _S("")},
     {_S(""), _S("")},
 #if defined(MOD_SATURN)
-    {_S("Cursed"), _S("Prison")}, // Saturn port: MOD_STAGE_PRS
+    #if defined(MOD_KO)
+    {"\xF0\xDE\xF0\x82\xF1\x8B\xF1\xD9\x20\xF0\xF3\xF2\xCD", ""}, /* 16 저주받은 감옥 */
+#else
+    {_S("Cursed"), _S("Prison")},
+#endif, // Saturn port: MOD_STAGE_PRS
 #else
     {_S(""), _S("")},
 #endif
 #if defined(MOD_SATURN)
-    {_S("Underground"), _S("Garden")}, // Saturn port: MOD_STAGE_GDN
+    #if defined(MOD_KO)
+    {"\xF0\x85\xF0\xA3\x20\xF0\x81\xF1\xD6\x00\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 17 지하 정원 */
+#else
+    {_S("Underground"), _S("Garden")},
+#endif, // Saturn port: MOD_STAGE_GDN
 #else
     {_S(""), _S("")},
 #endif
@@ -104,32 +179,88 @@ StageName D_80180128[80] = {
     {_S(""), _S("")},
     {_S(""), _S("")},
     {_S(""), _S("")},
+    #if defined(MOD_KO)
+    {"\xF0\x5E\xF1\x01\xF0\x62\x20\xF0\xCD\xF1\x41\x00\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 32 비광석 복도 (한패 표기, 이전 흑대리석 복도) */
+#else
     {_S("Black Marble"), _S("Gallery")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF1\xCC\x20\xF1\xD3\xF1\x96\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 33 역 외벽 */
+#else
     {_S("Reverse"), _S("Outer Wall")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF1\x0A\xF0\x61\xF0\xA5\xF1\x00\xF0\xBD\x00\x00\x00\x00\x00\x00\x00", ""}, /* 34 금서보관고 (한패 표기, 이전 금지된 도서관) */
+#else
     {_S("Forbidden"), _S("Library")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\xA9\xF0\xA6\xF2\xA4\xF0\x85\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 35 공중묘지 (한패 표기, 이전 떠다니는 카타콤베) */
+#else
     {_S("Floating"), _S("Catacombs")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\xAB\xF1\xDA\xF0\x7C\x20\xF0\xCA\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 36 사익의 방 (한패 표기, 이전 데스윙의 소굴) */
+#else
     {_S("Death Wing's"), _S("Lair")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\x9C\xF2\x93\x00", ""}, /* 37 동굴 */
+#else
     {_S("Cave"), _S("")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\x7D\xF0\xC0\xF1\xCD\xF0\xA8\xF2\x7A\x00\x00", ""}, /* 38 이단예배당 (한패 표기, 이전 뒤집힌예배당) */
+#else
     {_S("Anti-Chapel"), _S("")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\xC3\xF0\xE1\xF2\x4F\xF0\x63\x20\xF0\xDD\xF0\x44\x00\x00\x00", ""}, /* 39 뒤집힌성 입구 (한패 표기, 이전 역 성 입구) */
+#else
     {_S("Reverse"), _S("Entrance")},
+#endif,
     {_S(""), _S("")},
 #if defined(MOD_SATURN)
     // Saturn port: the retail "Reverce" typo, corrected
+    #if defined(MOD_KO)
+    {"\xF1\xFC\xF0\x81\xF0\xD2\xF3\x2C\x00\x00\x00\x00\x00\x00\x00", ""}, /* 41 천정수맥 (한패 표기, 이전 역 지하 동굴) */
+#else
     {_S("Reverse"), _S("Caverns")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\x6E\xF2\xF2\x20\xF2\x26\xF0\x46\xF0\x80\x00\x00\x00\x00\x00\x00", ""}, /* 42 안쪽 투기장 (한패 표기, 이전 역 투기장) */
+#else
     {_S("Reverse"), _S("Colosseum")},
+#endif,
+    #if defined(MOD_KO)
+    {"\xF0\xC3\xF0\xE1\xF2\x4F\xF0\x63\xF1\xFF\xF0\xA3\xF0\x5C", ""}, /* 43 뒤집힌성최하부 (한패 표기, 이전 역 성 본관) */
+#else
     {_S("Reverse"), _S("Keep")},
+#endif,
 #else
     {_S("Reverce"), _S("Caverns")},
     {_S("Reverce"), _S("Colosseum")},
     {_S("Reverce"), _S("Keep")},
 #endif
+    #if defined(MOD_KO)
+    {"\xF2\x4B\xF0\x52\xF0\x67\x20\xF0\xD8\xF0\x44\xF0\x9C\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 44 흑마술 연구동 (한패 표기, 이전 강령 연구실) */
+#else
     {_S("Necromancy"), _S("Laboratory")},
+#endif,
     {_S(""), _S("")},
     {_S(""), _S("")},
     {_S(""), _S("")},
 #if defined(MOD_SATURN)
-    {_S("Soul"), _S("Prison")}, // Saturn port: MOD_STAGE_RPRS
-    {_S("Hell"), _S("Garden")}, // Saturn port: MOD_STAGE_RGDN
+    #if defined(MOD_KO)
+    {"\xF0\x76\xF0\x97\xF0\x7C\x20\xF0\xF3\xF2\xCD", ""}, /* 48 영혼의 감옥 */
+#else
+    {_S("Soul"), _S("Prison")},
+#endif, // Saturn port: MOD_STAGE_RPRS
+    #if defined(MOD_KO)
+    {"\xF0\x85\xF2\xCD\x20\xF0\x81\xF1\xD6\x00\x00", ""}, /* 49 지옥 정원 */
+#else
+    {_S("Hell"), _S("Garden")},
+#endif, // Saturn port: MOD_STAGE_RGDN
 #else
     {_S(""), _S("")},
     {_S(""), _S("")},
@@ -149,7 +280,11 @@ StageName D_80180128[80] = {
     {_S(""), _S("")},
     {_S(""), _S("")},
     {_S(""), _S("")},
+    #if defined(MOD_KO)
+    {"\xF0\x63\x20\xF0\xDD\xF0\x44\x00\x00", ""}, /* 7/65 shared */
+#else
     {_S("Entrance"), _S("")},
+#endif,
     {_S(""), _S("")},
     {_S(""), _S("")},
     {_S(""), _S("")},
@@ -246,7 +381,7 @@ void InitMainMenuUI(void) {
     prim->drawMode = DRAW_DEFAULT;
 
     prim = prim->next;
-    SetTexturedPrimRect(prim, 0x20, 0xB0, 0x10, 0x10, 0xA0, 0x70);
+    SetTexturedPrimRect(prim, 0x20, 0xB0, 0x10, 0x10, 0xA0, SEL_DECIDEV);
     func_801B1D88(prim);
     prim->tpage = 0xC;
     prim->clut = 0x200;
@@ -254,10 +389,10 @@ void InitMainMenuUI(void) {
     prim->drawMode = DRAW_DEFAULT;
 
     prim = prim->next;
-    SetTexturedPrimRect(prim, 0x20, 0xB0, 0x10, 0x10, 0xA0, 0x60);
+    SetTexturedPrimRect(prim, 0x20, 0xB0, 0x10, 0x10, 0xA0, SEL_CANCELV);
     func_801B1D88(prim);
     prim->tpage = 0xC;
-    prim->clut = 0x202;
+    prim->clut = SEL_CANCELCLUT;
     prim->priority = 0x10;
     prim->drawMode = DRAW_DEFAULT;
 
@@ -548,7 +683,11 @@ void func_801ACF7C(void) {
 }
 
 char* D_801803A8[10] = {
+#if defined(MOD_KO)
+    _S(""), _S(""), _S(""), _S(""), _S("Not for-"),
+#else
     _S("Select"), _S("Decide"), _S("Cancel"),  _S("Input"), _S("Not for-"),
+#endif
     _S("Yes"),    _S("No"),     _S("Confirm"), _S("Error"), _S("matted"),
 };
 
@@ -563,11 +702,53 @@ char* D_801803A8[10] = {
 #define STR_ERROR D_801803A8[8]
 #define STR_MATTED D_801803A8[9]
 
+#if defined(MOD_KO)
+/* Menu legends via the top-message band path (func_801B2608 ->
+ * func_801B2108 12px upload to VRAM (0x180,id*16), one dynamic SPRT
+ * per row). Hook path (#229: dead) removed. */
+/* Words = MGalmuri12 v12c codes. Bands = free ids 2,3,13,14.
+ * SPRT y = button-icon top (EN 8px-text y minus 4): icon 16px and SPRT
+ * 16px share the same center (#239). */
+static const char SelLegW[] = "\xF1\xAA\xF2\x1C\x00"
+                              "\xF3\x01\xF0\x81\x00"
+                              "\xF3\x29\xF0\x65\x00"
+                              "\xF0\xDD\xF0\xA4\x00"
+                              /* trial25: Sound Mode hint words (재생, 뒤로) */
+                              "\xF1\xE3\xF1\xA9\x00"
+                              "\xF0\xC3\xF0\xA0\x00";
+static const u8 SelLegFile[] = {0, 13, 5, 14, 10, 2};
+static const u8 SelLegSnd[] = {20, 14, 25, 2};
+static const u8 SelLegName[] = {0, 13, 15, 14, 10, 2, 5, 3};
+static void SelLegRows(s32 x, s32 y, const u8 *t, s32 n) {
+    /* diet (trial18): x/y live in the incoming arg slots (reloaded each
+     * row), id is re-read from the table after the first call (jal
+     * clobbers v0). Same rows/ids/positions as #234+#239. */
+    s32 wi;
+    while (n > 0) {
+        wi = *t++;
+        func_801B2608((char *)&SelLegW[wi], *t);
+        func_801B27A8(x, y, 0x30, 0x10, 0, (*t++) * 16, 0x1A1, 6, 1, 0x80);
+        y += 16;
+        n--;
+    }
+}
+#endif
+
+#if defined(MOD_KO)
+/* sihum40 (CP 901): save name as ASCII -> func_801B2108 (engtab MGalmuri12 cells, proportional advance)
+ * instead of fullwidth SJIS -> BIOS Kanji ROM (grey, 12 px fixed). Same 33 entries / order. */
+static char* D_801803D0[] = {
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+    "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+    "W", "X", "Y", "Z", "&", "!", "-",  ".", "'",  "?", " ",
+};
+#else
 static char* D_801803D0[] = {
     "Ａ", "Ｂ", "Ｃ", "Ｄ", "Ｅ", "Ｆ", "Ｇ", "Ｈ", "Ｉ", "Ｊ", "Ｋ",
     "Ｌ", "Ｍ", "Ｎ", "Ｏ", "Ｐ", "Ｑ", "Ｒ", "Ｓ", "Ｔ", "Ｕ", "Ｖ",
     "Ｗ", "Ｘ", "Ｙ", "Ｚ", "＆", "！", "−",  "．", "’",  "？", "　",
 };
+#endif
 
 void func_801ACFBC(s32 port, s32 slot, s32 textId) {
     char playerName[0x20];
@@ -601,8 +782,16 @@ void PrintFileSelectPlaceName(s32 port, s32 slot, s32 y) {
     volatile u32 pad; // !FAKE:
 
     s32 stage = g_SaveSummary[port].stage[slot];
+#if defined(MOD_KO)
+    /* ko_place: single-line 12x16 textId path, same renderer as the
+     * file-select top message (func_801B2608 -> func_801B2108, 12px).
+     * Slot rides the existing name-block rows: id 7 (summary card,
+     * y+0x70) and id 11 (detail box, y == 0x48). No new prims. */
+    func_801B2608(D_80180128[stage].line1, (y == 0x48) ? 11 : 7);
+#else
     DrawImages8x8(D_80180128[stage].line1, 0xA0, y, 1);
     DrawImages8x8(D_80180128[stage].line2, 0xA0, y + 8, 1);
+#endif
 }
 
 void func_801AD1D0(void) {
@@ -688,8 +877,12 @@ void func_801AD490(void) {
     s32 i;
 
     DrawNavigationTips(Tips_MenuNavigation);
+#if defined(MOD_KO)
+    SelLegRows(0x34, 0xB8, SelLegFile, 2);
+#else
     DrawImages8x8(STR_SELECT, 0x34, 0xBC, 1);
     DrawImages8x8(STR_DECIDE, 0x34, 0xCC, 1);
+#endif
     DrawString16x16("select", 0xF0, 0x20, 1);
     DrawString16x16("your", 0x100, 0x30, 1);
     DrawString16x16("destiny", 0xE8, 0x40, 1);
@@ -712,8 +905,32 @@ void func_801AD490(void) {
 }
 
 const char* D_80180454[] = {
-    "−＊＊＊＊＊−",  "− New Game −",   "− Change Name −",
-    "− Copy File −", "− Erase File −",
+    "−＊＊＊＊＊−",  
+#if defined(MOD_KO)
+    "− \xF1\xA7 \xF0\xBC\xF1\xDB −"
+#else
+    "− New Game −"
+#endif
+,   
+#if defined(MOD_KO)
+    "− \xF0\x7D\xF0\x4F \xF0\xA1\xF0\xF9 −"
+#else
+    "− Change Name −"
+#endif
+,
+    
+#if defined(MOD_KO)
+    "− \xF0\x92\xF0\x7F \xF0\xCD\xF0\xAB −"
+#else
+    "− Copy File −"
+#endif
+, 
+#if defined(MOD_KO)
+    "− \xF0\x92\xF0\x7F \xF0\x85\xF0\xDA\xF0\x46 −"
+#else
+    "− Erase File −"
+#endif
+,
 };
 #if defined(MOD_SATURN)
 // (not in D_80180454: SEL's .data must not move, psp_script.py patches it)
@@ -797,13 +1014,23 @@ void func_801AD66C(void) {
 #include "../../../mods/sotn-ultimate/src/menu/2C048_mod_player_select.h"
 #endif
 
+#if defined(MOD_KO)
+#define KO_SAVE(en, ko) ko
+#else
+#define KO_SAVE(en, ko) en
+#endif
+
 void func_801AD78C(void) {
     Primitive* prim;
 
+#if defined(MOD_KO)
+    SelLegRows(0x134, 0x20, SelLegName, 4);
+#else
     DrawImages8x8(STR_SELECT, 0x134, 0x24, 1);
     DrawImages8x8(STR_INPUT, 0x134, 0x34, 1);
     DrawImages8x8(STR_CANCEL, 0x134, 0x44, 1);
     DrawImages8x8(STR_DECIDE, 0x134, 0x54, 1);
+#endif
     DrawString16x16("a b c d e f g h", 0x48, 0x70, 1);
     DrawString16x16("i j k l m n o p", 0x48, 0x88, 1);
     DrawString16x16("q r s t u v w x", 0x48, 0xA0, 1);
@@ -859,7 +1086,7 @@ void UpdateNameEntry(void) {
         }
     }
 
-    if (g_pads[0].tapped & PAD_CROSS) { // Input Character
+    if (g_pads[0].tapped & SEL_CONFIRM) { // Input Character
         g_api.PlaySfx(SFX_UI_NAME_ENTRY);
         g_InputSaveName[g_InputCursorPos] = g_AsciiSet[D_801BC3E0];
         g_InputCursorPos++;
@@ -868,7 +1095,7 @@ void UpdateNameEntry(void) {
         }
     }
 
-    if (g_pads[0].tapped & PAD_TRIANGLE) { // Backspace
+    if (g_pads[0].tapped & SEL_CANCEL) { // Backspace
         g_InputCursorPos--;
         if (g_InputCursorPos == -1) {
             g_InputCursorPos = 7;
@@ -988,9 +1215,13 @@ void func_801ADF94(s32 flags, s32 yOffset) {
     }
 
     if (!hideButtons) {
+#if defined(MOD_KO)
+        SelLegRows(0x34, 0xB0, SelLegFile, 3);
+#else
         DrawImages8x8(STR_SELECT, 0x34, 0xB4, 1);
         DrawImages8x8(STR_DECIDE, 0x34, 0xC4, 1);
         DrawImages8x8(STR_CANCEL, 0x34, 0xD4, 1);
+#endif
     }
 
     for (port = 0; port < PORT_COUNT; port++) {
@@ -1264,7 +1495,7 @@ void Update(void) {
     case Upd_Eng_MainMenuIdle:
         func_801AD590();
         func_801AD490();
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             switch (g_MainMenuCursor) {
             case 0:
                 g_api.PlaySfx(SFX_UI_CONFIRM);
@@ -1318,7 +1549,7 @@ void Update(void) {
             }
         }
         if ((g_pads[0].tapped & PAD_SELECT) ||
-            ((g_pads[0].tapped & PAD_TRIANGLE) && i == 8 &&
+            ((g_pads[0].tapped & SEL_CANCEL) && i == 8 &&
              g_InputCursorPos == 0)) {
             g_GameEngineStep = Upd_Eng_FileSelect;
         } else {
@@ -1408,8 +1639,8 @@ void Update(void) {
         break;
     case Upd_Eng_FileSelect:
         SelectMainMenuOption(MAIN_MENU_CURSOR_FILE_SELECT);
-        func_801B2608("Checking Memory Card．", 4);
-        func_801B2608("Do not remove Memory Card．", 5);
+        func_801B2608(KO_SAVE("Checking Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2 \xF2\x48\xF0\x7E \xF0\xA6．"), 4);
+        func_801B2608(KO_SAVE("Do not remove Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6 \xF2\xB4\xF0\x85 \xF0\x52\xF0\x69\xF0\x77．"), 5);
         func_801B3120();
         g_GameEngineStep++;
         /* fallthrough */
@@ -1441,8 +1672,8 @@ void Update(void) {
             g_MemCardSelectorX = g_MemCardSelectorX % 3;
         }
         if (D_801BAF10) {
-            func_801B2608("You won’t be able to save", 4);
-            func_801B2608("your game． Is that OK？", 5);
+            func_801B2608(KO_SAVE("You won’t be able to save", "\xF0\xDE\xF0\x80\xF0\xB4 \xF3\x18 \xF0\xD2 \xF0\xD6\xF2\xC0\xF1\x36\xF0\x49"), 4);
+            func_801B2608(KO_SAVE("your game． Is that OK？", "\xF0\xFB\xF0\xD0\xF0\xA3\xF2\x59\xF2\xC0\xF1\x36\xF1\x11？"), 5);
             func_801ADF94(0x83, 0);
             DrawNavigationTips(Tips_YesNo);
             g_GameEngineStep = Upd_Eng_64;
@@ -1457,11 +1688,11 @@ void Update(void) {
     case Upd_Eng_64:
         func_801ADF94(0x81, 0);
         DrawNavigationTips(Tips_YesNo);
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             func_801AE9A8();
             func_801AD490();
             g_GameEngineStep = Upd_Eng_MainMenuIdle;
-        } else if (g_pads[0].tapped & PAD_CROSS) {
+        } else if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             g_GameEngineStep = Upd_Eng_0x10;
         }
@@ -1469,19 +1700,19 @@ void Update(void) {
     case Upd_Eng_65:
         func_801ADF94(0x83, 0);
         DrawNavigationTips(Tips_YesNo);
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             D_801BAF0C = 0xFF;
             DrawNavigationTips(Tips_Generic);
-            func_801B2608("Select file to be loaded．", 4);
-            func_801B2608("", 5);
+            func_801B2608(KO_SAVE("Select file to be loaded．", "\xF1\x9C\xF1\x5D\xF1\xCF \xF0\x92\xF0\x7F\xF0\xB4"), 4);
+            func_801B2608("\xF1\xAA\xF2\x1C\xF0\xB9\xF0\x82\xF1\xAE\xF0\x78", 5);
             g_GameEngineStep = Upd_Eng_51;
-        } else if (g_pads[0].tapped & PAD_CROSS) {
+        } else if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             g_GameEngineStep = Upd_Eng_0x10;
         }
         break;
     case Upd_Eng_51:
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             func_801AE9A8();
             func_801AD490();
             g_GameEngineStep = Upd_Eng_MainMenuIdle;
@@ -1490,34 +1721,34 @@ void Update(void) {
             func_801ADF94(1, 0);
             D_801BAF0C++;
             if (D_801BAF0C == 0x100) {
-                func_801B2608("Select file to be loaded．", 4);
-                func_801B2608("", 5);
+                func_801B2608(KO_SAVE("Select file to be loaded．", "\xF1\x9C\xF1\x5D\xF1\xCF \xF0\x92\xF0\x7F\xF0\xB4"), 4);
+                func_801B2608("\xF1\xAA\xF2\x1C\xF0\xB9\xF0\x82\xF1\xAE\xF0\x78", 5);
             }
             if (D_801BAF0C == 0x200) {
                 if (D_801BAF14) {
-                    func_801B2608("Press Start button", 4);
-                    func_801B2608("to begin new game．", 5);
+                    func_801B2608(KO_SAVE("Press Start button", "START \xF1\x8E\xF3\x0E\xF0\xB4 \xF1\x33\xF1\x6D\xF0\x69\xF0\x77"), 4);
+                    func_801B2608(KO_SAVE("to begin new game．", "\xF1\xA7 \xF0\xBC\xF1\xDB\xF0\xB4 \xF0\x69\xF1\xDF\xF2\x3F\xF1\x36\xF0\x49"), 5);
                 } else {
-                    func_801B2608("Select New Game", 4);
-                    func_801B2608("to start from beginning．", 5);
+                    func_801B2608(KO_SAVE("Select New Game", "NEW GAME \xF1\xAA\xF2\x1C\xF0\x69"), 4);
+                    func_801B2608(KO_SAVE("to start from beginning．", "\xF1\xA7\xF0\xA0\xF0\xDB \xF0\xBC\xF1\xDB\xF0\xB4 \xF0\x69\xF1\xDF\xF2\x3F\xF1\x36\xF0\x49"), 5);
                 }
                 if (g_GameClearFlag == SAVE_FLAG_NORMAL) {
                     D_801BAF0C = 0;
                 }
             }
             if (D_801BAF0C == 0x300) {
-                func_801B2608("Input ””RICHTER”” to play", 4);
-                func_801B2608("as Richter Belmont．", 5);
+                func_801B2608(KO_SAVE("Input ””RICHTER”” to play", "\xF0\x50\xF2\x4E\xF2\x1E\xF0\xA0 \xF2\x3D\xF0\x4C\xF0\x7D\xF0\xA3\xF1\x63\xF1\x81"), 4);
+                func_801B2608(KO_SAVE("as Richter Belmont．", "””RICHTER””\xF0\xC6 \xF0\xDD\xF0\xA4\xF0\xA3\xF0\x69\xF0\x77．"), 5);
                 D_801BAF0C = 0;
             }
             if ((g_pads[0].tapped & PAD_START) && D_801BAF14) {
                 g_api.PlaySfx(SFX_UI_CONFIRM);
-                func_801B2608("You won’t be able to save", 4);
-                func_801B2608("your game． Is that OK？", 5);
+                func_801B2608(KO_SAVE("You won’t be able to save", "\xF0\xDE\xF0\x80\xF0\xB4 \xF3\x18 \xF0\xD2 \xF0\xD6\xF2\xC0\xF1\x36\xF0\x49"), 4);
+                func_801B2608(KO_SAVE("your game． Is that OK？", "\xF0\xFB\xF0\xD0\xF0\xA3\xF2\x59\xF2\xC0\xF1\x36\xF1\x11？"), 5);
                 func_801ADF94(0x81, 0);
                 DrawNavigationTips(Tips_YesNo);
                 g_GameEngineStep = Upd_Eng_65;
-            } else if (g_pads[0].tapped & PAD_CROSS) {
+            } else if (g_pads[0].tapped & SEL_CONFIRM) {
                 port = D_801D6B04 / 15;
                 slot = D_801D6B04 % 15;
                 if (g_SaveSummary[port].icon[slot] >= 0) {
@@ -1535,8 +1766,8 @@ void Update(void) {
     case Upd_Eng_NameChange:
         SelectMainMenuOption(MAIN_MENU_CURSOR_FILE_DELETE);
         func_801ACBE4(GFX_UNK_15, 0);
-        func_801B2608("Checking Memory Card．", 4);
-        func_801B2608("Do not remove Memory Card．", 5);
+        func_801B2608(KO_SAVE("Checking Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2 \xF2\x48\xF0\x7E \xF0\xA6．"), 4);
+        func_801B2608(KO_SAVE("Do not remove Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6 \xF2\xB4\xF0\x85 \xF0\x52\xF0\x69\xF0\x77．"), 5);
         func_801B3120();
         g_GameEngineStep++;
         /* fallthrough */
@@ -1565,23 +1796,23 @@ void Update(void) {
         }
         func_801AEE74();
         if (D_801BAF10) {
-            func_801B2608("No data found", 4);
-            func_801B2608("on this Memory Card．", 5);
+            func_801B2608(KO_SAVE("No data found", "\xF0\x7D \xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\x74\xF0\xBF"), 4);
+            func_801B2608(KO_SAVE("on this Memory Card．", "\xF1\x3F\xF0\x7D\xF2\x1E\xF0\x40 \xF0\xD6\xF2\xC0\xF1\x36\xF0\x49．"), 5);
             func_801ADF94(0x82, 0);
             DrawNavigationTips(Tips_Confirm);
             g_GameEngineStep = Upd_Eng_0xA0;
         } else {
             DrawNavigationTips(Tips_Generic);
             func_801ADF94(2, 0);
-            func_801B2608("Select the file", 4);
-            func_801B2608("you wish to rename．", 5);
+            func_801B2608(KO_SAVE("Select the file", "\xF0\x7D\xF0\x4F\xF0\xB4 \xF0\xBD\xF2\x03 \xF0\x92\xF0\x7F\xF0\xB4"), 4);
+            func_801B2608(KO_SAVE("you wish to rename．", "\xF1\xAA\xF2\x1C\xF0\xA3\xF0\x69\xF0\x77．"), 5);
             g_GameEngineStep++;
         }
         break;
     case Upd_Eng_0xA0:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801AE9A8();
             func_801AD490();
@@ -1589,14 +1820,14 @@ void Update(void) {
         }
         break;
     case Upd_Eng_147:
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             func_801AE9A8();
             func_801AD490();
             g_GameEngineStep = Upd_Eng_MainMenuIdle;
         } else {
             UpdateFileSelect();
             func_801ADF94(2, 0);
-            if (g_pads[0].tapped & PAD_CROSS) {
+            if (g_pads[0].tapped & SEL_CONFIRM) {
                 port = D_801D6B04 / 15;
                 slot = D_801D6B04 % 15;
                 if (g_SaveSummary[port].icon[slot] >= 0) {
@@ -1620,7 +1851,7 @@ void Update(void) {
             }
         }
         if ((g_pads[0].tapped & PAD_SELECT) ||
-            (g_pads[0].tapped & PAD_TRIANGLE && i == 8 &&
+            (g_pads[0].tapped & SEL_CANCEL && i == 8 &&
              g_InputCursorPos == 0)) {
             SelectMainMenuOption(MAIN_MENU_CURSOR_FILE_DELETE);
             g_GameEngineStep = Upd_Eng_146;
@@ -1639,8 +1870,8 @@ void Update(void) {
                     g_GameEngineStep = Upd_Eng_146;
                 } else {
                     func_801ACBE4(GFX_UNK_15, 0);
-                    func_801B2608("Changing Name．", 4);
-                    func_801B2608("Do not remove Memory Card．", 5);
+                    func_801B2608(KO_SAVE("Changing Name．", "\xF0\x7D\xF0\x4F \xF0\xA1\xF0\xF9 \xF0\xA6．"), 4);
+                    func_801B2608(KO_SAVE("Do not remove Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6 \xF2\xB4\xF0\x85 \xF0\x52\xF0\x69\xF0\x77．"), 5);
                     g_api.PlaySfx(SFX_UI_CONFIRM);
                     g_GameEngineStep++;
                 }
@@ -1662,19 +1893,19 @@ void Update(void) {
         }
         if (temp_s1 == 1) {
             func_801B1F4C(5);
-            func_801B2608("Name changed．", 4);
+            func_801B2608(KO_SAVE("Name changed．", "\xF0\x7D\xF0\x4F\xF0\x7D \xF0\xA1\xF0\xF9\xF2\x80\xF1\xC9\xF2\xC0\xF1\x36\xF0\x49．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep += 2;
         }
         if (temp_s1 == -1) {
             func_801B1F4C(5);
-            func_801B2608("Loading error．", 4);
+            func_801B2608(KO_SAVE("Loading error．", "\xF0\xA0\xF0\xB2 \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
         if (temp_s1 == -3) {
             func_801B1F4C(5);
-            func_801B2608("Save error．", 4);
+            func_801B2608(KO_SAVE("Save error．", "\xF1\xAE\xF0\x7D\xF0\x5D \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
@@ -1682,7 +1913,7 @@ void Update(void) {
     case Upd_Eng_152:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801ACBE4(GFX_UNK_15, 8);
             g_GameEngineStep = Upd_Eng_NameChange;
@@ -1691,15 +1922,15 @@ void Update(void) {
     case Upd_Eng_153:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             g_GameEngineStep = Upd_Eng_146;
         }
         break;
     case Upd_Eng_FileCopy:
         SelectMainMenuOption(MAIN_MENU_CURSOR_NAME_CHANGE);
-        func_801B2608("Checking Memory Card．", 4);
-        func_801B2608("Do not remove Memory Card．", 5);
+        func_801B2608(KO_SAVE("Checking Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2 \xF2\x48\xF0\x7E \xF0\xA6．"), 4);
+        func_801B2608(KO_SAVE("Do not remove Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6 \xF2\xB4\xF0\x85 \xF0\x52\xF0\x69\xF0\x77．"), 5);
         func_801B3120();
         g_GameEngineStep++;
         /* fallthrough */
@@ -1727,23 +1958,23 @@ void Update(void) {
         }
         func_801AEE74();
         if (D_801BAF10) {
-            func_801B2608("No data found", 4);
-            func_801B2608("on this Memory Card．", 5);
+            func_801B2608(KO_SAVE("No data found", "\xF0\x7D \xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\x74\xF0\xBF"), 4);
+            func_801B2608(KO_SAVE("on this Memory Card．", "\xF1\x3F\xF0\x7D\xF2\x1E\xF0\x40 \xF0\xD6\xF2\xC0\xF1\x36\xF0\x49．"), 5);
             func_801ADF94(0x82, 0);
             DrawNavigationTips(Tips_Confirm);
             g_GameEngineStep = Upd_Eng_0x60;
         } else {
             DrawNavigationTips(Tips_Generic);
             func_801ADF94(2, 0);
-            func_801B2608("Select file", 4);
-            func_801B2608("to be copied．", 5);
+            func_801B2608(KO_SAVE("Select file", "\xF0\xCD\xF0\xAB\xF3\x18 \xF0\x92\xF0\x7F\xF0\xB4"), 4);
+            func_801B2608(KO_SAVE("to be copied．", "\xF1\xAA\xF2\x1C\xF0\xA3\xF0\x69\xF0\x77．"), 5);
             g_GameEngineStep++;
         }
         break;
     case Upd_Eng_0x60:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801AE9A8();
             func_801AD490();
@@ -1751,19 +1982,19 @@ void Update(void) {
         }
         break;
     case Upd_Eng_83:
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             func_801AE9A8();
             func_801AD490();
             g_GameEngineStep = Upd_Eng_MainMenuIdle;
         } else {
             UpdateFileSelect();
             func_801ADF94(2, 0);
-            if (g_pads[0].tapped & PAD_CROSS) {
+            if (g_pads[0].tapped & SEL_CONFIRM) {
                 port = D_801D6B04 / 15;
                 slot = D_801D6B04 % 15;
                 if (g_SaveSummary[port].icon[slot] >= 0) {
-                    func_801B2608("Where do you want", 4);
-                    func_801B2608("to copy to？", 5);
+                    func_801B2608(KO_SAVE("Where do you want", "\xF0\xCD\xF0\xAB\xF3\x18 \xF1\xD8\xF2\x02\xF0\xC6"), 4);
+                    func_801B2608(KO_SAVE("to copy to？", "\xF1\xAA\xF2\x1C\xF0\xA3\xF0\x69\xF0\x77．"), 5);
                     D_801BC3EC = D_801D6B04;
                     g_api.PlaySfx(SFX_UI_CONFIRM);
                     g_GameEngineStep++;
@@ -1777,26 +2008,26 @@ void Update(void) {
         UpdateFileSelect();
         func_801ADF94(2, 1);
         func_801AE6D0();
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             func_801ACBE4(GFX_UNK_18, 8);
             func_801ACBE4(GFX_UNK_19, 8);
             func_801ACBE4(GFX_UNK_20, 8);
-            func_801B2608("Select file", 4);
-            func_801B2608("to be copied．", 5);
+            func_801B2608(KO_SAVE("Select file", "\xF0\xCD\xF0\xAB\xF3\x18 \xF0\x92\xF0\x7F\xF0\xB4"), 4);
+            func_801B2608(KO_SAVE("to be copied．", "\xF1\xAA\xF2\x1C\xF0\xA3\xF0\x69\xF0\x77．"), 5);
             g_GameEngineStep--;
         } else {
-            if (g_pads[0].tapped & PAD_CROSS) {
+            if (g_pads[0].tapped & SEL_CONFIRM) {
                 port = D_801D6B04 / 15;
                 slot = D_801D6B04 % 15;
                 if (D_801BC3EC != D_801D6B04) {
                     if (g_SaveSummary[port].icon[slot] >= 0) {
                         func_801B1F4C(5);
-                        func_801B2608("OK to overwrite data？", 4);
+                        func_801B2608(KO_SAVE("OK to overwrite data？", "\xF1\x3F\xF0\x7D\xF2\x1E\xF0\xC6 \xF1\x3E\xF0\x71\xF0\xD5\xF1\x41 \xF2\x5D\xF2\xF6\xF2\xC0\xF1\x36\xF1\x11？"), 4);
                         g_api.PlaySfx(SFX_UI_CONFIRM);
                         g_GameEngineStep = Upd_Eng_89;
                     } else if (g_SaveSummary[port].icon[slot] != -2) {
-                        func_801B2608("Copying data．", 4);
-                        func_801B2608("Do not remove Memory Card．", 5);
+                        func_801B2608(KO_SAVE("Copying data．", "\xF1\x3F\xF0\x7D\xF2\x1E \xF0\xCD\xF0\xAB \xF0\xA6．"), 4);
+                        func_801B2608(KO_SAVE("Do not remove Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6 \xF2\xB4\xF0\x85 \xF0\x52\xF0\x69\xF0\x77．"), 5);
                         g_api.PlaySfx(SFX_UI_CONFIRM);
                         g_GameEngineStep++;
                     }
@@ -1823,19 +2054,19 @@ void Update(void) {
         }
         if (temp_s1 == 1) {
             func_801B1F4C(5);
-            func_801B2608("File copied．", 4);
+            func_801B2608(KO_SAVE("File copied．", "\xF0\x92\xF0\x7F\xF0\x7D \xF0\xCD\xF0\xAB\xF2\x80\xF1\xC9\xF2\xC0\xF1\x36\xF0\x49．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep += 2;
         }
         if (temp_s1 == -1) {
             func_801B1F4C(5);
-            func_801B2608("Loading error．", 4);
+            func_801B2608(KO_SAVE("Loading error．", "\xF0\xA0\xF0\xB2 \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
         if (temp_s1 == -3) {
             func_801B1F4C(5);
-            func_801B2608("Save error．", 4);
+            func_801B2608(KO_SAVE("Save error．", "\xF1\xAE\xF0\x7D\xF0\x5D \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
@@ -1844,7 +2075,7 @@ void Update(void) {
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 1);
         func_801AE6D0();
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801ACBE4(GFX_UNK_15, 8);
             g_GameEngineStep = Upd_Eng_FileCopy;
@@ -1854,7 +2085,7 @@ void Update(void) {
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 1);
         func_801AE6D0();
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801ACBE4(GFX_UNK_18, 8);
             func_801ACBE4(GFX_UNK_19, 8);
@@ -1866,13 +2097,13 @@ void Update(void) {
         DrawNavigationTips(Tips_YesNo);
         func_801ADF94(0x82, 1);
         func_801AE6D0();
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
-            func_801B2608("Copying data．", 4);
-            func_801B2608("Do not remove Memory Card．", 5);
+            func_801B2608(KO_SAVE("Copying data．", "\xF1\x3F\xF0\x7D\xF2\x1E \xF0\xCD\xF0\xAB \xF0\xA6．"), 4);
+            func_801B2608(KO_SAVE("Do not remove Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6 \xF2\xB4\xF0\x85 \xF0\x52\xF0\x69\xF0\x77．"), 5);
             g_GameEngineStep = Upd_Eng_85;
         } else {
-            if (g_pads[0].tapped & PAD_TRIANGLE) {
+            if (g_pads[0].tapped & SEL_CANCEL) {
                 func_801B1F4C(5);
                 func_801B25D4("どこにコピーしますか？", 4);
                 DrawNavigationTips(Tips_Generic);
@@ -1883,8 +2114,8 @@ void Update(void) {
         break;
     case Upd_Eng_FileDelete:
         SelectMainMenuOption(MAIN_MENU_CURSOR_FILE_COPY);
-        func_801B2608("Checking Memory Card．", 4);
-        func_801B2608("Do not remove Memory Card．", 5);
+        func_801B2608(KO_SAVE("Checking Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2 \xF2\x48\xF0\x7E \xF0\xA6．"), 4);
+        func_801B2608(KO_SAVE("Do not remove Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6 \xF2\xB4\xF0\x85 \xF0\x52\xF0\x69\xF0\x77．"), 5);
         func_801B3120();
         g_GameEngineStep++;
         /* fallthrough */
@@ -1912,23 +2143,23 @@ void Update(void) {
         }
         func_801AEE74();
         if (D_801BAF10) {
-            func_801B2608("No data found", 4);
-            func_801B2608("on this Memory Card．", 5);
+            func_801B2608(KO_SAVE("No data found", "\xF0\x7D \xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\x74\xF0\xBF"), 4);
+            func_801B2608(KO_SAVE("on this Memory Card．", "\xF1\x3F\xF0\x7D\xF2\x1E\xF0\x40 \xF0\xD6\xF2\xC0\xF1\x36\xF0\x49．"), 5);
             func_801ADF94(0x82, 0);
             DrawNavigationTips(Tips_Confirm);
             g_GameEngineStep = Upd_Eng_0x80;
         } else {
             DrawNavigationTips(Tips_Generic);
             func_801ADF94(2, 0);
-            func_801B2608("Select file", 4);
-            func_801B2608("to be erased．", 5);
+            func_801B2608(KO_SAVE("Select file", "\xF0\x85\xF0\x79 \xF0\x92\xF0\x7F\xF0\xB4"), 4);
+            func_801B2608(KO_SAVE("to be erased．", "\xF1\xAA\xF2\x1C\xF0\xA3\xF0\x69\xF0\x77．"), 5);
             g_GameEngineStep++;
         }
         break;
     case Upd_Eng_0x80:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801AE9A8();
             func_801AD490();
@@ -1936,7 +2167,7 @@ void Update(void) {
         }
         break;
     case Upd_Eng_115:
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             func_801AE9A8();
             func_801AD490();
             g_GameEngineStep = Upd_Eng_MainMenuIdle;
@@ -1944,12 +2175,12 @@ void Update(void) {
             UpdateFileSelect();
             func_801ADF94(2, 0);
             DrawNavigationTips(Tips_Generic);
-            if (g_pads[0].tapped & PAD_CROSS) {
+            if (g_pads[0].tapped & SEL_CONFIRM) {
                 port = D_801D6B04 / 15;
                 slot = D_801D6B04 % 15;
                 if (g_SaveSummary[port].icon[slot] >= 0) {
                     func_801B1F4C(5);
-                    func_801B2608("Is it OK to erase file？", 4);
+                    func_801B2608(KO_SAVE("Is it OK to erase file？", "\xF0\x92\xF0\x7F\xF0\xB4 \xF0\x85\xF0\xB3\xF1\x41 \xF2\x5D\xF2\xF6\xF2\xC0\xF1\x36\xF1\x11？"), 4);
                     g_api.PlaySfx(SFX_UI_CONFIRM);
                     g_GameEngineStep++;
                 } else {
@@ -1961,11 +2192,11 @@ void Update(void) {
     case Upd_Eng_116:
         DrawNavigationTips(Tips_YesNo);
         func_801ADF94(0x82, 0);
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
-            func_801B2608("Select file", 4);
-            func_801B2608("to be erased．", 5);
+        if (g_pads[0].tapped & SEL_CANCEL) {
+            func_801B2608(KO_SAVE("Select file", "\xF0\x85\xF0\x79 \xF0\x92\xF0\x7F\xF0\xB4"), 4);
+            func_801B2608(KO_SAVE("to be erased．", "\xF1\xAA\xF2\x1C\xF0\xA3\xF0\x69\xF0\x77．"), 5);
             g_GameEngineStep--;
-        } else if (g_pads[0].tapped & PAD_CROSS) {
+        } else if (g_pads[0].tapped & SEL_CONFIRM) {
             func_801ACBE4(GFX_UNK_15, 8);
             g_api.PlaySfx(SFX_UI_CONFIRM);
             g_GameEngineStep++;
@@ -1986,13 +2217,13 @@ void Update(void) {
         }
         if (temp_s1 == 1) {
             func_801B1F4C(5);
-            func_801B2608("File erased．", 4);
+            func_801B2608(KO_SAVE("File erased．", "\xF0\x92\xF0\x7F\xF0\x7D \xF0\x85\xF0\xB3\xF2\xE5\xF2\xC0\xF1\x36\xF0\x49．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep += 2;
         }
         if (temp_s1 == -1) {
             func_801B1F4C(5);
-            func_801B2608("Delete error．", 4);
+            func_801B2608(KO_SAVE("Delete error．", "\xF1\xA5\xF1\xE7 \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
@@ -2000,7 +2231,7 @@ void Update(void) {
     case Upd_Eng_119:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801ACBE4(GFX_UNK_15, 8);
             g_GameEngineStep = Upd_Eng_FileDelete;
@@ -2009,7 +2240,7 @@ void Update(void) {
     case Upd_Eng_120:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x82, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             g_GameEngineStep = Upd_Eng_114;
         }
@@ -2017,8 +2248,8 @@ void Update(void) {
     case Upd_Eng_0x100:
         func_801ACBE4(GFX_UNK_6, 8);
         func_801ADF94(0x81, 0);
-        func_801B2608("Loading Memory Card．", 4);
-        func_801B2608("Do not remove Memory Card．", 5);
+        func_801B2608(KO_SAVE("Loading Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2 \xF0\xA0\xF0\xB2 \xF0\xA6．"), 4);
+        func_801B2608(KO_SAVE("Do not remove Memory Card．", "\xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6 \xF2\xB4\xF0\x85 \xF0\x52\xF0\x69\xF0\x77．"), 5);
         func_801ACBE4(GFX_UNK_15, 0);
         func_801B367C(D_801D6B04);
         g_GameEngineStep++;
@@ -2039,13 +2270,13 @@ void Update(void) {
         }
         if (temp_s1 == -1) {
             func_801B1F4C(5);
-            func_801B2608("Loading error．", 4);
+            func_801B2608(KO_SAVE("Loading error．", "\xF0\xA0\xF0\xB2 \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
         if (temp_s1 == -2) {
             func_801B1F4C(5);
-            func_801B2608("Version error．", 4);
+            func_801B2608(KO_SAVE("Version error．", "\xF1\x8E\xF1\xE4 \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
@@ -2069,20 +2300,20 @@ void Update(void) {
         if (g_SaveSummary[0].padding != -2) {
             g_GameEngineStep = Upd_Eng_0x210;
         } else {
-            func_801B2608("Format Memory Card", 4);
-            func_801B2608("in slot １？", 5);
+            func_801B2608(KO_SAVE("Format Memory Card", "１\xF0\xCC \xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6"), 4);
+            func_801B2608(KO_SAVE("in slot １？", "\xF0\xB7\xF0\x46\xF0\x99\xF0\xA3\xF2\x59\xF2\xC0\xF1\x36\xF1\x11？"), 5);
             g_GameEngineStep++;
         }
         break;
     case Upd_Eng_513:
         func_801ADF94(0x80, 0);
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801ACBE4(GFX_UNK_6, 8);
             MemCardSetPort(0);
             g_GameEngineStep++;
         } else {
-            if (g_pads[0].tapped & PAD_CROSS) {
+            if (g_pads[0].tapped & SEL_CONFIRM) {
                 g_GameEngineStep = Upd_Eng_0x210;
             }
             func_801AD218();
@@ -2097,13 +2328,13 @@ void Update(void) {
         }
         if (temp_s1 == 1) {
             func_801B1F4C(5);
-            func_801B2608("Formatting completed．", 4);
+            func_801B2608(KO_SAVE("Formatting completed．", "\xF0\xB7\xF0\x46\xF0\x99\xF0\x40 \xF2\x68\xF1\x21\xF2\xC0\xF1\x36\xF0\x49．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep += 2;
         }
         if (temp_s1 == -1) {
             func_801B1F4C(5);
-            func_801B2608("Formatting error．", 4);
+            func_801B2608(KO_SAVE("Formatting error．", "\xF0\xB7\xF0\x46\xF0\x99 \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
@@ -2111,7 +2342,7 @@ void Update(void) {
     case Upd_Eng_515:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x80, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801ACBE4(GFX_UNK_15, 8);
             g_GameEngineStep = g_SelNextCrossPressEngStep;
@@ -2120,7 +2351,7 @@ void Update(void) {
     case Upd_Eng_516:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x80, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             g_GameEngineStep = g_SelNextCrossPressEngStep;
         }
@@ -2131,20 +2362,20 @@ void Update(void) {
         if (g_SaveSummary[1].padding != -2) {
             g_GameEngineStep = Upd_Eng_0x220;
         } else {
-            func_801B2608("Format Memory Card", 4);
-            func_801B2608("in slot １？", 5);
+            func_801B2608(KO_SAVE("Format Memory Card", "１\xF0\xCC \xF0\x54\xF1\x83\xF0\x50 \xF2\x06\xF0\xB2\xF0\xC6"), 4);
+            func_801B2608(KO_SAVE("in slot １？", "\xF0\xB7\xF0\x46\xF0\x99\xF0\xA3\xF2\x59\xF2\xC0\xF1\x36\xF1\x11？"), 5);
             g_GameEngineStep++;
         }
         break;
     case Upd_Eng_529:
         func_801ADF94(0x80, 0);
-        if (g_pads[0].tapped & PAD_TRIANGLE) {
+        if (g_pads[0].tapped & SEL_CANCEL) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801ACBE4(GFX_UNK_6, 8);
             MemCardSetPort(1);
             g_GameEngineStep++;
         } else {
-            if (g_pads[0].tapped & PAD_CROSS) {
+            if (g_pads[0].tapped & SEL_CONFIRM) {
                 g_GameEngineStep = Upd_Eng_0x220;
             }
             func_801AD218();
@@ -2159,13 +2390,13 @@ void Update(void) {
         }
         if (temp_s1 == 1) {
             func_801B1F4C(5);
-            func_801B2608("Formatting completed．", 4);
+            func_801B2608(KO_SAVE("Formatting completed．", "\xF0\xB7\xF0\x46\xF0\x99\xF0\x40 \xF2\x68\xF1\x21\xF2\xC0\xF1\x36\xF0\x49．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep += 2;
         }
         if (temp_s1 == -1) {
             func_801B1F4C(5);
-            func_801B2608("Formatting error．", 4);
+            func_801B2608(KO_SAVE("Formatting error．", "\xF0\xB7\xF0\x46\xF0\x99 \xF0\x74\xF1\x5D．"), 4);
             func_801ACBE4(GFX_UNK_15, 0);
             g_GameEngineStep++;
         }
@@ -2173,7 +2404,7 @@ void Update(void) {
     case Upd_Eng_531:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x80, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             func_801ACBE4(GFX_UNK_15, 8);
             g_GameEngineStep = g_SelNextCrossPressEngStep;
@@ -2182,7 +2413,7 @@ void Update(void) {
     case Upd_Eng_532:
         DrawNavigationTips(Tips_Confirm);
         func_801ADF94(0x80, 0);
-        if (g_pads[0].tapped & PAD_CROSS) {
+        if (g_pads[0].tapped & SEL_CONFIRM) {
             g_api.PlaySfx(SFX_UI_CONFIRM);
             g_GameEngineStep = g_SelNextCrossPressEngStep;
         }

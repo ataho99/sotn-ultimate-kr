@@ -1,0 +1,14 @@
+name: 질문
+description: 설치·재료·사용법 질문
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: "⚠ ROM·디스크 이미지는 절대 첨부하지 마세요. 재료 구하는 곳 문의에는 답하지 않습니다."
+  - type: textarea
+    id: q
+    attributes: {label: 질문}
+    validations: {required: true}
+  - type: input
+    id: env
+    attributes: {label: 환경(윈도 버전·에뮬레이터)}

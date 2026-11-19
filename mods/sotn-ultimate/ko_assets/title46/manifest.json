@@ -1,0 +1,51 @@
+{
+ "source": "trial46 live image (sha1 38eb97090501b44779bff36fd8ae454aa6a0f4dc)",
+ "files": [
+  {
+   "file": "F_TITLE0.BIN",
+   "path": [
+    "BIN",
+    "F_TITLE0.BIN;1"
+   ],
+   "size": 262144,
+   "sha256": "bab977e9b0d0dc49e94f9644bbe3c976311b169116554516791781eb1224e27b"
+  },
+  {
+   "file": "F_TITLE1.BIN",
+   "path": [
+    "BIN",
+    "F_TITLE1.BIN;1"
+   ],
+   "size": 262144,
+   "sha256": "6a5c7258ccdf625689b23457909dcf68bfa8e2135f1170446a9f586e6220f591"
+  },
+  {
+   "file": "F_SEL.BIN",
+   "path": [
+    "ST",
+    "SEL",
+    "F_SEL.BIN;1"
+   ],
+   "size": 196608,
+   "sha256": "5717c5fb66e63951012065ab90fe5f2e9810f88ad6b2fb1cd685e8037c09e7d1"
+  },
+  {
+   "file": "F_GAME.BIN",
+   "path": [
+    "BIN",
+    "F_GAME.BIN;1"
+   ],
+   "size": 270336,
+   "sha256": "ceb72ed7dfa9fae6d98e16a6a22c9f9898b054a858ec8f860daf977974267dc6"
+  },
+  {
+   "file": "F_GAME2.BIN",
+   "path": [
+    "BIN",
+    "F_GAME2.BIN;1"
+   ],
+   "size": 270336,
+   "sha256": "321fa542b74143aa77e48c68878a04b6216fe4c6203f04ba380c88e3ed4ec7d2"
+  }
+ ]
+}

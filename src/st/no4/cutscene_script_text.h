@@ -25,6 +25,8 @@ static
 #endif
 }
 
+#include "../cutscene_ko_wire.h"
+
 static u8 SetCutsceneScript(u8* script) {
     Primitive* prim;
 
@@ -32,7 +34,10 @@ static u8 SetCutsceneScript(u8* script) {
         g_api.AllocPrimitives(PRIM_SPRT, NUM_CUTSCENE_PRIM);
 
     if (g_Dialogue.primIndex[2] != -1) {
-#if defined(MOD_PSP_SCRIPT)
+#if defined(MOD_KO)
+        // KO trial: script selector (ko_dlg2 #127, passthrough until staged)
+        g_Dialogue.scriptCur = ModKoScript(script);
+#elif defined(MOD_PSP_SCRIPT)
         // Saturn port: the PSP dub toggle's script copies (mod_psp_script.h)
         g_Dialogue.scriptCur = ModPspScript(script);
 #else

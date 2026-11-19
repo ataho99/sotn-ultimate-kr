@@ -7,7 +7,7 @@
 #define CUTSCENE_UNK3_RECT_Y 384
 #endif
 
-#ifdef VERSION_HD
+#if defined(VERSION_HD) || defined(MOD_KO)
 #define CUTSCENE_UNK3_RECT_H 16
 #else
 #define CUTSCENE_UNK3_RECT_H 12

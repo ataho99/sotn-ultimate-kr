@@ -262,7 +262,11 @@ void DebugCaptureVideo(void) {
 // the difference between the bytes the mod adds and the bytes it drops.
 // mods/sotn-ultimate/tools/check_dra_layout.sh prints the value to use after a
 // build.
-#define MOD_DRA_PAD 40
+#if defined(MOD_KO)
+#define MOD_DRA_PAD 696 /* trial25: hand labels (menu.c KO branch) +60B (1908-60); trial24 B1 desc +312B (2220-312); checker verifies 3/3 */
+#else
+#define MOD_DRA_PAD 40 /* v1.4 upstream */
+#endif
 const u8 g_ModDraPad[MOD_DRA_PAD] = {1};
 #endif
 

@@ -142,11 +142,19 @@ extern u8 cutscene_script[];
 extern u8 cutscene_data_ferryman_left[];
 extern u8 cutscene_data_ferryman_right[];
 
-static const char* actor_names[] = {_S("Ferryman")};
+static const char* actor_names[] = {_S("FERRYMAN")};
+#ifdef MOD_KO
+/* trial15 #159: KO actor name only (dialogue stays EN: NO4 VRAM overflows
+ * with the KO render branch). DrawCutsceneActorName's KO path needs these. */
+static const u8 ko_name_0[] = {0xF0, 0xCB, 0xF0, 0xAB, 0xF0, 0xA9};
+static const u8* const actor_names_ko[] = {ko_name_0};
+static const u8 actor_names_ko_len[] = {6};
+#endif
 
 // bss
 static bool skip_cutscene;
 static Dialogue3 g_Dialogue;
+/* w230-A: STATIC_PAD_BSS(88) restored (suspect 1). KO render kept. */
 STATIC_PAD_BSS(88);
 u32 g_CutsceneFlags; // Used by EntityFerrymanController
 static bool dialogue_started;
@@ -170,7 +178,12 @@ static bool dialogue_started;
 #endif
 
 // Unused by pspeu and deadstripped
+/* trial17a #225: ScaleCutsceneAvatar is never called in no4 US
+ * (DIALOGUE_LOAD_PORTRAIT anim is open-coded above); the static copy
+ * costs ~260B text. Skipped under MOD_KO toward the KO dialogue branch. */
+#ifndef MOD_KO
 #include "../cutscene_scale_avatar.h"
+#endif
 
 void EntityCutscene(Entity* self) {
     Primitive* prim;
@@ -579,8 +592,47 @@ void EntityCutscene(Entity* self) {
             break; // This breaks the big while loop for psx
         } // This closes the big while loop for psx
         if (nextByte == ASCII_SPACE) {
+#ifdef MOD_KO
+            g_Dialogue.nextCharX += 1; /* 4px space (maintainer 08:16), KO_SPACE_ADV */
+#else
             g_Dialogue.nextCharX += 2;
+#endif
             return;
+        }
+#endif
+/* trial17a #225: KO dialogue render (same idiom as no3/st0: 2B path via
+ * DRA func_80106A28 + 12x16 LoadTPage, x+=3; spaces stay 1B EN path).
+ * KO script is same-length spliced (gen_ko_splice no4 entries), so this
+ * branch is the only .text growth (+172B measured, real toolchain). */
+#if defined(MOD_KO) && !defined(VERSION_PSP)
+        /* ko engtab dialogue ASCII (sihum37b): . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
+         * KO_ENGTAB (94xu16 at 0x8009EF00), 12-col direct + kind0, advance KO_ENG_ADV (4/8 px). * A miss (0) keeps the original-font MoveImage path below. */
+        if (nextByte > 0x20 && nextByte < 0x7F && ((const u16*)0x8009EF00)[nextByte - 0x21]) {
+            u_long* eng_glyph = (u_long*)g_api.func_80106A28(((const u16*)0x8009EF00)[nextByte - 0x21], 1);
+            if (eng_glyph) {
+                LoadTPage(eng_glyph, 0, 0, g_Dialogue.nextCharX, (g_Dialogue.nextCharY * 16) + 384, 0xC, 0x10);
+                g_Dialogue.nextCharX += KO_ENG_ADV(nextByte);
+                return;
+            }
+        }
+        if ((nextByte & 0xFC) == 0xF0 || (nextByte >= 0x80 && nextByte < 0xF0)) {
+            s32 ko_ch;
+            u_long* ko_glyph;
+            s32 ko_y;
+            if (nextByte >= 0x80 && nextByte < 0xF0) {
+                /* 1-byte promotion: KO_PROMO_TBL_ADDR (dra.h), gen_ko_promo.py */
+                ko_ch = ((u16*)0x8009F000)[nextByte - 0x80];
+            } else {
+                ko_ch = (nextByte << 8) | *g_Dialogue.scriptCur++;
+            }
+            ko_glyph = (u_long*)g_api.func_80106A28(ko_ch, 1);
+            if (ko_glyph) {
+                ko_y = (g_Dialogue.nextCharY * 16) + 384;
+                LoadTPage(
+                    ko_glyph, 0, 0, g_Dialogue.nextCharX, ko_y, 0xC, 0x10);
+                g_Dialogue.nextCharX += 3;
+                return;
+            }
         }
 #endif
         rect.x = ((nextByte & 0xF) * 2) + 896;

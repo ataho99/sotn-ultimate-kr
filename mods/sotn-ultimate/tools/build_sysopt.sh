@@ -65,7 +65,7 @@ fi
 VERSION=us mipsel-linux-gnu-cpp -Iinclude -Iinclude/psxsdk -Isrc/dra -lang-c \
     -undef -Wall -fno-builtin -Dmips -D__GNUC__=2 -D__OPTIMIZE__ -D__mips__ -D__mips \
     -Dpsx -D__psx__ -D__psx -D_PSYQ -D__EXTENSIONS__ -D_MIPSEL -D_LANGUAGE_C \
-    -DLANGUAGE_C -DNO_LOGS -DHACKS -DUSE_INCLUDE_ASM -D_internal_version_us -DSOTN_STR \
+    -DLANGUAGE_C -DNO_LOGS -DHACKS -DUSE_INCLUDE_ASM -D_internal_version_us -DSOTN_STR $SYSOPT_DEFS \
     mods/sotn-ultimate/src/menu/sysopt.c | tools/sotn_str/target/release/sotn_str process |
     iconv --from-code=UTF-8 --to-code=Shift-JIS |
     bin/cc1-psx-26 -G0 -w -funsigned-char -fpeephole -ffunction-cse \

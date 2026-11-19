@@ -3,6 +3,13 @@
 #include "dra.h"
 #include "dra_bss.h"
 
+#if defined(MOD_KO)
+#include "gen/us/ko_save_str.h"
+#define KOS(en, ko) ko /* sihum40: save-room texts in Hangul (MGalmuri12 cells, no BIOS Kanji ROM glyph) */
+#else
+#define KOS(en, ko) en
+#endif
+
 // BSS
 static s32 D_801379B8;
 static s32 D_801379BC;
@@ -197,8 +204,13 @@ static Primitive* func_80103148(Primitive* prim, Primitive* basis) {
 
 static s32 HandleSaveMenu(s32 arg0) {
 #if defined(VERSION_US)
+#if defined(MOD_KO)
+#define CONFIRM (PAD_START | PAD_SQUARE | PAD_CIRCLE)
+#define EXIT PAD_CROSS
+#else
 #define CONFIRM PAD_CROSS
 #define EXIT PAD_TRIANGLE
+#endif
 #elif defined(VERSION_HD)
 #define CONFIRM (PAD_START | PAD_SQUARE | PAD_CIRCLE)
 #define EXIT PAD_CROSS
@@ -258,7 +270,7 @@ static s32 HandleSaveMenu(s32 arg0) {
             }
             if (D_80137E4C == 6) {
 #if defined(VERSION_US)
-                func_800F9D88("Data saved．", 0, 1);
+                func_800F9D88(KOS("Data saved．", KS_SAVED), 0, 1);
 #elif defined(VERSION_HD)
                 func_800F9D40("セーブしました　　　", 0, 1);
 #elif defined(VERSION_PSP)
@@ -268,8 +280,8 @@ static s32 HandleSaveMenu(s32 arg0) {
             }
             if (D_80137E4C == 7) {
 #if defined(VERSION_US)
-                func_800F9D88("Memory Card", 0, 1);
-                func_800F9D88("  not found．", 1, 0);
+                func_800F9D88(KOS("Memory Card", KS_NOCARD0), 0, 1);
+                func_800F9D88(KOS("  not found．", KS_NOCARD1), 1, 0);
 #elif defined(VERSION_HD)
                 func_800F9D40("メモリーカードが　　", 0, 1);
                 func_800F9D40("ささっていません　　", 1, 0);
@@ -281,8 +293,8 @@ static s32 HandleSaveMenu(s32 arg0) {
             }
             if (D_80137E4C == 8) {
 #if defined(VERSION_US)
-                func_800F9D88("Memory Card", 0, 1);
-                func_800F9D88("is Defective．", 1, 0);
+                func_800F9D88(KOS("Memory Card", KS_DEFECT0), 0, 1);
+                func_800F9D88(KOS("is Defective．", KS_DEFECT1), 1, 0);
 #elif defined(VERSION_HD)
                 func_800F9D40("メモリーカードが　　", 0, 1);
                 func_800F9D40("　壊れています　　　", 1, 0);
@@ -294,8 +306,8 @@ static s32 HandleSaveMenu(s32 arg0) {
             }
             if (D_80137E4C == 9) {
 #if defined(VERSION_US)
-                func_800F9D88("Memory Card is", 0, 1);
-                func_800F9D88("not formatted．", 1, 0);
+                func_800F9D88(KOS("Memory Card is", KS_NOFMT0), 0, 1);
+                func_800F9D88(KOS("not formatted．", KS_NOFMT1), 1, 0);
 #elif defined(VERSION_HD)
                 func_800F9D40("　メモリーカードが　", 0, 1);
                 func_800F9D40("初期化されていません", 1, 0);
@@ -308,8 +320,8 @@ static s32 HandleSaveMenu(s32 arg0) {
             if (D_80137E4C == 10) {
                 if (D_80137E54 == 2) {
 #if defined(VERSION_US)
-                    func_800F9D88("Cannot", 0, 1);
-                    func_800F9D88("overwrite file．", 1, 0);
+                    func_800F9D88(KOS("Cannot", KS_CANTOW0), 0, 1);
+                    func_800F9D88(KOS("overwrite file．", KS_CANTOW1), 1, 0);
 #elif defined(VERSION_HD)
                     func_800F9D40("　　上書き　　　　　", 0, 1);
                     func_800F9D40("　できません　　　　", 1, 0);
@@ -319,8 +331,8 @@ static s32 HandleSaveMenu(s32 arg0) {
 #endif
                 } else if (D_80137E54 == 3) {
 #if defined(VERSION_US)
-                    func_800F9D88("No game", 0, 1);
-                    func_800F9D88("data found．", 1, 0);
+                    func_800F9D88(KOS("No game", KS_NODATA0), 0, 1);
+                    func_800F9D88(KOS("data found．", KS_NODATA1), 1, 0);
 #elif defined(VERSION_HD)
                     func_800F9D40("データがないため　　", 0, 1);
                     func_800F9D40("上書きできません　　", 1, 0);
@@ -330,8 +342,8 @@ static s32 HandleSaveMenu(s32 arg0) {
 #endif
                 } else {
 #if defined(VERSION_US)
-                    func_800F9D88("   ０ memory", 0, 1);
-                    func_800F9D88("blocks available．", 1, 0);
+                    func_800F9D88(KOS("   ０ memory", KS_NOBLK0), 0, 1);
+                    func_800F9D88(KOS("blocks available．", KS_NOBLK1), 1, 0);
 #elif defined(VERSION_HD)
                     func_800F9D40("空きブロックが　　　", 0, 1);
                     func_800F9D40("　足りません　　　　", 1, 0);
@@ -344,8 +356,8 @@ static s32 HandleSaveMenu(s32 arg0) {
             }
             if (D_80137E4C == 11) {
 #if defined(VERSION_US)
-                func_800F9D88("  Memory card", 0, 1);
-                func_800F9D88("  format error．", 1, 0);
+                func_800F9D88(KOS("  Memory card", KS_FMTERR0), 0, 1);
+                func_800F9D88(KOS("  format error．", KS_FMTERR1), 1, 0);
 #elif defined(VERSION_HD)
                 func_800F9D40("　メモリーカードの　", 0, 1);
                 func_800F9D40("初期化に失敗しました　", 1, 0);
@@ -423,9 +435,9 @@ static s32 HandleSaveMenu(s32 arg0) {
             PlaySfx(SFX_UI_ALERT_TINK);
             prim2->p1 += 2;
 #if defined(VERSION_US)
-            func_800F9D88("  Select the slot．", 0, 1);
-            func_800F9D88(" Slot １", 1, 0);
-            func_800F9D88(" Slot ２", 2, 0);
+            func_800F9D88(KOS("  Select the slot．", KS_SLOTSEL), 0, 1);
+            func_800F9D88(KOS(" Slot １", KS_SLOT1), 1, 0);
+            func_800F9D88(KOS(" Slot ２", KS_SLOT2), 2, 0);
 #elif defined(VERSION_HD)
             func_800F9D40("スロットを選んで下さい　", 0, 1);
             func_800F9D40("スロット１　", 1, 0);
@@ -503,7 +515,7 @@ static s32 HandleSaveMenu(s32 arg0) {
         prim2->p1 += 2;
         if (arg0 == 2) {
 #if defined(VERSION_US)
-            func_800F9D88(" Wish to format？", 0, 1);
+            func_800F9D88(KOS(" Wish to format？", KS_WISHFMT), 0, 1);
 #elif defined(VERSION_HD)
             func_800F9D40("初期化してもいいですか　", 0, 1);
 #else
@@ -513,7 +525,7 @@ static s32 HandleSaveMenu(s32 arg0) {
         }
         if (arg0 == 3) {
 #if defined(VERSION_US)
-            func_800F9D88(" Overwrite data？", 0, 1);
+            func_800F9D88(KOS(" Overwrite data？", KS_OVERWR), 0, 1);
 #elif defined(VERSION_HD)
             func_800F9D40("　　上書きしますか　　　", 0, 1);
 #else
@@ -523,7 +535,7 @@ static s32 HandleSaveMenu(s32 arg0) {
         }
         if (arg0 == 4) {
 #if defined(VERSION_US)
-            func_800F9D88("   Wish to save？", 0, 1);
+            func_800F9D88(KOS("   Wish to save？", KS_WISHSAVE), 0, 1);
 #elif defined(VERSION_HD)
             func_800F9D40("　　セーブしますか　　　", 0, 1);
 #else
@@ -532,8 +544,8 @@ static s32 HandleSaveMenu(s32 arg0) {
             D_80137E6C = false;
         }
 #if defined(VERSION_US)
-        func_800F9D88("Yes ", 1, 0);
-        func_800F9D88("  No  ", 2, 0);
+        func_800F9D88(KOS("Yes ", KS_YES), 1, 0);
+        func_800F9D88(KOS("  No  ", KS_NO), 2, 0);
 #elif defined(VERSION_HD)
         func_800F9D40("はい　　", 1, 0);
         func_800F9D40("いいえ　", 2, 0);

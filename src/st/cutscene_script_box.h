@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#include "ko_font_params.h"
 // The CUTSCENE_UNK3_RECT_X and CUTSCENE_UNK4_TPAGE macros must be defined in
 // the overlay
 
@@ -34,10 +35,10 @@ static void CutsceneUnk4(void) {
     prim->clut = g_Dialogue.clutIndex;
     prim->y0 = g_Dialogue.nextLineY;
     prim->u0 = 0;
-    prim->x0 = g_Dialogue.startX + 4;
+    prim->x0 = g_Dialogue.startX + 4 - KO_TEXT_DX;
     prim->v0 = g_Dialogue.nextCharY * 12 + 128;
 #endif
-    prim->u1 = 192;
+    prim->u1 = 192 + KO_TEXT_EXTRA_W;
     prim->v1 = 12;
     prim->priority = 0x1FF;
     prim->drawMode = DRAW_DEFAULT;

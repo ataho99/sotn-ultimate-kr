@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "lib.h"
 
+#if defined(MOD_KO)
+#include "ko_lib_names.h"
+#endif
+
 // An inventory item consists of a category, which affects
 // how the other fields are interpretted, an "unlock level",
 // which is related to the number of things which have been
@@ -101,38 +105,173 @@ static u16 D_us_80180E90[] = {
 #endif
 
 static const char* D_us_80180FB4[] = {
+    #if defined(MOD_KO)
+        "1792\xF2\x70 \xF0\x50\xF2\x4E\xF2\x1E\xF0\x40 \xF0\xB0\xF0\x92\xF3\x19\xF0\x49(5\xF2\x70 \xF1\xE4).",
+    #else
     "Destroyed by Richter in １７９２．（５ years ago）",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x94\xF3\x17\xF1\xD9 \xF2\x6B\xF0\xA0@\xF2\x80\xF0\xCF\xF0\x6C\xF2\x6A\xF0\x49.",
+    #else
     "Revives due to blood soaked@bones．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF1\xF3\x1B\xF1\x05 \xF0\x58\xF0\x83.@\xF0\x6D\xF0\x7C \xF0\xA3\xF0\xD2\xF0\x7E\xF0\xDC\xF0\xA0 \xF0\xC2\xF1\x63\xF2\xD3\xF1\x8B\xF0\xBF\xF0\x49.",
+    #else
     "Vampire bats．@Feared as servants of evil．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x92\xF0\xBE \xF1\x9C\xF0\x40 \xF0\xEE\xF1\xE4 \xF0\xB9\xF0\xFE.",
+    #else
     "Indestructible spinning skull．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xA7 \xF0\x69\xF0\x88\xF0\x74 \xF0\x52\xF1\x90\xF0\xDC\xF0\xA0@\xF1\xA9\xF1\x82\xF0\xB4 \xF0\x5C\xF0\xD7\xF0\x95\xF0\x49.",
+    #else
     "Fresh corpses．@Magically animated．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xE4\xF1\xAB\xF0\x7C \xF0\xBE\xF0\x9E.@\xF2\x04\xF0\xDD\xF1\xDE\xF0\xBF \xF1\x83\xF0\xC2 \xF0\xA9\xF0\xB0\xF0\x95\xF0\x49.",
+    #else
     "Legendary ””creature””．@Attacks all invaders．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x52\xF1\x90\xF0\xDC\xF0\xA0 \xF2\xD3\xF1\xF1\xF0\x7D\xF0\xBF \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Magically animated skeleton．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x63 \xF0\xDD\xF0\x44\xF0\xC6 \xF0\x85\xF0\xE4\xF0\xBF \xF0\x48\xF0\x4A.",
+    #else
     "Wolves which guard castle @entrance．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x6A\xF2\x39\xF0\x95 \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24 \xF0\x43\xF0\xAB",
+    #else
     "Ferocious skeleton @swordsman．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x9C\xF2\x7E\xF0\x7D \xF3\x48\xF0\xBF \xF1\x7B\xF1\x7A.@\xF1\x7B\xF1\x7A \xF0\xA6 \xF0\x40\xF0\x80 \xF0\x8C\xF0\x49.",
+    #else
     "Fireball−spitting Merman．@Largest of merman kind．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x2C \xF0\xC9 \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.@\xF0\xC1\xF0\xB4 \xF3\x25\xF1\x6F\xF0\x49.",
+    #else
     "４−legged skeleton．@Drips poison．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xA3\xF1\x0B \xF0\x70\xF0\x68 \xF0\x9F\xF0\x7D\xF0\x90.",
+    #else
     "Low level axe knight．",
+    #endif
+    #if defined(MOD_KO)
+        "300\xF2\x70 \xF1\xE4 \xF0\x92\xF2\x8D\xF1\x42 \xF0\x9C\xF0\xCA\xF2\x5E\xF0\xEE@\xF1\x98\xF0\xAB",
+    #else
     "Eastern Church soldiers @dispatched ３００ years ago．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x6B\xF0\xC6 \xF1\x3D\xF0\x85\xF0\xBF \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Bone−hurling skeleton．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x05\xF0\x6A \xF1\x47\xF1\x6F \xF1\xD8\xF1\xDE \xF0\x8E\xF0\x7D\xF1\x9F.",
+    #else
     "Possessed Ouija table．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x5C\xF0\x54\xF1\x58 \xF1\xBF\xF0\xBF \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Boomerang wielding skeleton．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xDD\xF0\x7D \xF1\x81\xF1\x41\xF1\x1D\xF1\xFA\xF1\x60 \xF1\x1D\xF2\x06\xF0\xA0\xF0\xDB \xF1\xB8\xF0\x9E",
+    #else
     "Plant with razor−sharp @leaves．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x9C \xF3\x48\xF0\xBD \xF0\x9F\xF0\xBF \xF1\x3F\xF0\x55.",
+    #else
     "Fire−breathing flying demon．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xA3\xF1\x0B \xF1\x9C\xF1\x15 \xF0\x7B\xF0\x4D.",
+    #else
     "Low level flaming ghosts．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x85\xF2\xCD\xF0\x7C \xF2\x65\xF0\xC2\xF0\xF2\xF0\x69 \xF1\x3F\xF0\x55.",
+    #else
     "Demonic puppet from Hell．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x52\xF1\xF7\xF0\xB4 \xF1\x46 \xF1\x3F\xF0\x55",
+    #else
     "Demon with enchanted spear．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xC2 \xF1\x7B\xF0\x50 \xF1\xCC\xF2\x81\xF0\xDB@\xF1\xC5\xF0\xD2. \xF0\x71\xF2\x74 \xF2\xF2\xF0\x7D \xF1\x7B\xF0\x50?",
+    #else
     "Nauseating two−headed @beast． Which is the head？",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x46\xF2\xA4\xF0\x95 \xF0\x7E\xF0\xAE\xF2\x46 \xF1\xA9\xF0\x9E.@\xF1\x95\xF3\x0A\xF1\xFA\xF1\x60 \xF0\x20\xF0\x49.",
+    #else
     "Strange human−like creature．@Jumps like a flea．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x54\xF0\xC2\xF0\xAB \xF1\x7B\xF0\x50\xF2\x06\xF2\x8E\xF0\x74\xF0\x61 \xF0\xA2\xF0\x71\xF2\x6A\xF0\x49.",
+    #else
     "From Medusa’s hair．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xBB\xF1\x1D \xF0\x43\xF0\x67\xF0\x7C \xF0\xB7\xF0\x6B\xF1\xDE",
+    #else
     "Novice of twin−bladed @combat．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x65\xF2\xFA \xF1\x46@\xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Skeletons equipped with @rifles．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x54\xF0\xC2\xF0\xAB\xF0\x7C \xF1\x7B\xF0\x50\xF2\x06\xF2\x8E.@\xF0\x62\xF0\x99\xF0\x69\xF2\x17\xF0\x49.",
+    #else
     "From Medusa’s hair．@Can petrify．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xFD\xF0\x44 \xF1\x46 \xF0\xA6\xF0\x80 \xF0\x9F\xF0\x7D\xF0\x90.",
+    #else
     "Heavily armored knight with @iron ball．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xA1\xF0\x7D \xF1\xB8\xF0\x9E. \xF1\xC1\xF2\xC6\xF0\x74@\xF0\x62\xF0\x99 \xF0\xEF\xF0\xFF\xF0\x40 \xF1\xDD\xF0\x49.",
+    #else
     "Mutated plant．@Seeds petrify．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xA6\xF0\xC7\xF0\x80 \xF0\x70\xF0\x68 \xF0\x9F\xF0\x7D\xF0\x90.",
+    #else
     "Well armored axe knight．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x9C\xF0\xFF \xF0\x73\xF0\xAC\xF0\x7C \xF1\x3F\xF0\x55.@\xF2\xC3\xF0\xDA\xF0\x46\xF0\xC6 \xF3\x4C\xF0\x71\xF0\x95\xF0\x49.",
+    #else
     "Fire and ice demon．@Seems reluctant to fight．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF3\x1E \xF1\x46 \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24 \xF2\x9C\xF0\xD2.",
+    #else
     "Skeleton archer equipped @with bow．",
+    #endif
+#if defined(MOD_KO)
+#if defined(MOD_SATURN)
+    "\xF0\xB2\xF1\x59\xF0\xFD \xF0\xB9\xF0\xFE\xF0\xA0 \xF1\x74\xF1\x46 \xF0\x46\xF1\x44",
+#else
+    "\xF0\x5A\xF1\xA8 \xF0\xB2\xF1\x59\xF0\xFD \xF0\xB9\xF0\xFE@\xF0\x4A\xF0\x93.",
+#endif
+#else
 #if defined(MOD_SATURN)
     // the PSP port's text (mods/sotn-ultimate/tools/gen_menu_text.py lists the
     // menu changes)
@@ -140,127 +279,588 @@ static const char* D_us_80180FB4[] = {
 #else
     "Cannon built of white @dragon skulls．",
 #endif
+#endif
+    #if defined(MOD_KO)
+        "\xF0\xA1\xF0\x6A\xF0\xA3\xF0\xBF \xF1\x3F\xF0\x55.",
+    #else
     "Shape−shifting demon．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x63\xF0\x7C \xF0\x9A\xF0\x74 \xF0\xA1\xF0\x7D\xF1\x42 \xF1\xCF\xF2\xB4\xF0\x57.",
+    #else
     "Local barnyard owl Mutated @by castle’s influence．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xFA\xF2\x46\xF1\x42 \xF1\x98\xF0\xAB\xF0\x7C \xF1\x7B\xF0\x50. \xF0\xCD\xF0\xD2\xF0\xC6@\xF1\x2E\xF1\x6F\xF0\x49.",
+    #else
     "Executed soldier’s head．@Hunting for vengeance．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x68\xF0\xE5\xF0\x4B\xF0\x74 \xF3\x27\xF0\x71\xF0\xAB\xF0\xBF \xF1\x8D.",
+    #else
     "Snake living off Scylla．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xD3\xF1\xF1\xF0\x7D\xF0\xBF \xF1\xD6\xF3\x4B\xF0\x7D \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.@\xF0\x9F\xF0\xC7\xF0\xE9\xF0\xB4 \xF1\x3D\xF0\xB6\xF0\x49.",
+    #else
     "Animated ape skeleton．@Hurls wooden barrels．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x9F\xF0\x46\xF0\x9F\xF0\x8D \xF1\x46 \xF0\xC7\xF0\xAB.",
+    #else
     "Armored warrior with @naginata．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xB7\xF0\xA5\xF1\xDE\xF1\xD5 \xF0\x52\xF1\x41\xF0\x61",
+    #else
     "Book of beginner’s spells．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x74\xF0\x50\xF0\xBC \xF0\x9F\xF0\xBF \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24 \xF1\xE4\xF0\xAB.",
+    #else
     "Slow−flying skeleton warrior．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xD9\xF0\x88 \xF0\xD6\xF0\xBF \xF0\xBD\xF0\xE9\xF1\x8B\xF0\xBF \xF0\x76\xF0\x97\xF0\x7C@\xF1\xB9\xF0\x88.",
+    #else
     "Physical manifestations of @bodiless tormented souls．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x4A\xF0\x43 \xF1\x46 \xF0\x9F\xF0\x7D\xF0\x90.",
+    #else
     "Knight armed with @Greatsword．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x6D\xF0\x52\xF0\x7C \xF1\xAE\xF3\x04\xF0\xA0 \xF0\xF6\xF0\x4A\xF0\xB9\xF0\xB6 \xF0\xC2\xF2\x63\xF0\x5E",
+    #else
     "Toad magically enlarged by @demonic baptism．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xA6\xF0\xC7\xF0\x80 \xF0\x72\xF1\x3F\xF0\xB2@\xF1\xE4\xF0\xAB.",
+    #else
     "Heavily armored undead @warrior．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF4\xF1\xD1 \xF0\xF9\xF0\x5E.@\xF2\x44\xF0\x85\xF0\x74\xF0\x61 \xF0\xAF\xF0\xA3\xF0\x49.",
+    #else
     "Armored guard．@Strong in perilous areas． ",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x4C\xF0\x7D\xF0\x94\xF0\x71 \xF1\xBF\xF0\xBF \xF1\x84@\xF0\xD6\xF0\xBF \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Headless skeleton．@Wields a rapier．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x9C\xF2\x93\xF0\x74 \xF0\xAB\xF0\xBF \xF0\x42\xF0\x44\xF0\x50",
+    #else
     "Cave−dwelling frog．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x73\xF0\xAC \xF1\xBF\xF0\xBF \xF0\xD7\xF1\xDE \xF0\x7B\xF0\x4D.",
+    #else
     "Ice−wielding female spirit．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xBD\xF0\x4A \xF0\xC7\xF0\x46\xF0\x7C \xF0\x61.",
+    #else
     "Book of ancient weapons．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF6\xF0\x4A \xF0\xB9\xF0\xFE \xF0\x76\xF0\x97.",
+    #else
     "Giant skull spirit．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xD9\xF1\xB8\xF0\x63 \xF1\x11\xF0\x52\xF1\x05",
+    #else
     "Flesh−eating raven．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xEC\xF1\xD9 \xF0\x85 \xF0\x77\xF1\x59\xF1\x42 \xF0\xEA\xF0\xC5@\xF1\x11\xF0\x52\xF1\x05 \xF0\x76\xF0\x97.",
+    #else
     "Spirit of long−dead blue @raven．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xDD\xF0\x7D \xF1\x81\xF1\x41\xF1\x1D\xF1\xFA\xF1\x60 \xF1\x1D\xF2\x06\xF0\xA0\xF0\xDB \xF1\xB8\xF0\x9E.",
+    #else
     "Plant with razor−sharp @leaves．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xFD\xF2\x25 \xF1\x46 \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Skeleton equipped with @spiked iron flail．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF3\x20\xF2\x96\xF1\x42 \xF1\x02\xF1\xD5 \xF0\xF6\xF1\xD8 \xF0\xE6 \xF2\x3D\xF0\x50 \xF1\x7A",
+    #else
     "Flea Man riding on specially @trained war−goose．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xAB\xF0\x6D\xF0\x95 \xF0\x52\xF0\x43.@\xF3\x14\xF2\x1E\xF0\x40\xF0\x7D\xF0\x68\xF0\x90\xF0\xC6 \xF0\x7F\xF0\xDC\xF2\x17\xF0\x49.",
+    #else
     "Evil demon−sword． Causes @poltergeist phenomena．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x9F\xF0\x46\xF0\x9F\xF0\x8D \xF1\x46 \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Naginata−wielding skeleton．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x6A\xF0\x99\xF0\x7C \xF1\x8A\xF0\x49 \xF0\xBE\xF0\x9E.",
+    #else
     "Mythological sea monster．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x26\xF1\x82\xF0\x95 \xF0\xD7\xF0\xAB\xF1\x26\xF1\x17 \xF0\x76\xF0\x97",
+    #else
     "Invisible huntress spirit．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xD3\xF1\xF1\xF0\x7D\xF0\xBF \xF0\xB6\xF3\x26 \xF0\xFE\xF2\xF5.",
+    #else
     "Animated mud golem．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xA6\xF0\xC7\xF0\x80 \xF0\x9F\xF0\x7D\xF0\x90.@\xF3\x20\xF2\x96\xF1\x42 \xF1\xCF\xF2\xB4\xF0\x57\xF1\xD2 \xF0\xA9\xF0\xB0\xF0\x95\xF0\x49.",
+    #else
     "Heavily armored knight @Attacks with trained owl．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xAB\xF0\x6D\xF0\x95 \xF0\x52\xF0\x43.@\xF3\x14\xF2\x1E\xF0\x40\xF0\x7D\xF0\x68\xF0\x90\xF0\xC6 \xF0\x7F\xF0\xDC\xF2\x17\xF0\x49.",
+    #else
     "Evil demon−sword． Causes @poltergeist phenomena．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xF3\xF2\x81\xF0\x9F\xF1\x41 \xF0\x43\xF0\xB4 \xF3\x22\xF0\xC2\xF1\x6D\xF0\xBF \xF0\x65\xF0\xB2 \xF0\xA0\xF0\xB2",
+    #else
     "Sword Lord wields sword @even when banished．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x41\xF1\x1C\xF1\xD2 \xF1\xB9\xF0\xB2\xF0\xA0@\xF0\xC7\xF0\x80\xF0\x95 \xF2\x3D\xF0\x50 \xF1\x7A.",
+    #else
     "Flea Man armed with axe and@shield．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x76, \xF0\xAB\xF1\xDE, \xF0\xC1\xF0\xD2\xF0\x50\xF0\x7C \xF2\x3F\xF0\x63\xF0\xD2.",
+    #else
     "Part horse， lion and eagle．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF6\xF0\x4A \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Giant skeleton．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xE3\xF0\xA0 \xF1\x42 \xF0\x55\xF0\x68\xF2\x1E",
+    #else
     "Monster made from gel．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xBB\xF1\x1D \xF1\xE4\xF2\x26\xF0\x7C@\xF1\x3A\xF0\x7E.",
+    #else
     "Master of twin−bladed @combat．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF3\x11\xF0\x61 \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Were panther skeleton．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xC7\xF2\x7D\xF0\x85\xF0\x46. \xF1\x7A\xF0\x66 \xF0\xB0\xF2\x26@\xF1\x3A\xF0\x7E.",
+    #else
     "Grave Keeper．@Master of unarmed combat．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x9C\xF0\xB4 \xF2\xE7\xF0\x6C\xF0\xA3\xF0\xBF \xF1\x08\xF2\xF5\xF1\x6F",
+    #else
     "Pyromaniacal gremlin．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xD7\xF0\x7E \xF1\x7B\xF0\x50\xF0\x74 \xF1\xA7 \xF2\xA3\xF0\x7C@\xF0\xBE\xF0\x9E.",
+    #else
     "Creature with head of @woman and body of bird．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x65\xF1\x7B\xF0\x50 \xF0\xBE\xF0\x9E.",
+    #else
     "Bull−headed monster．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xC7\xF0\xF4\xF0\xA3\xF0\xBF \xF0\x4B\xF0\x7D\xF3\x02\xF0\x68\xF0\xA0\xF0\xA7.",
+    #else
     "Shape−shifting lycanthrope．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x68\xF2\x0F\xF0\x4C\xF2\x24 \xF0\xAB\xF1\xE7\xF0\x40 \xF1\x46 \xF0\xB9\xF0\xFE \xF1\xE7\xF0\xC0",
+    #else
     "Portable skull shrine carried @by skeleton priests．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xC3\xF2\xD3\xF0\xB4 \xF0\x76\xF1\xD6\xF2\x4E \xF0\x41\xF0\x44\xF0\xA3\xF0\xBF@\xF0\x94\xF0\x74 \xF1\x03\xF0\x82\xF1\x6F \xF0\x72\xF1\x3F\xF0\xB2 \xF0\x9F\xF0\x7D\xF0\x90.",
+    #else
     "Bloodthirsty undead knight @who eternally seeks combat．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xD2\xF0\xD2\xF1\x14\xF1\x1C\xF0\x7C \xF1\x78\xF2\x22 \xF0\x43\xF2\x75.",
+    #else
     "Mysterious cloaked @swordsman．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x71\xF0\x7E \xF1\x7B\xF0\x50 \xF0\xD2\xF2\x47\xF1\xDE.",
+    #else
     "Fish head guardian．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xDF\xF1\xD9 \xF0\x52\xF1\x90 \xF1\x3F\xF0\x55. \xF0\x9C\xF0\x9D\xF0\xC6@\xF0\x65\xF0\x9B\xF0\x95\xF0\x49.",
+    #else
     "Short magic−wielding demon．@Summons demonic allies．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xC7\xF2\x7D\xF0\x40\xF0\xC6 \xF2\x45\xF0\x53\xF3\x0C@\xF1\xCE\xF3\x36 \xF0\x85\xF3\x47\xF0\xC6 \xF0\x6E\xF0\x49.",
+    #else
     "Searches among graves and @knows much wise lore．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xAE\xF0\x7F\xF1\x60\xF0\x7C \xF0\x7B\xF0\x4D \xF0\x52\xF2\x6F.",
+    #else
     "Ghost witches from Salem．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF6\xF0\x7E \xF2\x46\xF1\xE7\xF0\x7C \xF3\x0B\xF0\x7D.@\xF0\xF6\xF0\x4A\xF0\x95 \xF0\xC0\xF0\x43 \xF0\xC2 \xF1\xDE\xF1\x67\xF0\xC6 \xF3\x3E\xF0\x49.",
+    #else
     "Eldest Giant brother．@Wields two huge daggers．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF6\xF0\x7E \xF2\x46\xF1\xE7.@\xF0\x44\xF1\x6D\xF2\x06 \xF0\x9F\xF0\x7D\xF0\xA7\xF0\xC6 \xF3\x3E\xF0\x49.",
+    #else
     "Giant brother．@Wields a gurkha knife．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF6\xF0\x7E \xF2\x46\xF1\xE7.@\xF2\x0A\xF0\x49\xF1\x55 \xF0\xAF\xF1\xFD \xF1\x78\xF2\x02\xF0\xC6 \xF3\x3E\xF0\x49.",
+    #else
     "Giant brother．@Uses huge steel hammer．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xD6\xF0\x59 \xF1\x46 \xF0\xF4\xF1\xD1@\xF0\x9F\xF0\x7D\xF0\x90.",
+    #else
     "Discus−wielding armored @knight．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x11\xF0\x52\xF1\x05\xF0\x7C \xF0\x52\xF2\xD0.",
+    #else
     "Demon Lord of Ravens．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xB5\xF0\x70\xF0\xE0 \xF2\xE3\xF0\xA0 \xF0\xA2\xF0\x71\xF2\x6A \xF0\x55\xF0\x68\xF2\x1E",
+    #else
     "Monster created from slimy @gel substance．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xCC\xF0\x42 \xF1\xBF\xF0\xBF \xF1\x3F\xF0\x55.@“\xF0\x85\xF2\xCD\xF0\x7C \xF0\x6D\xF0\xAB”\xF0\x4B \xF1\x9C\xF1\x6F\xF0\x49.",
+    #else
     "Thunder−wielding demon．@Called ””Musician from Hell””．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x85\xF2\xCD\xF0\x7C \xF0\x92\xF0\xD2\xF2\x8D.",
+    #else
     "Watchdog of Hell．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x71\xF0\x7E \xF0\xDA\xF0\xC2\xF1\x7B\xF0\x50.",
+    #else
     "Master Fish−head．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x52\xF1\x90 \xF1\xBF\xF0\xBF \xF0\xF1\xF3\x1B\xF1\x05.@\xF0\x63 \xF0\x60\xF2\xFF\xF0\xB4 \xF0\x85\xF0\xA8\xF0\x95\xF0\x49.",
+    #else
     "Magic−wielding vampire．@Rules upper part of castle．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xD7\xF1\xDE \xF1\x3F\xF0\x55.@\xF1\x1E\xF1\xDE\xF0\x7C \xF2\x67\xF0\x74 \xF2\x04\xF0\xDD\xF0\x95\xF0\x49.",
+    #else
     "Female demon．@Invades men’s dreams．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xEC\xF1\xD9 \xF1\xDE\xF0\x7C \xF0\xAB\xF0\x4D \xF1\x46@\xF2\xA4\xF0\x62.",
+    #else
     "Gravestones possessed by @evil spirits of dead．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x7E\xF3\x1B\xF0\xA0 \xF0\xE4\xF0\xDB \xF1\xB8\xF0\x9E.",
+    #else
     "Watered with human blood．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x78\xF2\xE0\xF0\x7D \xF0\xAB\xF1\xDE.",
+    #else
     "The cowardly lion．",
+    #endif
+#if defined(MOD_KO)
+#if defined(MOD_SATURN)
+    "\xF2\x73\xF0\xC6 \xF1\x2E\xF0\x50\xF0\xBF \xF1\x18\xF1\x54\xF1\x6F \xF1\x1E\xF1\xDE.",
+#else
+    "\xF2\x73\xF0\xC6 \xF2\xF7\xF0\xBF \xF1\x18\xF1\x54\xF1\x6F \xF1\x1E\xF1\xDE.",
+#endif
+#else
 #if defined(MOD_SATURN)
     "Impaled man looking for brains．",
 #else
     "Impaled man looking for brain．",
 #endif
+#endif
+    #if defined(MOD_KO)
+        "\xF0\xD7\xF2\xEF\xF0\x7D \xF1\x83\xF0\x7E \xF0\x6D\xF1\x86\xF0\x7C@\xF1\xA9\xF1\x82\xF0\x88.",
+    #else
     "Nightmarish creature．@Composed of many．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xD4\xF0\xC7\xF0\x4B\xF0\xBF \xF1\x97\xF1\x82\xF0\x7C \xF0\x55\xF0\x68\xF2\x1E.",
+    #else
     "Monster nicknamed ””schmoo””．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x6B\xF0\x80 \xF0\xD6\xF0\xBF \xF1\xC7\xF1\xFD \xF0\x9F\xF0\xC7\xF1\x17.",
+    #else
     "Heartless tin man．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xD2\xF1\x75\xF1\xD9 \xF0\xC1\xF1\xC1\xF0\xC6 \xF3\x16\xF0\xBF\xF0\x49.",
+    #else
     "Holds countless poison seeds．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xDE\xF0\x46 \xF0\xB9\xF0\xFE \xF2\xF3\xF0\xBF \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Skeleton eternally chasing @his own skull．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x39\xF0\xE6 \xF1\x3D\xF0\x85\xF0\xBF \xF0\x6C\xF1\x7B@\xF0\x9F\xF0\x7D\xF0\x90",
+    #else
     "Bomb−tossing armored @knight．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x59\xF0\xDC\xF0\xA0 \xF1\xE0\xF1\x63\xF1\x41 \xF2\x7D\xF0\x5E\xF0\xBF@\xF2\xE6\xF0\x5E.",
+    #else
     "Zombies which attack even @when cut in half．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xB1\xF0\xD8\xF0\xA1\xF0\x7D \xF0\xFD\xF2\xFD.@\xF0\x52\xF1\x90\xF0\xAB\xF1\x74 \xF0\x5B \xF0\xD2 \xF1\xDD\xF0\x49.",
+    #else
     "Mutated insect．@Visible only to magicians．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x26\xF1\xFB \xF0\xC7\xF0\x46 \xF1\x3A\xF0\x7E.",
+    #else
     "Expert at throwing weapons．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xC7\xF3\x3D\xF1\x41\xF0\x4E \xF0\x81\xF2\x48\xF0\x95 \xF2\x9C\xF0\xD2.",
+    #else
     "Fiendishly accurate archer．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x59\xF1\xD9 \xF0\x7E\xF0\xAE, \xF0\x59\xF1\xD9 \xF0\x48\xF0\x4A.",
+    #else
     "Half−man， half−wolf．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x70\xF0\x88 \xF1\xA9\xF0\x9E.@\xF2\x4B\xF0\xB8\xF1\x8F \xF1\x83\xF2\xC0\xF0\x7D \xF1\x42\xF0\x49.",
+    #else
     "Liquid creature．@Takes black panther shape．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF6\xF0\x4A \xF0\xF1\xF3\x1B \xF0\x58\xF0\x83.",
+    #else
     "Giant vampire bat．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x3D\xF0\x50 \xF1\x7A\xF0\x7D \xF0\x8D\xF0\xBF \xF0\x5A\xF3\x09",
+    #else
     "White dragon ridden by Flea @Man．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x59\xF1\xD9 \xF0\x7E\xF0\xAE, \xF0\x59\xF1\xD9 \xF0\x65.",
+    #else
     "Half−man， half−bull．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xC7\xF0\x61\xF0\xDB \xF3\x40@\xF0\xC7\xF0\x46\xF0\xC6 \xF3\x3E\xF0\x49.",
+    #else
     "Wields fearsome beam @weapon．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\x3D\xF0\x50\xF1\x7A\xF0\x7D \xF1\xE8\xF1\xEB\xF0\xA3\xF0\xBF \xF0\x5E\xF3\x09.",
+    #else
     "Wyrm controlled by Flea Man．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF6\xF0\x4A \xF0\xB2\xF1\x59\xF0\xFD\xF0\x7C \xF0\xB9\xF0\xFE",
+    #else
     "Animated skeleton of huge @dragon．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x9C\xF2\x7E\xF0\x7D \xF3\x48\xF0\xBF \xF0\x48\xF0\x4A.",
+    #else
     "Fireball−spitting wolf．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xB1 \xF1\x3D\xF0\x85\xF0\xBF \xF0\xF4\xF1\xD1@\xF0\x9F\xF0\x7D\xF0\x90.",
+    #else
     "Rock−tossing armored @knight．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\xFC\xF0\xAB \xF2\x9C\xF0\xD2.@\xF0\xBD\xF0\x90\xF1\xE9\xF0\x7C \xF0\x6C\xF1\x76\xF0\x4B\xF0\x50\xF0\x8C\xF0\xC6 \xF1\xEC\xF2\xCB\xF0\x49.",
+    #else
     "Angel archer．@Slew Amalaric of the Goths．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xAB\xF0\x6D\xF0\x95 \xF0\x52\xF0\x43.@\xF3\x14\xF2\x1E\xF0\x40\xF0\x7D\xF0\x68\xF0\x90\xF0\xC6 \xF0\x7F\xF0\xDC\xF2\x17\xF0\x49.",
+    #else
     "Evil demon−sword． Causes @poltergeist phenomena．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xCC\xF0\x71\xF1\xCF\xF0\x4B \xF0\xA9\xF0\xB0\xF0\xA3\xF0\xBF \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Skeleton with leaping attack．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xB3\xF1\x08 \xF0\xE6 \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24.",
+    #else
     "Skeleton mounted on Warg．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x0D \xF3\x1A\xF0\xA0 \xF0\x94@\xF1\xA2\xF0\xBF \xF0\xF1\xF3\x1B\xF2\xFD.",
+    #else
     "Pre−intelligent bloodsucker @with long tongue for sucking．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xAB\xF0\x6D\xF0\x95 \xF0\xA1\xF0\x7D \xF0\xC8\xF0\x71",
+    #else
     "Evil mutated octopus．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x9C\xF1\x15 \xF1\x3F\xF0\x55.",
+    #else
     "Flame demon．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x80\xF0\xF4 \xF1\xE4\xF2\x26\xF1\xC5\xF0\xD2.",
+    #else
     "Armor plated war−beast．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x85\xF2\xCD\xF0\x7C \xF2\xDE\xF3\x1D \xF1\x3F\xF0\x55.",
+    #else
     "Gruesome Demon from Hell．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xBD\xF0\x4A \xF0\x7D\xF0\xE1\xF0\x90 \xF0\x57\xF0\x4B",
+    #else
     "Ancient egyptian mummy．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xB6\xF0\x99\xF0\x95 \xF0\x5E\xF1\x27\xF0\x68 \xF1\xD8\xF0\xB2.@\xF1\x3F\xF0\x55\xF0\x7C \xF0\x94\xF0\xA0 \xF1\xDE\xF2\x8F\xF0\x49.",
+    #else
     "Advanced Venus Weed．@Fed with demon blood．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xA1\xF0\x6A\xF0\xA3\xF0\xBF \xF1\x3F\xF0\x55.",
+    #else
     "Shape−shifting demon．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xA5\xF1\x81 \xF0\xB1 \xF2\x80\xF0\xBF@\xF1\x8D\xF1\x7B\xF0\x50 \xF0\x52\xF2\x6F.",
+    #else
     "Snake−headed demoness @with gaze of stone．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xAF\xF0\x95 \xF1\xE4\xF0\xAB\xF1\x47\xF0\x7C \xF2\xA3\xF0\xB4@\xF0\x7D\xF0\x71 \xF3\x27\xF0\xD7 \xF1\x74\xF1\x47\xF1\xC9\xF0\x49.",
+    #else
     "Made from the body parts @of powerful warriors．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x08\xF1\x5A\xF0\x90\xF0\xC6 \xF0\x40\xF0\x80\xF0\x95 \xF2\xE6\xF0\x5E.",
+    #else
     "Zombie impersonating Grant．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF1\x56\xF0\xA7\xF0\xC6 \xF0\x40\xF0\x80\xF0\x95 \xF2\xE6\xF0\x5E.",
+    #else
     "Zombie impersonating Trevor．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x80\xF2\x6A\xF2\xA8\xF1\x5D\xF0\x46 \xF2\x64\xF0\x52 \xF1\x3F\xF0\x55.",
+    #else
     "Mischievous little demon．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xAB\xF0\x7D\xF0\x92\xF0\xC6 \xF0\x40\xF0\x80\xF0\x95 \xF2\xE6\xF0\x5E.",
+    #else
     "Zombie impersonating Sypha．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x92\xF0\x50\xF0\x7C \xF2\xD0 \xF1\x93\xF1\xE7\xF0\x5D\xF0\x5D.",
+    #else
     "Beelzebub Lord of Flies．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x85\xF2\xCD\xF0\x7C \xF1\xFA\xF2\x46\xF1\xDE.",
+    #else
     "Executioner of Hell．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x41\xF0\x4B\xF1\x83\xF0\x68 \xF0\x5C\xF0\xA3 \xF0\x73\xF0\xAC \xF0\x81\xF0\x4D.",
+    #else
     "New−half ice spirit．@Servant of Galamoth．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF2\xE1\xF1\xD9 \xF0\xD7\xF1\xDE \xF0\x52\xF2\x6F",
+    #else
     "Young female witch．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xF1\xF3\x1B\xF1\x05 \xF0\xAB\xF1\x26\xF0\x7C \xF1\x3A\xF0\x7E.",
+    #else
     "Master Vampire hunter．",
+    #endif
+#if defined(MOD_KO)
+#if defined(MOD_SATURN)
+    "\xF2\x4D\xF1\x05 \xF1\xE8\xF1\x6B.@\xF0\xAB\xF1\x57 \xF0\xA5\xF1\x81 \xF1\x41\xF1\x78\xF3\x00\xF0\x49.",
+#else
+    "\xF0\xAB\xF1\x57 \xF0\xA5\xF1\x81 \xF1\x41\xF1\x78\xF2\x02\xF0\xBF@\xF2\x4D\xF1\x05 \xF1\xA7.",
+#endif
+#else
 #if defined(MOD_SATURN)
     "Rare bird．@Runs when it sees people．",
 #else
     "Rare bird．@Runs when sees people．",
 #endif
+#endif
+    #if defined(MOD_KO)
+        "\xF0\x52\xF0\xFB \xF0\x85\xF0\xA8 \xF1\x2E\xF0\x50\xF0\xBF \xF0\x52\xF1\x41\xF0\xAB",
+    #else
     "Magical being with plan to @rule the netherworld．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\x60\xF1\x0B \xF0\x6C\xF1\x7B \xF0\xA0\xF0\xB2.",
+    #else
     "High level Armor Lord．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xB2\xF0\x4B\xF2\x16\xF0\x4B\xF0\x7C \xF2\xFE\xF2\xA0.",
+    #else
     "Dracula’s close friend．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF0\xB2\xF0\x4B\xF2\x16\xF0\x4B\xF0\x7C \xF0\x71\xF1\x43\xF0\x7C \xF0\x6A\xF1\x00.",
+    #else
     "Dark Priest of Dracula．",
+    #endif
+    #if defined(MOD_KO)
+        "\xF3\x4D\xF0\x4B\xF0\xE4\xF0\x6C \xF0\x76\xF0\x82. \xF0\x6F\xF2\x06\xF0\xB2\xF0\x7C \xF0\x6C\xF1\x8E\xF0\x85",
+    #else
     "Lord of Wallachia．@Father of Alucard．",
+    #endif
 };
 static u8 D_us_801811FC[] = {6, 3, 16, 4, -1, 0};
 static u8 D_us_80181204[] = {10, 5, 10, 4, 10, 5, 1, 4, -1, 0};
@@ -306,6 +906,9 @@ extern u8** D_psp_092A5F48;
 extern u8** D_psp_092A5F98;
 #define BUTTON_CONFIRM g_ConfirmButton
 #define BUTTON_CANCEL g_CancelButton
+#elif defined(MOD_KO)
+#define BUTTON_CONFIRM PAD_CIRCLE
+#define BUTTON_CANCEL PAD_CROSS
 #else
 #define BUTTON_CONFIRM PAD_CROSS
 #define BUTTON_CANCEL PAD_TRIANGLE
@@ -767,18 +1370,43 @@ void EntityLibrarianChair(Entity* self) {
 extern const char** D_us_80181310;
 #else
 static const char* D_us_80181310[] = {
+#if defined(MOD_KO)
+    "\x03\xF0\x44\xF0\xDD",
+#else
     "\003"
     "Buy item",
+#endif
+#if defined(MOD_KO)
+    "\x03\xF1\xE4\xF0\x67",
+#else
     "\003"
     "Tactics",
+#endif
+#if defined(MOD_KO)
+    "\x01\xF0\xAD\xF1\x84\xF0\x4E",
+#else
     "\001"
     "Enemy list",
+#endif
+#if defined(MOD_KO)
+    "\x01\xF0\xAB\xF0\xDB\xF0\xB2\xF0\x8E\xF0\x68\xF0\x90",
+#else
     "\001"
     "Sound test",
+#endif
+#if defined(MOD_KO)
+    "\x06\xF0\x9F\xF0\x40\xF0\x46",
+#else
     "\006"
     "Exit",
+#endif
+#if defined(MOD_KO)
+    "\x03\xF0\xA5\xF0\x62\xF0\x53\xF0\xF2",
+#else
     "\003"
-    "Sell gem"};
+    "Sell gem"
+#endif
+};
 #endif
 
 static u8 D_us_80181328[] = {4, 0, 5, 1, 4};
@@ -1008,6 +1636,10 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
 void func_us_801B0FBC(const char* str, u16 x, u16 y) {
     RECT rect;
     char ch;
+#ifdef MOD_KO
+    u16 ko_ch;
+    u_long* ko_glyph;
+#endif
 
 loop:
     ch = *str++;
@@ -1020,6 +1652,17 @@ loop:
             ch = 0xBB;
 #endif
         }
+#ifdef MOD_KO
+        if (((u8)ch & 0xFC) == 0xF0) {
+            ko_ch = ((u16)(u8)ch << 8) | (u8)*str++;
+            ko_glyph = (u_long*)g_api.func_80106A28(ko_ch, 1);
+            if (ko_glyph) {
+                LoadTPage(ko_glyph, 0, 0, x, y, 0xC, 0x10);
+                x += 3;
+                goto loop;
+            }
+        }
+#endif
         rect.x = ((ch & 0x0F) << 1) + 0x380;
         rect.y = ((ch & 0xF0) >> 1) + 0xF0;
         rect.w = 2;
@@ -1103,6 +1746,23 @@ Primitive* func_us_801B1064(
             x += 8;
         }
 #else
+#if defined(MOD_KO)
+        if ((((u8)ch) & 0x80) != 0) {
+            /* 2-byte KO code: consume the pair, layout placeholder.
+             * Mono7 plate upload (VRAM rect TBD) is TODO ko_lib-2;
+             * '?' cell keeps 8px advance so layout is measurable. */
+            ch = *chPtr++;
+            --length;
+            prim->clut = clut;
+            prim->u0 = (0x3F & 0x0F) << 3;
+            prim->v0 = (0x3F & 0xF0) >> 1;
+            prim->drawMode = DRAW_DEFAULT;
+            prim->x0 = x;
+            prim->y0 = y;
+            prim = prim->next;
+            x += 8;
+        } else
+#endif
         if (ch) {
             prim->clut = clut;
             prim->u0 = (s8)((ch & 0x0F) << 3);
@@ -3423,6 +4083,13 @@ static const char* D_us_801816B0[] = {
 #endif
 #endif
 
+#if defined(MOD_KO)
+/* ko_equip_jp (#182): tail bundle loader (absolute, ARC_KO resident).
+ * Truth in dra.h (KO_EQUIP_LOAD / KO_JP_BUNDLE_*). */
+#define KO_JP_LOAD ((void (*)(s32))0x8009FF40)
+#define KO_JP_BUNDLE_LBA 0x4928F /* trial17d #236B: 2-pass wired (OFF_BIN_KO_JP, disc end) */
+#define KO_JP_BUNDLE_SECTORS 1
+#endif
 void func_us_801B56E4(Entity* self) {
     Entity* tempEntity;
     s32 primIndex;
@@ -3502,6 +4169,14 @@ void func_us_801B56E4(Entity* self) {
         break;
 
     case 2:
+#if defined(MOD_KO)
+        /* ko_equip_jp (#182): one boot-load; menu-open reloads refresh it.
+         * Valid only if stage loads never touch 0x801F0000 (see #182-4). */
+        if (*(volatile u32*)0x8009EEDC == 0) {
+            KO_JP_LOAD(KO_JP_BUNDLE_LBA);
+            *(volatile u32*)0x8009EEDC = 1;
+        }
+#endif
         posY = tempEntity->ext.et_801B56E4.unk84 + 16;
         prim = &g_PrimBuf[self->primIndex];
         prim = prim->next;
@@ -4739,7 +5414,12 @@ void func_us_801B7DF8(Primitive* prim, Entity* arg1, s16 enemyId) {
     prim = func_us_801B7D10(prim, enemyDef->absorbs, 0x79);
 
     posX = 0x18;
+#if defined(MOD_KO)
+    prim = func_us_801B1064(
+        prim, posX, 0x28, KoLibEnemyName(enemyId, enemyDef->name), 0x196);
+#else
     prim = func_us_801B1064(prim, posX, 0x28, enemyDef->name, 0x196);
+#endif
 
     posX += 0xA0;
     prim = func_us_801B1064(prim, posX, 0x28, D_us_801818C0[5], 0x196); // "No."

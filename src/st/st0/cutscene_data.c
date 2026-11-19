@@ -23,8 +23,15 @@ u8 cutscene_script_en[] = {
 #include <gen/cutscene_script_en.h>
 };
 #else
+#if defined(MOD_KO)
+u8 cutscene_script[] = {
+#include "cutscene_script_ko_st0.h"
+#include <gen/cutscene_events.h>
+};
+#else
 u8 cutscene_script[] = {
 #include <gen/cutscene_script_psx.h>
 #include <gen/cutscene_events.h>
 };
+#endif
 #endif

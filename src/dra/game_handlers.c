@@ -1968,7 +1968,7 @@ void HandleVideoPlayback(void) {
             if (temp == 96) {
                 prim2 = prim->next;
 #if defined(VERSION_US)
-                prim2->drawMode = DRAW_HIDE;
+                prim2->drawMode = DRAW_DEFAULT;
 #elif defined(VERSION_HD)
                 prim2->drawMode = DRAW_DEFAULT;
 #endif

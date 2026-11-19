@@ -773,13 +773,29 @@ static void ModCharselDraw(void) {
     x = MOD_CHARSEL_CENTRE_X - (3 * (16 + 4 + 48) + 2 * 16) / 2;
     y = MOD_CHARSEL_HINT_Y;
     func_801B27A8(x, y, 16, 16, 0xA0, 0x50, 0x200, 0xC, 1, 0x80);
+#if defined(MOD_KO)
+    SelLegRows(x + 20, y, &SelLegFile[0], 1);
+#else
     DrawImages8x8(STR_SELECT, x + 20, y + 4, 1);
+#endif
     x += 16 + 4 + 48 + 16;
+#if defined(MOD_KO)
+    /* trial25: confirm = circle (F_SEL sheet slot (0xA0,0x60), clut 0x200 red) */
+    func_801B27A8(x, y, 16, 16, 0xA0, 0x60, 0x200, 0xC, 1, 0x80);
+    SelLegRows(x + 20, y, &SelLegFile[2], 1);
+#else
     func_801B27A8(x, y, 16, 16, 0xA0, 0x70, 0x200, 0xC, 1, 0x80);
     DrawImages8x8(STR_DECIDE, x + 20, y + 4, 1);
+#endif
     x += 16 + 4 + 48 + 16;
+#if defined(MOD_KO)
+    /* cancel = cross (slot (0xA0,0x70), clut 0x200) */
+    func_801B27A8(x, y, 16, 16, 0xA0, 0x70, 0x200, 0xC, 1, 0x80);
+    SelLegRows(x + 20, y, &SelLegFile[4], 1);
+#else
     func_801B27A8(x, y, 16, 16, 0xA0, 0x60, 0x202, 0xC, 1, 0x80);
     DrawImages8x8(STR_CANCEL, x + 20, y + 4, 1);
+#endif
 }
 
 // the retail name entry's last steps (Upd_Eng_17), for the chosen character
@@ -833,12 +849,12 @@ static void ModCharselUpdate(void) {
                 g_ModCharselOpt[id] ^= 1;
             }
         } else if (
-            (g_pads[0].tapped & PAD_CROSS) && !(g_pads[0].tapped & PAD_START) &&
+            (g_pads[0].tapped & SEL_CONFIRM) && !(g_pads[0].tapped & PAD_START) &&
             g_ModCharselRow < MOD_CHARSEL_ROWS(id) - 1) {
             // X answers the row: on to the next one (the last one starts)
             g_api.PlaySfx(SFX_UI_CONFIRM);
             g_ModCharselRow++;
-        } else if (g_pads[0].tapped & (PAD_CROSS | PAD_START)) {
+        } else if (g_pads[0].tapped & (SEL_CONFIRM | PAD_START)) {
             // X on the last row, or Start on any: the game, as shown
             g_api.PlaySfx(SFX_UI_CONFIRM);
             opt = g_ModCharselOpt[id];
@@ -870,7 +886,7 @@ static void ModCharselUpdate(void) {
             ModCharselStartGame();
         }
         if (g_ModCharselOpen && g_GameEngineStep == Upd_Eng_ModCharSelect &&
-            (g_pads[0].tapped & PAD_TRIANGLE)) {
+            (g_pads[0].tapped & SEL_CANCEL)) {
             // Triangle: back to the row before; on the first, the panel
             // closes (back to the characters)
             g_api.PlaySfx(SFX_UI_ERROR);
@@ -893,10 +909,10 @@ static void ModCharselUpdate(void) {
         g_api.PlaySfx(SFX_UI_MOVE);
         g_ModCharselCursor = (g_ModCharselCursor + n - 1) % n;
     }
-    if (g_pads[0].tapped & (PAD_CROSS | PAD_START)) {
+    if (g_pads[0].tapped & (SEL_CONFIRM | PAD_START)) {
         g_api.PlaySfx(SFX_UI_CONFIRM);
         g_ModCharselOpen = 1;
-    } else if (g_pads[0].tapped & PAD_TRIANGLE) {
+    } else if (g_pads[0].tapped & SEL_CANCEL) {
         // Saturn: cancel goes back to the name entry (sfx 0x686)
         g_api.PlaySfx(SFX_UI_ERROR);
         func_801AEA8C(0);
@@ -975,8 +991,10 @@ static const ModSoundTrack g_ModSoundTracks[] MOD_RO = {
     {_S("I Am the Wind"), MU_STAFF_CREDITS},                   // SD1D
 };
 const char g_ModSoundText[] MOD_RO = _S("Now playing");
+#if !defined(MOD_KO) /* trial25: KO hint bar uses SelLegW words instead */
 const char g_ModSoundHint[] MOD_RO = _S("Play/Stop");
 const char g_ModSoundBack[] MOD_RO = _S("Back");
+#endif
 #define MOD_SOUND_N LEN(g_ModSoundTracks)
 #define MOD_SOUND_ROWS 11
 #define MOD_SOUND_JUMP 10 // L1 / R1: 10 tracks back / forward
@@ -1102,6 +1120,21 @@ static void ModSoundDraw(void) {
     }
 
     // hint bar, as the Player Select's
+#if defined(MOD_KO)
+    /* trial25: 12px KO labels (선택 / 재생 / 뒤로) via SelLegRows, circle =
+     * play/stop, cross = back; same 3-slot layout as the Player Select */
+    x = MOD_CHARSEL_CENTRE_X - (3 * (16 + 4 + 48) + 2 * 16) / 2;
+    y = MOD_CHARSEL_HINT_Y;
+    func_801B27A8(x, y, 16, 16, 0xA0, 0x50, 0x200, 0xC, 1, 0x80);
+    SelLegRows(x + 20, y, &SelLegFile[0], 1);
+    x += 16 + 4 + 48 + 16;
+    func_801B27A8(x, y, 16, 16, 0xA0, 0x60, 0x200, 0xC, 1, 0x80);
+    SelLegRows(x + 20, y, &SelLegSnd[0], 1);
+    x += 16 + 4 + 48 + 16;
+    func_801B27A8(x, y, 16, 16, 0xA0, 0x70, 0x200, 0xC, 1, 0x80);
+    SelLegRows(x + 20, y, &SelLegSnd[2], 1);
+}
+#else
     x = MOD_CHARSEL_CENTRE_X -
         (16 + 4 + 48 + 16 + 16 + 4 + 72 + 16 + 16 + 4 + 32) / 2;
     y = MOD_CHARSEL_HINT_Y;
@@ -1114,6 +1147,7 @@ static void ModSoundDraw(void) {
     func_801B27A8(x, y, 16, 16, 0xA0, 0x60, 0x202, 0xC, 1, 0x80);
     DrawImages8x8((u8*)g_ModSoundBack, x + 20, y + 4, 1);
 }
+#endif
 
 static void ModSoundMove(s32 d) {
     s32 k = g_ModSoundCursor + d;
@@ -1155,7 +1189,7 @@ static void ModSoundUpdate(void) {
         ModSoundStart(g_ModSoundPending - 1);
         g_ModSoundPending = 0;
     }
-    if (g_pads[0].tapped & PAD_CROSS) {
+    if (g_pads[0].tapped & SEL_CONFIRM) {
         g_ModSoundPending = 0;
         if (g_ModSoundPlaying == g_ModSoundCursor + 1) {
             g_api.PlaySfx(SET_STOP_MUSIC);
@@ -1172,7 +1206,7 @@ static void ModSoundUpdate(void) {
             }
             g_ModSoundPlaying = g_ModSoundCursor + 1;
         }
-    } else if (g_pads[0].tapped & PAD_TRIANGLE) {
+    } else if (g_pads[0].tapped & SEL_CANCEL) {
         g_ModSoundPending = 0;
         g_api.PlaySfx(SFX_UI_ERROR);
         // back to the menu and its music (unless that is what plays)

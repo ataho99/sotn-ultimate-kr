@@ -87,17 +87,32 @@ def want(what, value, path, field=0):
                      f"{files[path][field]:#x}")
 
 
+# Trial10: KO_LBA(0x..) literals resolve +1 on trial discs (BIN/ARC_KO.BIN
+# present, layout shifted) and +0 on OFF discs. Image-derived, no flags.
+KO_BIAS = 1 if "BIN/ARC_KO.BIN" in files else 0
+
+
+def ko_int(tok):
+    m = re.fullmatch(r"\s*KO_LBA\((0x[0-9A-Fa-f]+)\)\s*", tok)
+    if m:
+        return int(m.group(1), 16) + KO_BIAS
+    return int(tok, 0)
+
+
 for name, path in CDFILES.items():
-    m = re.search(r"CdFile %s = \{(0x[0-9A-Fa-f]+)," % name, us)
+    m = re.search(r"CdFile %s = \{(?:KO_LBA\()?(0x[0-9A-Fa-f]+)\)?," % name, us)
     if not m:
         fails.append(f"{name}: not found in cd.c")
         continue
-    want(name, int(m.group(1), 16), path)
+    v = int(m.group(1), 16)
+    if "KO_LBA(" in m.group(0):
+        v += KO_BIAS
+    want(name, v, path)
 
 
 def table(name):
     m = re.search(r"%s\[\] = \{([^}]*)\}" % name, us)
-    return [int(x, 0) for x in m.group(1).replace("\n", " ").split(",") if x.strip()]
+    return [ko_int(x) for x in m.group(1).replace("\n", " ").split(",") if x.strip()]
 
 
 for i, x in enumerate(table("g_LbaServantChrOff")):

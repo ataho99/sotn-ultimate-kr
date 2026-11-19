@@ -5,6 +5,12 @@
 
 extern Dialogue g_Dialogue;
 extern const char* actor_names[];
+#ifdef MOD_KO
+static const u8 ko_name_0[] = {0xF0, 0x6F, 0xF2, 0x06, 0xF0, 0xB2};
+static const u8 ko_name_1[] = {0xF0, 0xB2, 0xF0, 0x4B, 0xF2, 0x16, 0xF0, 0x4B};
+static const u8* const actor_names_ko[] = {ko_name_0, ko_name_1};
+static const u8 actor_names_ko_len[] = {6, 8};
+#endif
 
 #define CUTSCENE_UNK1_NEXT_X 0
 #include "../../st/cutscene_unk1.h"

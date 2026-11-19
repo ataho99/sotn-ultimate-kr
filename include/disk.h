@@ -46,6 +46,7 @@ typedef enum {
     CdFile_30,
     CdFile_31,
     CdFile_DemoKey,
+    CdFile_KoGlyphs,
     CdFile_NoNext = 0xFF,
     CdFile_StagePrg = 0x100,
 } CdFileType;
@@ -71,6 +72,7 @@ typedef enum {
     CdCallback_17,       // func_80107C6C
     CdCallback_Seq,      // func_80107DB4
     CdCallback_Vh,       // func_80107EF0
+    CdCallback_KoGlyphs, // CopyKoGlyphsCallback (MOD_KO)
 } CdCallbacks;
 
 #endif // DISK_H

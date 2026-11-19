@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#include "ko_font_params.h"
 #ifndef CUTSCENE_UNK4_TPAGE
 #define CUTSCENE_UNK4_TPAGE 0x10
 #endif
@@ -7,7 +8,7 @@
 #define CUTSCENE_UNK4_V_OFFSET 128
 #endif
 
-#ifdef VERSION_HD
+#if defined(VERSION_HD) || defined(MOD_KO)
 #define CUTSCENE_UNK4_V 16
 #else
 #define CUTSCENE_UNK4_V 12
@@ -30,10 +31,10 @@ static
     prim->y0 = g_Dialogue.nextLineY;
     prim->u0 = 0;
 #ifndef VERSION_HD
-    prim->x0 = g_Dialogue.startX + 4;
+    prim->x0 = g_Dialogue.startX + 4 - KO_TEXT_DX;
 #endif
     prim->v0 = g_Dialogue.nextCharY * CUTSCENE_UNK4_V + CUTSCENE_UNK4_V_OFFSET;
-    prim->u1 = 0xC0;
+    prim->u1 = 0xC0 + KO_TEXT_EXTRA_W;
     prim->v1 = CUTSCENE_UNK4_V;
     prim->priority = 0x1FF;
     prim->drawMode = DRAW_DEFAULT;

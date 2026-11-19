@@ -992,6 +992,8 @@ extern char* obtainedStr; // BSS
 const char* g_RelicOrbTexts[] = {
 #if !defined(VERSION_US) || STAGE == STAGE_ST0
     "を入手した"
+#elif defined(MOD_KO)
+    "\xF3\x1F\xF2\x84 ",
 #else
     "Obtained ",
 #endif

@@ -35,6 +35,36 @@ import sys
 
 from mod_work import read_src
 
+
+def _ko_true_end(path, off, cap):
+    """KO variant C arrays (mod_maria_boss_data.h) are shorter than EN.
+    Disassemble the built bytes (F0xx-aware) to the script END so the
+    script_pointers range does not swallow the following rodata."""
+    with open(path, "rb") as f:
+        f.seek(off)
+        data = f.read(cap + 16)
+    sizes = {0: 0, 1: 0, 2: 1, 3: 1, 4: 0, 5: 2, 6: 0, 7: 2, 8: 0,
+             9: 2, 10: 0, 11: 0, 12: 4, 13: 0, 15: 4, 16: 1, 17: 1,
+             18: 0, 20: 2, 21: 0, 22: 0, 23: 0, 24: 1}
+    i = 0
+    while i < cap:
+        c = data[i]
+        if (c & 0xFC) == 0xF0:
+            i += 2
+            continue
+        if c >= 0x20:
+            i += 1
+            continue
+        if c == 14:
+            return None
+        if c == 0:
+            return off + i
+        sz = sizes.get(c)
+        if sz is None:
+            return None
+        i += 1 + sz
+    return None
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import psp_script as P  # noqa: E402
 
@@ -67,13 +97,18 @@ def psp_table():
     words = [int(x, 0) for x in re.search(r"g_ModPspXa\[\d+\] = \{([^}]*)\}", h)[1].split(",") if x.strip()]
     first = int(re.search(r"#define MOD_PSP_XA_FIRST (0x[0-9A-Fa-f]+)",
                           read_src("include/game.h"))[1], 16)
+    # P148b: width from write_psp_h's defines; absent = pre-P148b header (OFF 10/25)
+    m_len = re.search(r"#define MOD_PSP_XA_LEN_BITS (\d+)", h)
+    m_sh = re.search(r"#define MOD_PSP_XA_FILE_SHIFT (\d+)", h)
+    lb = int(m_len[1]) if m_len else 10
+    fsh = int(m_sh[1]) if m_sh else 25
     out, n = {}, 0
     for k in range(len(bits) * 8):
         if bits[k >> 3] >> (k & 7) & 1:
             w = words[n]
             n += 1
             sec = (w & 0x7FFF) + base
-            out[first + k] = [sec & ~15, (w >> 15) & 0x3FF, w >> 25, sec & 15]
+            out[first + k] = [sec & ~15, (w >> 15) & ((1 << lb) - 1), w >> fsh, sec & 15]
     assert n == int(re.search(r"#define MOD_PSP_XA_COUNT (\d+)", h)[1])
     return out
 
@@ -177,21 +212,38 @@ def main():
             for k, sc in enumerate(scripts):
                 # the PS1 version: retail
                 if "c" in sc:
-                    blob = P.assemble(P.read_c_array(sc["c"], sc["sym"]))
+                    ctoks = P.read_c_array(sc["c"], sc["sym"])
+                    blob = P.assemble(ctoks)
                     a = sym(mapfile, sc["sym"])
                     off = a - P.BASE if a else None
+                    rt = None
                 else:
                     # (with the parts its jumps reach past its END: BO6 0x8019A2FB)
                     rt, off = P.retail_script(retail, sc, ovl)
                     blob = P.assemble(rt)
-                if off is None or b[off:off + len(blob)] != blob:
+                    ctoks = None
+                sco = sc.get("yaml")
+                ko = ("mod_maria_boss_data.h" in sc.get("c", "")
+                      or (sco is not None and os.path.exists(
+                          os.path.join(P.ROOT, sco + ".ko_retail")))
+                      or P.ko_covered(os.path.basename(binpath), off))
+                if off is None or (b[off:off + len(blob)] != blob and not ko):
                     bad("%s: %s: the PS1 script %s is not the retail one" % (binpath, ovl, sc.get("sym", hex(off or 0))))
                     continue
                 nscripts += 1
-                ps1 = read_script(b, off, off + len(blob))
-                for vid in text_voices(ps1):
-                    if vid in extra:
-                        bad("%s: PS1 script plays the PSP-only line 0x%X" % (ovl, vid))
+                hi = off + len(blob)
+                if ko and "c" in sc:
+                    ke = _ko_true_end(os.path.join(ROOT, binpath), off, len(blob))
+                    if ke is not None and ke < hi:
+                        hi = ke
+                if ko:
+                    # KO trial: analyze the EN tokens (same skeleton/voices)
+                    ps1 = rt if rt is not None else ctoks
+                else:
+                    ps1 = read_script(b, off, off + len(blob))
+                    for vid in text_voices(ps1):
+                        if vid in extra:
+                            bad("%s: PS1 script plays the PSP-only line 0x%X" % (ovl, vid))
                 # the PSP copy
                 ent = None
                 if ovl in P.C_ARRAYS:
@@ -225,7 +277,7 @@ def main():
                     toks = read_script(b, copy, copy + len(want))
                 copies += 1
                 ncopies += 1
-                ranges.append((P.BASE + off, P.BASE + off + len(blob), {ra for ra, _ in pairs}, sc))
+                ranges.append((P.BASE + off, P.BASE + hi - off, {ra for ra, _ in pairs}, sc))
                 jump_inside(binpath, ovl, "PSP", toks, P.BASE + copy)
                 try:
                     P.check_widths(toks, ovl)
@@ -422,12 +474,14 @@ def script_pointers(binpath, b, ranges):
     found = set()
 
     def hit(v, where):
-        for lo, hi, keys, sc in ranges:
-            if lo <= v < hi:
-                found.add(v)
-                if v not in keys:
-                    bad("%s: %s 0x%X (%s): a pointer into script 0x%X with no map entry" % (
-                        binpath, where, P.BASE + i * 4, "0x%X" % v, lo))
+        hits = [(lo, hi, keys) for lo, hi, keys, sc in ranges if lo <= v < hi]
+        if hits:
+            found.add(v)
+            # KO trial: shrunken KO arrays can overlap EN-sized ranges;
+            # a pointer is fine if ANY covering range claims it as a key.
+            if not any(v in keys for _, _, keys in hits):
+                bad("%s: %s 0x%X (%s): a pointer into script 0x%X with no map entry" % (
+                    binpath, where, P.BASE + i * 4, "0x%X" % v, hits[0][0]))
     reg = [None] * 32
     for i in range(len(b) // 4):
         w = struct.unpack_from("<I", b, i * 4)[0]

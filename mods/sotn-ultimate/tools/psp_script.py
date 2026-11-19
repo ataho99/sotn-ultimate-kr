@@ -74,6 +74,10 @@ PATCHES = os.path.join(WORK, "patches.json")
 REPORT = os.path.join(WORK, "report.txt")
 KEEP_JSON = os.path.join(WORK, "keep_ps1.json")
 EDITS = os.path.join(WORK, "edits.json")  # check_stage_data.py allows these
+# KO trial (gen_ko_splice.py): overlay regions whose TEXT bytes were
+# replaced with KO bytes (same size, ops untouched). The intactness
+# check below skips differences inside these ranges. Absent = retail.
+KO_ALLOW = os.path.join(ROOT, "build/us/mod_ko_psp_allow.json")
 DUB_JSON = os.path.join(ROOT, "build/us/psp_dub/dub.json")
 MAX_COLS = 21
 # overlay -> (columns, lines per box) where the box differs (see above)
@@ -277,9 +281,25 @@ def assemble(toks):
     return bytes(out)
 
 
+def ko_covered(binname, off):
+    """KO trial: True if this BIN offset lies in a KO-spliced region
+    (gen_ko_splice.py's allow file). Those bytes intentionally differ."""
+    if off is None or not os.path.exists(KO_ALLOW):
+        return False
+    try:
+        allow = json.load(open(KO_ALLOW))
+    except ValueError:
+        return False
+    return any(a <= off < a + z for a, z in allow.get(binname, []))
+
+
 def read_c_array(path, sym):
     """tokens of a script written as a C array of cutscene.h macros"""
     src = open(os.path.join(ROOT, path)).read()
+    # KO trial: this tooling is EN-based; use the EN branch of MOD_KO ifdefs
+    # (e.g. the Saturn Maria fight scripts carry a KO variant for the trial).
+    src = re.sub(r"#ifdef MOD_KO\b.*?\n#else\n", "", src, flags=re.S)
+    src = src.replace("#endif", "")
     m = re.search(r"^u8 %s\[\][^=]*= \{(.*?)\};" % sym, src, re.S | re.M)
     assert m, (path, sym)
     items = re.findall(r"(\w+)\(([^)]*)\)|'(\\.|[^'])'|(0x[0-9a-fA-F]+|\d+)", m.group(1))
@@ -374,7 +394,12 @@ def retail_script(retail, sc, where):
     END_CUTSCENE (0x8019A432), which the copy must hold too, else its jump
     lands in the retail (PS1) text. A jump anywhere else outside: error."""
     if "yaml" in sc:
-        toks = read_yaml(sc["yaml"])
+        yp = sc["yaml"]
+        # KO trial (gen_ko_splice.py): the yaml on disk may hold KO bytes;
+        # locate with the retail backup instead (same skeleton, retail text).
+        if os.path.exists(os.path.join(ROOT, yp + ".ko_retail")):
+            yp = yp + ".ko_retail"
+        toks = read_yaml(yp)
         blob = assemble(toks)
         off = retail.find(blob)
         assert off >= 0 and retail.find(blob, off + 1) < 0, (where, sc["yaml"])
@@ -1224,6 +1249,40 @@ HDR_FN = """static u8* ModPspScript(u8* script) {
     return script;
 }
 """
+# P148n: single-entry overlays (stsel etc.) skip the map loops (ON trial only).
+# Same behavior for one entry; smaller .text. OFF keeps the loop shape so the
+# 46k_off image stays byte-identical.
+HDR_FN_JP_1 = """static u8* ModPspScript(u8* script) {
+    if (MOD_JP_DUB_ON() && script == g_ModJpMap[0][0]) {
+        return g_ModJpMap[0][1];
+    }
+    if (MOD_PSP_DUB_ON() && script == g_ModPspMap[0][0]) {
+        return g_ModPspMap[0][1];
+    }
+    return script;
+}
+"""
+HDR_FN_1 = """static u8* ModPspScript(u8* script) {
+    if (MOD_PSP_DUB_ON() && script == g_ModPspMap[0][0]) {
+        return g_ModPspMap[0][1];
+    }
+    return script;
+}
+"""
+
+
+def hdr_fn_for(sp):
+    if os.environ.get("PSP_DUB_JP") != "1":
+        return HDR_FN_JP if sp.get("jp_size") else HDR_FN
+    npsp = sum(len(sc.get("entries", [])) for sc in sp["scripts"])
+    if sp.get("jp_size"):
+        njp = sum(len(sc.get("jp_entries", [])) for sc in sp["scripts"])
+        if npsp == 1 and njp == 1:
+            return HDR_FN_JP_1
+        return HDR_FN_JP
+    if npsp == 1:
+        return HDR_FN_1
+    return HDR_FN
 
 
 def write_spill_headers(spills):
@@ -1279,9 +1338,9 @@ def write_spill_headers(spills):
                 for sc in sp["scripts"]:
                     for po, so in sc.get("jp_entries", []):
                         s += "    {(u8*)0x%08X, g_ModJpSpill + %d},\n" % (BASE + sc["off"] + po, so)
-                s += "};\n" + HDR_FN_JP
+                s += "};\n" + hdr_fn_for(sp)
             else:
-                s += HDR_FN
+                s += hdr_fn_for(sp)
         if sp:
             s = s.replace("#define MOD_PSP_SCRIPT\n",
                           "#if defined(MOD_SATURN) && defined(VERSION_US)\n"
@@ -1356,8 +1415,16 @@ def apply(off, check=False):
                     changed = True
                 jcount += 1
             old = bytes.fromhex(sc["old"])
-            if bytes(b[sc["off"]:sc["off"] + len(old)]) != old:
-                sys.exit("psp_script: %s at 0x%X: the retail script changed" % (p["bin"], sc["off"]))
+            new = bytes(b[sc["off"]:sc["off"] + len(old)])
+            if new != old:
+                allow = {}
+                if os.path.exists(KO_ALLOW):
+                    allow = json.load(open(KO_ALLOW))
+                ranges = allow.get(os.path.basename(p["bin"]), [])
+                bad = [i for i in range(len(old)) if new[i] != old[i]
+                       and not any(a <= sc["off"] + i < a + z for a, z in ranges)]
+                if bad:
+                    sys.exit("psp_script: %s at 0x%X: the retail script changed" % (p["bin"], sc["off"]))
             addr = int(m[1], 16) + sc["at"]
             toks = [tuple(tuple(a) if isinstance(a, list) else a for a in t) for t in sc["tokens"]]
             code = assemble(resolve(toks, addr))

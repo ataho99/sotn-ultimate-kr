@@ -36,7 +36,8 @@ The repack:
     MOD_PSP_DUB_ON); each dubbed voice id gets a second, mono stream, packed
     after all the others (one region, so src/dra/mod_psp_xa.h can store
     each as 15 bits of sector past MOD_PSP_XA_BASE, 10 of length and 6 of
-    file: src/dra/sound.c ModXaConfig plays it while the dub is on); new
+    file (PSP_DUB_JP=1, P148b: 11 of length, file at 26, as the JP table
+    below): src/dra/sound.c ModXaConfig plays it while the dub is on); new
     configs (lines with no PS1 slot) are appended to the mod table in
     src/dra/mod_xa_music.h,
   - with --dub-jp (psp_dub.py --set jp's dub.json, the JP dub; needs
@@ -51,6 +52,7 @@ The repack:
     mismatch.
 """
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -114,6 +116,19 @@ class Xa:
 
     def sector(self, i):
         return self.buf[i * S:(i + 1) * S]
+
+    def extend(self, buf2):
+        """append raw sectors from a second source; returns the base index"""
+        assert len(buf2) % S == 0
+        base = self.n
+        self.buf = self.buf + buf2
+        self.n = len(self.buf) // S
+        a = np.frombuffer(buf2, np.uint8).reshape(len(buf2) // S, S)
+        self.file = np.concatenate([self.file, a[:, 16].copy()])
+        self.chan = np.concatenate([self.chan, a[:, 17].copy()])
+        self.sm = np.concatenate([self.sm, a[:, 18].copy()])
+        self.coding = np.concatenate([self.coding, a[:, 19].copy()])
+        return base
 
     def run(self, start, f, ch):
         """sectors of the stream starting at sector start (file f, chan ch)"""
@@ -214,6 +229,9 @@ def main():
     ap.add_argument("--keep-all", action="store_true", help="keep the JP lines")
     ap.add_argument("--dub", help="psp_dub.py's dub.json: replacement voices")
     ap.add_argument("--dub-jp", help="psp_dub.py --set jp's dub.json: the JP versions")
+    ap.add_argument("--swap-jp", help="P127 TSV (US cfg idx -> JP PS1 span run): retail voice runs take JP takes")
+    ap.add_argument("--swap-span", help="P127 JP PS1 XA span file (p110_jp_xa_span.bin)")
+    ap.add_argument("--swap-report", help="P127 JSON sidecar for the swapped configs' new tables")
     args = ap.parse_args()
     if args.dub_jp and not args.dub:
         sys.exit("repack_xa: --dub-jp needs --dub")
@@ -254,6 +272,53 @@ def main():
     xa = Xa(IN_XA)
     filler = next(xa.sector(i) for i in range(xa.n) if xa.sm[i] == 0)
 
+    # P127: the JP PS1 (SLPM-86023) takes replace the retail voice runs
+    # (what the PS1 dub plays). The JP runs live in the span file; their
+    # sectors are appended to xa so every step below (pack, write, verify)
+    # treats them like any other run. (69,6) is not in the TSV: it keeps
+    # the retail runs.
+    swap_runs = {}  # cfg idx -> appended JP sectors (replaces the retail run)
+    swap_unk = {}   # cfg idx -> new unk228 (from the JP run length)
+    swap_usec = {}  # cfg idx -> replaced US run length (for the report)
+    if args.swap_jp:
+        assert args.swap_span, "repack_xa: --swap-jp needs --swap-span"
+        span = open(args.swap_span, "rb").read()
+        assert len(span) % S == 0 and len(span) // S == 184111, len(span)
+        if hashlib.sha1(span).hexdigest() != "cf89a5127ea97b67d1791236e92b23159313b4f3":
+            sys.exit("repack_xa: --swap-span sha1 mismatch (want p110 cf89a512..)")
+        sa = np.frombuffer(span, np.uint8).reshape(len(span) // S, S)
+        ssm, scoding = sa[:, 18], sa[:, 19]
+        nojp = {i - 0x300 for i in JP_IDS}
+        want = []
+        rows = [l.rstrip("\n").split("\t") for l in open(args.swap_jp, encoding="utf-8")]
+        assert rows[0][0] == "US_cfg_idx", rows[0][:3]
+        for col in rows[1:]:
+            if len(col) < 13 or col[12] != "교체":
+                continue
+            c = int(col[0])
+            assert 88 <= c <= 562 and cfg[c][6] == 2, "swap 0x%X not a voice config" % (0x300 + c)
+            assert c not in nojp, "swap 0x%X is a JP-only line" % (0x300 + c)
+            off, nsec, nu = int(col[7]), int(col[8]), int(col[11])
+            secs = [off + 8 * k for k in range(nsec)]
+            for s in secs:
+                assert ssm[s] & SM_AUDIO and scoding[s] & CODING_STEREO, \
+                    "swap 0x%X span sector %d" % (0x300 + c, s)
+            want.append((c, secs, nu))
+        assert len(want) == 243, "swap rows: %d" % len(want)
+        ext = bytearray()
+        at = {}
+        for c, secs, nu in want:
+            at[c] = (len(ext) // S, len(secs), nu)
+            for s in secs:
+                ext.extend(span[s * S:(s + 1) * S])
+        base = xa.extend(bytes(ext))
+        for c, (o, nsec, nu) in at.items():
+            swap_runs[c] = list(range(base + o, base + o + nsec))
+            swap_unk[c] = nu
+            swap_usec[c] = len(xa.run(cfg[c][0] + cfg[c][3], cfg[c][2], cfg[c][3]))
+        print("xa swap-jp: %d retail voice runs take JP PS1 takes (%d sectors in, %d us out)" %
+              (len(swap_runs), len(ext) // S, sum(swap_usec.values())))
+
     # 1. every config's run; group runs by their last sector
     runs = {}
     groups = {}  # last sector -> [config indexes]
@@ -262,8 +327,11 @@ def main():
             continue  # unused entry
         if i in dubbed and not dubbed[i].get("psp"):
             continue  # a new config: no retail run
-        r = xa.run(addr + ch, f, ch)
-        assert r, "config 0x%X has no stream" % (0x300 + i)
+        if i in swap_runs:
+            r = swap_runs[i]  # P127: the JP PS1 take instead of the retail run
+        else:
+            r = xa.run(addr + ch, f, ch)
+            assert r, "config 0x%X has no stream" % (0x300 + i)
         assert xa.coding[r[0]] == CODING_STEREO
         runs[i] = r
         groups.setdefault(r[-1], []).append(i)
@@ -451,6 +519,8 @@ def main():
             new[c][3] = st["ch"]
             if st.get("dub"):
                 new[c][1] = st["dub"]["unk228"]
+            elif c in swap_unk:  # P127: the timer from the JP run length
+                new[c][1] = swap_unk[c]
 
     # 7. verify: re-extract every config from the written file
     nx = Xa(tmp)
@@ -467,7 +537,8 @@ def main():
                                              psp[c] if st.get("psp") else new[c])
             r = nx.run(addr + ch, f, ch)
             o = cfg[c]
-            ok = (ln, vol, u, mode) == (o[1], o[4], o[5], o[6])
+            exp_ln = swap_unk[c] if c in swap_runs else o[1]  # P127: swapped timers come from the JP run
+            ok = (ln, vol, u, mode) == (exp_ln, o[4], o[5], o[6])
             if st.get("dub"):
                 ok = (ln == st["dub"]["unk228"] and (vol, u, mode) == (o[4], o[5], o[6])
                       and len(r) == st["n"] and all(
@@ -501,6 +572,28 @@ def main():
         os.remove(tmp)
         sys.exit("xa repack: %d configs failed verification" % bad)
     os.replace(tmp, OUT_XA)
+    if args.swap_jp:
+        rep, nswap = {}, 0
+        for st in streams:
+            if st.get("dub") or st.get("silent"):
+                continue  # the dub regions reuse the same cfg indexes
+            for c, off in st["offs"].items():
+                if c not in swap_runs:
+                    continue
+                nswap += 1
+                addr, ln, f, ch = new[c][0], new[c][1], new[c][2], new[c][3]
+                r = nx.run(addr + ch, f, ch)
+                rep[str(c)] = {"ps1": "0x%X" % (0x300 + c), "cd_addr": addr,
+                               "file": f, "channel": ch, "sectors": len(r),
+                               "unk228": ln, "mono": bool(nx.coding[r[0]] == 0),
+                               "us_sectors": swap_usec[c], "jp_sectors": len(swap_runs[c])}
+        assert nswap == len(swap_runs), (nswap, len(swap_runs))
+        if args.swap_report:
+            json.dump(rep, open(args.swap_report, "w"), indent=1, sort_keys=True)
+        print("xa swap-jp: %d/%d swapped configs verified byte-identical "
+              "(packed interleave consistent), raw %+d sectors" %
+              (nswap, len(swap_runs),
+               sum(len(swap_runs[c]) for c in swap_runs) - sum(swap_usec.values())))
 
     # 8. the config tables
     lines = open(GEN_H).read().split("\n")
@@ -547,13 +640,18 @@ def write_psp_h(psp):
     n = PSP_LAST - PSP_FIRST + 1
     bits = [0] * ((n - 1) // 8 + 1)
     base = min((a + ch) & ~15 for a, _, _, ch, *_ in psp.values()) if psp else 0
+    # P148b: PSP table length field 10 bits (OFF, old value) or 11
+    # (PSP_DUB_JP=1, as the JP table); the reader
+    # (sound_mod_music.h) takes the width from the defines below
+    LEN_BITS = 11 if os.environ.get("PSP_DUB_JP") == "1" else 10
+    FILE_SHIFT = 15 + LEN_BITS
 
     def word(t, c):
         a, ln, f, ch = t[c][:4]
         rel = a + ch - base
         assert a % 16 == 0 and ch < 16, hex(0x300 + c)
-        assert 0 <= rel < 1 << 15 and 0 < ln < 1 << 10 and 0 < f < 1 << 6, (hex(0x300 + c), rel, ln, f)
-        return rel | ln << 15 | f << 25
+        assert 0 <= rel < 1 << 15 and 0 < ln < 1 << LEN_BITS and 0 < f < 1 << 6, (hex(0x300 + c), rel, ln, f)
+        return rel | ln << 15 | f << FILE_SHIFT
     words = []
     for c in sorted(psp):
         k = 0x300 + c - PSP_FIRST
@@ -562,6 +660,8 @@ def write_psp_h(psp):
     out = ["// Generated by mods/sotn-ultimate/tools/repack_xa.py, do not edit",
            "// PSP dub toggle: the voice ids with a PSP English version (see sound.c)",
            "#define MOD_PSP_XA_BASE %d" % base,
+           "#define MOD_PSP_XA_LEN_BITS %d" % LEN_BITS,
+           "#define MOD_PSP_XA_FILE_SHIFT %d" % FILE_SHIFT,
            "#define MOD_PSP_XA_COUNT %d" % len(words),
            "static const u8 g_ModPspXaBits[%d] = {%s};" % (len(bits), ", ".join("0x%02X" % b for b in bits)),
            "static const u32 g_ModPspXa[%d] = {" % max(1, len(words))]

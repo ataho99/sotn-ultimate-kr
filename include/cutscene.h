@@ -92,7 +92,7 @@ u8* CutsceneAddrToPc(u32 psxAddr);
 #define SCRIPT_UNKNOWN_21() CSOP_SCRIPT_UNKNOWN_21
 #define SCRIPT_UNKNOWN_23() CSOP_SCRIPT_UNKNOWN_23
 #define WAIT_FOR_FLAG_RESET(x) CSOP_WAIT_FOR_FLAG_RESET, x
-#if defined(VERSION_PSP) || defined(VERSION_HD)
+#if defined(VERSION_PSP) || defined(VERSION_HD) || defined(MOD_KO)
 #define CS_LINE_SPACING 16
 #define CS_LINE_MAX 3
 #else

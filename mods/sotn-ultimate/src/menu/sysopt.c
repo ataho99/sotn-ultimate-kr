@@ -248,6 +248,17 @@ static void SysOptBanks(void) {
 
 // The box's input, while g_MenuStep is MOD_STEP_BOX: only when it is fully
 // open (Up / Down pick, Left / Right / X change, Triangle / Circle close)
+/* KO build: confirm = Circle (JP style, maintainer 11-11; DRA's PAD_MENU_SELECT = Circle|Square,
+ * PAD_MENU_BACK = Cross); the mod box used the North-American X = confirm / Circle = close
+ * (found with the sihum38 control test, 월하 11-16). */
+#if defined(MOD_SYSOPT_JPPAD) /* build_ko_trial.sh: SYSOPT_DEFS=-DMOD_SYSOPT_JPPAD */
+#define SYSOPT_SELECT (PAD_CIRCLE | PAD_SQUARE)
+#define SYSOPT_BACK (PAD_CROSS | PAD_TRIANGLE)
+#else
+#define SYSOPT_SELECT PAD_CROSS
+#define SYSOPT_BACK (PAD_TRIANGLE | PAD_CIRCLE)
+#endif
+
 static void PopInput(MenuContext* pop) {
     const SysOptRow* row;
     s32 v;
@@ -255,7 +266,7 @@ static void PopInput(MenuContext* pop) {
     MenuHandleCursorInput(&g_PopRow, ROWS, 0); // Up / Down, wraps
     row = &g_SysOptRows[g_PopRow];
     // X steps on as Right does
-    if (g_pads[0].tapped & PAD_CROSS) {
+    if (g_pads[0].tapped & SYSOPT_SELECT) {
         g_pads[0].repeat |= PAD_RIGHT;
     }
     if (g_pads[0].repeat & (PAD_LEFT | PAD_RIGHT)) {
@@ -284,7 +295,7 @@ static void PopInput(MenuContext* pop) {
         }
     }
     // Triangle / Circle close it as the Sound box closes (MenuHide)
-    if (g_pads[0].tapped & (PAD_TRIANGLE | PAD_CIRCLE)) {
+    if (g_pads[0].tapped & SYSOPT_BACK) {
         g_api.PlaySfx(SFX_UI_CONFIRM);
         pop->unk1C = 1;
         pop->unk1D = 0;
@@ -359,7 +370,7 @@ void ModSysOptInput(s32* nav, u8 nOptions, u32 type) {
         *nav = ROW; // (a save from the build with four rows here)
     }
     MenuHandleCursorInput(nav, ROW + 1, type);
-    if (*nav == ROW && (g_pads[0].tapped & PAD_CROSS)) {
+    if (*nav == ROW && (g_pads[0].tapped & SYSOPT_SELECT)) {
         pop->cursorX = POP_X;
         pop->cursorY = POP_Y;
         pop->cursorW = POP_W;

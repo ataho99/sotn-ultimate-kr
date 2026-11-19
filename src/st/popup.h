@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include <stage.h>
+#include "ko_font_params.h"
 
+#if defined(MOD_KO) && !defined(KO_POP_NOHANGUL)
+/* sihum42: the KO build runs the popup from the resident ARC_KO function (Hangul names, advance table) */
+void BottomCornerText(u8* str, u8 leftAlign) { KO_PopupText(str, leftAlign); }
+#else
 void BottomCornerText(u8* str, u8 leftAlign) {
     u8 toPrint[64];
     Primitive* prim;
@@ -10,6 +15,7 @@ void BottomCornerText(u8* str, u8 leftAlign) {
     u16 textWidth;
     u16 xPos;
     s16 xPos2;
+    s32 kA;
 
     chIdx = (u8*)&toPrint;
     xPos = textWidth = 0;
@@ -36,11 +42,16 @@ void BottomCornerText(u8* str, u8 leftAlign) {
         if (ch) {
             xPos++;
         }
+#ifdef MOD_KO
+        kA = KO_POP_LOOK(ch);
+        textWidth += kA ? KO_NAME_ADV(kA) : KO_NAME_SP; /* KO: per-cell advance table (sihum40) */
+#else
         if (ch) {
             textWidth += 8;
         } else {
             textWidth += 4;
         }
+#endif
 #else
         textWidth++;
 
@@ -162,7 +173,8 @@ void BottomCornerText(u8* str, u8 leftAlign) {
             prim->u1 = prim->v1 = 8;
             prim->priority = 0x1F0;
             prim->drawMode = DRAW_DEFAULT;
-            prim->x0 = xPos2;
+            kA = KO_POP_LOOK(ch);
+            prim->x0 = xPos2 + KO_NAME_OFF(kA);
             prim->y0 = 0xD4;
             prim = prim->next;
         }
@@ -186,12 +198,18 @@ void BottomCornerText(u8* str, u8 leftAlign) {
             xPos2 += 8;
         }
 #else
+#ifdef MOD_KO
+        kA = KO_POP_LOOK(ch);
+        xPos2 += kA ? KO_NAME_ADV(kA) : KO_NAME_SP;
+#else
         if (ch) {
             xPos2 += 8;
         } else {
             xPos2 += 4;
         }
 #endif
+#endif
     }
     g_unkGraphicsStruct.BottomCornerTextTimer = 0x130;
 }
+#endif

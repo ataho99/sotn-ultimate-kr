@@ -1085,6 +1085,10 @@ typedef struct {
                                     : &g_Status.relics[id]))
 // Test builds only: Alucard starts the game with the shoes.
 // #define MOD_GODSPEED_TEST_START
+// Korean trial (P64) only: Hangul font/strings. Default OFF; enabled only
+// with the build flag -DMOD_KO (see mods/sotn-ultimate/tools/build_ko_trial.sh).
+// Like MOD_GODSPEED_TEST_START it is never defined here.
+// #define MOD_KO
 // Test builds only: on-screen readout of Alucard's player state.
 // #define MOD_ULTIMATE_DEBUG
 #endif

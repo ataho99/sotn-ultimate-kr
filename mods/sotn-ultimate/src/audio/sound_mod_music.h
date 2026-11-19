@@ -10,8 +10,10 @@
 // recordings are extra streams (mods/sotn-ultimate/tools/repack_xa.py --dub
 // writes mod_psp_xa.h: a bit per voice id from MOD_PSP_XA_FIRST that has a PSP
 // version, and per set bit, in order, the stream's sector - MOD_PSP_XA_BASE
-// (bits 0-14), its length unk228 (15-24) and file (25-30); channel =
-// sector % 16, volume / mode as the PS1 config). While MOD_PSP_DUB_ON(), a
+// (bits 0-14), its length unk228 and file; channel =
+// sector % 16, volume / mode as the PS1 config; OFF build: length 10 bits
+// (15-24), file (25-30) — PSP_DUB_JP=1 (P148b): length 11 bits (15-25),
+// file (26-31), as the JP table below). While MOD_PSP_DUB_ON(), a
 // voice id with a PSP version plays it. The JP dub (MOD_JP_DUB_ON) the same
 // way from g_ModDub.jp (SEL's copy of src/st/sel/mod_jp_xa.h), with 11 bits
 // of length (its lines run to 25.3 s) and 6 of file (26-31), and a version
@@ -81,7 +83,12 @@ static const XaMusicConfig* ModXaConfig(s32 i) {
     }
     e = g_ModPspXa[n];
     k = MOD_PSP_XA_BASE;
+    // P148b: width from write_psp_h's defines (OFF 10 = old literal value)
+#ifdef MOD_PSP_XA_LEN_BITS
+    len = MOD_PSP_XA_LEN_BITS;
+#else
     len = 10;
+#endif
 build:
     r = (XaMusicConfig*)g_ModDub.cfg;
     *r = *c;

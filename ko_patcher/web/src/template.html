@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>월하의 야상곡 한글 베타 v0.9 — 웹 패처</title>
+<style>
+:root{--bg:#fafaf8;--fg:#1d1d1f;--mut:#6b6b70;--line:#d8d8d4;--card:#fff;--acc:#2e5aa8;--ok:#1b7a3a;--bad:#b3261e}
+@media(prefers-color-scheme:dark){:root{--bg:#161618;--fg:#ececee;--mut:#9a9aa2;--line:#35353a;--card:#202024;--acc:#7da6ee;--ok:#5fcf84;--bad:#ff8a80}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.6 system-ui,-apple-system,"Malgun Gothic",sans-serif}
+main{max-width:760px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:22px;margin:0 0 4px}
+.sub{color:var(--mut);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+.card h2{font-size:15px;margin:0 0 10px}
+ul.need{list-style:none;margin:10px 0 0;padding:0}
+ul.need li{display:flex;gap:8px;padding:3px 0;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+ul.need .st{width:1.4em;text-align:center}
+ul.need .miss .st{color:var(--mut)}
+ul.need .have .st{color:var(--ok)}
+button,label.btn{font:inherit;padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);cursor:pointer;display:inline-block}
+button.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+button:disabled{opacity:.45;cursor:default}
+input[type=file]{display:none}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin:8px 0 4px}
+.bar>i{display:block;height:100%;width:0;background:var(--acc)}
+#phase{color:var(--mut);font-size:13px}
+#log{white-space:pre-wrap;font:12.5px/1.55 ui-monospace,Consolas,monospace;max-height:260px;overflow:auto;margin:10px 0 0}
+#log .ok{color:var(--ok)} #log .bad{color:var(--bad);font-weight:600}
+a.dl{display:inline-block;margin:4px 8px 4px 0;padding:8px 14px;border-radius:8px;background:var(--ok);color:#fff;text-decoration:none}
+.note{color:var(--mut);font-size:13px}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:14px;text-align:center;color:var(--mut);margin-top:10px}
+.drop.on{border-color:var(--acc);color:var(--acc)}
+</style>
+</head>
+<body>
+<main>
+<h1>월하의 야상곡 한글 베타 v0.9 — 웹 패처</h1>
+<p class="sub">내 재료로 한글 이미지를 만드는 브라우저 패처. 재료 파일은 이 브라우저 안에서만 읽히며 어떤 서버로도 전송되지 않습니다.</p>
+
+<div class="card">
+<h2>1. 재료 고르기</h2>
+<div class="row">
+<label class="btn">파일 선택(여러 개)<input id="fFiles" type="file" multiple></label>
+<label class="btn">폴더 선택<input id="fDir" type="file" webkitdirectory></label>
+</div>
+<div class="drop" id="drop">여기로 파일을 끌어다 놓아도 됩니다 (폴더는 「폴더 선택」 사용)</div>
+<ul class="need" id="need"></ul>
+</div>
+
+<div class="card">
+<h2>2. 만들기</h2>
+<div class="row"><button id="go" class="primary" disabled>한글 이미지 만들기</button><button id="clean">임시 파일 지우기</button></div>
+<div class="bar"><i id="barI"></i></div>
+<div id="phase">대기 중</div>
+<div id="log"></div>
+</div>
+
+<div class="card" id="res" hidden>
+<h2>3. 결과 저장</h2>
+<div id="resBody"></div>
+<p class="note">저장한 두 파일을 같은 폴더에 두고 .cue 로 열면 됩니다. 저장 뒤에는 「임시 파일 지우기」로 브라우저 안의 작업 사본(약 0.7GB)을 지우세요.</p>
+</div>
+
+<p class="note">한글 패치 v0.9 (베타). 크롬·엣지(최신판) 권장. 작업 중 임시로 디스크 약 1.5GB 를 씁니다. 결과 이미지는 sha1 지문으로 검증됩니다. 라이선스 AGPL-3.0 — 자체 구현 코드만 사용, 외부 라이브러리 없음.<br>글꼴 크레딧: M갈무리(Monad ABXY, 갈무리 수정판)·갈무리(이민서 quiple) — SIL OFL 1.1.<br>비공식 팬 번역 · 원작과 얼티밋 모드의 권리는 각 권리자에게 있습니다.</p>
+</main>
+
+<script id="wsrc" type="text/plain">/*__WORKER__*/</script>
+<script id="pkg" type="text/plain">/*__PKG__*/</script>
+<script>
+(function () {
+  var NEED = [
+    ['m1_bin', 'SOTN_Ultimate_v1.4.bin'], ['m1_cue', 'SOTN_Ultimate_v1.4.cue'],
+    ['m2_cue', 'SOTN_JP_PS1_v1.2.cue'], ['m2_t1', 'SOTN_JP_PS1_v1.2_T1.bin'], ['m2_t2', 'SOTN_JP_PS1_v1.2_T2.ape']
+  ];
+  var $ = function (id) { return document.getElementById(id); };
+  var files = new Map(), worker = null, busy = false, urls = [];
+
+  function render() {
+    var ul = $('need'), have = 0;
+    ul.innerHTML = '';
+    NEED.forEach(function (n) {
+      var ok = files.has(n[1].toLowerCase()); if (ok) have++;
+      var li = document.createElement('li'); li.className = ok ? 'have' : 'miss';
+      li.innerHTML = '<span class="st">' + (ok ? '✓' : '·') + '</span><span></span>';
+      li.lastChild.textContent = n[1];
+      ul.appendChild(li);
+    });
+    $('go').disabled = busy || have < NEED.length;
+  }
+  function addFiles(list) {
+    for (var i = 0; i < list.length; i++) { var k = list[i].name.toLowerCase(); if (!files.has(k)) files.set(k, list[i]); }
+    render();
+  }
+  function logLine(s, cls) {
+    var d = document.createElement('div'); if (cls) d.className = cls; d.textContent = s;
+    $('log').appendChild(d); $('log').scrollTop = 1e9;
+  }
+  $('fFiles').addEventListener('change', function (e) { addFiles(e.target.files); e.target.value = ''; });
+  $('fDir').addEventListener('change', function (e) { addFiles(e.target.files); e.target.value = ''; });
+  var dz = $('drop');
+  ['dragenter', 'dragover'].forEach(function (t) { dz.addEventListener(t, function (e) { e.preventDefault(); dz.classList.add('on'); }); });
+  ['dragleave', 'drop'].forEach(function (t) { dz.addEventListener(t, function (e) { e.preventDefault(); dz.classList.remove('on'); }); });
+  dz.addEventListener('drop', function (e) { addFiles(e.dataTransfer.files); });
+
+  function mkWorker() {
+    var url = URL.createObjectURL(new Blob([$('wsrc').textContent], { type: 'text/javascript' }));
+    var w = new Worker(url);
+    w.onmessage = onMsg;
+    w.onerror = function (e) { fail('REJECT 오류: ' + (e.message || '작업기 오류')); };
+    return w;
+  }
+  function fail(text) {
+    logLine(text, 'bad'); $('phase').textContent = '실패'; busy = false; render();
+    document.body.dataset.state = 'error'; window.__error = text;
+  }
+  function fmtMB(n) { return (n / 1048576).toFixed(0) + ' MB'; }
+  async function onMsg(ev) {
+    var m = ev.data;
+    if (m.t === 'log') logLine(m.s, m.cls);
+    else if (m.t === 'prog') {
+      var pct = m.total ? Math.min(100, m.done / m.total * 100) : 0;
+      $('barI').style.width = pct.toFixed(1) + '%';
+      $('phase').textContent = m.phase + ' ' + pct.toFixed(0) + '%';
+    } else if (m.t === 'err') fail(m.text);
+    else if (m.t === 'cleaned') logLine('임시 파일 ' + m.n + '개 삭제', 'ok');
+    else if (m.t === 'done') {
+      logLine('OK result sha1 ' + m.sha1 + ' == 기대치. 합격. (' + m.sec + '초)', 'ok');
+      $('phase').textContent = '완료'; $('barI').style.width = '100%';
+      try {
+        var root = await navigator.storage.getDirectory();
+        var f = await (await root.getFileHandle(m.outName)).getFile();
+        var cue = 'FILE "' + m.outName + '" BINARY\r\n  TRACK 01 MODE2/2352\r\n    FLAGS DCP\r\n    INDEX 01 00:00:00\r\n';
+        urls.forEach(URL.revokeObjectURL); urls = [];
+        var u1 = URL.createObjectURL(f), u2 = URL.createObjectURL(new Blob([cue], { type: 'text/plain' }));
+        urls.push(u1, u2);
+        var body = $('resBody'); body.innerHTML = '';
+        [[u1, m.outName, fmtMB(m.size)], [u2, m.outName.replace(/\.bin$/, '.cue'), '']].forEach(function (x) {
+          var a = document.createElement('a'); a.className = 'dl'; a.id = x[1].slice(-3) === 'bin' ? 'dlBin' : 'dlCue';
+          a.href = x[0]; a.download = x[1]; a.textContent = x[1] + (x[2] ? ' (' + x[2] + ')' : ''); body.appendChild(a);
+        });
+        $('res').hidden = false;
+        window.__result = { sha1: m.sha1, size: m.size, sec: m.sec };
+        document.body.dataset.state = 'done';
+      } catch (e) { fail('REJECT 오류: 결과 파일을 열 수 없습니다 — ' + e.message); return; }
+      busy = false; render();
+    }
+  }
+
+  $('go').addEventListener('click', function () {
+    if (busy) return;
+    busy = true; render(); $('log').innerHTML = ''; $('res').hidden = true; $('barI').style.width = '0';
+    document.body.dataset.state = 'running'; window.__error = null; window.__result = null;
+    if (!worker) worker = mkWorker();
+    var list = []; files.forEach(function (f) { list.push(f); });
+    worker.postMessage({ t: 'run', files: list, pkg: $('pkg').textContent.trim() });
+  });
+  $('clean').addEventListener('click', function () {
+    if (busy) return;
+    urls.forEach(URL.revokeObjectURL); urls = []; $('res').hidden = true;
+    if (!worker) worker = mkWorker();
+    worker.postMessage({ t: 'clean' });
+  });
+  render();
+  document.body.dataset.state = 'ready';
+})();
+</script>
+</body>
+</html>

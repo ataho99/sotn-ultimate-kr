@@ -100,7 +100,15 @@ void func_801B1198(s16 yVal) {
 u16* func_801B11E8(u8 ch) {
     u16 jCh;
 #ifndef VERSION_PC
-    if (ch >= 'a') {
+#if defined(MOD_KO)
+    /* #241: Latin/punct inside KO scroll lines -> MGalmuri12 (v12d
+     * repurposed cells via KO_ENGTAB, 94xu16 in ARC_KO gap at 0x8009EF00).
+     * Miss (0) falls through to the JP fullwidth path. TSV untouched. */
+    if (ch != ' ' && ch < 0x80 && ((const u16*)0x8009EF00)[ch - 0x21]) {
+        return g_api.func_80106A28(((const u16*)0x8009EF00)[ch - 0x21], 0);
+    }
+#endif
+     if (ch >= 'a') {
         jCh = ('ａ' - 'a') + ch;
     } else if (ch >= 'A') {
         jCh = ('Ａ' - 'A') + ch;
@@ -126,6 +134,7 @@ u16* func_801B11E8(u8 ch) {
 }
 
 #include "prologue_cutscene_script.h"
+#include "prologue_scroll_ko.h"
 
 void func_801B1298(Entity* self) {
     s16 y0;
@@ -139,7 +148,11 @@ void func_801B1298(Entity* self) {
 
     switch (self->step) {
     case 0:
+#if defined(MOD_KO) && !defined(VERSION_PSP)
+        if (func_801B101C((u8*)prologue_scroll_ko_psx)) {
+#else
         if (func_801B101C((u8*)prologue_script_en)) {
+#endif
             self->flags |= FLAG_HAS_PRIMS;
             self->primIndex = g_Dialogue.primIndex;
             ++self->step;
@@ -154,7 +167,12 @@ void func_801B1298(Entity* self) {
                     ++g_Dialogue.nextLineX;
                     break;
                 }
-                glyph = func_801B11E8(nextChar);
+                if (nextChar & 0x80) {
+                    nextChar = (nextChar << 8) + *g_Dialogue.scriptCur++;
+                    glyph = g_api.func_80106A28(nextChar, 0);
+                } else {
+                    glyph = func_801B11E8(nextChar);
+                }
                 if (glyph) {
                     glyphPtr = D_801BEE90[glyphIndex];
                     for (i = 0; i < 0x30; ++i) {
@@ -228,7 +246,12 @@ void func_801B1298(Entity* self) {
                 return;
             }
         } while (0);
-        glyph = func_801B11E8(nextChar);
+        if (nextChar & 0x80) {
+            nextChar = (nextChar << 8) + *g_Dialogue.scriptCur++;
+            glyph = g_api.func_80106A28(nextChar, 0);
+        } else {
+            glyph = func_801B11E8(nextChar);
+        }
 
         if (glyph) {
             y = g_Dialogue.nextLineX * 16;

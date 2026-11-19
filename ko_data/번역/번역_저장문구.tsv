@@ -1,0 +1,24 @@
+키	영문	일판	한글
+KS_SAVED			저장했습니다.
+KS_NOCARD0			메모리 카드가
+KS_NOCARD1			없습니다
+KS_DEFECT0			메모리 카드가
+KS_DEFECT1			손상되었습니다
+KS_NOFMT0			메모리 카드가
+KS_NOFMT1			초기화 안 됐습니다
+KS_CANTOW0			덮어쓸 수
+KS_CANTOW1			없습니다
+KS_NODATA0			게임 데이터가
+KS_NODATA1			없습니다
+KS_NOBLK0			남은 메모리
+KS_NOBLK1			블록이 없습니다
+KS_FMTERR0			메모리 카드
+KS_FMTERR1			초기화 오류
+KS_SLOTSEL			슬롯을 선택하세요
+KS_SLOT1			슬롯 1
+KS_SLOT2			슬롯 2
+KS_WISHFMT			초기화할까요?
+KS_OVERWR			덮어쓸까요?
+KS_WISHSAVE			저장할까요?
+KS_YES			예
+KS_NO			아니오

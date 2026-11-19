@@ -26,8 +26,8 @@ s16 D_800AC998[] = {
 };
 
 #if defined(VERSION_US)
-CdFile g_LbaBinTitle = {0x63D6, 0, 0x80000, 0, 0, 0xFF, 0};
-CdFile g_LbaBinProlo = {0x62D6, 6, 0x80000, 0, 0, 0xFF, 0};
+CdFile g_LbaBinTitle = {KO_LBA(0x63D6), 0, 0x80000, 0, 0, 0xFF, 0};
+CdFile g_LbaBinProlo = {KO_LBA(0x62D6), 6, 0x80000, 0, 0, 0xFF, 0};
 CdFile g_LbaBinGame = {0x0000, 1, 0x42000, 0, 0, 0x13, 0};
 CdFile g_LbaStageChr = {0x7E5D, 2, 0x40000, 0, 0, 0xFF, 0};
 CdFile g_LbaSdAlkVh = {0x610D, 19, 0x01020, 1, 1, 0xFF, 7};
@@ -45,19 +45,19 @@ CdFile g_LbaStageVh = {0x0000, 19, 0x00000, 3, 3, 0xFF, 14};
 CdFile g_LbaStageVb = {0x0000, 17, 0x00000, 3, 3, 0xFF, 0};
 CdFile g_LbaSdJ010_3_Vh = {0x6082, 19, 0x02A20, 3, 3, 0xFF, 16};
 CdFile g_LbaSdJ010_3_Vb = {0x6088, 17, 0x41CB0, 3, 3, 0xFF, 0};
-CdFile g_LbaBinWeapon0 = {0x6582, 12, 0x04000, 0, 0, 0xFF, 0};
-CdFile g_LbaBinWeapon1 = {0x68BC, 13, 0x04000, 0, 0, 0xFF, 1};
-CdFile g_LbaBinMonster = {0x6BF6, 14, 0x05800, 0, 0, 0xFF, 0};
-CdFile g_LbaBinDemokey = {0x7415, 4, 0x02000, 0, 0, 0xFF, 0};
+CdFile g_LbaBinWeapon0 = {KO_LBA(0x6582), 12, 0x04000, 0, 0, 0xFF, 0};
+CdFile g_LbaBinWeapon1 = {KO_LBA(0x68BC), 13, 0x04000, 0, 0, 0xFF, 1};
+CdFile g_LbaBinMonster = {KO_LBA(0x6BF6), 14, 0x05800, 0, 0, 0xFF, 0};
+CdFile g_LbaBinDemokey = {KO_LBA(0x7415), 4, 0x02000, 0, 0, 0xFF, 0};
 
 // SERVANT/FT_xxx.BIN off
 s32 g_LbaServantChrOff[] = {
-    0x7248, 0x728B, 0x72CE, 0x7311, 0x7350, 0x7392, 0x73D5,
+    KO_LBA(0x7248), KO_LBA(0x728B), KO_LBA(0x72CE), KO_LBA(0x7311), KO_LBA(0x7350), KO_LBA(0x7392), KO_LBA(0x73D5),
 };
 
 // SERVANT/SD_xxx.VH off
 s32 g_LbaServantVhOff[] = {
-    0x7268, 0x72AB, 0x72EE, 0x7331, 0x7370, 0x73B2, 0x73F5,
+    KO_LBA(0x7268), KO_LBA(0x72AB), KO_LBA(0x72EE), KO_LBA(0x7331), KO_LBA(0x7370), KO_LBA(0x73B2), KO_LBA(0x73F5),
 };
 
 // SERVANT/SD_xxx.VH len
@@ -67,7 +67,7 @@ s32 g_LbaServantVhLen[] = {
 
 // SERVANT/SD_xxx.VB off
 s32 g_LbaServantVbOff[] = {
-    0x726B, 0x72AE, 0x72F1, 0x7333, 0x7372, 0x73B5, 0x73F7,
+    KO_LBA(0x726B), KO_LBA(0x72AE), KO_LBA(0x72F1), KO_LBA(0x7333), KO_LBA(0x7372), KO_LBA(0x73B5), KO_LBA(0x73F7),
 };
 
 // SERVANT/SD_xxx.VB len
@@ -78,10 +78,13 @@ s32 g_LbaServantVbLen[] = {
 CdFile g_LbaServantChr = {0x0000, 15, 0x06000, 0, 0, 0x1D, 0};
 CdFile g_LbaServantVh = {0x0000, 19, 0x00000, 2, 2, 0xFF, 30};
 CdFile g_LbaServantVb = {0x0000, 17, 0x00000, 2, 2, 0xFF, 0};
-CdFile g_LbaBinRichter = {0x64D6, 10, 0x39A58, 0, 0, 0x14, 0};
+CdFile g_LbaBinRichter = {KO_LBA(0x64D6), 10, 0x39A58, 0, 0, 0x14, 0};
 #if defined(MOD_SATURN)
 #ifndef OFF_BIN_ARC_F2
 #define OFF_BIN_ARC_F2 0 // (the first compile of make disk, as below)
+#endif
+#ifndef OFF_BIN_KO
+#define OFF_BIN_KO 0 // trial ARC_KO.BIN (A-gap); OFF has none
 #endif
 #endif
 #if defined(MOD_SATURN) && OFF_BIN_ARC_F2 != 0
@@ -91,14 +94,17 @@ CdFile g_LbaBinRichter = {0x64D6, 10, 0x39A58, 0, 0, 0x14, 0};
 // mods/sotn-ultimate/tools/build_sysopt.sh), a new file at the disc's end (no
 // file moves; the retail ARC_F.BIN stays where it was, unused), loaded up to
 // 0x80170000
-CdFile g_LbaBinAlucard = {OFF_BIN_ARC_F2, 10, MOD_ARC_F_LEN, 0, 0, 0x04, 0};
+CdFile g_LbaBinAlucard = {OFF_BIN_ARC_F2, 10, MOD_ARC_F_LEN, 0, 0, KO_ALUCARD_NEXT, 0};
 #else
-CdFile g_LbaBinAlucard = {0x616A, 10, 0x31BEC, 0, 0, 0x04, 0};
+CdFile g_LbaBinAlucard = {KO_LBA(0x616A), 10, 0x31BEC, 0, 0, KO_ALUCARD_NEXT, 0};
+#endif
+#if defined(MOD_KO)
+CdFile g_LbaBinKoGlyphs = {OFF_BIN_KO, 20, KO_ARC_SIZE, 0, 0, 0x04, 0};
 #endif
 CdFile g_LbaOpnWsStr = {0x3631, 0, 0x00000, 0, 0, 0xFF, 0};
 CdFile g_LbaStagePrg = {0x0000, 8, 0x00000, 0, 0, 0xFF, 0};
-CdFile g_LbaBinGo = {0x654A, 9, 0x1C000, 0, 0, 0xFF, 0};
-CdFile g_LbaBinEnd = {0x7489, 9, 0x16000, 0, 0, 0xFF, 0};
+CdFile g_LbaBinGo = {KO_LBA(0x654A), 9, 0x1C000, 0, 0, 0xFF, 0};
+CdFile g_LbaBinEnd = {KO_LBA(0x7489), 9, 0x16000, 0, 0, 0xFF, 0};
 CdFile D_800ACC64 = {0x0000, 3, 0x00000, 0, 0, 0xFF, 0};
 
 #elif defined(VERSION_HD)
@@ -155,7 +161,7 @@ CdFile g_LbaServantChr = {0x0000, 15, 0x06000, 0, 0, 0x1D, 0};
 CdFile g_LbaServantVh = {0x0000, 19, 0x00000, 2, 2, 0xFF, 30};
 CdFile g_LbaServantVb = {0x0000, 17, 0x00000, 2, 2, 0xFF, 0};
 CdFile g_LbaBinRichter = {0x6524, 10, 0x3999C, 0, 0, 0x14, 0};
-CdFile g_LbaBinAlucard = {0x61B8, 10, 0x31BEC, 0, 0, 0x04, 0};
+CdFile g_LbaBinAlucard = {0x61B8, 10, 0x31BEC, 0, 0, KO_ALUCARD_NEXT, 0};
 CdFile g_LbaOpnWsStr = {0x3628, 0, 0x00000, 0, 0, 0xFF, 0};
 CdFile g_LbaStagePrg = {0x0000, 8, 0x00000, 0, 0, 0xFF, 0};
 CdFile g_LbaBinGo = {0x6598, 9, 0x1C000, 0, 0, 0xFF, 0};
@@ -174,6 +180,9 @@ CdFile* D_800ACC74[] = {
     &g_LbaOpnWsStr,    &D_800ACC64,       &g_LbaBinGo,       &g_LbaServantChr,
     &g_LbaBinMonster,  &g_LbaServantVh,   &g_LbaServantVb,   &g_LbaBinEnd,
     &g_LbaBinDemokey,
+#if defined(MOD_KO)
+    &g_LbaBinKoGlyphs,
+#endif
 };
 
 CdFileSeq D_800ACCF8[] = {
@@ -187,6 +196,9 @@ const char* D_800ACD10[] = {
 
 void func_801080DC(void);
 void CopyStageOvlCallback(void);
+#if defined(MOD_KO)
+void CopyKoGlyphsCallback(void);
+#endif
 void CopyRicOvlCallback(void);
 void func_801078C4(void);
 void CopyMonsterPreviewCallback(void);
@@ -204,6 +216,9 @@ void (*g_CdCallbacks[])(void) = {
     func_801078C4,        func_801078C4,        CopyMonsterPreviewCallback,
     func_801078C4,        func_80107DB4,        func_80107C6C,
     func_80107DB4,        func_80107EF0,
+#if defined(MOD_KO)
+    CopyKoGlyphsCallback,
+#endif
 };
 s32 D_800ACD7C = 0;
 
@@ -319,6 +334,42 @@ void CopyRicOvlCallback(void) {
         CdDataCallback(NULL);
     }
 }
+
+#if defined(MOD_KO)
+// Trial10 A-gap KO loader (+trial17d5 #246: JP bundle + 8px block ride the
+// same Alucard chain into 0x801F0000~/0x801F2000~). Plain copy into fixed
+// RAM (like the stage overlay copy, but fixed dest). Armed with the Alucard
+// chain below. The dest block derives from the completed-block counter
+// (no BSS pointer needed). Blocks 0-13: glyph area; block 14: JP bundle;
+// blocks 15-16: 8px block.
+void CopyKoGlyphsCallback(void) {
+    s32 i;
+    u8* dst;
+    u8* src;
+    s32 blk;
+    blk = g_Cd.D_80137F74;
+    dst = (u8*)(KO_GLYPH_BLOCK_ADDR + (blk << 11));
+    if (blk >= KO_ARC_SECTORS) {
+        if (blk == KO_ARC_SECTORS) {
+            dst = (u8*)KO_JP_BUNDLE_BASE;
+        } else {
+            dst = (u8*)(KO_8P_BASE + ((blk - KO_ARC_SECTORS - 1) << 11));
+        }
+    }
+    src = TO_CD_BLOCK(g_Cd.D_80137F70) + D_801EC000;
+    for (i = 0; i < CD_BLOCK_LEN; i++) {
+        *dst++ = *src++;
+    }
+    g_Cd.D_80137F70 = (g_Cd.D_80137F70 + 1) & 7;
+    g_Cd.D_80137F74++;
+    g_Cd.overlayBlockCount--;
+    if (g_Cd.overlayBlockCount < 0 ||
+        (g_Cd.overlayBlockCount == 0 && g_Cd.overlayLastBlockSize == 0)) {
+        g_Cd.D_80137F78 = 1;
+        CdDataCallback(NULL);
+    }
+}
+#endif
 
 void CopySupportOvlCallback(void) {
     s32 i;

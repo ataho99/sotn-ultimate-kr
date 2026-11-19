@@ -18,7 +18,7 @@ RETAIL_BSS_START=0x801362ac
 data_end=$(grep -oE "0x[0-9a-f]+ +dra_DATA_END = " "$MAP" | awk '{print $1}')
 sound_data=$(grep -E "^ \.data +0x[0-9a-f]+ +0x[0-9a-f]+ build/us/src/dra/sound_data\.c\.o" "$MAP" | awk '{print $2}')
 bss_start=$(grep -oE "0x[0-9a-f]+ +dra_BSS_START = " "$MAP" | awk '{print $1}')
-pad=$(grep -oE "#define MOD_DRA_PAD [0-9]+" src/dra/42398.c | awk '{print $3}')
+pad=$(grep -oE "#define MOD_DRA_PAD [0-9]+" src/dra/42398.c | head -1 | awk '{print $3}') # MOD_KO 분기가 먼저(M7 순서), OFF는 이 스크립트 대상 아님
 dpad=$(grep -oE "#define MOD_DATA_PAD [0-9]+" src/dra/config_us.c | awk '{print $3}' || echo 0)
 
 status=0

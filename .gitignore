@@ -69,3 +69,10 @@ mods/sotn-ultimate/tools/builder/web/*.generated.html
 # the tile swap atlases are rebuilt from the discs (tile_atlases.ts)
 mods/sotn-ultimate/tools/gdn_ps1_tiles/*.png
 mods/sotn-ultimate/tools/prs_ps1_tiles/*.png
+
+# SOTN Ultimate KR: 디스크 이미지·재료는 저장소에 두지 않음 (루트에 놓은 재료 파일만 제외; ko_data 안의 글리프 .bin 은 추적)
+/*.bin
+/*.cue
+/*.ape
+/*.iso
+/*.img

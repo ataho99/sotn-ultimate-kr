@@ -171,7 +171,13 @@ extern u32 D_894568C;
 #include "../set_cutscene_events.h"
 #include "../cutscene_events.h"
 #else
-static const char* actor_names[] = {_S("Richter"), _S("Dracula")};
+static const char* actor_names[] = {_S("RICHTER"), _S("DRACULA")};
+#ifdef MOD_KO
+static const u8 ko_name_0[] = {0xF0, 0x50, 0xF2, 0x4E, 0xF2, 0x1E};
+static const u8 ko_name_1[] = {0xF0, 0xB2, 0xF0, 0x4B, 0xF2, 0x16, 0xF0, 0x4B};
+static const u8* const actor_names_ko[] = {ko_name_0, ko_name_1};
+static const u8 actor_names_ko_len[] = {6, 8};
+#endif
 
 // bss
 s32 g_SkipCutscene;
@@ -195,7 +201,14 @@ static u8 SetCutsceneScript(u8* script) {
         g_Dialogue.primIndex[2] = 0;
         return 0;
     }
-#if defined(MOD_PSP_SCRIPT)
+#if defined(MOD_KO)
+    // #213: default Dub=PSP played the PSP copy (ST0.BIN 0x27a0e, EN
+    // "Dracula. Die now...") in English. TSV v13 has no PSP-phrasing
+    // st0_richter_dracula rows (only 6 PSX-phrasing rows), so reuse the
+    // PSX KO script (cutscene_script_ko_st0.h, 626B unit-exact) for both
+    // dubs; PSP voices still play via MOD_PSP_DUB audio path.
+    g_Dialogue.scriptCur = script;
+#elif defined(MOD_PSP_SCRIPT)
     // Saturn port: the PSP dub toggle's script copies (mod_psp_script.h)
     g_Dialogue.scriptCur = ModPspScript(script);
 #else
@@ -341,19 +354,23 @@ void EntityCutscene(Entity* self) {
                     }
                     g_Dialogue.nextCharX = g_Dialogue.nextLineX;
                     if (!(g_Dialogue.unk12 & 1)) {
-                        g_Dialogue.nextLineY += CS_LINE_SPACING;
+                        g_Dialogue.nextLineY += KO_LINE_STEP(CS_LINE_SPACING);
                     }
                     g_Dialogue.nextCharY++;
 #ifdef VERSION_PSP
                     g_Dialogue.nextCharY &= CS_LINE_MAX;
 #else
+#ifdef MOD_KO
+                g_Dialogue.nextCharY &= CS_LINE_MAX;
+#else
                 if (g_Dialogue.nextCharY >= 5) {
                     g_Dialogue.nextCharY = 0;
                 }
 #endif
+#endif
                     CutsceneUnk4();
                     if (!(g_Dialogue.unk12 & 1)) {
-                        if (g_Dialogue.nextCharY > CS_LINE_MAX - 1) {
+                        if (KO_SCROLL_AT(g_Dialogue.nextCharY, g_Dialogue.nextCharY > CS_LINE_MAX - 1)) {
                             g_Dialogue.unk12 |= 1;
                             g_Dialogue.portraitAnimTimer = 0;
                             self->step_s = DIALOG_BOX_INIT;
@@ -678,8 +695,50 @@ void EntityCutscene(Entity* self) {
             break; // This breaks the big while loop for psx
         } // This closes the big while loop for psx
         if (nextByte == ' ') {
+#ifdef MOD_KO
+            g_Dialogue.nextCharX += 1; /* 4px space (maintainer 08:16), KO_SPACE_ADV */
+#else
             g_Dialogue.nextCharX += 2;
+#endif
             return;
+        }
+#endif
+#if defined(MOD_KO) && !defined(VERSION_PSP) && !defined(VERSION_HD)
+        /* #241: ASCII inside KO lines -> MGalmuri12 (v12d repurposed cells
+         * via KO_ENGTAB, 94xu16 in ARC_KO gap at 0x8009EF00). Miss (0) keeps
+         * the 8x8 plate path. TSV untouched. */
+        if (nextByte != ' ' && nextByte < 0x80 &&
+            ((const u16*)0x8009EF00)[nextByte - 0x21]) {
+            u16 eng_ch = ((const u16*)0x8009EF00)[nextByte - 0x21];
+            u_long* eng_glyph = (u_long*)g_api.func_80106A28(eng_ch, 1);
+            if (eng_glyph) {
+                s32 eng_y = (g_Dialogue.nextCharY * 16) + 384;
+                LoadTPage(
+                    eng_glyph, 0, 0, g_Dialogue.nextCharX, eng_y, 0xC, 0x10);
+                g_Dialogue.nextCharX += KO_ENG_ADV(nextByte);
+                return;
+            }
+        }
+#endif
+#if defined(MOD_KO) && !defined(VERSION_PSP)
+        if ((nextByte & 0xFC) == 0xF0 || (nextByte >= 0x80 && nextByte < 0xF0)) {
+            s32 ko_ch;
+            u_long* ko_glyph;
+            s32 ko_y;
+            if (nextByte >= 0x80 && nextByte < 0xF0) {
+                /* 1-byte promotion: KO_PROMO_TBL_ADDR (dra.h), gen_ko_promo.py */
+                ko_ch = ((u16*)0x8009F000)[nextByte - 0x80];
+            } else {
+                ko_ch = (nextByte << 8) | *g_Dialogue.scriptCur++;
+            }
+            ko_glyph = (u_long*)g_api.func_80106A28(ko_ch, 1);
+            if (ko_glyph) {
+                ko_y = (g_Dialogue.nextCharY * 16) + 384;
+                LoadTPage(
+                    ko_glyph, 0, 0, g_Dialogue.nextCharX, ko_y, 0xC, 0x10);
+                g_Dialogue.nextCharX += 3;
+                return;
+            }
         }
 #endif
         rect.x = ((nextByte & 0xF) * 2) + 896;

@@ -54,6 +54,21 @@ for path, sha in sorted(retail.items()):
             orig = orig[:lo] + bytes(hi - lo) + orig[hi:]
             built = built[:lo] + bytes(hi - lo) + built[hi:]
     if len(orig) != len(built):
+        if name == "main.exe" and os.path.exists("build/us/ARC_KO.BIN"):
+            # Trial13/15: main.exe carries ARC_KO.BIN (boot-resident KO font;
+            # 12 sectors trial13, 14 with the ko_equip tail). The head must
+            # stay retail-identical.
+            tail = open("build/us/ARC_KO.BIN", "rb").read()
+            import struct as _st
+            tsize = _st.unpack("<I", built[0x1C:0x20])[0]
+            head_ok = (built[:0x1C] == orig[:0x1C]
+                       and built[0x20:len(orig)] == orig[0x20:]
+                       and tsize in (0x8F000, 0x90000, 0x91800))
+            if (len(tail) == len(built) - len(orig) and len(tail) in (24576, 28672, 34816)
+                    and head_ok and built[len(orig):] == tail):
+                print(f"OK   {name}: trial boot-resident font (+{len(tail)}B)")
+                checked += 1
+                continue
         print(f"FAIL {name}: size {len(orig)} -> {len(built)}")
         status = 1
         continue

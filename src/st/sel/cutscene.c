@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#define KO_NAME_FIXED 1 /* stsel: 8 B margin, no bytes for the advance table lookup */
 #include "sel.h"
 #include "mod_psp_script.h" // the PSP dub toggle's script copies
+#include "../cutscene_ko_wire.h" // KO trial script selector (ko_dlg2 #127)
 #include <cutscene.h>
 
 extern u32 D_801BC3E8;
@@ -26,7 +28,14 @@ static u16 D_80180840[] = {
     0x1B, 0x34, 0x41, 0x35, 0x08, 0x0E, 0x4D, 0x11, 0x34, 0x41, 0x29, 0x48,
 };
 
-static const char* actor_names[] = {_S("Alucard"), _S("Maria"), _S("Richter")};
+static const char* actor_names[] = {_S("ALUCARD"), _S("MARIA"), _S("RICHTER")};
+#ifdef MOD_KO
+static const u8 ko_name_0[] = {0xF0, 0x6F, 0xF2, 0x06, 0xF0, 0xB2};
+static const u8 ko_name_1[] = {0xF0, 0x52, 0xF0, 0x50, 0xF0, 0x6C};
+static const u8 ko_name_2[] = {0xF0, 0x50, 0xF2, 0x4E, 0xF2, 0x1E};
+static const u8* const actor_names_ko[] = {ko_name_0, ko_name_1, ko_name_2};
+static const u8 actor_names_ko_len[] = {6, 6, 6};
+#endif
 
 #include "../cutscene_unk1.h"
 
@@ -35,7 +44,10 @@ u8 SetCutsceneScript(u8* script) {
 
     g_Dialogue.primIndex[2] = g_api.AllocPrimitives(PRIM_SPRT, 7);
     if (g_Dialogue.primIndex[2] != -1) {
-#if defined(MOD_PSP_SCRIPT)
+#if defined(MOD_KO)
+        // KO trial: script selector (ko_dlg2 #127, passthrough until staged)
+        g_Dialogue.scriptCur = ModKoScript(script);
+#elif defined(MOD_PSP_SCRIPT)
         // Saturn port: the PSP dub toggle's script copies (mod_psp_script.h)
         g_Dialogue.scriptCur = ModPspScript(script);
 #else
@@ -169,15 +181,27 @@ void EntityCutscene(Entity* self) {
                 }
                 g_Dialogue.nextCharX = g_Dialogue.nextLineX;
                 if (!(g_Dialogue.unk12 & 1)) {
+#ifdef MOD_KO
+                    g_Dialogue.nextLineY += KO_LINE_STEP(0x10);
+#else
                     g_Dialogue.nextLineY += 0xC;
+#endif
                 }
                 g_Dialogue.nextCharY++;
+#ifdef MOD_KO
+                g_Dialogue.nextCharY &= 3;
+#else
                 if (g_Dialogue.nextCharY >= 5) {
                     g_Dialogue.nextCharY = 0;
                 }
+#endif
                 CutsceneUnk4();
                 if (!(g_Dialogue.unk12 & 1)) {
+#ifdef MOD_KO
+                    if (KO_SCROLL_AT(g_Dialogue.nextCharY, g_Dialogue.nextCharY > 2)) {
+#else
                     if (g_Dialogue.nextCharY > 3) {
+#endif
                         g_Dialogue.unk12 |= 1;
                         g_Dialogue.portraitAnimTimer = 0;
                         self->step_s = 0;
@@ -412,9 +436,45 @@ void EntityCutscene(Entity* self) {
         }
 
         if (nextChar == ' ') {
+#ifdef MOD_KO
+            g_Dialogue.nextCharX += 1; /* 4px space (maintainer 08:16), KO_SPACE_ADV */
+#else
             g_Dialogue.nextCharX += 2;
+#endif
             break;
         }
+#ifdef MOD_KO
+        /* ko engtab dialogue ASCII (sihum37b): . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
+         * KO_ENGTAB (94xu16 at 0x8009EF00), 12-col direct + kind0, advance KO_ENG_ADV (4/8 px). * A miss (0) keeps the original-font MoveImage path below. */
+        {
+            u16 eng_ch = ((u16)(nextChar - 0x21) < 0x5E) ? ((const u16*)0x8009EF00)[nextChar - 0x21] : 0;
+            if (eng_ch) {
+                /* func_80106A28 always returns its scratch buffer (no null check: SEL overlay is full) */
+                LoadTPage((u_long*)g_api.func_80106A28(eng_ch, 1), 0, 0, g_Dialogue.nextCharX, (g_Dialogue.nextCharY * 16) + 0x180, 0xC, 0x10);
+                g_Dialogue.nextCharX += KO_ENG_ADV(nextChar);
+                break;
+            }
+        }
+        if ((nextChar & 0xFC) == 0xF0 || (nextChar >= 0x80 && nextChar < 0xF0)) {
+            s32 ko_ch;
+            u_long* ko_glyph;
+            s32 ko_y;
+            if (nextChar >= 0x80 && nextChar < 0xF0) {
+                /* 1-byte promotion: KO_PROMO_TBL_ADDR (dra.h), gen_ko_promo.py */
+                ko_ch = ((u16*)0x8009F000)[nextChar - 0x80];
+            } else {
+                ko_ch = (nextChar << 8) | *g_Dialogue.scriptCur++;
+            }
+            ko_glyph = (u_long*)g_api.func_80106A28(ko_ch, 1);
+            if (ko_glyph) {
+                ko_y = (g_Dialogue.nextCharY * 16) + 0x180;
+                LoadTPage(
+                    ko_glyph, 0, 0, g_Dialogue.nextCharX, ko_y, 0xC, 0x10);
+                g_Dialogue.nextCharX += 3;
+                break;
+            }
+        }
+#endif
         rect->x = ((nextChar & 0x0F) << 1) + 0x380;
         rect->y = ((nextChar & 0xF0) >> 1) + 0xF0;
         rect->w = 2;

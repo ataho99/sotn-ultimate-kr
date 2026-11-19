@@ -861,8 +861,12 @@ void func_us_801C2474(Entity* self) {
         }
     }
 #ifdef VERSION_US
+/* trial17a #225: retail TTY debug prints dropped under MOD_KO
+ * (32T+20R toward the KO dialogue branch). Computation kept. */
+#ifndef MOD_KO
     FntPrint("vol ; %x\n", volume);
     FntPrint("pan : %d\n", pan);
+#endif
 #endif
 
     if (!self->step) {

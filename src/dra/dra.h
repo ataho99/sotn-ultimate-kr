@@ -616,7 +616,127 @@ extern Equipment* g_EquipDefs;
 #else
 extern RelicDesc g_RelicDefs[30];
 extern SpellDef g_SpellDefs[28];
+#if defined(MOD_KO)
+// Korean trial (P64): one appended System row ("Korean")
+extern const char* g_MenuStr[111];
+#else
 extern const char* g_MenuStr[110];
+#endif
+#if defined(MOD_KO)
+// Trial10 static chain: AlucardPrg -> KoGlyphs -> 0x04 (Alucard's old next,
+// kept as KO struct's next). Zero DRA text (init data only, OFF keeps 0x04).
+#define KO_ALUCARD_NEXT CdFile_KoGlyphs
+#else
+#define KO_ALUCARD_NEXT 0x04
+#endif
+#if defined(MOD_KO)
+// Trial10 disc: BIN/ARC_KO.BIN at the disc end shifts every post-VAB literal
+// sector +1 (layout dry-run + image TOC verified; sizes and root movies stay).
+// KO_LBA gates those literals (OFF keeps retail values). Data only.
+#define KO_LBA(b) ((b) + 1)
+#else
+#define KO_LBA(b) (b)
+#endif
+#if defined(MOD_KO)
+// Korean trial (P65 base, P70 trial10): 776 Hangul glyphs, 16x15 1bpp MSB,
+// 30 bytes each (same layout as Krom2RawAdd returns). Not in DRA's rodata:
+// build_ko_trial.sh packs BIN/ARC_KO.BIN (glyphs + KO blob, trial-only disc
+// file at the disc end) and cd.c's CdFile_KoGlyphs chain loads it to
+// KO_GLYPH_BLOCK_ADDR (A-gap). The 66590.c wrapper and the blob renderer
+// (MenuDrawKoHook at KO_BLOB_ADDR) both read the block.
+#define KO_GLYPH_COUNT 819 /* v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372, sihum40); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
+#define KO_GLYPH_CELL_BYTES 23
+#define KO_GLYPH_12COL 1 /* sihum37: MGalmuri12 "an na" 12-col 23 B direct path + a (kind0); the Isunshin branch keeps it off */
+/* cutscene 1-byte promotion table: 112 x u16 (byte 0x80+i -> glyph code), in the
+ * ARC_KO zero gap after the engtab (0x8009EFBC..0x8009F500, loaded with the ARC). Read directly by
+ * the cutscene render hooks in src/st/*; gen_ko_promo.py writes ko_promo_tbl.bin. */
+#define KO_PROMO_TBL_ADDR 0x8009F000
+#define KO_PROMO_TBL_SLOTS 112
+#define KO_GLYPH_BASE 0xF040
+#define KO_GLYPH_BLOCK_ADDR 0x80099000
+// Trial10b blob: MenuDrawKoHook entry, fixed 768B slot (text + zero pad).
+#define KO_BLOB_ADDR 0x8009EAF0
+#define KO_BLOB_SLOT 896
+// Trial10d status-box strings: 0xFF00-terminated KO bytes baked into ARC_KO.BIN
+// right after the blob slot (ko_blob.c KO_STR_9x, order asserted by build).
+#define KO_STR_BASE 0x8009EE70
+#define KO_STR_92 ((const char*)0x8009EE70) // 장비 (6B)
+#define KO_STR_93 ((const char*)0x8009EE76) // 10p term (6B)
+#define KO_STR_94 ((const char*)0x8009EE7C) // 10p term (8B)
+#define KO_STR_95 ((const char*)0x8009EE84) // 10p term (6B)
+#define KO_STR_96 ((const char*)0x8009EE8A) // 사역마 (8B)
+// ko_sheet (#80): 12x16 sheet tables in the ARC_KO strings slot, appended
+// after the 34B box strings (offsets asserted by build_ko_trial.sh).
+// Upload list 37B + 9 index strings 30B = 67B; FLAG at +98 stays clear.
+// Trial12 measured: KO_BOXALL 34B + 2B linker pad, sheet starts at +36
+// (ro == 104B = 34 + 2 + 67 + 1 trailing NUL). Strings end 0x8009EED8,
+// FLAG 0x8009EEF4 stays clear (16B gap).
+// #249: RIGHT/LEFT hand-slot labels (오른손/왼손) appended; SEL/OV/EPOCH
+// dirty state moves +8 (EED8/DC/E0).
+#define KO_SHEET_UPLOAD ((const char*)0x8009EE94)
+#define KO_SHEET_EQUIP ((const char*)0x8009EEB9)
+#define KO_SHEET_SKILL ((const char*)0x8009EEBC)
+#define KO_SHEET_MAGIC ((const char*)0x8009EEBF)
+#define KO_SHEET_SYSTEM ((const char*)0x8009EEC3)
+#define KO_SHEET_FAMILIAR ((const char*)0x8009EEC6)
+/* sihum37: big labels moved to the ARC zero gap behind the engtab (gen_ko_sheet2.py, ko_sheet2.bin
+ * at ARC offset 0x6100 = 0x8009F100): UPLOAD2 now carries 12 glyphs (cells 0x10..0x1B),
+ * ATK/DEF got 력, and HEAD/BODY/CLOAK/OTHER are new 12px labels (retail slot names Head/Body/
+ * Cloak/Other were 8px English). The old strings at 0x8009EECA/EECD stay unused. */
+#define KO_SHEET_ATK ((const char*)0x8009F11C)
+#define KO_SHEET_DEF ((const char*)0x8009F120)
+#define KO_SHEET_HEAD ((const char*)0x8009F124)
+#define KO_SHEET_BODY ((const char*)0x8009F128)
+#define KO_SHEET_CLOAK ((const char*)0x8009F12C)
+#define KO_SHEET_OTHER ((const char*)0x8009F130)
+#define KO_SHEET_HOLDER ((const char*)0x8009F134)
+#define KO_SHEET2_ADDR 0x8009F100
+#define KO_POP_TEXT 0x8009E640 /* sihum42: resident KO_PopupText(str, leftAlign) (eq_popt.c, <= 0x4B0 B) in the glyph block slot behind the last possible cell (960 x 23 B = 0x5640): the stage overlays only call it */
+#define KO_POP_GLYPH 0x8009F280 /* sihum42: resident KO_PopGlyph(code, n) (eq_pop.c, <= 0x80 B) for the pickup popup Hangul; ARC zero gap behind the advance table */
+#define KO_FONT8_ADV_ADDR 0x8009F200 /* sihum40: 96 B, per sheet cell index: pen advance of the re-baked ASCII cells (ink width + 2), 0 = other cell (advance 8, no offset); gen_ko_font8.py ko_font8_adv.bin */
+#define KO_SHEET_RIGHT ((const char*)0x8009EED0)
+#define KO_SHEET_LEFT ((const char*)0x8009EED4)
+#define KO_SHEET_UPLOAD2 ((const char*)0x8009F100) /* trial26: glyphs 14-17 re-uploaded to tpage 7 row 0 (cells 0x10-0x13), call y=0x100 */
+// ko_equipreloc #128: equipment-name tail. 3 fixed entries (plain jal
+// from DRA, same cost as ordinary calls) + core. Loaded as the tail of
+// ARC_KO.BIN (cd.c CdFile_KoGlyphs chain). DRA keeps no KO code/BSS.
+// Dirty state lives at A-gap absolute (zero gap 9EED8~9EEF4, like FLAG).
+#define KO_EQUIP_BASE 0x8009F500
+#define KO_EQUIP_SIZE 0xB00 // 2816B; entries + core + load end <= 0x800A0000
+#define KO_EQUIP_SEL 0x8009F500 // 0x40 slot (entry must be first function)
+#define KO_EQUIP_OV 0x8009F540 // 0x40 slot
+#define KO_EQUIP_ENTER 0x8009F580 // 0x80 slot
+#define KO_EQUIP_CORE 0x8009F600 // 0xA00 slot (core end + load <= 0x800A0000)
+#define KO_EQUIP_LOAD 0x8009FF40 // 0xC0 slot (menu-open bundle loader ends 0x8009FFE0, #182)
+#define KO_EQUIP_NAMES 0x8009FECC // kept (unused by ko_equip_jp; build asserts)
+#define KO_JP_BUNDLE_BASE 0x801F0000 // KR hanpae name-block address (#177)
+#define KO_JP_BUNDLE_LBA 0x4928F // trial17d #236B: 2-pass wired (OFF_BIN_KO_JP, disc end)
+#define KO_JP_BUNDLE_SECTORS 1 // 1669B
+#define KO_8P_BASE 0x801F2000 // 8px block RAM base (#243 block, #246 boot-loaded)
+#define KO_8P_SECTORS 2 // 2832B
+#define KO_ARC_SECTORS 14 // glyph-area sectors inside ARC_KO.BIN (blocks 0-13)
+#define KO_EQ_SELSIG_ADDR 0x8009EED8
+#define KO_EQ_OVSIG_ADDR 0x8009EEDC
+#define KO_EQ_EPOCH_ADDR 0x8009EEE0
+// Trial10r scratch: 16 ring buffers of one 12x16/2 strip (96B each,
+// KO_SCRATCH_ADDR + (idx & 15) * 0x60 = EF00~F4FF). EF00~EFF7 reuses the
+// removed 10q DIAG area; F000~F4FF is past ARC_KO.BIN in the A-gap remainder
+// (write-before-read, never loaded from disc). FLAG/TMR/IDX below stay;
+// EF00~F4FF is scratch; F500~A0000 is the ko_equip tail (DRA starts at
+// 0x800A0000).
+#define KO_SCRATCH_N 16
+#define KO_SCRATCH_ADDR 0x8009EF00
+// Trial10d runtime switch (default 1=on, 0=bypass) + per-frame slot ring
+// state (timer/id), in the ARC_KO pad (zeros on disc, flag set by build).
+#define KO_FLAG_ADDR 0x8009EEF4
+#define KO_SLOT_TMR 0x8009EEF8
+#define KO_SLOT_IDX 0x8009EEFC
+// Trial10 ARC_KO.BIN content bytes (trial17d5 #246: 17 full sectors =
+// glyphs + blob slot + strings slot + gap + ko_equip tail + JP bundle 1 +
+// 8px block 2, zero-padded). Multiple of 2048 so the loader callback copies
+// a fixed CD_BLOCK_LEN per block.
+#define KO_ARC_SIZE 34816 // glyph area 28672 + bundle 2048 + 8px 4096 (17 sectors)
+#endif
 #if defined(MOD_SATURN)
 extern EnemyDef g_EnemyDefs[426];
 #else

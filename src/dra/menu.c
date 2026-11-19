@@ -57,15 +57,27 @@ extern s32 g_PrevEquippedWeapons[2];
 #define MOD_SYSOPT_SOUND MenuSoundConfigDraw
 #endif
 
+#if defined(MOD_KO)
+#include "gen/us/ko_cfg_str.h" /* gen_ko_cfg.py: System (config) screen strings */
+#endif
 const char* D_800A2D48[] = {
 #if defined(VERSION_US)
     "？？？？？",
+#if defined(MOD_KO)
+    ko_desc1,
+    ko_desc2,
+    ko_desc3,
+    ko_desc4,
+    ko_desc5,
+    ko_desc6,
+#else
     "Button set−up",
     "Select front／back of reversible cloak",
     "Custom cloak settings",
     "Window color settings",
     "Sound settings",
     "Time from game start",
+#endif
 #if defined(MOD_SATURN)
     // Saturn port: the System screen's "Ultimate settings" row 6 (Alucard
     // games only; mods/sotn-ultimate/src/menu/sysopt.c): its text is in
@@ -98,9 +110,11 @@ const char* D_800A2D48[] = {
 
 #if defined(VERSION_US)
 static const char* D_800A2D64 = "ＡＴＤＥＦ";
-
 static const char* D_800A2D68[] = {
-#if !defined(VERSION_PC)
+#if defined(MOD_KO)
+    KO_SHEET_ATK,
+    KO_SHEET_DEF,
+#elif !defined(VERSION_PC)
     _S2("ＡＴＴ"),
     _S2("ＤＥＦ"),
 #else // TODO cheap fix as func_800F66BC does not support unicode
@@ -944,10 +958,42 @@ void func_800F66BC(
     }
 }
 
+#if defined(MOD_KO)
+// ko_equip_jp (#182): equipment-name render lives in the resident tail
+// (absolute entries, KO_BLOB_ADDR pattern — no link symbols in DRA).
+// Collect here (stack only), draw in tail. Bundle base/LBA in dra.h.
+#define KO_EqSelDraw ((void (*)(const char**, const s32*, const s32*, s32, MenuContext*))KO_EQUIP_SEL)
+#define KO_EqOvDraw ((void (*)(const char**, const s32*, const s32*, s32, MenuContext*))KO_EQUIP_OV)
+#define KO_EqOnMenuEnter ((void (*)(void))KO_EQUIP_ENTER)
+#define KO_EquipJpLoad ((void (*)(s32))KO_EQUIP_LOAD)
+#define KO_EQ_MAX_NAMES 14 // selector page: (74/12+1)*2
+void func_800F98AC(const char* str, u32 y);
+#endif
+
+#if defined(MOD_KO)
+/* sihum40 (CP 904): menu ASCII = variable pen advance from a per-cell table (KO_FONT8_ADV_ADDR, 96 B written by
+ * gen_ko_font8.py into ARC_KO): re-baked ASCII cells advance ink width + 2 and are drawn 1 px right of the pen
+ * (1 px margin both sides); table value 0 = any other cell (arrows, kana, kanji pictures, icons): advance 8, no
+ * offset. Space (cell 0) = 4. Digits of MenuDrawInt/MenuDrawTime/clock/HP: fixed pitch 6 (KO_P), ink centred. */
+#define KO_ADV_RAW(ch) (((u8)(ch) < 0x60) ? ((const u8*)KO_FONT8_ADV_ADDR)[(u8)(ch)] : 0)
+#define KO_P 6
+#define KO_CC(ch) ((8 - KO_ADV_RAW(ch)) >> 1) /* centre a glyph in the fixed pitch */
+#else
+#define KO_ADV_RAW(ch) 0
+#define KO_P 8
+#define KO_CC(ch) 0
+#endif
+
 void MenuDrawChar(char ch, s32 x, s32 y, MenuContext* ctx) {
     MenuDrawImg(
         ctx, x, y, 8, 8, (ch & 0xF) * 8, (ch & 0xF0) >> 1, 0x196, 0x1E, 1, 0);
 }
+
+#if defined(MOD_KO)
+// Trial10: KO double-byte renderer lives in ARC_KO.BIN (A-gap KO_BLOB_ADDR,
+// dra.h). Function-pointer macro: no undefined symbol in DRA's link.
+#define MenuDrawKoHook ((void (*)(u16, s32, s32, void*))KO_BLOB_ADDR)
+#endif
 
 void MenuDrawStr(const char* str, s32 x, s32 y, MenuContext* ctx) {
     const s32 ChWidth = 8;
@@ -956,6 +1002,9 @@ void MenuDrawStr(const char* str, s32 x, s32 y, MenuContext* ctx) {
     s32 xcopy;
     s32 ycopy;
     char ch;
+#if defined(MOD_KO)
+    s32 a;
+#endif
 
 #if defined(VERSION_US) || defined(VERSION_PSP)
     temp = D_8013784C;
@@ -986,8 +1035,14 @@ void MenuDrawStr(const char* str, s32 x, s32 y, MenuContext* ctx) {
                 x -= ChWidth;
             }
         }
+#if defined(MOD_KO)
+        a = KO_ADV_RAW(ch);
+        MenuDrawChar(ch, xcopy + (a ? 1 : 0), ycopy, ctx);
+        x += a ? a : ChWidth;
+#else
         MenuDrawChar(ch, xcopy, ycopy, ctx);
         x += ChWidth;
+#endif
     }
     D_80137614 = 1;
     func_800F53D4(0x1E, ctx->otIdx + 2);
@@ -995,20 +1050,37 @@ void MenuDrawStr(const char* str, s32 x, s32 y, MenuContext* ctx) {
 
 void MenuDrawInt(s32 number, s32 x, s32 y, MenuContext* ctx) {
     const s32 ChWidth = 8;
+#if defined(MOD_KO)
+    (void)ChWidth;
+#endif
     do {
+#if defined(MOD_KO)
+        /* digit: pitch 6, ink centred in it */
+        MenuDrawChar((number % 10) + CH('0'), x + ((8 - KO_ADV_RAW((number % 10) + CH('0'))) >> 1), y, ctx);
+        x -= KO_P;
+#else
         MenuDrawChar((number % 10) + CH('0'), x, y, ctx);
-        number /= 10;
         x -= ChWidth;
+#endif
+        number /= 10;
     } while (number != 0);
 }
 
 // Draw a number with a limit of N digits
 void MenuDrawTime(s32 number, s32 x, s32 y, MenuContext* ctx, s32 digits) {
     const s32 ChWidth = 8;
+#if defined(MOD_KO)
+    (void)ChWidth;
+#endif
     do {
+#if defined(MOD_KO)
+        MenuDrawChar((number % 10) + CH('0'), x + ((8 - KO_ADV_RAW((number % 10) + CH('0'))) >> 1), y, ctx);
+        x -= KO_P;
+#else
         MenuDrawChar((number % 10) + CH('0'), x, y, ctx);
-        number /= 10;
         x -= ChWidth;
+#endif
+        number /= 10;
         digits--;
     } while (digits != 0);
 }
@@ -1042,14 +1114,34 @@ void MenuJosephsCloakDraw(MenuContext* ctx) {
 #endif
 
     // 3 iterations, each iteration does Exterior and Lining for one letter
+#if defined(MOD_KO)
+    {
+        const char* kn[6];
+        s32 kx[6];
+        s32 ky[6];
+        for (i = 0; i < 3; i++) {
+            kn[i * 2] = ko_str20;
+            kn[i * 2 + 1] = ko_str21;
+            kx[i * 2] = x_Start;
+            kx[i * 2 + 1] = x_Start;
+            ky[i * 2] = 40 + (i * 12);
+            ky[i * 2 + 1] = 40 + (i * 12) + 36;
+        }
+        KO_EqSelDraw(kn, kx, ky, 6, menu);
+    }
+#endif
     for (i = 0; i < 3; i++) {
         s32 y = 40 + (i * 12);
+#if !defined(MOD_KO)
         // Write "Exterior"
         MenuDrawStr(g_MenuStr[20], x_Start, y, menu);
+#endif
         // Write R, G, or B
         MenuDrawChar(g_ChRgb[i], x_RGB, y, menu);
+#if !defined(MOD_KO)
         // Write "Lining"
         MenuDrawStr(g_MenuStr[21], x_Start, y + 36, menu);
+#endif
         // Write R, G, or B
         MenuDrawChar(g_ChRgb[i], x_RGB, y + 36, menu);
     }
@@ -1142,11 +1234,12 @@ void MenuTimeAttackDraw(MenuContext* ctx) {
 #ifdef VERSION_HD
             cursorX -= 100;
 #endif
+            /* KO_P = digit pitch (8 retail, 6 KO): ':' and the 2-digit groups stay contiguous */
             MenuDrawInt(seconds / 10000, cursorX + 268, cursorY, ctx);
-            MenuDrawChar(CH(':'), cursorX + 276, cursorY, ctx);
-            MenuDrawTime((seconds / 100) % 100, cursorX + 292, cursorY, ctx, 2);
-            MenuDrawChar(CH(':'), cursorX + 300, cursorY, ctx);
-            MenuDrawTime(seconds % 100, cursorX + 316, cursorY, ctx, 2);
+            MenuDrawChar(CH(':'), cursorX + 268 + KO_P + KO_CC(CH(':')), cursorY, ctx);
+            MenuDrawTime((seconds / 100) % 100, cursorX + 268 + 3 * KO_P, cursorY, ctx, 2);
+            MenuDrawChar(CH(':'), cursorX + 268 + 4 * KO_P + KO_CC(CH(':')), cursorY, ctx);
+            MenuDrawTime(seconds % 100, cursorX + 268 + 6 * KO_P, cursorY, ctx, 2);
         }
     }
 }
@@ -1173,8 +1266,30 @@ void MenuButtonConfigDraw(MenuContext* ctx) {
 #define XVAR cursorX
 #endif
 
+#if defined(MOD_KO)
+    {
+        const char* kn[8];
+        s32 kx[8];
+        s32 ky[8];
+        kn[0] = ko_str22;
+        kn[1] = ko_str23;
+        kn[2] = ko_str24;
+        kn[3] = ko_str25;
+        kn[4] = ko_str26;
+        kn[5] = ko_str27;
+        kn[6] = ko_str28;
+        kn[7] = ko_str37;
+        for (i = 0; i < MOD_BUTTON_ROWS(); i++) {
+            kx[i] = cursorX;
+            ky[i] = 0x30 + i * 16;
+        }
+        KO_EqSelDraw(kn, kx, ky, MOD_BUTTON_ROWS(), ctx);
+    }
+#endif
     for (i = 0, x = startX; i < MOD_BUTTON_ROWS(); i++) {
-#if defined(MOD_SATURN)
+#if defined(MOD_KO)
+        /* labels: KO_EqOvDraw above */
+#elif defined(MOD_SATURN)
         MenuDrawStr(i == 7 ? MOD_HOLDER_STR : g_MenuStr[i + 22], cursorX,
                     0x30 + i * 16, ctx);
 #else
@@ -1211,8 +1326,23 @@ void MenuReverseCloakDraw(MenuContext* ctx) {
     const int ImgW = 40;
 #endif
 
+#if defined(MOD_KO)
+    {
+        const char* kn[2];
+        s32 kx[2];
+        s32 ky[2];
+        kn[0] = ko_str30;
+        kn[1] = ko_str31;
+        kx[0] = StrX;
+        kx[1] = StrX;
+        ky[0] = 48;
+        ky[1] = 64;
+        KO_EqSelDraw(kn, kx, ky, 2, ctx);
+    }
+#else
     MenuDrawStr(g_MenuStr[30], StrX, 48, ctx);
     MenuDrawStr(g_MenuStr[31], StrX, 64, ctx);
+#endif
     func_800F5E68(
         ctx, g_Settings.isCloakLiningReversed, StrX - 2, 46, ImgW, 12, 4, 1);
 }
@@ -1230,8 +1360,23 @@ void MenuSoundConfigDraw(MenuContext* ctx) {
     return;
 #endif
 
+#if defined(MOD_KO)
+    {
+        const char* kn[2];
+        s32 kx[2];
+        s32 ky[2];
+        kn[0] = ko_str33;
+        kn[1] = ko_str34;
+        kx[0] = cursorX + 4;
+        kx[1] = cursorX + 4;
+        ky[0] = cursorY + 4;
+        ky[1] = cursorY + 20;
+        KO_EqSelDraw(kn, kx, ky, 2, ctx);
+    }
+#else
     MenuDrawStr(g_MenuStr[33], cursorX + 4, cursorY + 4, ctx);
     MenuDrawStr(g_MenuStr[34], cursorX + 4, cursorY + 20, ctx);
+#endif
     func_800F5E68(
         ctx, g_Settings.isSoundMono, cursorX + 2, cursorY + 2, ImgW, 12, 4, 1);
 }
@@ -1347,16 +1492,16 @@ void MenuDrawStats(s32 menuDialogue) {
             MenuDrawStr(g_MenuStr[0], 128, 40, ctx);
         }
         MenuDrawStr(g_MenuStr[12], 96, 56, ctx);
-        MenuDrawInt(g_Status.hp, 168, 56, ctx);
-        MenuDrawChar(CH('/'), 176, 56, ctx);
+        MenuDrawInt(g_Status.hp, 208 - 5 * KO_P, 56, ctx); /* KO: "/" flush left of the 4-digit max (retail 168/176/208) */
+        MenuDrawChar(CH('/'), 208 - 4 * KO_P + KO_CC(CH('/')), 56, ctx);
         MenuDrawInt(g_Status.hpMax, 208, 56, ctx);
         MenuDrawStr(g_MenuStr[13], 96, 68, ctx);
-        MenuDrawInt(g_Status.mp, 168, 68, ctx);
-        MenuDrawChar(CH('/'), 176, 68, ctx);
+        MenuDrawInt(g_Status.mp, 208 - 5 * KO_P, 68, ctx); /* KO: "/" flush left of the 4-digit max (retail 168/176/208) */
+        MenuDrawChar(CH('/'), 208 - 4 * KO_P + KO_CC(CH('/')), 68, ctx);
         MenuDrawInt(g_Status.mpMax, 208, 68, ctx);
         MenuDrawStr(g_MenuStr[14], 96, 80, ctx);
-        MenuDrawInt(g_Status.hearts, 168, 80, ctx);
-        MenuDrawChar(CH('/'), 176, 80, ctx);
+        MenuDrawInt(g_Status.hearts, 208 - 5 * KO_P, 80, ctx); /* KO: "/" flush left of the 4-digit max (retail 168/176/208) */
+        MenuDrawChar(CH('/'), 208 - 4 * KO_P + KO_CC(CH('/')), 80, ctx);
         MenuDrawInt(g_Status.heartsMax, 208, 80, ctx);
         MenuDrawStr(g_MenuStr[5], 32, 176, ctx);
         MenuDrawInt(g_Status.exp, 144, 176, ctx);
@@ -1402,10 +1547,10 @@ void MenuDrawStats(s32 menuDialogue) {
 #endif
         MenuDrawStr(g_MenuStr[9], x, 192, ctx);
         MenuDrawInt(g_Status.timerHours, x + 56, 192, ctx);
-        MenuDrawChar(CH(':'), x + 64, 192, ctx);
-        MenuDrawTime(g_Status.timerMinutes, x + 80, 192, ctx, 2);
-        MenuDrawChar(CH(':'), x + 88, 192, ctx);
-        MenuDrawTime(g_Status.timerSeconds, x + 104, 192, ctx, 2);
+        MenuDrawChar(CH(':'), x + 56 + KO_P + KO_CC(CH(':')), 192, ctx);
+        MenuDrawTime(g_Status.timerMinutes, x + 56 + 3 * KO_P, 192, ctx, 2);
+        MenuDrawChar(CH(':'), x + 56 + 4 * KO_P + KO_CC(CH(':')), 192, ctx);
+        MenuDrawTime(g_Status.timerSeconds, x + 56 + 6 * KO_P, 192, ctx, 2);
     }
 
     if (ctx == &g_Menus[MENU_DG_BG]) {
@@ -1442,12 +1587,54 @@ void MenuDrawStats(s32 menuDialogue) {
         y = 120;
     } else {
 #if defined(VERSION_US) && defined(MOD_SATURN)
+#if defined(MOD_KO)
+        /* trial25 (#CC-1 item 5): the #249 12px KO hand labels below sat in a
+         * dead #elif (MOD_SATURN takes this branch). Measured trial25 RAM:
+         * g_MenuStr[85]="Right hand", [86]="Left hand", [90]==[91]="Other",
+         * so the slot index (cursorEquip 0 = right, 1 = left) is the test,
+         * not the #249 pointer compare against [90]/[91] (that hit "Other").
+         * The holder slot and the other slots keep the Saturn path. */
+        if (g_MenuNavigation.cursorEquip == MOD_HOLDER_SLOT) {
+            func_800F66BC(KO_SHEET_HOLDER, 8, 40, ctx, true);
+        } else if (g_MenuNavigation.cursorEquip == 0) {
+            func_800F66BC(KO_SHEET_RIGHT, 8, 40, ctx, true);
+        } else if (g_MenuNavigation.cursorEquip == 1) {
+            func_800F66BC(KO_SHEET_LEFT, 8, 40, ctx, true);
+        } else if (g_MenuNavigation.cursorEquip == 2) {
+            func_800F66BC(KO_SHEET_HEAD, 8, 40, ctx, true);
+        } else if (g_MenuNavigation.cursorEquip == 3) {
+            func_800F66BC(KO_SHEET_BODY, 8, 40, ctx, true);
+        } else if (g_MenuNavigation.cursorEquip == 4) {
+            func_800F66BC(KO_SHEET_CLOAK, 8, 40, ctx, true);
+        } else if (g_MenuNavigation.cursorEquip == 5 ||
+                   g_MenuNavigation.cursorEquip == 6) {
+            func_800F66BC(KO_SHEET_OTHER, 8, 40, ctx, true);
+        } else {
+            MenuDrawStr(
+                g_MenuStr[g_MenuNavigation.cursorEquip + 85], 8, 40, ctx);
+        }
+#else
         MenuDrawStr(g_MenuNavigation.cursorEquip == MOD_HOLDER_SLOT
                         ? MOD_HOLDER_STR
                         : g_MenuStr[g_MenuNavigation.cursorEquip + 85],
                     8, 40, ctx);
+#endif
 #elif defined(VERSION_US)
+#if defined(MOD_KO)
+        /* #249: hand-slot headers as 12px KO sheet labels (MGalmuri12 1:1).
+         * Other slots keep the 8px English MenuDrawStr. */
+        if (g_MenuStr[g_MenuNavigation.cursorEquip + 85] == g_MenuStr[90]) {
+            func_800F66BC(KO_SHEET_RIGHT, 8, 40, ctx, true);
+        } else if (
+            g_MenuStr[g_MenuNavigation.cursorEquip + 85] == g_MenuStr[91]) {
+            func_800F66BC(KO_SHEET_LEFT, 8, 40, ctx, true);
+        } else {
+            MenuDrawStr(
+                g_MenuStr[g_MenuNavigation.cursorEquip + 85], 8, 40, ctx);
+        }
+#else
         MenuDrawStr(g_MenuStr[g_MenuNavigation.cursorEquip + 85], 8, 40, ctx);
+#endif
 #elif defined(VERSION_PSP)
         func_800F66BC(
             D_800A2D68[g_MenuNavigation.cursorEquip + 0x12], 15, 40, ctx, true);
@@ -1692,12 +1879,33 @@ void MenuSystemDraw(MenuContext* ctx) {
 #else
     const int Width = 80;
 #endif
+#if !defined(MOD_KO)
     s32 strIdx;
+#endif
     s32 y = 0x30;
 
     MOD_SYSOPT_BOX(ctx, g_MenuNavigation.cursorSettings, 30, 46, Width, 12, 4,
                    g_MenuStep == MENU_STEP_SYSTEM);
 
+#if defined(MOD_KO)
+    {
+        const char* kn[6];
+        s32 kx[6];
+        s32 ky[6];
+        s32 k;
+        kn[0] = ko_str16;
+        kn[1] = g_IsCloakLiningUnlocked ? ko_str17 : ko_str19;
+        kn[2] = g_IsCloakColorUnlocked ? ko_str18 : ko_str19;
+        kn[3] = ko_str35;
+        kn[4] = ko_str32;
+        kn[5] = g_GameClearFlag ? ko_str36 : ko_str19;
+        for (k = 0; k < 6; k++) {
+            kx[k] = 0x20;
+            ky[k] = y + k * 0x10;
+        }
+        KO_EqOvDraw(kn, kx, ky, 6, ctx);
+    }
+#else
     MenuDrawStr(g_MenuStr[16], 0x20, y, ctx);
     y += 0x10;
 
@@ -1719,6 +1927,7 @@ void MenuSystemDraw(MenuContext* ctx) {
 
     strIdx = g_GameClearFlag ? 36 : 19;
     MenuDrawStr(g_MenuStr[strIdx], 0x20, y, ctx);
+#endif
 }
 
 void func_800F84CC(void) {
@@ -1790,18 +1999,46 @@ void func_800F8754(MenuContext* ctx, s32 x, s32 y) {
     }
 
 #define MOD_HEAD_X(us, pt) (us)
+#if defined(MOD_KO)
+    // JP box (48 wide) + JP offsets by char count: 2-char rows +12
+    // (margins 12/12), 3-char rows +6 (6/6). Cursor/border/animation all
+    // follow ctx from g_MenuInit, so no other 76 needs changing.
+    func_800F66BC(KO_SHEET_EQUIP, x + 12, y, ctx, true);
+#else
     MenuDrawStr(g_MenuStr[93], x + MOD_HEAD_X(14, 14), y + 20, ctx);
+#endif
     if (D_801375E0[NUM_FAMILIARS] == 0) {
         D_8013784C = 1;
     } else {
         D_8013784C = 0;
     }
 
-    MenuDrawStr(g_MenuStr[96], x + MOD_HEAD_X(2, 10), y + 68, ctx);
+#if defined(MOD_KO)
+    // US MenuDrawImg swaps clut to 0x15E while D_8013784C == 1 (HD has no
+    // such override). With no familiar set above, row 2 got 0x15E *and* the
+    // no-spells shade below: double-darkened to invisible (trial12 capture).
+    // Zero it so the row dims to grey like row 5 when spells are unlearned.
     D_8013784C = 0;
+    func_800F66BC(KO_SHEET_SKILL, x + 12, y + 0x10, ctx, D_801375DC != 0);
+#else
+    MenuDrawStr(g_MenuStr[96], x + MOD_HEAD_X(2, 10), y + 68, ctx);
+#endif
+    D_8013784C = 0;
+#if defined(MOD_KO)
+    func_800F66BC(KO_SHEET_MAGIC, x + 6, y + 0x20, ctx, true);
+#else
     MenuDrawStr(g_MenuStr[92], x + MOD_HEAD_X(18, 10), y + 4, ctx);
+#endif
+#if defined(MOD_KO)
+    func_800F66BC(KO_SHEET_SYSTEM, x + 12, y + 0x30, ctx, true);
+#else
     MenuDrawStr(g_MenuStr[94], x + MOD_HEAD_X(14, 2), y + 36, ctx);
+#endif
+#if defined(MOD_KO)
+    func_800F66BC(KO_SHEET_FAMILIAR, x + 6, y + 0x40, ctx, D_801375E0[NUM_FAMILIARS] != 0);
+#else
     MenuDrawStr(g_MenuStr[95], x + MOD_HEAD_X(14, 10), y + 52, ctx);
+#endif
 }
 #elif defined(VERSION_PSP)
 void func_800F8754(MenuContext* ctx, s32 x, s32 y) {
@@ -1884,6 +2121,12 @@ void func_800F8990(MenuContext* ctx, s32 x, s32 y) {
     s32 icon;
     s32 palette;
     u8 equipId;
+#if defined(MOD_KO)
+    const char* koEqNames[KO_EQ_MAX_NAMES];
+    s32 koEqX[KO_EQ_MAX_NAMES];
+    s32 koEqY[KO_EQ_MAX_NAMES];
+    s32 koEqN;
+#endif
 
 #if defined(VERSION_PSP)
     DrawSync(0);
@@ -1893,6 +2136,9 @@ void func_800F8990(MenuContext* ctx, s32 x, s32 y) {
     equipsAmount = GetEquipCount(D_801375CC);
     nItems = func_800FD6C4(D_801375CC);
     curX = curY = 0;
+#if defined(MOD_KO)
+    koEqN = 0;
+#endif
     itemsPerPage = (ctx->cursorH / Height + 1) * Cols;
     for (i = 0; i < itemsPerPage; i++) {
         itemIndex = i + -ctx->h / Height * Cols;
@@ -1923,7 +2169,14 @@ void func_800F8990(MenuContext* ctx, s32 x, s32 y) {
 
         LoadEquipIcon(icon, palette, i);
         func_800F892C(i, myX - 16, myY - 4, ctx);
+#if defined(MOD_KO)
+        koEqNames[koEqN] = equipName;
+        koEqX[koEqN] = myX;
+        koEqY[koEqN] = myY;
+        koEqN++;
+#else
         MenuDrawStr(equipName, myX, myY, ctx);
+#endif
 
         if (D_801375CC == EQUIP_HAND && equipId != ITEM_EMPTY_HAND ||
             D_801375CC != EQUIP_HAND && equipId != ITEM_EMPTY_HEAD &&
@@ -1936,6 +2189,9 @@ void func_800F8990(MenuContext* ctx, s32 x, s32 y) {
     if (g_IsSelectingEquipment) {
         func_800F6508(ctx, curX, curY);
     }
+#if defined(MOD_KO)
+    KO_EqSelDraw(koEqNames, koEqX, koEqY, koEqN, ctx);
+#endif
 }
 
 void MenuDrawLine(s32 x0, s32 y0, s32 x1, s32 y1, s32 isColorStatic) {
@@ -2038,6 +2294,12 @@ void MenuDraw(void) {
     s32 flag;
     s32 i, j;
     s32 new_var2;
+#if defined(MOD_KO)
+    const char* koOvNames[8];
+    s32 koOvX[8];
+    s32 koOvY[8];
+    s32 koOvN;
+#endif
 
     for (i = 0; i < NUM_MENU; i++) {
         prim = &g_PrimBuf[D_801377FC[i]];
@@ -2178,23 +2440,47 @@ void MenuDraw(void) {
             break;
         case MENU_DG_EQUIP_OVERVIEW:
             MenuDrawStats(2);
+#if defined(MOD_KO)
+            koOvN = 0;
+#endif
             equipIndex = g_Status.equipment[LEFT_HAND_SLOT];
             equip = &g_EquipDefs[equipIndex];
+#if defined(MOD_KO)
+            koOvNames[koOvN] = equip->name;
+            koOvX[koOvN] = 112;
+            koOvY[koOvN] = 30;
+            koOvN++;
+#else
             MenuDrawStr(equip->name, 112, 30, menu);
+#endif
             DrawConsumableCount(equipIndex, LEFT_HAND_SLOT, menu);
             LoadEquipIcon(equip->icon, equip->iconPalette, 0x10);
 
             equipIndex = g_Status.equipment[RIGHT_HAND_SLOT];
             equip = &g_EquipDefs[equipIndex];
+#if defined(MOD_KO)
+            koOvNames[koOvN] = equip->name;
+            koOvX[koOvN] = 112;
+            koOvY[koOvN] = 30 + MOD_EQUIP_PITCH();
+            koOvN++;
+#else
             MenuDrawStr(equip->name, 112, 30 + MOD_EQUIP_PITCH(), menu);
+#endif
             DrawConsumableCount(equipIndex, RIGHT_HAND_SLOT, menu);
             flag = equip->itemCategory == 5;
             LoadEquipIcon(equip->icon, equip->iconPalette, 0x11);
 
             for (j = 0; j < 5; j++) {
                 acc = &g_AccessoryDefs[g_Status.equipment[j + 2]];
+#if defined(MOD_KO)
+                koOvNames[koOvN] = acc->name;
+                koOvX[koOvN] = 112;
+                koOvY[koOvN] = 30 + ModEquipRow(j + 2) * MOD_EQUIP_PITCH();
+                koOvN++;
+#else
                 MenuDrawStr(acc->name, 112,
                             30 + ModEquipRow(j + 2) * MOD_EQUIP_PITCH(), menu);
+#endif
                 LoadEquipIcon(acc->icon, acc->iconPalette, j + 0x12);
             }
 #if defined(MOD_SATURN)
@@ -2202,13 +2488,23 @@ void MenuDraw(void) {
             if (ModHolderOn()) {
                 equipIndex = ModHolderItem();
                 equip = &g_EquipDefs[equipIndex];
+#if defined(MOD_KO)
+                koOvNames[koOvN] = equip->name;
+                koOvX[koOvN] = 112;
+                koOvY[koOvN] = 30 + 2 * MOD_EQUIP_PITCH();
+                koOvN++;
+#else
                 MenuDrawStr(equip->name, 112, 30 + 2 * MOD_EQUIP_PITCH(), menu);
+#endif
                 DrawConsumableCount(equipIndex, 2, menu);
                 LoadEquipIcon(
                     equip->icon, equip->iconPalette, 0x10 + MOD_HOLDER_SLOT);
             }
 #endif
 
+#if defined(MOD_KO)
+            KO_EqOvDraw(koOvNames, koOvX, koOvY, koOvN, menu);
+#endif
             for (j = 0; j < MOD_EQUIP_ROWS(); j++) {
                 if ((j == 0 || j == 1) && flag) {
                     if (j == 0) {
@@ -2430,7 +2726,11 @@ void func_800F99B8(const char* str, u32 y, bool arg2) {
             ch16 = ch + 0x821F;
         } else if (ch == ' ') {
             ch16 = DOUBLE_SPACE;
+#if defined(MOD_KO)
+            var_s2 = 1;
+#else
             var_s2 = 2;
+#endif
         } else {
             // load ch16 as a big-endian value corresponding with shift-jis
             ch16 = ch << 8;
@@ -2440,7 +2740,11 @@ void func_800F99B8(const char* str, u32 y, bool arg2) {
             }
             if (ch16 == DOUBLE_SPACE) {
                 ch = ' ';
+#if defined(MOD_KO)
+                var_s2 = 1;
+#else
                 var_s2 = 2;
+#endif
             }
         }
         var_a2 = func_80106A28(ch16, 0);
@@ -3204,7 +3508,11 @@ s32 D_800A2DEC[] = {
 
 MenuContextInit g_MenuInit[NUM_MENU] = {
 #if defined(VERSION_US)
+#if defined(MOD_KO)
+    {172, 100, 48, 80, 0x40},  // MENU_DG_MAIN (JP box; sheet rows centered)
+#else
     {158, 100, 76, 80, 0x40},  // MENU_DG_MAIN
+#endif
     {0, 24, 360, 200, 0x10},   // MENU_DG_BG
     {0, 24, 360, 97, 0x20},    // MENU_DG_EQUIP_OVERVIEW
     {0, 120, 360, 74, 0x20},   // MENU_DG_EQUIP_SELECTOR
@@ -3261,10 +3569,17 @@ MenuContextInit g_MenuInit[NUM_MENU] = {
 };
 
 #if defined(VERSION_US)
+#if defined(MOD_KO)
+#define PAD_MENU_SELECT_ALT (PAD_CIRCLE)
+#define PAD_MENU_SELECT (PAD_MENU_SELECT_ALT | PAD_SQUARE)
+#define PAD_MENU_BACK (PAD_CROSS)
+#define PAD_MENU_SORT (PAD_TRIANGLE)
+#else
 #define PAD_MENU_SELECT_ALT (PAD_CROSS)
 #define PAD_MENU_SELECT (PAD_MENU_SELECT_ALT)
 #define PAD_MENU_BACK (PAD_TRIANGLE)
 #define PAD_MENU_SORT (PAD_SQUARE)
+#endif
 #elif defined(VERSION_PSP)
 #define PAD_MENU_SELECT_ALT (g_ConfirmButton)
 #define PAD_MENU_SELECT (PAD_MENU_SELECT_ALT | PAD_SQUARE)
@@ -3624,7 +3939,11 @@ block_4:
             func_800F6A48();
             func_800F84CC();
             SetFadeMode(FADE_FROM_BLACK);
-#if defined(VERSION_US)
+#if defined(VERSION_US) && defined(MOD_KO)
+            func_800F98AC(KO_SHEET_UPLOAD, 0);
+            func_800F98AC(KO_SHEET_UPLOAD2, 0x100);
+            KO_EqOnMenuEnter();
+#elif defined(VERSION_US)
             func_800F98AC(D_800A2D64, 0);
 #elif defined(VERSION_PSP)
             func_800F98AC(D_800A2D10, 0);
@@ -3809,6 +4128,9 @@ block_4:
                 func_800FADC0();
                 MenuShow(MENU_DG_EQUIP_SELECTOR);
                 MenuShow(MENU_DG_INFO_BAR);
+#if defined(MOD_KO)
+                KO_EqOnMenuEnter();
+#endif
                 g_MenuStep = MENU_STEP_EQUIP;
                 break;
             case 1:

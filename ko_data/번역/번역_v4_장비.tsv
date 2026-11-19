@@ -1,0 +1,643 @@
+키	분류	EN	번역	글자수(B)	폭한계	넘침여부	비고
+equipment.h:g_EquipDefs:0x000:name	장비	#h5bfb752d92	맨손	4		통과	신규 번역·DUB행 존재(런타임 EN 덮어씀)
+equipment.h:g_EquipDefs:0x000:desc	장비	#h7b3d21cb20	무기 없음. 맨손으로 공격한다	28	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x001:name	장비	#h0825c54329	캡슐 몬스터 1	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x001:desc	장비	#hbb3f7a8450	머맨 아군 소환 [사용]	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x002:name	장비	#he8d78933e2	캡슐 몬스터 2	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x002:desc	장비	#h903f488faf	박쥐 아군 소환 [사용]	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x003:name	장비	#h682d4ed17a	캡슐 몬스터 3	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x003:desc	장비	#h495aced3a9	스켈레톤 아군 소환 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x004:name	장비	#h554087a496	실드 로드	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x004:desc	장비	#h4d5c1dbc83	실드와 함께 쓰면 위력 증가	26	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x005:name	장비	#h9f2c2f14a1	레더 실드	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x005:desc	장비	#h36c6bf8c3f	가죽 실드. 방어 낮다	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x006:name	장비	#hd71b0b20dd	나이트 실드	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x006:desc	장비	#h535a714dbf	갑옷 기사의 실드	16	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x007:name	장비	#h0a1d439ab8	아이언 실드	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x007:desc	장비	#h9da24f09b7	단단한 철제 실드	16	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x008:name	장비	#hfc7ff1d97d	액스 아머의 방패	16		통과	신규 번역
+equipment.h:g_EquipDefs:0x008:desc	장비	#h56cdfa3c15	액스 로드 애용 실드	19	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x009:name	장비	#heda9a8190a	문장의 방패	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x009:desc	장비	#hdf993b1f69	하트 문장 새긴 실드	19	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x00A:name	장비	#h41c6633fa7	다크 실드	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x00A:desc	장비	#ha9625d7f15	어둠의 방패 건드리면 피해	16	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x00B:name	장비	#h334dbc35c5	여신의 방패	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x00B:desc	장비	#h92c0edb12b	여신상 새긴 실드	16	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x00C:name	장비	#hbe4dc78d53	샤먼의 방패	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x00C:desc	장비	#h15de72f1ee	마법 의식에 쓰는 실드	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x00D:name	장비	#he5117e2210	메디우사의 방패	15		통과	신규 번역
+equipment.h:g_EquipDefs:0x00D:desc	장비	#hd7173c08ab	고르곤 머리 달린 실드	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x00E:name	장비	#h588d956fca	해골의 방패	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x00E:desc	장비	#h8d0914b3be	기사 문장 새긴 실드	19	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x00F:name	장비	#h23b6636fb0	플레임 실드	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x00F:desc	장비	#ha25e910dee	불 속성 지닌 실드	17	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x010:name	장비	#h931870557b	알루카드 실드	13		통과	용어집 채택+신규 혼합
+equipment.h:g_EquipDefs:0x010:desc	장비	#h018ca984d5	모든 공격에 강하다	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x011:name	장비	#h5903af7339	여명의 검	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x011:desc	장비	#h944fb167a3	새벽의 전사 소환 [양손]	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x012:name	장비	#h263b4a4026	바젤라르드	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x012:desc	장비	#hb75c9bc01a	기본 숏 소드	12	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x013:name	장비	#h870b601d25	숏 소드	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x013:desc	장비	#h807c6879db	흔한 숏 소드	12	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x014:name	장비	#h7a6dbf14ae	컴뱃 나이프	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x014:desc	장비	#h99fcbf38ea	납작한 전투용 대거	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x015:name	장비	#hdc46d5cc85	톤파	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x015:desc	장비	#h04bd5b8d59	적을 두 번 공격한다 [양손]	26	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x016:name	장비	#hed5706c3b4	웨어 버스터	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x016:desc	장비	#h7be8c878a3	늑대인간류에 효과적이다	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x017:name	장비	#h6801548a26	레이피어	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x017:desc	장비	#h99f9fa237b	긴 날의 소드	12	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x018:name	장비	#h0d95da243e	봄버 코인	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x018:desc	장비	#haeca8562d9	두 가지 효과 지닌 동전 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x019:name	장비	#hdc2f718d57	매직 미사일	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x019:desc	장비	#hd8c2e00c04	마법 화살 발사 [사용]	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x01A:name	장비	#h7cd528b914	붉은 녹	7		통과	신규 번역
+equipment.h:g_EquipDefs:0x01A:desc	장비	#hdb29efa6dc	녹슨 붉은 소드 [양손]	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x01B:name	장비	#hf009cfba0a	타케미츠	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x01B:desc	장비	#hfd34f7298a	죽도 [양손]	11	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x01C:name	장비	#h3aff11a29c	쇼텔	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x01C:desc	장비	#h61137fc31b	아비시니아 곡도 소드	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x01D:name	장비	#h09fb6aaba7	귤	2		통과	신규 번역
+equipment.h:g_EquipDefs:0x01D:desc	장비	#h0b66b1f396	새콤달콤한 일본 귤. 체력 회복 [사용]	36	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x01E:name	장비	#h476432a3e8	사과	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x01E:desc	장비	#hb8b84edae6	아삭하고 맛있는 사과. 체력 회복 [사용]	38	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x01F:name	장비	#hfc6fae10db	바나나	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x01F:desc	장비	#h1a81896078	거의 썩었을 때 제맛. 체력 회복 [사용]	37	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x020:name	장비	#h0de4744826	포도	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x020:desc	장비	#hc51b52afa6	과즙 많은 씨 없는 포도. 체력 회복 [사용]	40	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x021:name	장비	#h393d46da84	딸기	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x021:desc	장비	#h2a7728dee7	잘 익은 붉은 딸기. 체력 회복 [사용]	35	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x022:name	장비	#h347aecd593	파인애플	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x022:desc	장비	#hfb056ae891	새콤한 남국 과일. 체력 회복 [사용]	34	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x023:name	장비	#h039109b059	피너츠	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x023:desc	장비	#h60a8f9a9ac	먹기 까다로운 열매. 체력 회복 [사용]	36	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x024:name	장비	#h6302fee615	붉은 광대버섯	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x024:desc	장비	#h0c1832cdf8	독버섯. 먹으면 위험하다 [사용]	30	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x025:name	장비	#hc82ef7ab9c	맛있는 버섯	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x025:desc	장비	#hbaf1d53d6c	향긋한 일본 버섯. 체력 회복 [사용]	34	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x026:name	장비	#hddcc27e711	치즈케이크	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x026:desc	장비	#h2beb46fa79	초코칩 박힌 쿠키. 체력 회복 [사용]	34	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x027:name	장비	#hf63c57f4bb	쇼트케이크	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x027:desc	장비	#h13f39a33a2	딸기 쇼트케이크. 체력 회복 [사용]	33	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x028:name	장비	#h2be24782a7	딸기 타르트	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x028:desc	장비	#h6c0a126b88	딸기 타르트. 체력 회복 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x029:name	장비	#h4b00c1bff3	파페	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x029:desc	장비	#heecd3bb4c8	생크림 듬뿍 케이크. 체력 회복 [사용]	36	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x02A:name	장비	#h558401d4c0	프린 아라모드	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x02A:desc	장비	#he2117a5c97	아이스크림 곁들인 후식. 체력 회복 [사용]	40	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x02B:name	장비	#h1242a215b0	아이스크림	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x02B:desc	장비	#h193b348564	3단 아이스크림. 체력 회복 [사용]	32	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x02C:name	장비	#h6cb68f819a	프랑크푸르트	12		통과	신규 번역
+equipment.h:g_EquipDefs:0x02C:desc	장비	#h3d46520cb3	현지 인기 간식. 체력 회복 [사용]	32	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x02D:name	장비	#h94c92dceff	햄버거	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x02D:desc	장비	#h7c020ca814	100% 미국산 A급. 체력 회복 [사용]	33	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x02E:name	장비	#h01eb73e0be	피자	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x02E:desc	장비	#h3d35d64d7d	뉴욕 스타일 치즈케이크. 체력 회복 [사용]	40	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x02F:name	장비	#hd48b39393f	치즈	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x02F:desc	장비	#ha394f825c2	맛있는 치즈. 체력 회복 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x030:name	장비	#hd7da91cf19	햄에그	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x030:desc	장비	#h883d831d5f	콜레스테롤 증가 주의. 체력 회복 [사용]	38	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x031:name	장비	#h132f706c45	미트 오믈렛	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x031:desc	장비	#ha90d14beb0	서양식 오믈렛. 체력 회복 [사용]	31	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x032:name	장비	#h7b0336b828	모닝세트	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x032:desc	장비	#h9860bab987	달걀 토스트 커피 정식. 체력 회복 [사용]	39	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x033:name	장비	#h86bd5e0836	A 런치	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x033:desc	장비	#he1ba1527c3	런치 세트 A. 체력 회복 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x034:name	장비	#h1b3bc3430a	B 런치	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x034:desc	장비	#h79ce1e756c	런치 세트 B. 체력 회복 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x035:name	장비	#hfab655a27d	카레라이스	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x035:desc	장비	#h7449a64310	코코넛 밀크 조리 요리. 체력 회복 [사용]	39	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x036:name	장비	#hcfa32da2b0	도리아	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x036:desc	장비	#h1d05d94482	감자튀김 곁들임. 체력 회복 [사용]	33	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x037:name	장비	#hfe78ea4011	스파게티	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x037:desc	장비	#h55b65f06e2	까르보나라 스파게티. 체력 회복 [사용]	37	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x038:name	장비	#h49d66822a4	와인	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x038:desc	장비	#h6627caa1b1	톡 쏘는 탄산 주스. 체력 회복 [사용]	35	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x039:name	장비	#hcd2696ae50	맥주	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x039:desc	장비	#h4ee1eaafe7	시원한 보리차. 체력 회복 [사용]	31	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x03A:name	장비	#he66502703b	술	2		통과	신규 번역
+equipment.h:g_EquipDefs:0x03A:desc	장비	#h268be67da7	일본 녹차. 체력 회복 [사용]	27	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x03B:name	장비	#h7843ee83d6	낫토	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x03B:desc	장비	#he148581754	냄새 강한 낫토. 체력 회복 [사용]	32	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x03C:name	장비	#ha742dcdcd0	라멘	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x03C:desc	장비	#h515c828386	중국식 라면. 체력 회복 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x03D:name	장비	#h44fa23b5a4	미소시루	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x03D:desc	장비	#h4abc312ae5	일본 미소된장국. 체력 회복 [사용]	33	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x03E:name	장비	#h25e2d66355	초밥	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x03E:desc	장비	#hd9c6d4a4aa	참치뱃살 새우 계란 초밥. 체력 회복 [사용]	41	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x03F:name	장비	#h6e3787a8b3	고기만두	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x03F:desc	장비	#he6550b66d6	중국식 고기만두. 체력 회복 [사용]	33	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x040:name	장비	#hefd5156413	팥 찐빵	7		통과	신규 번역
+equipment.h:g_EquipDefs:0x040:desc	장비	#h2c0aa91229	중국식 팥만두. 체력 회복 [사용]	31	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x041:name	장비	#h673b849557	딤섬	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x041:desc	장비	#hcd7f884018	야채 찐만두. 체력 회복 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x042:name	장비	#hd0e41dae79	딤섬세트	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x042:desc	장비	#hb3162145c0	딤섬 3종 모둠. 체력 회복 [사용]	31	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x043:name	장비	#h57a103eefc	맛있는 고기	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x043:desc	장비	#heab0fa421f	캐슬바니아식 포트 로스트. 체력 회복 [사용]	42	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x044:name	장비	#h9b6df9f90d	비프	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x044:desc	장비	#hdd97a19757	등심 스테이크. 체력 회복 [사용]	31	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x045:name	장비	#hd7153e6702	터키	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x045:desc	장비	#hd7e6674f98	로스트 터키. 체력 회복 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x046:name	장비	#hc1a2b9de9b	식권	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x046:desc	장비	#h17c0cb5a38	정체불명 식사권. 체력 회복 [사용]	33	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x047:name	장비	#h9062b066e0	뉴트론 폭탄	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x047:desc	장비	#ha6d409a10c	모든 적에 대미지 [사용]	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x048:name	장비	#h983aee5613	아버지의 위광	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x048:desc	장비	#ha6d409a10c	모든 적에 대미지 [사용]	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x049:name	장비	#h65d6c0ebf5	펜타그램	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x049:desc	장비	#ha6d409a10c	모든 적에 대미지 [사용]	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x04A:name	장비	#hc6ddca3fe2	배트 펜타그램	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x04A:desc	장비	#ha6d409a10c	모든 적에 대미지 [사용]	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x04B:name	장비	#heed1aa6ddd	수리검	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x04B:desc	장비	#h1aec19c631	일본 수리검 [사용]	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x04C:name	장비	#h638194b714	십자 수리검	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x04C:desc	장비	#hbad8993d64	강력한 수리검 [사용]	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x04D:name	장비	#hfbf181d08e	야규 수리검	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x04D:desc	장비	#h67ab26b21a	예리한 명인 수리검 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x04E:name	장비	#hb79fefe8b1	불꽃 수리검	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x04E:desc	장비	#h798a269dd8	불타는 수리검 [사용]	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x04F:name	장비	#hffd0260f2c	폭뢰	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x04F:desc	장비	#hc3112f0ce0	불기둥 생성 [사용]	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x050:name	장비	#h5c176b6ef9	브와카 나이프	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x050:desc	장비	#ha987e58f5e	브와카 투척 나이프 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x051:name	장비	#h694c6d32da	부메랑	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x051:desc	장비	#h9a0a8a8600	대공용 무기 [사용]	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x052:name	장비	#h64140760a9	재블린	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x052:desc	장비	#h15e523dae8	투척용 스피어 [사용]	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x053:name	장비	#h86f72f57a3	티르빙	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x053:desc	장비	#hb9ad7e8e88	저주받은 어둠 소드	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x054:name	장비	#hb0b7fbb737	나마쿠라	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x054:desc	장비	#h00cf1b521e	조잡하게 만든 검 [양손]	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x055:name	장비	#hb1c0d21b7a	너클 더스터	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x055:desc	장비	#hf18401aa98	철 못 박힌 너클	15	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x056:name	장비	#h93d8ffe134	글라디우스	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x056:desc	장비	#ha33585385f	고대 로마의 검	14	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x057:name	장비	#h54c9c63bbd	시미터	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x057:desc	장비	#hb591ea58f3	외날 곡검	9	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x058:name	장비	#haa5bd59e70	커틀러스	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x058:desc	장비	#hd071385b4b	영국 해군의 검	14	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x059:name	장비	#h22721acdde	세이버	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x059:desc	장비	#h17c620d022	경기병용 검	11	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x05A:name	장비	#h564dbe5d48	팰치온	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x05A:desc	장비	#h77cfd0aa42	노르만 곡검	11	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x05B:name	장비	#haccfc405cb	카츠발겔	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x05B:desc	장비	#hd98f2c669d	평범한 용병의 검	16	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x05C:name	장비	#h079df19233	베카토와	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x05C:desc	장비	#h19ad234b28	평범하고 다루기 쉬운 군용 검	28	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x05D:name	장비	#he1cefb9a34	다마스커스 소드	15		통과	신규 번역
+equipment.h:g_EquipDefs:0x05D:desc	장비	#he8d19798bb	면도날처럼 날카롭게 간 검	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x05E:name	장비	#h924fc69d48	자드프라테	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x05E:desc	장비	#hd11f29b588	상아 자루 사냥검	16	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x05F:name	장비	#hf52dcfa31c	에스토크	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x05F:desc	장비	#he450b5524b	독일식 찌르기 검 [양손]	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x060:name	장비	#h7db37e9fe3	버스터드 소드	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x060:desc	장비	#hbf65496b75	표준 검	7	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x061:name	장비	#hcaa147f12b	다이아 너클	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x061:desc	장비	#h14dcdd504a	보석 박힌 너클	14	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x062:name	장비	#hf29519e2d3	클레이모어	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x062:desc	장비	#hc75d5d5982	스코틀랜드 양손검	17	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x063:name	장비	#h959dfc81ab	탈와르	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x063:desc	장비	#h106266a33f	인도식 곡검	11	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x064:name	장비	#h913305b0b0	카타나	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x064:desc	장비	#h1dd8ff2692	무명 카타나 [양손]	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x065:name	장비	#hcd872a950b	플람베르주	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x065:desc	장비	#hc6563eb23a	불꽃날 검 [양손]	16	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x066:name	장비	#ha8f79f3f03	카이저 너클	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x066:desc	장비	#he59687dcd0	가라테 고수가 쓰던 것	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x067:name	장비	#h54bcf512be	츠바이핸더	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x067:desc	장비	#h858c1e532e	독일식 양손검	13	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x068:name	장비	#h9469d29144	헬게의 검	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x068:desc	장비	#h0f16b9a944	하도르 가문의 가보	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x069:name	장비	#he7439bcca6	오르크리스트	12		통과	신규 번역
+equipment.h:g_EquipDefs:0x069:desc	장비	#h349bceb69f	엘프가 벼린 검	14	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x06A:name	장비	#hca23b48186	하퍼	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x06A:desc	장비	#h898280fea1	하퍼라는 이름의 검	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x06B:name	장비	#hd5c5525eda	흑요석의 검	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x06B:desc	장비	#he7a54e19f5	양손 흑요석 검	14	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x06C:name	장비	#h33d7fcc0b1	명도 그람	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x06C:desc	장비	#hbf8b428f0c	그람이라는 이름의 검	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x06D:name	장비	#h2c5e6de16d	주얼 소드	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x06D:desc	장비	#h77816a37aa	적을 보석으로 바꾼다	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x06E:name	장비	#h072f3feefe	홀리 버스터	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x06E:desc	장비	#h95726bb7e1	흑검, 신성에 강하다	19	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x06F:name	장비	#h7a3e5d72ce	아그니의 불꽃검	15		통과	신규 번역
+equipment.h:g_EquipDefs:0x06F:desc	장비	#h2241cc3085	오베론의 불 검	14	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x070:name	장비	#h801f50e4a1	인드라의 번개검	15		통과	신규 번역
+equipment.h:g_EquipDefs:0x070:desc	장비	#h3c4bf6d013	인드라의 번개 검	16	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x071:name	장비	#hbc74a6d865	라하브의 얼음검	15		통과	신규 번역
+equipment.h:g_EquipDefs:0x071:desc	장비	#h96c040a699	밈의 얼음 검	12	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x072:name	장비	#h7a3c881084	밀리칸의 돌칼	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x072:desc	장비	#h2ad7dfeb66	적을 석화시킨다	15	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x073:name	장비	#h98a4ca5fe9	홀리 소드	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x073:desc	장비	#hb0b5945fe3	십자 손잡이, 언데드에 강하다	28	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x074:name	장비	#h69645acfe3	프룬팅	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x074:desc	장비	#h80118108d3	독 바른 처형인의 검	19	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x075:name	장비	#h62b44f2280	레바테인	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x075:desc	장비	#h6f5e861f33	강력한 불꽃 검	14	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x076:name	장비	#he53902e7ed	그람드링	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x076:desc	장비	#h349bceb69f	엘프가 벼린 검	14	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x077:name	장비	#hd332a52d52	헤븐즈 소드	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x077:desc	장비	#h3738abed94	마법으로 떠다니는 검	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x078:name	장비	#hfd7f7b1759	오리하르콘	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x078:desc	장비	#hfff6364c55	발라 툴카스의 축복을 받았다	27	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x079:name	장비	#ha5072f5242	다인슬레이프	12		통과	신규 번역
+equipment.h:g_EquipDefs:0x079:desc	장비	#h4cca168950	피에 젖으면 강해진다	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x07A:name	장비	#h75289e4bcb	몬블레이드	10		통과	신규 번역
+equipment.h:g_EquipDefs:0x07A:desc	장비	#h74536fc000	적의 영혼을 먹는다	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x07B:name	장비	#hd3a85e05cc	알루카드 소드	13		통과	용어집 채택+신규 혼합
+equipment.h:g_EquipDefs:0x07B:desc	장비	#h03bd326779	어머니 가문의 가보	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x07C:name	장비	#h16135a5ee2	렘리아 소드	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x07C:desc	장비	#hb42282eabf	정령검, 방어력이 오른다	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x07D:name	장비	#h95514fa7d1	발자이의 언월도	15		통과	신규 번역
+equipment.h:g_EquipDefs:0x07D:desc	장비	#h8cbfd19433	플레이 시간에 따라 강해진다	27	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x07E:name	장비	#hdd6b039ee3	사역마의 검	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x07E:desc	장비	#hf59eff4655	의식을 가진 검 사역마	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x07F:name	장비	#h2dd98c6596	그레이트 소드	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x07F:desc	장비	#hd50f1867f0	오벡의 대검 [양손]	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x080:name	장비	#hb2efd3606c	메이스	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x080:desc	장비	#h4107ef06a8	쇠 몽둥이	9	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x081:name	장비	#h919fdff672	모닝스타	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x081:desc	장비	#h21790665fa	가시 박힌 쇠 방망이	19	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x082:name	장비	#h6645908fdd	홀리 로드	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x082:desc	장비	#h56d8108717	성별받은 봉	11	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x083:name	장비	#h820ab9239b	스타 프레일	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x083:desc	장비	#hd38aee45bf	가시 철구 달린 철퇴	19	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x084:name	장비	#h930fedea11	문 로드	7		통과	신규 번역
+equipment.h:g_EquipDefs:0x084:desc	장비	#h70aba0a637	달 무늬 새긴 봉	15	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x085:name	장비	#ha101133925	차크람	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x085:desc	장비	#h1a26a5e2eb	시크족 강철 투척 링	19	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x086:name	장비	#h08961b9344	불꽃의 부메랑	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x086:desc	장비	#h53444934ef	불타는 부메랑 [사용]	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x087:name	장비	#h23d6805c52	철구	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x087:desc	장비	#hd976afffd6	갑주 영주의 철구 [사용]	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x088:name	장비	#ha80bb9dfb0	속공의 단도	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x088:desc	장비	#h9776f5e0f5	빠르게 위 대각선으로 공격한다	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x089:name	장비	#h50a458a9c7	블루 너클	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x089:desc	장비	#h70ff4a3f08	어퍼컷용 너클	13	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x08A:name	장비	#hc95c763c47	다이너마이트	12		통과	신규 번역
+equipment.h:g_EquipDefs:0x08A:desc	장비	#he0d4d2e6a6	강력하다! 조심한다 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x08B:name	장비	#hb53f4e41f4	비젠 오사후네	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x08B:desc	장비	#h0a4a89b58e	오사후네 카타나 [양손]	22	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x08C:name	장비	#h5c6aab429b	마사무네	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x08C:desc	장비	#hdee9d78089	전설의 마사무네 카타나 [양손]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x08D:name	장비	#h04ea2f250c	요도 무라마사	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x08D:desc	장비	#h024e4b3f61	피에 굶주린 검 [양손]	21	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x08E:name	장비	#he9e13729b7	하트 리페어	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x08E:desc	장비	#h4bc7e08ff2	하트 500 회복한다 [사용]	24	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x08F:name	장비	#h3fd163fdf9	헤븐즈 룬	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x08F:desc	장비	#h66d90efe14	룬 새긴 비행 검	15	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x090:name	장비	#h420e0c899e	세럼	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x090:desc	장비	#h89a3656531	독을 치료한다 [사용]	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x091:name	장비	#had3fd8ec12	언커스	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x091:desc	장비	#ha4f7b75ebe	저주를 푼다 [사용]	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x092:name	장비	#h87817fa19b	생명의 영약	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x092:desc	장비	#h008ec1216d	회복한다 [사역마 전용]	22	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x093:name	장비	#hab7b8ea47e	해머	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x093:desc	장비	#ha01d0ce95b	석화를 푼다 [사역마 전용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x094:name	장비	#hdf812f50d0	힘의 약	7		통과	신규 번역
+equipment.h:g_EquipDefs:0x094:desc	장비	#h5edec33940	일시적으로 힘을 올린다 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x095:name	장비	#h8ff92fb33a	러키 드러그	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x095:desc	장비	#h9ce9835b6b	일시적으로 행운을 올린다 [사용]	31	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x096:name	장비	#h4d26057a04	지력의 약	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x096:desc	장비	#h0576b55c2f	일시적으로 지능을 올린다 [사용]	31	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x097:name	장비	#h97dafdabf3	공격 포션	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x097:desc	장비	#h71668cfc6d	일시적으로 공격력을 올린다 [사용]	33	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x098:name	장비	#h8b24e8a88c	실드 포션	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x098:desc	장비	#hf38f0a6db1	일시적으로 방어력을 올린다 [사용]	33	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x099:name	장비	#hb499eb2bb7	레지스트 파이어	15		통과	신규 번역
+equipment.h:g_EquipDefs:0x099:desc	장비	#hfc768d6743	잠시 불 내성을 얻는다 [사용]	28	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x09A:name	장비	#h461fc236e6	레지스트 선더	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x09A:desc	장비	#hb702daee7b	번개 내성을 얻는다 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x09B:name	장비	#heeefb4085c	레지스트 아이스	15		통과	신규 번역
+equipment.h:g_EquipDefs:0x09B:desc	장비	#hb4505592f8	잠시 얼음 내성을 얻는다 [사용]	30	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x09C:name	장비	#hccb940c1f7	레지스트 스톤	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x09C:desc	장비	#h22d768bc85	석화 내성을 얻는다 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x09D:name	장비	#h42a6b29d87	레지스트 홀리	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x09D:desc	장비	#he79cdbb3a0	신성 내성을 얻는다 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x09E:name	장비	#hd3d77744a3	레지스트 다크	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x09E:desc	장비	#hc0c5609cbf	어둠 내성을 얻는다 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x09F:name	장비	#h5f4632af95	포션	4		통과	신규 번역
+equipment.h:g_EquipDefs:0x09F:desc	장비	#hd6f6ad2075	HP를 조금 회복한다 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A0:name	장비	#h2dfe7682a3	하이 포션	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x0A0:desc	장비	#h8477a6ecc5	HP 절반가량을 회복한다 [사용]	29	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A1:name	장비	#hc0c7bf1430	엑스 포션	9		통과	신규 번역
+equipment.h:g_EquipDefs:0x0A1:desc	장비	#h17dbae35f1	HP를 전부 회복한다 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A2:name	장비	#he55d2a8eac	만나 프리즘	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x0A2:desc	장비	#hbc03c0d60c	MP를 전부 회복한다 [사용]	25	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A3:name	장비	#h1053404e33	소닉 블레이드	13		통과	신규 번역
+equipment.h:g_EquipDefs:0x0A3:desc	장비	#h1b74fbb4ad	적을 깨끗이 베어낸다	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A4:name	장비	#h7d5a36d72e	발만웨	6		통과	신규 번역
+equipment.h:g_EquipDefs:0x0A4:desc	장비	#h74ce88ef46	수많은 칼날이 적을 썬다	23	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A5:name	장비	#hb7b68ce373	야스쓰나	8		통과	신규 번역
+equipment.h:g_EquipDefs:0x0A5:desc	장비	#ha9495c504b	야스쓰나 카타나 [양손]	22	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A6:name	장비	#h0809affbf1	매지컬 티켓	11		통과	신규 번역
+equipment.h:g_EquipDefs:0x0A6:desc	장비	#ha72d6836ed	마법 도서카드 [사용]	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A7:name	장비	#hd82680a70c	알루카트 실드	13		통과	용어집 채택+신규 혼합
+equipment.h:g_EquipDefs:0x0A7:desc	장비	#h8e56e4ec26	가문의 실드를 닮았다	20	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A8:name	장비	#h85cef97ccc	알루카트 소드	13		통과	용어집 채택+신규 혼합
+equipment.h:g_EquipDefs:0x0A8:desc	장비	#hcbf318199d	가문의 검을 닮았다	18	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x0A9:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0A9:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AA:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AA:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AB:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AB:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AC:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AC:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AD:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AD:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AE:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AE:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AF:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0AF:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B0:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B0:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B1:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B1:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B2:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B2:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B3:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B3:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B4:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B4:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B5:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B5:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B6:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B6:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B7:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B7:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B8:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B8:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B9:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0B9:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BA:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BA:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BB:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BB:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BC:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BC:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BD:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BD:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BE:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BE:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BF:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0BF:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C0:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C0:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C1:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C1:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C2:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C2:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C3:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C3:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C4:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C4:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C5:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C5:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C6:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C6:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C7:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C7:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C8:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C8:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C9:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0C9:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CA:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CA:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CB:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CB:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CC:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CC:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CD:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CD:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CE:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CE:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CF:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0CF:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D0:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D0:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D1:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D1:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D2:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D2:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D3:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D3:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D4:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D4:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D5:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D5:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D6:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D6:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D7:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D7:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D8:name	장비			0		통과	unused(원문 빈 문자열)
+equipment.h:g_EquipDefs:0x0D8:desc	장비			0		통과	unused(원문 빈 문자열)
+accessories.h:g_AccessoryDefs:0x00:name	장비	#haf8207aece	----	4		통과	신규 번역·DUB행 존재(런타임 EN 덮어씀)
+accessories.h:g_AccessoryDefs:0x00:desc	장비	#h1144212817	장착 해제한다	13	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x01:name	장비	#h659220ef38	천 옷	5		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x01:desc	장비	#hd74f0745f6	소박한 천 튜닉	14	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x02:name	장비	#ha056d72488	가죽 흉갑	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x02:desc	장비	#h562e63b2a0	무두질 가죽 흉갑	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x03:name	장비	#h887e612d66	청동 흉갑	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x03:desc	장비	#h887e612d66	청동 흉갑	9	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x04:name	장비	#h2f25e93b98	철 흉갑	7		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x04:desc	장비	#h2f25e93b98	철 흉갑	7	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x05:name	장비	#hb05963d19d	강철 흉갑	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x05:desc	장비	#hb05963d19d	강철 흉갑	9	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x06:name	장비	#h7e8072358a	실버 체스트	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x06:desc	장비	#hb8e89e9425	은 흉갑	7	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x07:name	장비	#h964bf87741	골드 체스트	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x07:desc	장비	#h84c7ea8cbd	금 흉갑	7	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x08:name	장비	#h078f48b6c5	플래티나 체스트	15		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x08:desc	장비	#h1213767f46	백금 흉갑	9	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x09:name	장비	#h785100be3a	다이아 브레스트	15		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x09:desc	장비	#h185c336c22	다이아몬드 흉갑	15	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0A:name	장비	#h6252853c9b	불꽃 흉갑	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0A:desc	장비	#hcec31c58f4	불 공격에 강하다	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0B:name	장비	#hd279fce5fe	번개 흉갑	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0B:desc	장비	#h20eae40fac	번개 공격에 강하다	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0C:name	장비	#he42fe61667	얼음 흉갑	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0C:desc	장비	#hc9300e8fda	얼음 공격에 강하다	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0D:name	장비	#h76a5df676f	미러 퀴라스	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0D:desc	장비	#h559375ef1d	석화 방지 광택 갑옷	19	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0E:name	장비	#h1a1417e731	스파이크 브레이커	17		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0E:desc	장비	#h5db996d2e3	가시를 막는 갑옷	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x0F:name	장비	#hb089a79d3d	알루카드 메일	13		통과	용어집 채택+신규 혼합
+accessories.h:g_AccessoryDefs:0x0F:desc	장비	#h794bd6f3ac	불, 번개, 얼음에 내성을 가진다	30	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x10:name	장비	#h605c86505f	사악한 흉갑	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x10:desc	장비	#h882dbdf4a7	사악한 공격에 무효하다	22	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x11:name	장비	#h6be43ab0a3	힐링 메일	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x11:desc	장비	#hd30fc035e8	걸으면 HP가 회복된다	20	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x12:name	장비	#h16e6682a21	성스러운 흉갑	13		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x12:desc	장비	#hce09677c29	신성 공격에 강하다	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x13:name	장비	#h497c241958	워크 마스터	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x13:desc	장비	#hd532601955	지도 달성률에 따라 방어력이 오른다	34	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x14:name	장비	#hf68eb1498a	빛의 흉갑	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x14:desc	장비	#hf34c1e1f04	서브웨폰 위력을 강화한다	24	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x15:name	장비	#h1c633ec4a4	어둠의 흉갑	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x15:desc	장비	#h1900586d86	마법 공격력을 강화한다	22	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x16:name	장비	#hd674abb624	분노의 흉갑	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x16:desc	장비	#h8b4dcfe119	대미지를 받으면 방어력이 오른다	31	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x17:name	장비	#hbdc5ed459c	드라큘라의 옷	13		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x17:desc	장비	#h87981ea167	자수 놓은 귀족 튜닉	19	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x18:name	장비	#h8e2e9c32ec	가브 오브 갓	12		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x18:desc	장비	#h3059add990	모든 갑옷 중 최강이다	21	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x19:name	장비	#h90a6ab75d3	액스 아머의 갑옷	16		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x19:desc	장비	#h366896563f	착용자는 액스나이트가 된다	26	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1A:name	장비	#haf8207aece	----	4		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1A:desc	장비	#h1144212817	장착 해제한다	13	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1B:name	장비	#h849f3f7898	안경	4		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1B:desc	장비	#h5ebcccfc06	멋진 선글라스	13	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1C:name	장비	#h119810203f	댄스의 마스크	13		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1C:desc	장비	#hd864aebbcb	무도회용 가면	13	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1D:name	장비	#h748263306d	반다나	6		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1D:desc	장비	#hace1e73fb6	머리 약점을 보호한다	20	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1E:name	장비	#h0a6ab30110	펠트 모자	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1E:desc	장비	#h0a6ab30110	펠트 모자	9	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1F:name	장비	#h29a654e111	벨벳 모자	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x1F:desc	장비	#h29a654e111	벨벳 모자	9	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x20:name	장비	#h0b34f86f6a	고글	4		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x20:desc	장비	#ha2f0856361	편안한 눈 보호구	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x21:name	장비	#hf14e06d6e0	가죽 모자	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x21:desc	장비	#h5c4c70f82e	무두질 가죽 모자	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x22:name	장비	#h5c2d6c7989	성스러운 안경	13		통과	용어집 채택+신규 혼합
+accessories.h:g_AccessoryDefs:0x22:desc	장비	#h87864238fe	마법 저주를 꿰뚫어본다	22	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x23:name	장비	#hcd2cd56f87	나그네 모자	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x23:desc	장비	#h39fea45916	표준 모험가 투구	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x24:name	장비	#hbf7921e455	돌 가면	7		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x24:desc	장비	#h57721d9b54	고대 의식용 석면	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x25:name	장비	#hc3d314b05d	서클릿	6		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x25:desc	장비	#hc3d314b05d	서클릿	6	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x26:name	장비	#h04d3f78e92	은 서클릿	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x26:desc	장비	#h61db0d9627	신성 대미지로 HP를 회복한다	27	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x27:name	장비	#h646d7507ef	홍옥 서클릿	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x27:desc	장비	#h4165d8c5de	불 대미지로 HP를 회복한다	25	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x28:name	장비	#h2adab6fc7e	청옥 서클릿	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x28:desc	장비	#hf2c9b522a6	얼음 대미지로 HP를 회복한다	27	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x29:name	장비	#h1e3d1fe9c6	황옥 서클릿	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x29:desc	장비	#ha7fde07371	독 대미지로 HP를 회복한다	25	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2A:name	장비	#h6ea8aa3c5c	녹주석 서클릿	13		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2A:desc	장비	#h994b2b136d	번개 대미지로 HP를 회복한다	27	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2B:name	장비	#h10e3a4f652	묘안석 서클릿	13		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2B:desc	장비	#h72cdc83652	고양이 대미지로 HP를 크게 회복한다	34	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2C:name	장비	#hf015a31769	산호 서클릿	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2C:desc	장비	#hb785b8a3e9	저주를 무효한다	15	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2D:name	장비	#h5bfd3e2bca	에길의 투구	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2D:desc	장비	#hea3caa5b02	적을 놀라게 해 방어력을 낮춘다	30	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2E:name	장비	#h9beb3140f8	실버 티아라	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2E:desc	장비	#h1b51a15116	지능이 증가한다	15	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2F:name	장비	#ha73f2e845a	챙 넓은 모자	12		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x2F:desc	장비	#h1590ff2597	보호용 챙 넓은 모자	19	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x30:name	장비	#haf8207aece	----	4		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x30:desc	장비	#h1144212817	장착 해제한다	13	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x31:name	장비	#hef5c06cb71	천 망토	7		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x31:desc	장비	#h18b558f4b0	잘 만들었지만 초라해 보인다	27	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x32:name	장비	#hdbae16de07	리버시블 망토	13		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x32:desc	장비	#h6c48fec2b8	뒤집어쓰는 양면 클로크	22	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x33:name	장비	#h0c7d640b48	엘프의 로브	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x33:desc	장비	#h4afc9f1443	숲 위장에 딱 맞는다	19	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x34:name	장비	#hceb26bd65a	인비저블	8		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x34:desc	장비	#h96e58306d1	마법 반투명 클로크	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x35:name	장비	#h13967c00dd	블루 망토	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x35:desc	장비	#hc69c1f874a	화려한 파란 클로크	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x36:name	장비	#hc38b54ba01	피로 물든 망토	14		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x36:desc	장비	#hd0706caabd	대미지를 하트로 바꾼다	22	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x37:name	장비	#h96da2923a5	오더메이드	10		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x37:desc	장비	#hb1dd757325	색을 고른다 [시스템 메뉴]	25	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x38:name	장비	#h1b800e307d	칠흑의 망토	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x38:desc	장비	#h81287ed6af	뱀파이어용 검은 클로크	22	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x39:name	장비	#haf8207aece	----	4		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x39:desc	장비	#h1144212817	장착 해제한다	13	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3A:name	장비	#h2aac3a6051	문스톤	6		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3A:desc	장비	#h66c8e61a93	일몰 후 능력이 오른다	21	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3B:name	장비	#hac9974d222	선스톤	6		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3B:desc	장비	#h2a3c74b5ca	일출 후 능력이 오른다	21	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3C:name	장비	#h88965693d2	블러드스톤	10		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3C:desc	장비	#h33b5f0cb41	피 회복 능력을 강화한다	23	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3D:name	장비	#h2000cedb4d	스타우로라이트	14		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3D:desc	장비	#hb936f9a5d5	십자가 위력을 강화한다	22	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3E:name	장비	#h2b9a21aeb7	펄의 반지	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3E:desc	장비	#hf007eeff5e	신성한 힘 깃든 링	17	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3F:name	장비	#h814889f831	지르콘	6		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x3F:desc	장비	#hcc8082aab9	반짝이는 링 [판매용]	20	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x40:name	장비	#h73deb2e525	아쿠아마린	10		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x40:desc	장비	#h1f2ba5972b	꽤 귀한 링 [판매용]	19	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x41:name	장비	#hf7492a41e8	터콰이즈	8		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x41:desc	장비	#h1f2ba5972b	꽤 귀한 링 [판매용]	19	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x42:name	장비	#h67e5c74226	오닉스	6		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x42:desc	장비	#hf6f2dd1b63	귀한 링 [판매용]	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x43:name	장비	#h554537bc03	가넷	4		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x43:desc	장비	#hf6f2dd1b63	귀한 링 [판매용]	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x44:name	장비	#h13dc0b6401	오팔	4		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x44:desc	장비	#hf6f2dd1b63	귀한 링 [판매용]	16	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x45:name	장비	#hb3850e04b5	다이아몬드	10		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x45:desc	장비	#hdf1a52cc0e	매우 귀한 링 [판매용]	21	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x46:name	장비	#heef18c5eb3	라피스 라즈리	13		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x46:desc	장비	#hfa8238699c	행운을 부르는 보석	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x47:name	장비	#hf9b8d61262	라우린의 반지	13		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x47:desc	장비	#h9f2577ad4c	24인분의 힘을 준다	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x48:name	장비	#h885e65033c	금 반지	7		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x48:desc	장비	#h69262773c6	새김말 "..착용..시계.."	23	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x49:name	장비	#ha95e7e23f1	은 반지	7		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x49:desc	장비	#hd8e3f66596	새김말 "..탑..안.."	19	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4A:name	장비	#h5e85f7fdf6	해골 반지	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4A:desc	장비	#h7be4d01b68	모두를 다스리는 황금 링!	24	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4B:name	장비	#hdd0885420d	레어 링	7		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4B:desc	장비	#hfd34414a9b	희귀 아이템 출현이 증가한다	27	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4C:name	장비	#hd464ce11eb	펜던트	6		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4C:desc	장비	#hd4b3b539d6	MP 회복 속도가 증가한다	23	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4D:name	장비	#hc111100a97	하트 브로치	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4D:desc	장비	#hc262f27a16	하트 소모를 줄인다	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4E:name	장비	#hf851d5efcd	네클리스	8		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4E:desc	장비	#h5c75842384	방어력+5	8	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4F:name	장비	#hcea14ea3bb	건틀릿	6		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x4F:desc	장비	#h87329ef063	공격력+5	8	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x50:name	장비	#h0d5d7a0cb5	축복의 앙크	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x50:desc	장비	#h017ea443cd	회복 아이템 효능을 높인다	25	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x51:name	장비	#he850d2282e	마스터 링	9		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x51:desc	장비	#h909a8cbf73	전체 힘이 증가한다	18	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x52:name	장비	#h903467a99f	메달	4		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x52:desc	장비	#hdc9f147115	방어력+1 공격력+1	17	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x53:name	장비	#hd134015c52	탤리스먼	8		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x53:desc	장비	#he2c8e2ba2c	받은 대미지를 흡수한다	22	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x54:name	장비	#h0094e8bf62	듀플리케이터	12		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x54:desc	장비	#h72187e4e9c	[사용] 아이템을 복제한다	24	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x55:name	장비	#h9b6f78acee	킹 스톤	7		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x55:desc	장비	#hc6cef0e7d2	보석 버클 힘+10	15	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x56:name	장비	#h167d3b80c0	메깅요르즈	10		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x56:desc	장비	#hb50d2c98f8	보석 버클 힘+15	15	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x57:name	장비	#h2fe8c6882a	브리싱가멘	10		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x57:desc	장비	#h7ab6c193ce	드워프 목걸이 방어력+15	23	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x58:name	장비	#h44b0e7b0d2	시크릿 부츠	11		통과	신규 번역
+accessories.h:g_AccessoryDefs:0x58:desc	장비	#h530967709d	몰래 키가 커진다!	17	144	통과	신규 번역
+accessories.h:g_AccessoryDefs:0x59:name	장비	#h03288bf9d7	알루카트 메일	13		통과	용어집 채택+신규 혼합
+accessories.h:g_AccessoryDefs:0x59:desc	장비	#hea3c99c8c9	불, 번개, 얼음에 내성?	22	144	통과	신규 번역·원문 "?"(불확실)
+equipment_mod.h:g_EquipDefs:0x0A9:name	장비	#hd04059ddbf	스멜리 라이스	13		통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0A9:desc	장비	#hdf0944efc9	유통기한이 지났다 [사용]	24	144	통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AA:name	장비	#h459a191b48	딜리셔스 밀	11		통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AA:desc	장비	#hb3a9905076	별 다섯 코스요리 [사용]	23	144	통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AB:name	장비	#hdb38749e7f	사인드 보드	11		통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AB:desc	장비	#hf9579693a8	받았다!!	8	144	통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AC:name	장비	#h59cfc52117	알루카드 스피어	15		통과	용어집 채택+신규 혼합
+equipment_mod.h:g_EquipDefs:0x0AC:desc	장비	#h634f30e63f	그가 아끼던 마창	16	144	통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AD:name	장비	#h902dd83cee	우드랜드 실드	13		통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AD:desc	장비	#hf49ac65efb	나무 정령 실드, 장미향	22	144	통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AE:name	장비	#he4d50da1ec	아스트랄 대거	13		통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AE:desc	장비	#haa9c26401f	수수께끼 이계 단검	18	144	통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AF:name	장비	#hd2d623bc67	더블 블레이드 액스	18		통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0AF:desc	장비	#h009cc9199c	깔끔히 베는 쌍날	16	144	통과	신규 번역
+equipment_mod.h:g_EquipDefs:0x0E0:name	장비			0		통과	unused(원문 빈 문자열)
+equipment_mod.h:g_EquipDefs:0x0E0:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment_mod.h:g_EquipDefs:0x0E1:name	장비			0		통과	unused(원문 빈 문자열)
+equipment_mod.h:g_EquipDefs:0x0E1:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment_mod.h:g_EquipDefs:0x0E2:name	장비			0		통과	unused(원문 빈 문자열)
+equipment_mod.h:g_EquipDefs:0x0E2:desc	장비			0		통과	unused(원문 빈 문자열)
+equipment_mod.h:g_EquipDefs:0x0E3:name	장비			0		통과	unused(원문 빈 문자열)
+equipment_mod.h:g_EquipDefs:0x0E3:desc	장비			0		통과	unused(원문 빈 문자열)
+accessories_mod.h:g_AccessoryDefs:0x5A:name	장비	#h41518e4fd5	글레어링 클로스	15		통과	신규 번역
+accessories_mod.h:g_AccessoryDefs:0x5A:desc	장비	#h11ebe1b609	어둠을 가르는 은빛 섬광	23	144	통과	신규 번역
+accessories_mod.h:g_AccessoryDefs:0x5B:name	장비	#h27deba6600	레인보우 맨틀	13		통과	신규 번역
+accessories_mod.h:g_AccessoryDefs:0x5B:desc	장비	#h4dd60f2362	시간 따라 색이 바뀐다	21	144	통과	신규 번역
+accessories_mod.h:g_AccessoryDefs:0x5C:name	장비	#h6db13401eb	리릭스 카드	11		통과	신규 번역
+accessories_mod.h:g_AccessoryDefs:0x5C:desc	장비	#h3442c8bd2d	녹턴의 노랫말	13	144	통과	신규 번역

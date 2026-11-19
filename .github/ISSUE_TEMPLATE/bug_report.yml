@@ -1,0 +1,26 @@
+name: 버그 제보
+description: 멈춤·깨진 글자·음성 오류 등
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "⚠ ROM·디스크 이미지는 절대 첨부하지 마세요. 스크린샷·세이브는 환영합니다."
+  - type: input
+    id: version
+    attributes: {label: 한글판 버전(결과 sha1 앞 8자 포함), placeholder: "예: v0.9 / 결과 sha1 앞 8자"}
+    validations: {required: true}
+  - type: input
+    id: emu
+    attributes: {label: 에뮬레이터·기기·버전}
+    validations: {required: true}
+  - type: input
+    id: where
+    attributes: {label: 발생 위치(장소·메뉴·장면)}
+    validations: {required: true}
+  - type: textarea
+    id: what
+    attributes: {label: 증상과 재현 방법}
+    validations: {required: true}
+  - type: textarea
+    id: log
+    attributes: {label: 조립 도구 로그(REJECT 줄 등, 있으면)}

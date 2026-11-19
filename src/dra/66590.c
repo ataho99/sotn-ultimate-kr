@@ -2,6 +2,13 @@
 //! PSPO=4,p
 #include "dra.h"
 
+#if defined(MOD_KO)
+// Korean trial (P65 base, P70 trial10): the Hangul glyphs are not in DRA's
+// rodata. build_ko_trial.sh packs BIN/ARC_KO.BIN (trial-only disc file) and
+// cd.c's chain loads it to dra.h KO_GLYPH_BLOCK_ADDR (A-gap); this wrapper
+// and the blob renderer both read the block.
+#endif
+
 void DestroyEntity(Entity* entity) {
     s32 i;
     s32 length;
@@ -332,7 +339,23 @@ u16* func_80106A28(u16 ch, u16 kind) {
 
     // Krom2RawAdd returns a pointer to 30 bytes: 15 rows of 2 bytes for a
     // bitmap of size 16x15.
+#if defined(MOD_KO)
+    // Korean trial: KO_GLYPH_BASE + n serves its 30 bytes from ko_glyphs and
+    // shares the expansion below (the function returns the expanded scratch
+    // buffer, not the raw bitmap, so an early return of raw bytes would skip
+    // it). n is computed once and reused for the address (M7).
+    u16 n = ch - KO_GLYPH_BASE;
+    u16 ko12 = 0;
+    if (n < KO_GLYPH_COUNT) {
+        bitmap = (u8*)(KO_GLYPH_BLOCK_ADDR + n * KO_GLYPH_CELL_BYTES);
+#ifdef KO_GLYPH_12COL
+        ko12 = 1;
+#endif
+    } else {
+        bitmap = (u8*)Krom2RawAdd(ch);
+#else
     bitmap = (u8*)Krom2RawAdd(ch);
+#endif
     if (bitmap == (u8*)-1) {
         srcPtr = D_800AC910;
         for (i = 0; i < LEN(D_800AC914); i++) {
@@ -345,8 +368,33 @@ u16* func_80106A28(u16 ch, u16 kind) {
             bitmap = (u8*)Krom2RawAdd(ch);
         }
     }
+#if defined(MOD_KO)
+    }
+#endif
 
     srcPtr = D_80137EF8;
+#if defined(MOD_KO)
+#ifdef KO_GLYPH_12COL
+    if (ko12) {
+        // v13n: cell = 12 cols x 15 rows 1bpp MSB-first, 180 bits = 23 B, no
+        // squeeze. Ink = stage-1 value 4 (full), same word layout as below:
+        // val0 = px0..3, val1 = px4..7, val2 = px8..11, low nibble = left px.
+        u16 bit = 0;
+        for (i = 0; i < 15; i++) {
+            u16 w[3];
+            w[0] = w[1] = w[2] = 0;
+            for (j = 0; j < 12; j++, bit++) {
+                if ((bitmap[bit >> 3] >> (7 - (bit & 7))) & 1) {
+                    w[j >> 2] |= 4 << ((j & 3) * 4);
+                }
+            }
+            *srcPtr++ = w[0];
+            *srcPtr++ = w[1];
+            *srcPtr++ = w[2];
+        }
+    } else
+#endif /* KO_GLYPH_12COL */
+#endif /* MOD_KO */
     for (i = 0; i < 15; i++) {
         val0 = val2 = val1 = 0;
 
@@ -399,6 +447,14 @@ u16* func_80106A28(u16 ch, u16 kind) {
         bitmap++;
     }
 
+#if defined(MOD_KO)
+    // v13n "ⓐ" (maintainer 08:21): KO cells are already 12x15 final dots; the kind 1
+    // vertical interpolation (15 -> 14 rows, mixes neighbour rows) would squash
+    // and blur them, so use the 1:1 row path (kind 0) for KO cells only.
+    if (ko12 && kind == 1) {
+        kind = 0;
+    }
+#endif
     destPtr = D_80137EF8;
     srcPtr = D_80137EF8;
     switch (kind) {

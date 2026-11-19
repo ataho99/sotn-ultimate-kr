@@ -231,6 +231,7 @@ void func_801B2108(const char* str, s32 arg1) {
     u8* chPix;
     s32 var_a3;
     u8 ch;
+    u16 eng16;
     s32 var_s2;
     s32 var_s3;
     s32 var_s4;
@@ -257,6 +258,15 @@ void func_801B2108(const char* str, s32 arg1) {
     while (*str) {
         var_s2 = 0;
         ch = *str++;
+#if defined(MOD_KO)
+        /* #241: Latin/punct inside KO lines -> MGalmuri12 (v12d repurposed
+         * cells via KO_ENGTAB, 94xu16 in ARC_KO gap at 0x8009EF00).
+         * Miss (0) falls through to the JP fullwidth path. TSV untouched. */
+        if (ch != ' ' && ch < 0x80 &&
+            (eng16 = ((const u16*)0x8009EF00)[ch - 0x21])) {
+            ch16 = eng16; /* chPix is fetched once below (same call as the JP path) */
+        } else
+#endif
         if ('a' <= ch && ch <= 'z') {
             ch16 = ch + 0x8220;
         } else if ('A' <= ch && ch <= 'Z') {
@@ -320,6 +330,14 @@ void func_801B2108(const char* str, s32 arg1) {
         if (var_a3 < FontStride) {
             var_a3 += 1;
         }
+#if defined(MOD_KO)
+        /* trial32 (maintainer 결정 22:08): Hangul advance 10 -> 12 px (same as the
+         * Korean-patch file-select text). Latin (ch < 0x80) keeps the
+         * proportional advance. */
+        if ((ch & 0xF0) == 0xF0) {
+            var_a3 = FontStride;
+        }
+#endif
         for (i = 0; i < FontHeight; i++) {
             dest_addr = &D_801BAFD0[var_s3 + var_s4 * i];
             *dest_addr++ = *chPix++;
@@ -383,7 +401,11 @@ void func_801B2608(char* str, s32 id) {
 void func_801B263C(char* str, s32 id) {
     D_801BAFD4 = 0x180;
     D_801BAFD8 = 0;
+#if defined(MOD_KO)
+    func_801B2108(str, id); /* save name: ASCII via engtab cells, proportional advance (sihum40) */
+#else
     func_801B1FD8(str, id);
+#endif
 }
 
 #ifndef HARD_LINK

@@ -34,8 +34,14 @@ static s16 D_801805F4[] = {
 };
 
 #if !defined(VERSION_HD)
-static const char* actor_names[] = {_S("Alucard"), _S("Maria")};
+static const char* actor_names[] = {_S("ALUCARD"), _S("MARIA")};
 static const char _pad[4] = "";
+#ifdef MOD_KO
+static const u8 ko_name_0[] = {0xF0, 0x6F, 0xF2, 0x06, 0xF0, 0xB2};
+static const u8 ko_name_1[] = {0xF0, 0x52, 0xF0, 0x50, 0xF0, 0x6C};
+static const u8* const actor_names_ko[] = {ko_name_0, ko_name_1};
+static const u8 actor_names_ko_len[] = {6, 6};
+#endif
 #else
 // clang-format off
 static u16 actor_names[] = {
@@ -161,7 +167,7 @@ void EntityCutscene(Entity* self) {
                     }
                     g_Dialogue.nextCharX = g_Dialogue.nextLineX;
                     if (!(g_Dialogue.unk12 & 1)) {
-                        g_Dialogue.nextLineY += CS_LINE_SPACING;
+                        g_Dialogue.nextLineY += KO_LINE_STEP(CS_LINE_SPACING);
                     }
                     g_Dialogue.nextCharY++;
 #ifdef VERSION_HD
@@ -173,7 +179,7 @@ void EntityCutscene(Entity* self) {
 #endif
                     CutsceneUnk4();
                     if (!(g_Dialogue.unk12 & 1)) {
-                        if (g_Dialogue.nextCharY >= CS_LINE_MAX) {
+                        if (KO_SCROLL_AT(g_Dialogue.nextCharY, g_Dialogue.nextCharY >= CS_LINE_MAX)) {
                             g_Dialogue.unk12 |= 1;
                             g_Dialogue.portraitAnimTimer = 0;
                             self->step_s = 0;
@@ -444,11 +450,46 @@ void EntityCutscene(Entity* self) {
                 g_Dialogue.nextCharX += 3;
 #else
     if (nextChar == 0x20) {
+#ifdef MOD_KO
+        g_Dialogue.nextCharX += 1; /* 4px space (maintainer 08:16), KO_SPACE_ADV */
+#else
         g_Dialogue.nextCharX += 2;
+#endif
 #endif
                 return;
             }
 #ifndef VERSION_HD
+#ifdef MOD_KO
+            /* ko engtab dialogue ASCII (sihum37b): . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
+             * KO_ENGTAB (94xu16 at 0x8009EF00), 12-col direct + kind0, advance KO_ENG_ADV (4/8 px). * A miss (0) keeps the original-font MoveImage path below. */
+            if (nextChar > 0x20 && nextChar < 0x7F && ((const u16*)0x8009EF00)[nextChar - 0x21]) {
+                u_long* eng_glyph = (u_long*)g_api.func_80106A28(((const u16*)0x8009EF00)[nextChar - 0x21], 1);
+                if (eng_glyph) {
+                    LoadTPage(eng_glyph, 0, 0, g_Dialogue.nextCharX, (g_Dialogue.nextCharY * 16) + 0x180, 0xC, 0x10);
+                    g_Dialogue.nextCharX += KO_ENG_ADV(nextChar);
+                    return;
+                }
+            }
+            if ((nextChar & 0xFC) == 0xF0 || (nextChar >= 0x80 && nextChar < 0xF0)) {
+                s32 ko_ch;
+                u_long* ko_glyph;
+                s32 ko_y;
+                if (nextChar >= 0x80 && nextChar < 0xF0) {
+                    /* 1-byte promotion: KO_PROMO_TBL_ADDR (dra.h), gen_ko_promo.py */
+                    ko_ch = ((u16*)0x8009F000)[nextChar - 0x80];
+                } else {
+                    ko_ch = (nextChar << 8) | *g_Dialogue.scriptCur++;
+                }
+                ko_glyph = (u_long*)g_api.func_80106A28(ko_ch, 1);
+                if (ko_glyph) {
+                    ko_y = (g_Dialogue.nextCharY * 16) + 0x180;
+                    LoadTPage(
+                        ko_glyph, 0, 0, g_Dialogue.nextCharX, ko_y, 0xC, 0x10);
+                    g_Dialogue.nextCharX += 3;
+                    return;
+                }
+            }
+#endif
             rect.x = ((nextChar & 0xF) * 2) + 0x380;
             rect.y = ((u32)(nextChar & 0xF0) >> 1) + 0xF0;
             rect.w = 2;

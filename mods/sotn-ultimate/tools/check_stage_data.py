@@ -78,6 +78,14 @@ DATA_EDITS = json.load(open(EDITS_PATH)) if os.path.exists(EDITS_PATH) else {}
 PSP_PATH = "build/us/psp_script/edits.json"
 PSP_EDITS = json.load(open(PSP_PATH)) if os.path.exists(PSP_PATH) else {}
 
+# KO trial (#221/#223, MOD_KO only): ST0 prologue cutscene_script source-baked
+# in Korean (build_ko_trial.sh exports MOD_KO=1; OFF builds via build_disc.sh
+# do not, so retail builds still FAIL on any change here).
+# overlay -> [object file whose .data range is KO-baked]
+KO_DATA_OBJS = {
+    "stst0": ["build/us/src/st/st0/cutscene_data.c.o"],
+}
+
 # Overlays whose end (BSS included) must stay below a fixed buffer: the
 # castle map / save buffers at 0x801E0000+ (CASTLE_MAP_PTR), for every stage
 # (v1.3: NO3's horse ride neigh once ran past it unnoticed)
@@ -110,6 +118,13 @@ for name, retail_path in STAGES.items():
     for off, size in PSP_EDITS.get(name, []):
         # word-aligned cover of the range (the check walks words)
         edited.append((off & ~3, off + size))
+    if os.environ.get("MOD_KO") == "1":
+        for obj in KO_DATA_OBJS.get(name, []):
+            for m in re.finditer(
+                    r"\.data\s+0x([0-9a-f]+)\s+0x([0-9a-f]+)\s+%s" % re.escape(obj),
+                    text):
+                a = int(m.group(1), 16) - base
+                edited.append((a, a + int(m.group(2), 16)))
     bad = []
     for i in range(0, n, 4):
         if retail[i : i + 4] == built[i : i + 4]:
