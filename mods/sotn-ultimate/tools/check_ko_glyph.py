@@ -132,6 +132,26 @@ def main():
     if bad:
         fail("hand-coded sources decode to hangul outside the expected set: %s" % "".join(bad))
     print("hand-coded sources: %d distinct hangul, all expected" % len([c for c in seen if '가' <= c <= '힣']))
+    # fixLIB: LIB hand-coded string forms (the generators are outside this repo).
+    # (a) KO bestiary descriptions (D_us_80180FB4, func_us_801B0C40 reads every
+    #     non-letter byte as an SJIS pair): punctuation/digits must be full-width.
+    # (b) KO enemy names (func_us_801B1064): space \x00, \xFF\x00 terminator.
+    esc = re.compile(re.escape(chr(92)) + "x[0-9A-Fa-f]{2}")
+    t = io.open(os.path.join(ROOT, "src/st/lib/e_shop.c"), encoding="utf-8").read()
+    m = re.search(r"D_us_80180FB4\[\] = \{(.*?)\n\};", t, re.S)
+    if not m:
+        fail("e_shop.c: D_us_80180FB4 not found")
+    for ln in m.group(1).split("\n"):
+        q = re.match(r'\s*"(.*)",?\s*$', ln)
+        if q and re.search(re.escape(chr(92)) + "x[Ff][0-3]", q.group(1)):
+            if re.search(r"[0-9.,?!():]", esc.sub("", q.group(1))):
+                fail("e_shop.c KO description has half-width punctuation/digit: %s" % ln.strip())
+    t = io.open(os.path.join(ROOT, "src/st/lib/ko_lib_names.h"), encoding="utf-8").read()
+    for q in re.finditer(r'^\s*"(.+)", //', t, re.M):
+        s = q.group(1)
+        if not s.endswith(chr(92) + "xFF" + chr(92) + "x00") or (chr(92) + "x20") in s:
+            fail("ko_lib_names.h entry not in func_us_801B1064 form (\\x00 space, \\xFF\\x00 end): %s" % s)
+    print("LIB KO descriptions full-width, enemy names FF00-terminated")
     # 6. font profile <-> C macros (one place for font-dependent values)
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import ko_font_profile as FP

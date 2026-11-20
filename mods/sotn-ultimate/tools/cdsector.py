@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # Raw 2352-byte CD sector helpers for build_ko_trial.sh's last step (JP Konami
-# movie, trial48): EDC/ECC of Mode 2 sectors and a range reader for .bin.ecm
+# movie, 시험48): EDC/ECC of Mode 2 sectors and a range reader for .bin.ecm
 # images (Neill Corlett's ECM format), so the Japanese disc's LOGO15XA.STR
 # sectors can be read without unpacking the whole image.
 import struct

@@ -19,7 +19,7 @@ void KO_PopupText(u8* str, u8 leftAlign) {
     u16 xPos;
     s16 xPos2;
     s32 a;
-    s32 kN = 0;
+    s32 kN = 6; /* glyph slots from x 18 / u 72 (clear of Maria's slot x 0..17, CEN); u8 u0 -> max 15 Hangul (kN 6..20) */
 
     chIdx = toPrint;
     xPos = textWidth = 0;
@@ -125,7 +125,7 @@ void KO_PopupText(u8* str, u8 leftAlign) {
             prim->tpage = 0x10;
             prim->clut = PAL_UNK_1A1;
             prim->u0 = (u8)(kN * 12);
-            prim->v0 = 192;
+            prim->v0 = 208; /* y 464 (eq_pop.c KO_PopGlyph) */
             prim->u1 = 12;
             prim->v1 = 16;
             prim->priority = 0x1F0;

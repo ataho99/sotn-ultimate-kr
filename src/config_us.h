@@ -258,6 +258,13 @@ SpellDef g_SpellDefs[] = {
     {"", _S(""), "", 0, 20, 8, 2, 129, 0, 16448, 45},
 };
 
+#if defined(MOD_KO)
+// KO relic names/descs: generated from the v14 translation table by
+// mods/sotn-ultimate/tools/gen_ko_names.py (current glyph map; checked by
+// check_ko_text_codes.py). No hand-written KO bytes in this table.
+#include "dra/gen/us/ko_relic_str.h"
+#endif
+
 #if defined(MOD_SATURN) && defined(MOD_DRA_CONFIG)
 // Saturn port: DRA's relic table moves to rodata, freeing its data bytes for
 // the new item records (MOD_DATA_PAD keeps sound_data where it was)
@@ -265,152 +272,152 @@ const
 #endif
 RelicDesc g_RelicDefs[] = {
 #if defined(MOD_KO)
-    {" \xF0\x65\xF0\x79 \xF0\x77\xF0\x5D \xF0\xA8\xF0\x90", "\xF0\x58\xF0\x83\xF0\xA0 \xF0\xA1\xF0\x6A", 256, 256, 0},
+    {KO_RELIC_NAME_0, KO_RELIC_DESC_0, 256, 256, 0},
 #else
     {" Soul of Bat", "Transform into Bat", 256, 256, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x92\xF0\x7D\xF0\x71 \xF0\x77\xF0\x5D \xF0\xA8\xF0\x90", "\xF0\x58\xF0\x83 \xF0\x60\xF0\xA2 \xF0\x99\xF0\x75 \xF0\xC9\xF0\xAB", 256, 257, 0},
+    {KO_RELIC_NAME_1, KO_RELIC_DESC_1, 256, 257, 0},
 #else
     {"Fire of Bat", "Shoot fireballs as Bat", 256, 257, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x74\xF0\x8A \xF0\x77\xF0\x5D \xF0\xA8\xF0\x90", "\xF0\x58\xF0\x83 \xF0\x60\xF0\xA2 \xF0\xB7\xF0\xAC\xF0\x92 \xF0\xE7\xF0\x85", 256, 258, 0},
+    {KO_RELIC_NAME_2, KO_RELIC_DESC_2, 256, 258, 0},
 #else
     {" Echo of Bat", "Use radar as Bat", 256, 258, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x8C\xF0\x4C\xF0\x7D\xF0\x85 \xF0\x74\xF0\x8A", "\xF0\xB7\xF0\xAC\xF0\x92\xF0\xA0 \xF0\xA9\xF0\xB0 \xF0\x40\xF0\xAA", 256, 259, 0},
+    {KO_RELIC_NAME_3, KO_RELIC_DESC_3, 256, 259, 0},
 #else
     {"Force of Echo", "Attack with radar waves", 256, 259, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x65\xF0\x79 \xF0\x77\xF0\x5D \xF0\x79\xF0\xA7", "\xF0\x48\xF0\x4A\xF0\xA0 \xF0\xA1\xF0\x6A", 257, 260, 0},
+    {KO_RELIC_NAME_4, KO_RELIC_DESC_4, 257, 260, 0},
 #else
     {" Soul of Wolf", "Transform into Wolf", 257, 260, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x48\xF0\x4A\xF0\x7C \xF0\x9A", "\xF0\x48\xF0\x4A \xF0\x60\xF0\xA2 \xF0\xBD\xF0\xD0 \xF0\xE0\xF0\x82", 257, 261, 0},
+    {KO_RELIC_NAME_5, KO_RELIC_DESC_5, 257, 261, 0},
 #else
     {"Power of Wolf", "Run swiftly as Wolf", 257, 261, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x68\xF0\xE5 \xF0\x77\xF0\x5D \xF0\x79\xF0\xA7", "\xF0\x48\xF0\x4A \xF0\x60\xF0\xA2 \xF0\xEB\xF0\xCF\xF0\x46", 257, 262, 0},
+    {KO_RELIC_NAME_6, KO_RELIC_DESC_6, 257, 262, 0},
 #else
     {" Skill of Wolf", "Special move as Wolf", 257, 262, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x57\xF0\x68\xF0\x90", "\xF0\x6E\xF0\x42\xF0\xA0 \xF0\xA1\xF0\x6A", 258, 263, 0},
+    {KO_RELIC_NAME_7, KO_RELIC_DESC_7, 258, 263, 0},
 #else
     {"Form of Mist", "Transform into Mist", 258, 263, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x92\xF0\xB3 \xF0\x77\xF0\x5D \xF0\x57\xF0\x68\xF0\x90", "\xF0\x6E\xF0\x42 \xF0\xA1\xF0\x6A \xF0\x69\xF0\xAE \xF0\xD8\xF0\x80", 258, 264, 0},
+    {KO_RELIC_NAME_8, KO_RELIC_DESC_8, 258, 264, 0},
 #else
     {" Power of Mist", "Extends Mist transform time", 258, 264, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x40\xF0\x68 \xF0\xE3\xF0\x4B\xF0\xDA\xF0\xB2", "\xF0\xC1\xF0\x6E\xF0\x42\xF0\xA0 \xF0\xA1\xF0\x6A", 258, 265, 0},
+    {KO_RELIC_NAME_9, KO_RELIC_DESC_9, 258, 265, 0},
 #else
     {"Gas Cloud", "Transform into poisonous cloud", 258, 265, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x52\xF0\x8E\xF0\x4B\xF0\x7D\xF0\x84 \xF0\x8B\xF0\x5D", "\xF0\x9E\xF0\xBB \xF0\x92\xF0\xBE \xF0\x69 \xF0\x6C\xF0\x7D\xF0\xE8 \xF0\xE2\xF0\xED", 259, 266, 0},
+    {KO_RELIC_NAME_10, KO_RELIC_DESC_10, 259, 266, 0},
 #else
     {" Cube of Zoe", "Causes items to materialize", 259, 266, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x76\xF0\x97\xF0\x7C \xF0\x77\xF0\x5D", "\xF0\xAD\xF0\x74\xF0\xBC \xF0\xDF \xF0\x94\xF0\xB9\xF0\xC4 \xF0\xB8\xF0\x69", 260, 267, 0},
+    {KO_RELIC_NAME_11, KO_RELIC_DESC_11, 260, 267, 0},
 #else
     {"Spirit Orb", "Shows enemy damage", 260, 267, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x5C\xF0\x6A\xF0\x7C \xF0\x5C\xF0\x89", "\xF0\xA3\xF0\x7D\xF0\xB5\xF0\xA7 \xF0\x40\xF0\xAA(\xF0\xE9\xF0\x60\xF0\x7C 5\xF0\xA8)", 261, 268, 0},
+    {KO_RELIC_NAME_12, KO_RELIC_DESC_12, 261, 268, 0},
 #else
     {" Gravity Boots", "Wearer can jump high", 261, 268, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x5E\xF0\x60\xF0\x62", "2\xF0\xC0 \xF0\xB5\xF0\xA7 \xF0\x40\xF0\xAA", 262, 269, 0},
+    {KO_RELIC_NAME_13, KO_RELIC_DESC_13, 262, 269, 0},
 #else
     {"Leap Stone", "Wearer can do double jump", 262, 269, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x98\xF0\x50 \xF0\x6B\xF0\x5B", "\xF0\x9E\xF0\x74\xF0\x61 \xF0\x94\xF0\xB9 \xF0\xD6\xF0\xAC", 263, 270, 0},
+    {KO_RELIC_NAME_14, KO_RELIC_DESC_14, 263, 270, 0},
 #else
     {" Holy Symbol", "Protection while underwater", 263, 270, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x78\xF0\x81\xF0\x7C \xF0\x87", "\xF0\xAD\xF0\x7C \xF0\x7D\xF0\x4F \xF0\xB8\xF0\x69", 264, 271, 0},
+    {KO_RELIC_NAME_15, KO_RELIC_DESC_15, 264, 271, 0},
 #else
     {"Faerie Scroll", "Displays enemy’s name ", 264, 271, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x72\xF0\x4E\xF0\x82\xF0\x73", "\xF0\xEA\xF0\xC5 \xF0\xCE\xF0\x7C \xF0\xC8\xF0\xB4 \xF0\xD7\xF0\xBF \xF0\xD9\xF0\xD1", 266, 273, 0},
+    {KO_RELIC_NAME_16, KO_RELIC_DESC_16, 266, 273, 0},
 #else
     {" Jewel of Open", "Can open locked blue doors", 266, 273, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x7E\xF0\x71\xF0\x60", "\xF0\xCB\xF0\xAB\xF0\xA9\xF0\xB4 \xF0\x5C\xF0\x4F", 272, 279, 0},
+    {KO_RELIC_NAME_17, KO_RELIC_DESC_17, 272, 279, 0},
 #else
     {"Merman Statue", "Summons the oarsman", 272, 279, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x58\xF0\x83\xF0\x7C \xF0\x65", "\xF0\x9C\xF0\x9D \xF0\x58\xF0\x83 \xF0\x65\xF0\x9B", 265, 272, 1},
+    {KO_RELIC_NAME_18, KO_RELIC_DESC_18, 265, 272, 1},
 #else
     {" Bat Card", "Summons ””Bat”” familiar", 265, 272, 1},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x7B\xF0\x4D\xF0\x7C \xF0\x65", "\xF0\x9C\xF0\x9D \xF0\x7B\xF0\x4D \xF0\x65\xF0\x9B", 265, 272, 2},
+    {KO_RELIC_NAME_19, KO_RELIC_DESC_19, 265, 272, 2},
 #else
     {"Ghost Card", "Summons ””Ghost”” familiar", 265, 272, 2},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x78\xF0\x81\xF0\x7C \xF0\x65", "\xF0\x9C\xF0\x9D \xF0\x78\xF0\x81 \xF0\x65\xF0\x9B", 265, 272, 3},
+    {KO_RELIC_NAME_20, KO_RELIC_DESC_20, 265, 272, 3},
 #else
     {" Faerie Card", "Summons ””Faerie”” familiar", 265, 272, 3},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x6C\xF0\x46\xF0\x6D\xF0\x52\xF0\x7C \xF0\x65", "\xF0\x9C\xF0\x9D \xF0\x6C\xF0\x46\xF0\x6D\xF0\x52 \xF0\x65\xF0\x9B", 265, 272, 4},
+    {KO_RELIC_NAME_21, KO_RELIC_DESC_21, 265, 272, 4},
 #else
     {"Demon Card", "Summons ””Devil”” familiar", 265, 272, 4},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x43\xF0\x52\xF0\x7C \xF0\x65", "\xF0\x9C\xF0\x9D \xF0\x43\xF0\x52 \xF0\x65\xF0\x9B", 265, 272, 5},
+    {KO_RELIC_NAME_22, KO_RELIC_DESC_22, 265, 272, 5},
 #else
     {" Sword Card", "Summons ””Sword”” familiar", 265, 272, 5},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x59\xF0\x78\xF0\x81\xF0\x7C \xF0\x65", "\xF0\x9C\xF0\x9D \xF0\x59\xF0\x78\xF0\x81 \xF0\x65\xF0\x9B", 265, 272, 6},
+    {KO_RELIC_NAME_23, KO_RELIC_DESC_23, 265, 272, 6},
 #else
     {"Sprite Card", "Summons ””Pixie”” familiar", 265, 272, 6},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x8A\xF0\x6D\xF0\x52\xF0\x7C \xF0\x65", "\xF0\x9C\xF0\x9D \xF0\x8A\xF0\x6D\xF0\x52 \xF0\x65\xF0\x9B", 265, 272, 7},
+    {KO_RELIC_NAME_24, KO_RELIC_DESC_24, 265, 272, 7},
 #else
     {" Nosedevil Card", "Summons ””Nose−devil”” familiar", 265, 272, 7},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x6B\xF0\x80", "5\xF0\x4A \xF0\xA5\xF0\x9E \xF0\xA6 \xF0\xA3\xF0\x9F, \xF0\xDE\xF0\x82 \xF0\xC7\xF0\xEF", 268, 275, 0},
+    {KO_RELIC_NAME_25, KO_RELIC_DESC_25, 268, 275, 0},
 #else
     {"Heart of Vlad", "１ of ５ Treasures． Avoid Curse．", 268, 275, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x66\xF0\x8F", "5\xF0\x4A \xF0\xA5\xF0\x9E \xF0\xA6 \xF0\xA3\xF0\x9F, STR+10", 270, 277, 0},
+    {KO_RELIC_NAME_26, KO_RELIC_DESC_26, 270, 277, 0},
 #else
     {" Tooth of Vlad", "１ of ５ Treasures． STR ＋１０", 270, 277, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x41\xF0\x5E\xF0\x5F", "5\xF0\x4A \xF0\xA5\xF0\x9E \xF0\xA6 \xF0\xA3\xF0\x9F, CON+10", 267, 274, 0},
+    {KO_RELIC_NAME_27, KO_RELIC_DESC_27, 267, 274, 0},
 #else
     {"Rib of Vlad", "１ of ５ Treasures． CON ＋１０", 267, 274, 0},
 #endif
 #if defined(MOD_KO)
-    {" \xF0\x59\xF0\x85", "5\xF0\x4A \xF0\xA5\xF0\x9E \xF0\xA6 \xF0\xA3\xF0\x9F, INT+10", 271, 278, 0},
+    {KO_RELIC_NAME_28, KO_RELIC_DESC_28, 271, 278, 0},
 #else
     {" Ring of Vlad", "１ of ５ Treasures． INT ＋１０", 271, 278, 0},
 #endif
 #if defined(MOD_KO)
-    {"\xF0\x47\xF0\x6F", "5\xF0\x4A \xF0\xA5\xF0\x9E \xF0\xA6 \xF0\xA3\xF0\x9F, LCK+10", 269, 276, 0},
+    {KO_RELIC_NAME_29, KO_RELIC_DESC_29, 269, 276, 0},
 #else
     {"Eye of Vlad", "１ of ５ Treasures． LCK ＋１０", 269, 276, 0},
 #endif
@@ -418,7 +425,7 @@ RelicDesc g_RelicDefs[] = {
     // Saturn relic 30 (RELIC_GODSPEED_SHOES); icon and palette ported by
     // mods/sotn-ultimate/tools/port_saturn_icons.py into the slots the Saturn uses
     #if defined(MOD_KO)
-    {"\xF0\xBA\xF0\x68\xF0\x94\xF0\xB2 \xF0\xD4\xF0\x84", "\xF0\xCA\xF0\xEC\xF0\xE4 \xF0\xC2 \xF0\xCC \xF0\xDD\xF0\xA4\xF0\xDC\xF0\xA0 \xF0\x4A\xF0\x69", 275, 281, 0},
+    {KO_RELIC_NAME_30, KO_RELIC_DESC_30, 275, 281, 0},
     #else
     {"Godspeed Shoes", "Dash with a double tap", 275, 281, 0},
     #endif
@@ -431,11 +438,21 @@ EnemyDef g_EnemyDefs[] = {
 // Saturn port: the retail (PS1) records; the Saturn's stat changes (boss
 // Richter attack, Fire Warg rare rate, Spear Guard flags) are applied at run
 // time with the Player Select's Balance row (game_handlers.c ModApplyBalance)
+#if defined(MOD_KO)
+// KO names (gen_ko_names.py: table, then ko_lib_names.h, then same-EN sharing;
+// _S-style bytes + FF 00, EN-sized when they fit)
+#include "dra/gen/us/enemydefs_ko.h"
+#else
 #include "dra/gen/us/enemydefs.h"
+#endif
 #if defined(MOD_SATURN) && defined(MOD_DRA_CONFIG)
 // Saturn port: the Saturn's 26 new enemies (400-425), with the Saturn's ids
 // (mods/sotn-ultimate/tools/gen_saturn_enemies.py)
+#if defined(MOD_KO)
+#include "dra/gen/us/enemydefs_mod_ko.h"
+#else
 #include "dra/gen/us/enemydefs_mod.h"
+#endif
 #endif
 };
 

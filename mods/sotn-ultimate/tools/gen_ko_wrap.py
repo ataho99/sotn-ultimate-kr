@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ko_font_profile as FP  # noqa: E402
 
 OUTD = os.environ.get("KO_OUTD", (KO_WK + "/검수/"))
-SRC = OUTD + "번역_v14.tsv"
+SRC = os.environ.get("KO_WRAP_SRC") or (OUTD + "번역_v14.tsv")  # 보스 행이 든 작업 원본을 받을 수 있게
 SCENES = ("st0_richter_dracula", "sel_ending", "no3_death", "cen_maria",
           "nz0_slogra_gaibon", "lib_librarian", "no4_ferryman_left",
           "no4_ferryman_right", "rcen_shaft", "dre_succubus",

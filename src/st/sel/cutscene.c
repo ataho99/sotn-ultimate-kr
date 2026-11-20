@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #define KO_NAME_FIXED 1 /* stsel: 8 B margin, no bytes for the advance table lookup */
+#ifdef MOD_KO
+#define KO_DLG16 1 /* Korean dialogue renderer here: 16 px line buffers (src/st/ko_font_params.h) */
+#endif
 #include "sel.h"
 #include "mod_psp_script.h" // the PSP dub toggle's script copies
 #include "../cutscene_ko_wire.h" // KO trial script selector (ko_dlg2 #127)
@@ -479,7 +482,11 @@ void EntityCutscene(Entity* self) {
         rect->y = ((nextChar & 0xF0) >> 1) + 0xF0;
         rect->w = 2;
         rect->h = 8;
+#ifdef KO_DLG16
+        y = (g_Dialogue.nextCharY * 16) + 0x180 + KO_DLG_FB_DY; /* 8x8 fallback on the 16 px buffer, KO baseline */
+#else
         y = g_Dialogue.nextCharY * 12 + 0x180;
+#endif
         MoveImage(rect, g_Dialogue.nextCharX, y);
         g_Dialogue.nextCharX += 2;
         break;

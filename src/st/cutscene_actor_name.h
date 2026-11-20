@@ -65,7 +65,7 @@ static void DrawCutsceneActorName(u16 actorIndex, Entity* self) {
         pKo = nameKo;
         remKo = actor_names_ko_len[DRAW_NAME_ACTOR_INDEX];
         x = 0x38;
-        kN = 0;
+        kN = 6; /* slots from x 18 / u 72: clear of Maria's slot (CEN g_PlayerDraw[8], x 0..17, y 443..511) */
         while (prim != NULL && remKo) {
             cKo = *pKo++;
             remKo--;
@@ -82,7 +82,7 @@ static void DrawCutsceneActorName(u16 actorIndex, Entity* self) {
                 kY = g_Dialogue.startY + 6 - KO_NAME_DY;
 #endif
                 /* trial29: upload into the dialogue text texture area
-                 * (page 0x10, row 4 = y 448, hw x = 3*n) and draw each glyph
+                 * (page 0x10, row 4 = y 448, hw x = 3*n, n from 6) and draw each glyph
                  * as a real 12x16 SPRT (the old direct write into the display
                  * buffer was erased by the next redraw). */
                 if (kGlyph) {
@@ -92,7 +92,7 @@ static void DrawCutsceneActorName(u16 actorIndex, Entity* self) {
                      * glyph to its own slot first (A-gap F000.., 96B each,
                      * unused while a cutscene runs). DrawSync is not linked
                      * into the stage overlays. */
-                    u_long* kDst = (u_long*)(0x8009F000 + kN * 0x60);
+                    u_long* kDst = (u_long*)(0x8009F000 - 6 * 0x60 + kN * 0x60); /* still F000.. for the 1st glyph */
                     s32 kI;
                     for (kI = 0; kI < 24; kI++) {
                         kDst[kI] = kGlyph[kI];

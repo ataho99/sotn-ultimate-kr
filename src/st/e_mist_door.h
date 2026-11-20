@@ -33,9 +33,20 @@ static char* richter_mist_label; // bss
 static char alucard_mist_label[] = "\x9C\x0Eこの壁は霧で抜けられそうだ";
 static char richter_mist_label[] = "\x90\x0Eこの壁は俺には関係無いな";
 #else
+#if defined(MOD_KO)
+#include "ko_field_msg.h" /* gen_ko_fieldmsg.py; a missing macro = placeholder, English kept */
+#endif
 static char alucard_mist_label[] = "\x7C\x0EMist could pass．";
 static char richter_mist_label[] =
     "\x94\x1EI have nothing to do\x01with this wall．．．";
+#if defined(KO_FIELD_MIST_ALUCARD_ADDR)
+#define KO_LBL_ALUCARD                                                         \
+    KO_FIELD_PICK(KO_FIELD_MIST_ALUCARD_ADDR, alucard_mist_label)
+#endif
+#if defined(KO_FIELD_MIST_RICHTER_ADDR)
+#define KO_LBL_RICHTER                                                         \
+    KO_FIELD_PICK(KO_FIELD_MIST_RICHTER_ADDR, richter_mist_label)
+#endif
 #endif
 
 #include "../get_lang.h"
@@ -75,10 +86,16 @@ void EntityMistDoor(Entity* self) {
                 messageBox->ext.messageBox.label = alucard_mist_label;
             }
 #else
+#ifndef KO_LBL_ALUCARD
+#define KO_LBL_ALUCARD alucard_mist_label
+#endif
+#ifndef KO_LBL_RICHTER
+#define KO_LBL_RICHTER richter_mist_label
+#endif
             if (g_PlayableCharacter != PLAYER_ALUCARD) {
-                messageBox->ext.messageBox.label = richter_mist_label;
+                messageBox->ext.messageBox.label = KO_LBL_RICHTER;
             } else {
-                messageBox->ext.messageBox.label = alucard_mist_label;
+                messageBox->ext.messageBox.label = KO_LBL_ALUCARD;
             }
 #endif
             messageBox->params = 0x100;

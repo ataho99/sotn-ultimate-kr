@@ -21,6 +21,12 @@ OUT=${MOD_OUT:-build/sotn_kr_P4_trial1.bin}
 export SOTN_KR="${SOTN_KR:-$PWD}"
 export KO_WK="${KO_WK:-$PWD/ko_data}"
 export KO_FONTS="${KO_FONTS:-$KO_WK/fonts}"
+# preflight: every static KO input problem (glyph coverage, keys, widths, slot sizes, cell budget, paths, entry
+# offsets) listed at once in 1-3 min, before the long build. KO_SKIP_PREFLIGHT=1 skips; a rebuild (exec "$0") does not repeat it.
+if [ "${KO_SKIP_PREFLIGHT:-0}" != 1 ] && [ "${KO_PREFLIGHT_DONE:-0}" != 1 ]; then
+    python3 mods/sotn-ultimate/tools/ko_preflight.py || { echo "ABORT: ko_preflight found problems (list above; KO_SKIP_PREFLIGHT=1 skips)" >&2; exit 2; }
+    export KO_PREFLIGHT_DONE=1
+fi
 # Korean trial flags. tools/builds/gen.py has no env passthrough for extra
 # -D defines, so they are injected with a compiler wrapper first on PATH:
 # only mipsel-linux-gnu-cpp evaluates #if (cc1/maspsx/as see preprocessed
@@ -170,12 +176,18 @@ $NODE --no-warnings mods/sotn-ultimate/tools/builder/node/cen_sounds.ts cen
 .venv/bin/python mods/sotn-ultimate/tools/port_saturn_icons.py
 python3 mods/sotn-ultimate/tools/gen_saturn_items.py
 python3 mods/sotn-ultimate/tools/gen_saturn_enemies.py
+# KO enemy names (g_EnemyDefs, Faerie Scroll popup + Library list) and relic names/descs from the
+# translation table -> src/dra/gen/us/enemydefs_ko.h, enemydefs_mod_ko.h, ko_relic_str.h, ko_names_pad.h;
+# review lists build/us/ko_enemy_names.tsv / ko_enemy_missing.tsv. Before gen_menu_text.py (MOD_KO_DUB
+# leaves the KO enemy/relic strings alone).
+python3 mods/sotn-ultimate/tools/gen_ko_names.py
 # the PSP port's menu text picks: fixes in DRA's tables, and the strings that
 # follow the Dub row (SEL's src/st/sel/mod_dub_text.h; checked below)
 python3 mods/sotn-ultimate/tools/gen_menu_text.py
 python3 mods/sotn-ultimate/tools/gen_ko_equip.py
 python3 mods/sotn-ultimate/tools/gen_ko_cfg.py # System (config) screen strings -> src/dra/gen/us/ko_cfg_str.h
 python3 mods/sotn-ultimate/tools/gen_ko_save.py # save-room texts -> src/dra/gen/us/ko_save_str.h
+python3 mods/sotn-ultimate/tools/gen_ko_fieldmsg.py # stage message boxes (mist / sealed door / NO4 bridge) -> src/st/ko_field_msg.h
 # the Saturn Librarian enemy list: src/st/lib/mod_bestiary.h
 python3 mods/sotn-ultimate/tools/gen_saturn_bestiary.py
 # Saturn-only music: build/us/XA_STR1.unpacked (retail + new tracks),
@@ -304,10 +316,14 @@ python3 mods/sotn-ultimate/tools/gen_saturn_balance.py
 python3 mods/sotn-ultimate/tools/gen_ko_dlg.py > build/us/ko_dlg_bake.log
 python3 mods/sotn-ultimate/tools/gen_ko_wrap.py
 python3 mods/sotn-ultimate/tools/gen_ko_sheet2.py
+# every KO string header + sheet-2 upload lists: glyph codes must be cells of the current glyph table
+python3 mods/sotn-ultimate/tools/check_ko_text_codes.py || { echo "check_ko_text_codes FAILED" >&2; exit 1; }
 python3 mods/sotn-ultimate/tools/gen_ko_promo.py
 python3 mods/sotn-ultimate/tools/gen_ko_splice.py
 # trial49: voice-linked windows >= longest Dub lane (psp_dub + jp_dub) + margin; before the ST0 header snapshot
 python3 mods/sotn-ultimate/tools/gen_ko_timing.py
+# fixCUT: every C-side entry offset (RCEN +0x129 pre-fight Shaft, DRE +0x49D, ...) still on its retail command after splice + timing (fail closed)
+python3 mods/sotn-ultimate/tools/ko_entry_offsets.py || { echo "ko_entry_offsets FAILED (a KO tool moved a C entry offset: the scene would freeze)" >&2; exit 1; }
 python3 mods/sotn-ultimate/tools/gen_ko_st0_snapshot.py
 # sihum43: KO cutscene windows keep the retail window count / speaker order / voice per window, <= window_lines lines (fail closed)
 python3 mods/sotn-ultimate/tools/check_ko_cutscene_struct.py || { echo "check_ko_cutscene_struct FAILED" >&2; exit 1; }
@@ -395,6 +411,10 @@ if ! grep -q "0x8009" "$KO_CHK_TMP"; then
 fi
 rm -f "$KO_CHK_TMP"
 echo "OK   KO code in DRA objects (66590 wrapper + menu hook)"
+# fixCUT B: KO bytes of the asm boss scripts (bo2/bo5/bo6/rbo2/rbo6) into the
+# linked BINs (plan from gen_ko_splice.py; empty while their rows are
+# placeholders), before psp_script checks them and BO6RIC2 copies BO6
+python3 mods/sotn-ultimate/tools/gen_ko_splice.py --apply-boss
 # the PSP English script into the built overlays (before BO6RIC2 copies BO6)
 if [ "$MOD_PSP_DUB" = 1 ]; then
     python3 mods/sotn-ultimate/tools/psp_script.py --apply
@@ -711,8 +731,9 @@ echo "ko_equip_jp: sel/ov/enter at $EQ_SEL/$EQ_OV/$EQ_ENTER, core $corevma size 
 # ARC_F2's old 178-bake region is zeroed (same length, no LBA moves).
 # #250 task 3(b): v12e (v12c Korean restored in F12A..F28A, English 32 moved
 # to free-code cells) + engtab250. Same 776x30 size, ARC offsets unchanged.
-export KO_BLK=${KO_WK}/P4시험/ko_glyph_block_mgalmuri12_v14c.bin
-export KO_SHA=08a8acecd8f1c2e125931664b8d04ff692ff2f5993f18dfed39761805df6c853
+# v14e (gen_ko_glyph_e.py): v14d + 91 more cells (950 in all, limit 960); KO_SHA = the block's sha256 (check_ko_glyph.py prints it).
+export KO_BLK=${KO_WK}/P4시험/ko_glyph_block_mgalmuri12_v14e.bin
+export KO_SHA=14868a22f7094106d042b337f24f8c6eca26fb89353a0144b18747a67253f558
 # name tag / popup advance table lookup (src/st/ko_font_params.h) is per overlay. KO_NAME_FIXED_OVERLAYS (switches, one
 # `#define KO_NAME_FIXED 1` as first line of the files): sel(cutscene.c) no3(cutscene.c, popup.c) no4(cutscene.c, popup.c) mad(popup.c: MAD.BIN must keep its retail size, check_status_shift).
 # If a later build reports `FAIL stXXX: overlay ends ... past 0x801e0000`, add the define to that overlay's
@@ -720,7 +741,8 @@ export KO_SHA=08a8acecd8f1c2e125931664b8d04ff692ff2f5993f18dfed39761805df6c853
 export KO_FONT8_ADV=${KO_WK}/P4시험/ko_font8_adv.bin
 export KO_SHEET2=${KO_WK}/P4시험/ko_sheet2.bin
 export KO_PROMO=${KO_WK}/P4시험/ko_promo_tbl.bin
-export KO_ENGTAB=${KO_WK}/P4시험/ko_engtab_252.bin
+export KO_ENGTAB=${KO_WK}/P4시험/ko_engtab_253.bin # v14d: 252 + 40 ASCII entries (existing entries unchanged)
+export KO_FIELD=${KO_WK}/P4시험/ko_field.bin
 python3 mods/sotn-ultimate/tools/check_ko_glyph.py || { echo 'check_ko_glyph FAILED' >&2; exit 1; }
 python3 - <<'PYEOF'
 import hashlib, io, os, re
@@ -729,7 +751,7 @@ def define(name):
     m = re.search(r"#define %s (0x[0-9A-Fa-f]+|\d+)" % name, dra_h)
     assert m, name
     return int(m.group(1), 0)
-assert (define('KO_GLYPH_BASE'), define('KO_GLYPH_COUNT')) == (0xF040, 819)
+assert define('KO_GLYPH_BASE') == 0xF040 and 819 <= define('KO_GLYPH_COUNT') <= 960, define('KO_GLYPH_COUNT')  # v14d: 819 + new ASCII cells
 slot, arc_size = define('KO_BLOB_SLOT'), define('KO_ARC_SIZE')
 eq_base, eq_size = define('KO_EQUIP_BASE'), define('KO_EQUIP_SIZE')
 eq_slots = {'sel': (define('KO_EQUIP_SEL'), 0x40),
@@ -738,7 +760,7 @@ eq_slots = {'sel': (define('KO_EQUIP_SEL'), 0x40),
             'core': (define('KO_EQUIP_CORE'), 0xA00)}
 eq_load = define('KO_EQUIP_LOAD')
 raw = open(os.environ['KO_BLK'], 'rb').read()
-assert len(raw) == 819 * 23 == 18837, len(raw)  # v14c (+16 Latin cells; v14a was 800): MGalmuri12 12x15 23 B cells, 800 cells inside the 23280 B block
+assert len(raw) == define('KO_GLYPH_COUNT') * 23 <= 0x5640, len(raw)  # v14d (v14c 819 + ASCII cells): MGalmuri12 12x15 23 B cells, must end before KO_POP_TEXT (0x5640)
 assert hashlib.sha256(raw).hexdigest() == os.environ['KO_SHA'], hashlib.sha256(raw).hexdigest()
 assert define('KO_GLYPH_CELL_BYTES') == 23
 # the extension cells (776..799) live in the dead blob slot at 0x8009EAF0 (896 B)
@@ -807,6 +829,13 @@ assert p_off == 0x6280 and 0 < len(pop) <= 128 and p_off >= a_off + 96, (hex(p_o
 s4 = p_off - (ENGTAB_OFF + len(engtab))
 assert bytes(gap_post[s4:s4 + 128]) == bytes(128)
 gap_post[s4:s4 + len(pop)] = pop
+# 56: stage message-box labels (gen_ko_fieldmsg.py), 4 slots x 0x80 at 0x8009F300
+fld = open(os.environ['KO_FIELD'], 'rb').read()
+f_off = define('KO_FIELD_BASE') - 0x80099000
+assert f_off == 0x6300 and len(fld) == 0x200 and f_off >= p_off + 128 and f_off + 0x200 <= 0x8009F500 - 0x80099000, (hex(f_off), len(fld))
+s5 = f_off - (ENGTAB_OFF + len(engtab))
+assert bytes(gap_post[s5:s5 + 0x200]) == bytes(0x200)
+gap_post[s5:s5 + 0x200] = fld
 gap_post = bytes(gap_post)
 gap = gap_pre + engtab + gap_post
 assert len(gap) == gap_end - (len(raw) + len(blob) + len(ro)), len(gap)
@@ -1068,12 +1097,13 @@ if [ ! -f "$cue" ]; then
     printf 'FILE "%s" BINARY\r\n  TRACK 01 MODE2/2352\r\n    FLAGS DCP\r\n    INDEX 01 00:00:00\r\n' \
         "$(basename "$OUT")" > "$cue"
 # Trial10h: the linked image must carry the KO fetch (else the menu hangs).
-# addiu v0,a0,4032 (n = ch-0xF040) near sltiu *,*,819 (KO_GLYPH_COUNT 0x333) in func_80106A28.
+# addiu v0,a0,4032 (n = ch-0xF040) near sltiu *,*,KO_GLYPH_COUNT (dra.h; v14c 819 = 0x333) in func_80106A28.
 if ! python3 - build/sotn.us.bin <<'PYEOF'
-import sys
+import re, sys
 d = open(sys.argv[1], 'rb').read()
+cnt = int(re.search(r"#define KO_GLYPH_COUNT (\d+)", open('src/dra/dra.h', encoding='utf-8').read()).group(1))
 a = d.find(bytes.fromhex('c00f8224'))
-b = d.find(bytes.fromhex('3303a22c'))
+b = d.find(cnt.to_bytes(2, 'little') + bytes.fromhex('a22c'))
 ok = a >= 0 and b >= 0 and abs(a - b) < 128
 sys.exit(0 if ok else 1)
 PYEOF

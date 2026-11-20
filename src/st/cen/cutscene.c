@@ -1,4 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#ifdef MOD_KO
+#define KO_DLG16 1 /* Korean dialogue renderer here: 16 px line buffers (src/st/ko_font_params.h) */
+/* CEN only: the 4 KO line buffers start 4 rows higher, y 380..443 (was 384..447), so Maria's slot
+ * (g_PlayerDraw[8], x 0..17, y 443..511: mod_maria_boss.h / mod_cenp.c, must stay at y 444 for her
+ * 67-row frames, v = y & 0xFF) only meets line 4's blank last row (cells are 15 rows). */
+#define KO_CEN_DLG_Y 380
+#define CUTSCENE_UNK3_RECT_Y KO_CEN_DLG_Y
+#define CUTSCENE_UNK4_V_OFFSET (KO_CEN_DLG_Y - 256)
+#endif
 #include "cen.h"
 #include "mod_psp_script.h" // the PSP dub toggle's script copies
 #include "../pfn_entity_update.h"
@@ -172,6 +181,8 @@ void EntityCutscene(Entity* self) {
                     g_Dialogue.nextCharY++;
 #ifdef VERSION_HD
                     g_Dialogue.nextCharY &= CS_LINE_MAX;
+#elif defined(KO_DLG16)
+                g_Dialogue.nextCharY &= 3; /* 4 KO line buffers (CEN: y 380..443), same as no3/lib/nz0/sel/top */
 #else
                 if (g_Dialogue.nextCharY > CS_LINE_MAX) {
                     g_Dialogue.nextCharY = 0;
@@ -465,7 +476,7 @@ void EntityCutscene(Entity* self) {
             if (nextChar > 0x20 && nextChar < 0x7F && ((const u16*)0x8009EF00)[nextChar - 0x21]) {
                 u_long* eng_glyph = (u_long*)g_api.func_80106A28(((const u16*)0x8009EF00)[nextChar - 0x21], 1);
                 if (eng_glyph) {
-                    LoadTPage(eng_glyph, 0, 0, g_Dialogue.nextCharX, (g_Dialogue.nextCharY * 16) + 0x180, 0xC, 0x10);
+                    LoadTPage(eng_glyph, 0, 0, g_Dialogue.nextCharX, (g_Dialogue.nextCharY * 16) + KO_CEN_DLG_Y, 0xC, 0x10);
                     g_Dialogue.nextCharX += KO_ENG_ADV(nextChar);
                     return;
                 }
@@ -482,7 +493,7 @@ void EntityCutscene(Entity* self) {
                 }
                 ko_glyph = (u_long*)g_api.func_80106A28(ko_ch, 1);
                 if (ko_glyph) {
-                    ko_y = (g_Dialogue.nextCharY * 16) + 0x180;
+                    ko_y = (g_Dialogue.nextCharY * 16) + KO_CEN_DLG_Y;
                     LoadTPage(
                         ko_glyph, 0, 0, g_Dialogue.nextCharX, ko_y, 0xC, 0x10);
                     g_Dialogue.nextCharX += 3;
@@ -494,7 +505,11 @@ void EntityCutscene(Entity* self) {
             rect.y = ((u32)(nextChar & 0xF0) >> 1) + 0xF0;
             rect.w = 2;
             rect.h = 8;
+#ifdef KO_DLG16
+            vCoord = (g_Dialogue.nextCharY * 16) + KO_CEN_DLG_Y + KO_DLG_FB_DY; /* 8x8 fallback on the 16 px buffer, KO baseline */
+#else
             vCoord = (g_Dialogue.nextCharY * 0xC) + 0x180;
+#endif
             MoveImage(&rect, g_Dialogue.nextCharX, vCoord);
             g_Dialogue.nextCharX += 2;
 #endif

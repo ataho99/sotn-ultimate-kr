@@ -2449,8 +2449,15 @@ static char D_pspeu_0929D8A0[] =
 static char D_us_80181644[] =
     "\xB8\x1ESomething appeared near\001to the wooden bridge\x81\x44";
 #else
+#if defined(MOD_KO)
+#include "../ko_field_msg.h" /* gen_ko_fieldmsg.py; a missing macro = placeholder, English kept */
+#endif
 static char D_us_80181644[] =
     "\xB8\x1ESomething appeared near\001to the wooden bridge．";
+#if defined(KO_FIELD_NO4_BRIDGE_ADDR)
+#define KO_LBL_NO4_BRIDGE                                                      \
+    KO_FIELD_PICK(KO_FIELD_NO4_BRIDGE_ADDR, D_us_80181644)
+#endif
 #endif
 
 /**
@@ -2510,7 +2517,10 @@ void func_us_801C5628(Entity* self) {
             CreateEntityFromCurrentEntity(E_MESSAGE_BOX, player);
             player->posX.i.hi = 0x80;
             player->posY.i.hi = 0xB0;
-            player->ext.messageBox.label = D_us_80181644;
+#ifndef KO_LBL_NO4_BRIDGE
+#define KO_LBL_NO4_BRIDGE D_us_80181644
+#endif
+            player->ext.messageBox.label = KO_LBL_NO4_BRIDGE;
             player->params = 0x100;
         }
         self->step++;

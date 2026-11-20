@@ -52,6 +52,21 @@ awk '/^u8 g_MbScriptPre\[\]/{p=1} p{print} p && /^};/{n++; if (n == 2) exit}' \
     mods/sotn-ultimate/src/maria_saturn/mod_maria_boss_data.h > "$OUT/st/cen_psp/mb_scripts.h"
 grep -q "g_MbScriptPost" "$OUT/st/cen_psp/mb_scripts.h" ||
     { echo "FAIL build_cenp: scripts not found in mod_maria_boss_data.h"; exit 1; }
+# fixCUT C: the KO trial (build_ko_trial.sh exports MOD_KO=1). CEN's own
+# sources below go through cpp (the trial's -DMOD_KO wrapper on PATH, and
+# KO_DEFS here as well), but the boss + glue are compiled by gcc, whose
+# built-in preprocessor never sees that wrapper: mod_cenp.c's mb_scripts.h
+# (the scripts CEN's cutscene.c plays in CENP) came out of the EN branch,
+# so the PSP Maria fight talked in English through the KO renderer. The KO
+# branch is gen_ko_mar.py's (+ gen_ko_timing.py --mar), as in CEN.BIN.
+# (src/st/cen_psp/st_init.c and its *_en scripts are the PSP build's; CENP
+# does not compile them.)
+KO_DEFS=""
+if [ "${MOD_KO:-}" = 1 ]; then
+    KO_DEFS="-DMOD_KO"
+    grep -q "^#ifdef MOD_KO" "$OUT/st/cen_psp/mb_scripts.h" ||
+        { echo "FAIL build_cenp: MOD_KO build but mb_scripts.h has no KO branch (gen_ko_mar.py not run?)"; exit 1; }
+fi
 
 # the PSP boss + glue (gcc, as build_mar2.sh)
 boss=""
@@ -61,12 +76,17 @@ done
 CC=mipsel-linux-gnu-gcc
 CFLAGS="-mno-abicalls -G0 -fno-pic -g -O2 -Iinclude -Iinclude/psxsdk -msoft-float -march=3000
  -funsigned-char -fpeephole -ffunction-cse -fpcc-struct-return -fcommon -fno-stack-protector
- -D_internal_version_us -DMOD_CENP -DMOD_CENP_BOSS -w"
+ -D_internal_version_us -DMOD_CENP -DMOD_CENP_BOSS $KO_DEFS -w"
 for c in "$OUT"/st/cen_psp/*.c; do
     b=$(basename "$c" .c)
     $CC $CFLAGS -c "$c" -o "$OUT/obj/$b.o"
     boss="$boss $OUT/obj/$b.o"
 done
+if [ -n "$KO_DEFS" ]; then
+    # canary: -DMOD_KO reached the gcc TU that holds g_MbScriptPre/Post
+    $CC $CFLAGS -dM -E "$OUT/st/cen_psp/mod_cenp.c" 2>/dev/null | grep -q "#define MOD_KO 1" ||
+        { echo "FAIL build_cenp: -DMOD_KO did not reach the gcc TUs"; exit 1; }
+fi
 
 # CEN's own sources with -DMOD_CENP (cc1-psx, as build.ninja's psx-cc)
 sed -e "s#build/us/src/st/cen/#$OUT/cen/#g" -e 's/stcen_/stcenp_/g' \
@@ -79,7 +99,7 @@ for o in $objs; do
     VERSION=us mipsel-linux-gnu-cpp -Isrc/st/cen -lang-c -Iinclude -Iinclude/psxsdk -undef \
         -Wall -fno-builtin -Dmips -D__GNUC__=2 -D__OPTIMIZE__ -D__mips__ -D__mips -Dpsx \
         -D__psx__ -D__psx -D_PSYQ -D__EXTENSIONS__ -D_MIPSEL -D_LANGUAGE_C -DLANGUAGE_C \
-        -DNO_LOGS -DHACKS -DUSE_INCLUDE_ASM -D_internal_version_us -DSOTN_STR -DMOD_CENP \
+        -DNO_LOGS -DHACKS -DUSE_INCLUDE_ASM -D_internal_version_us -DSOTN_STR -DMOD_CENP $KO_DEFS \
         "$src" 2>/dev/null |
         tools/sotn_str/target/release/sotn_str process |
         iconv --from-code=UTF-8 --to-code=Shift-JIS |

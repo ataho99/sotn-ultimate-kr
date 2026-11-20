@@ -644,7 +644,7 @@ extern const char* g_MenuStr[110];
 // file at the disc end) and cd.c's CdFile_KoGlyphs chain loads it to
 // KO_GLYPH_BLOCK_ADDR (A-gap). The 66590.c wrapper and the blob renderer
 // (MenuDrawKoHook at KO_BLOB_ADDR) both read the block.
-#define KO_GLYPH_COUNT 819 /* v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372, sihum40); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
+#define KO_GLYPH_COUNT 950 /* v14e = v14d + 91 Hangul cells F3CB.. (gen_ko_glyph_e.py; 10 cells kept free below KO_POP_TEXT 0x5640 = 960 cells); v14d = v14c + 40 ASCII cells F373.. (gen_ko_glyph_lat.py d; check_ko_glyph.py fails if a cell was skipped); v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372, sihum40); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
 #define KO_GLYPH_CELL_BYTES 23
 #define KO_GLYPH_12COL 1 /* sihum37: MGalmuri12 "an na" 12-col 23 B direct path + a (kind0); the Isunshin branch keeps it off */
 /* cutscene 1-byte promotion table: 112 x u16 (byte 0x80+i -> glyph code), in the
@@ -691,8 +691,15 @@ extern const char* g_MenuStr[110];
 #define KO_SHEET_OTHER ((const char*)0x8009F130)
 #define KO_SHEET_HOLDER ((const char*)0x8009F134)
 #define KO_SHEET2_ADDR 0x8009F100
+/* menu titles g_MenuStr[97]/[98] (gen_ko_sheet2.py fixed 8 B slots, asserted there) + the upload list
+ * of their glyphs that are not on the sheet yet: sheet row 1 of tpage 7 (indexes 0x30..), uploaded with
+ * func_800F98AC(KO_SHEET_UPLOAD3, 0x101) at menu open (PSP uses the same row for its fourth list) */
+#define KO_SHEET_FAMLIST ((const char*)0x8009F138)
+#define KO_SHEET_SPECIAL ((const char*)0x8009F140)
+#define KO_SHEET_UPLOAD3 ((const char*)0x8009F148)
 #define KO_POP_TEXT 0x8009E640 /* sihum42: resident KO_PopupText(str, leftAlign) (eq_popt.c, <= 0x4B0 B) in the glyph block slot behind the last possible cell (960 x 23 B = 0x5640): the stage overlays only call it */
 #define KO_POP_GLYPH 0x8009F280 /* sihum42: resident KO_PopGlyph(code, n) (eq_pop.c, <= 0x80 B) for the pickup popup Hangul; ARC zero gap behind the advance table */
+#define KO_FIELD_BASE 0x8009F300 /* 시험56: stage message-box labels (gen_ko_fieldmsg.py ko_field.bin, 4 x 0x80) in the ARC zero gap behind KO_POP_GLYPH; 0x8009F300..F4FF is unused (KO_SCRATCH is dead) */
 #define KO_FONT8_ADV_ADDR 0x8009F200 /* sihum40: 96 B, per sheet cell index: pen advance of the re-baked ASCII cells (ink width + 2), 0 = other cell (advance 8, no offset); gen_ko_font8.py ko_font8_adv.bin */
 #define KO_SHEET_RIGHT ((const char*)0x8009EED0)
 #define KO_SHEET_LEFT ((const char*)0x8009EED4)

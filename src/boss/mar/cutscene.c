@@ -1,4 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#if defined(MOD_KO) && !defined(VERSION_PSP) && !defined(VERSION_PC) && !defined(VERSION_HD)
+/* MAR draws the Korean glyph cells at n*16 + 0x180 (fixCUT B below); the line buffers (CutsceneUnk3/4)
+ * must be 16 rows too, or lines 2+ sample the wrong rows (src/st/ko_font_params.h KO_DLG16) */
+#define KO_DLG16 1
+#endif
 #include "mar.h"
 #include "mod_psp_script.h" // the PSP dub toggle's script copies
 #include "../../st/pfn_entity_update.h"
@@ -124,15 +129,27 @@ void EntityCutscene(Entity* self) {
                 }
                 g_Dialogue.nextCharX = g_Dialogue.nextLineX;
                 if (!(g_Dialogue.unk12 & 1)) {
+#ifdef KO_DLG16
+                    g_Dialogue.nextLineY += KO_LINE_STEP(16);
+#else
                     g_Dialogue.nextLineY += 12;
+#endif
                 }
                 g_Dialogue.nextCharY++;
+#ifdef KO_DLG16
+                g_Dialogue.nextCharY &= 3; /* 4 KO line buffers (y 384..447), as top/no3/lib/nz0/sel/rcen */
+#else
                 if (g_Dialogue.nextCharY >= 5) {
                     g_Dialogue.nextCharY = 0;
                 }
+#endif
                 CutsceneUnk4();
                 if (!(g_Dialogue.unk12 & 1)) {
+#ifdef KO_DLG16
+                    if (KO_SCROLL_AT(g_Dialogue.nextCharY, g_Dialogue.nextCharY > 2)) {
+#else
                     if (g_Dialogue.nextCharY >= 4) {
+#endif
                         g_Dialogue.unk12 |= 1;
                         g_Dialogue.portraitAnimTimer = 0;
                         self->step_s = 0;
@@ -399,9 +416,46 @@ void EntityCutscene(Entity* self) {
         }
 
         if (nextChar == ' ') {
+#ifdef MOD_KO
+            g_Dialogue.nextCharX += 1; /* 4px space, KO_SPACE_ADV (as rcen) */
+#else
             g_Dialogue.nextCharX += 2;
+#endif
             return;
         }
+#ifdef MOD_KO
+        /* fixCUT B: the KO glyph path of the stage renderers (src/st/rcen/
+         * cutscene.c), so MAR can show gen_ko_splice.py's mar_maria rows.
+         * ASCII via KO_ENGTAB (0x8009EF00), 1-byte promotion
+         * (KO_PROMO_TBL 0x8009F000), 2-byte 0xF0..0xF3 cells. */
+        if (nextChar > 0x20 && nextChar < 0x7F &&
+            ((const u16*)0x8009EF00)[nextChar - 0x21]) {
+            u_long* eng_glyph = (u_long*)g_api.func_80106A28(
+                ((const u16*)0x8009EF00)[nextChar - 0x21], 1);
+            if (eng_glyph) {
+                LoadTPage(eng_glyph, 0, 0, g_Dialogue.nextCharX,
+                          (g_Dialogue.nextCharY * 16) + 0x180, 0xC, 0x10);
+                g_Dialogue.nextCharX += KO_ENG_ADV(nextChar);
+                break;
+            }
+        }
+        if ((nextChar & 0xFC) == 0xF0 || (nextChar >= 0x80 && nextChar < 0xF0)) {
+            s32 ko_ch;
+            u_long* ko_glyph;
+            if (nextChar >= 0x80 && nextChar < 0xF0) {
+                ko_ch = ((u16*)0x8009F000)[nextChar - 0x80];
+            } else {
+                ko_ch = (nextChar << 8) | *g_Dialogue.scriptCur++;
+            }
+            ko_glyph = (u_long*)g_api.func_80106A28(ko_ch, 1);
+            if (ko_glyph) {
+                LoadTPage(ko_glyph, 0, 0, g_Dialogue.nextCharX,
+                          (g_Dialogue.nextCharY * 16) + 0x180, 0xC, 0x10);
+                g_Dialogue.nextCharX += 3;
+                break;
+            }
+        }
+#endif
 
 #if defined(VERSION_PC) || defined(VERSION_PSP)
         rect.x = ((nextChar & 0xF) * 2) + 0x380;
@@ -415,7 +469,11 @@ void EntityCutscene(Entity* self) {
         rect->h = 8;
 #endif
 
+#ifdef KO_DLG16
+        y = (g_Dialogue.nextCharY * 16) + 0x180 + KO_DLG_FB_DY; /* 8x8 fallback on the 16 px buffer, KO baseline */
+#else
         y = ((g_Dialogue.nextCharY * 0xC) + 0x180);
+#endif
         x = g_Dialogue.nextCharX;
 #if defined(VERSION_PC) || defined(VERSION_PSP)
         MoveImage(&rect, x, y);

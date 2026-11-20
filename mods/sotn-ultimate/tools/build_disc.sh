@@ -201,7 +201,7 @@ if [ -n "$pad" ]; then
         echo "DRA code grew past its pad: free more dead code first" >&2
         exit 1
     fi
-    sed -i "s/#define MOD_DRA_PAD [0-9]*/#define MOD_DRA_PAD $pad/" src/dra/42398.c
+    sed -i "s/#define MOD_DRA_PAD [0-9][0-9]*/#define MOD_DRA_PAD $pad/" src/dra/42398.c # digits only: the KO line is a formula (MOD_DRA_PAD_KO_BASE - KO_NAMES_DRA_GROW)
     echo "MOD_DRA_PAD -> $pad"
 fi
 # the PSP English script into the built overlays (before BO6RIC2 copies BO6)

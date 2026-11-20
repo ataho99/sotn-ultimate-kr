@@ -1672,7 +1672,12 @@ void MenuSpellsDraw(MenuContext* ctx) {
     const u8* comboPointer;
 #if defined(VERSION_US)
     s32 startXCoord = 176;
+#if defined(MOD_KO)
+    /* 12x16 sheet title (KO_SHEET_SPECIAL), centred where the 8px "Special Moves List" was */
+    func_800F66BC(KO_SHEET_SPECIAL, 146, 36, ctx, 1);
+#else
     MenuDrawStr(g_MenuStr[98], 104, 40, ctx);
+#endif
 #elif defined(VERSION_PSP)
     const s32 startXCoord = 180;
     func_800F66BC(D_800A2D68[2], 136, 36, ctx, 1);
@@ -1719,6 +1724,26 @@ void MenuSpellsDraw(MenuContext* ctx) {
             // This writes the word "or", because spells say '{Square} or
             // {Circle}'
             charNum++;
+#if defined(MOD_KO)
+            {
+                /* "or" with the re-baked ASCII cells' variable advance, the
+                 * MenuDrawStr rule (KO_ADV_RAW: pen + 1, advance a; 0 -> 8);
+                 * the second button follows the pen instead of charNum * 8 */
+                s32 koX = startXCoord + (charNum * 8);
+                s32 koA = KO_ADV_RAW(CH('o'));
+                MenuDrawChar(CH('o'), koX + (koA ? 1 : 0), yCoord, ctx);
+                koX += koA ? koA : 8;
+                koA = KO_ADV_RAW(CH('r'));
+                MenuDrawChar(CH('r'), koX + (koA ? 1 : 0), yCoord, ctx);
+                koX += koA ? koA : 8;
+                buttonCFG = g_Settings.buttonConfig[1];
+                MenuDrawChar(g_ChButtons[buttonCFG], koX, yCoord, ctx);
+                if (buttonCFG >= 4) {
+                    MenuDrawChar(
+                        g_ChButtons2[buttonCFG - 4], koX + 8, yCoord, ctx);
+                }
+            }
+#else
             MenuDrawChar(CH('o'), startXCoord + (charNum * 8), yCoord, ctx);
             charNum++;
             MenuDrawChar(CH('r'), startXCoord + (charNum * 8), yCoord, ctx);
@@ -1734,6 +1759,7 @@ void MenuSpellsDraw(MenuContext* ctx) {
                 MenuDrawChar(g_ChButtons2[buttonCFG - 4],
                              startXCoord + (charNum * 8), yCoord, ctx);
             }
+#endif
         } else {
             MenuDrawChar(CH('?'), startXCoord, yCoord, ctx);
             MenuDrawChar(CH('+'), startXCoord + 8, yCoord, ctx);
@@ -1778,7 +1804,10 @@ void MenuFamiliarsDraw(MenuContext* ctx) {
     FamiliarStats stats;
 #endif
 
-#if defined(VERSION_US)
+#if defined(VERSION_US) && defined(MOD_KO)
+    /* 12x16 sheet title (KO_SHEET_FAMLIST), centred where the 8px "Familiar List" was */
+    func_800F66BC(KO_SHEET_FAMLIST, 142, 36, ctx, 1);
+#elif defined(VERSION_US)
     MenuDrawStr(g_MenuStr[97], 120, 40, ctx);
 #elif defined(VERSION_PSP)
     MenuDrawStr(D_800A2D68[26], 120, 40, ctx);
@@ -3942,6 +3971,7 @@ block_4:
 #if defined(VERSION_US) && defined(MOD_KO)
             func_800F98AC(KO_SHEET_UPLOAD, 0);
             func_800F98AC(KO_SHEET_UPLOAD2, 0x100);
+            func_800F98AC(KO_SHEET_UPLOAD3, 0x101); /* title glyphs, sheet row 1 */
             KO_EqOnMenuEnter();
 #elif defined(VERSION_US)
             func_800F98AC(D_800A2D64, 0);
@@ -4323,7 +4353,9 @@ block_4:
             } else {
             block_117:
                 func_800F9808(2);
-#if defined(VERSION_US)
+#if defined(VERSION_US) && defined(MOD_KO)
+                ShowText(ko_desc7, 2); /* gen_ko_cfg.py cfg:desc7 */
+#elif defined(VERSION_US)
                 ShowText("Assign the function to each button．", 2);
 #elif defined(VERSION_PSP)
                 switch (g_UserLanguage) {

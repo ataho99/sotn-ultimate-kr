@@ -20,8 +20,28 @@
 # Idempotent: first run backs up retail yaml to *.ko_retail; every run
 # restores from backup, then splices. Refuses if yaml looks spliced but no
 # backup exists.
-# Excluded: prologue/opening/MAR
-# (separate mechanisms, next turn). See 조사_t15_1111.md.
+# Excluded: prologue/opening (separate mechanisms). See 조사_t15_1111.md.
+#
+# fixCUT (2026-11-19):
+#  * C-side entry offsets (ko_entry_offsets.py, e.g. RCEN cutscene_script +
+#    0x129 = Shaft's pre-fight lines): the 0x0D pads are also placed at every
+#    entry, so the part before it ends exactly at the retail offset (no KO row
+#    may straddle an entry; KO longer than EN before an entry = error). The
+#    result is re-verified (ko_entry_offsets.verify) before it is written.
+#  * boss overlays: MAR (yaml, C renderer with the KO glyph path) and the
+#    asm-rendered bo2/bo5/bo6/rbo2/rbo6 (scripts addressed like psp_script
+#    OVERLAYS "addr": spliced from the retail BIN into
+#    build/us/ko_boss_splice.json, written into the linked BINs by
+#    --apply-boss, run before psp_script --apply and build_bo6ric2.py).
+#    Their TSV keys (mar_*, bo2_* ...) are OPTIONAL: no rows / empty
+#    translation = the retail bytes stay (placeholder). --placeholders OUT
+#    writes the rows translators fill (+ OUT.ref.tsv: BIN offset, voice id,
+#    retail EN per row, local reference only).
+#  * the asm renderers have no KO glyph path: a non-empty KO row for them
+#    stops the build unless KO_BOSS_ASM_RENDER=1 (set it once the asm
+#    entities are decompiled / hooked). fixBOSS: bo5/bo6/rbo6 have a C
+#    entity with the KO path under MOD_KO (src/boss/ko_boss_dialogue.h,
+#    ko_entry_offsets.BOSS_KO_RENDER) and take KO rows; bo2/rbo2 still gated.
 import io
 from ko_paths import KO_WK, KO_REPO  # noqa: E402
 import json
@@ -60,7 +80,18 @@ STAGES = [
      ["dai_huntinggirl"]),
     ("st/dre/cutscene_script_psx.yaml", "stdre", "cutscene_script",
      ["dre_succubus"]),
+    # fixCUT B: Maria (boss MAR, Clock Tower). Optional: keys mar_maria:N.
+    ("boss/mar/cutscene_data.yaml", "bomar", "cutscene_data", ["mar_maria"]),
 ]
+# stages whose TSV keys may be absent / untranslated (placeholders)
+OPTIONAL = {"bomar"}
+
+# fixCUT B: asm-rendered boss overlays (ko_entry_offsets.BOSS_SCRIPTS);
+# key prefix per script region = "<ovl>_<BIN offset hex>" (e.g. bo2_1ccc:N)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ko_entry_offsets as EO  # noqa: E402
+BOSS_PLAN = os.path.join(REPO, "build", "us", "ko_boss_splice.json")
+BOSS_ASM_OK = os.environ.get("KO_BOSS_ASM_RENDER") == "1"
 
 MARK = "# KO-SPLICE trial15"
 
@@ -187,14 +218,22 @@ _OPS = {
     "SCRIPT_UNKNOWN_15": (15, [4]), "WAIT_FOR_FLAG": (16, [1]),
     "SET_FLAG": (17, [1]), "SCRIPT_UNKNOWN_18": (18, []),
     "LOAD_PORTRAIT": (19, [4, 1]), "SCRIPT_UNKNOWN_20": (20, [2]),
-    "SCRIPT_UNKNOWN_21": (21, []), "SCRIPT_UNKNOWN_22": (22, []),
+    "SCRIPT_UNKNOWN_21": (21, []), "SCRIPT_UNKNOWN_22": (22, [1]),
+    # fixCUT: the extractor (tools/sotn-assets cutscene/handler.go) names op
+    # 22 RESET_FLAG with a 1-byte arg (MAR's script has it); was missing
+    "RESET_FLAG": (22, [1]),
     "SCRIPT_UNKNOWN_23": (23, []), "WAIT_FOR_FLAG_RESET": (24, [1]),
 }
 
 
+def _text_len(pay):
+    """script bytes of a yaml TEXT payload (handler.go writes \\xNN escapes)"""
+    return len(re.sub(r"\\x[0-9A-Fa-f]{2}", "x", pay))
+
+
 def _row_size(kind, pay):
     if kind in ("RAW", "TEXT"):
-        return len(pay) if kind == "TEXT" else 0
+        return _text_len(pay) if kind == "TEXT" else 0
     if kind == "BYTE":
         return 1
     if kind == "SCRIPT_SWITCH":
@@ -264,22 +303,52 @@ WARN = []
 DROPPED_LB = []
 
 
-def splice_stage(asset, prefixes, tsv, mp):
+class Untranslated(Exception):
+    """optional stage: no TSV rows / no translated row -> keep retail"""
+
+
+def _read_yaml_retail(asset):
+    """(path, retail text): the retail yaml, from the .ko_retail backup when
+    there is one (every run restores from it), else the yaml on disk (backed
+    up first)."""
     path = os.path.join(REPO, "assets", asset)
     bak = path + ".ko_retail"
     cur = io.open(path, encoding="utf-8").read()
-    if MARK in cur:
-        assert os.path.exists(bak), "spliced yaml without backup: " + asset
+    if os.path.exists(bak):
         cur = io.open(bak, encoding="utf-8").read()
     else:
-        if not os.path.exists(bak):
-            io.open(bak, "w", encoding="utf-8", newline="").write(cur)
+        assert MARK not in cur, "spliced yaml without backup: " + asset
+        io.open(bak, "w", encoding="utf-8", newline="").write(cur)
+    return path, cur
+
+
+def splice_stage(asset, prefixes, tsv, mp, optional=False):
+    path, cur = _read_yaml_retail(asset)
     lines = cur.split("\n")
     rows = split_rows([l for l in lines if l.strip() != ""])
     nm0 = asset.split("/")[-1].rsplit(".", 1)[0]
     key0 = ("assets/" + asset.rsplit("/", 1)[0], nm0)
     start0, size0 = config_sizes()[0][key0]
+    entries = EO.offsets_for("assets/" + asset)
+    try:
+        out, stats = splice_rows(asset, rows, start0, size0, entries, prefixes, tsv, mp, optional)
+    except Untranslated:
+        # placeholder: the retail yaml stays (undo an older splice)
+        io.open(path, "w", encoding="utf-8", newline="").write(cur)
+        return None
+    errs = EO.verify(rows, split_rows(out), _row_size, entries, asset)
+    assert not errs, errs
+    io.open(path, "w", encoding="utf-8", newline="").write("\n".join(out) + "\n")
+    return stats
+
+
+def splice_rows(label, rows, start0, size0, entries, prefixes, tsv, mp, optional=False):
+    """KO rows for one script (rows = split_rows of the retail script):
+    -> (output yaml lines, (EN bytes, KO bytes, pad, keys)). entries = the
+    C code's entry offsets: pads go there too, so each lands on its retail
+    command (ko_entry_offsets)."""
     intra_targets = _intra_targets(rows, start0, size0)
+    entry_row = EO.entry_rows(rows, _row_size, entries, label)  # retail boundary, else error
     # group TEXT rows into slots: a slot ends at LINE_BREAK or at a
     # box-terminating op (NEXT_DIALOG / CLOSE_DIALOG / END_CUTSCENE --
     # the next voice box starts without a LINE_BREAK)
@@ -298,7 +367,6 @@ def splice_stage(asset, prefixes, tsv, mp):
     if cur_slot:
         slots.append(cur_slot)
         slot_end.append(len(rows))
-    texts = {}
     text_of = {}
     for idx, (kind, pay, raw) in enumerate(rows):
         if kind == "TEXT":
@@ -306,11 +374,13 @@ def splice_stage(asset, prefixes, tsv, mp):
     # TSV rows in file order
     keys = sorted([k for k in tsv if k.rsplit(":", 1)[0] in prefixes],
                   key=lambda k: int(k.rsplit(":", 1)[1]))
-    assert keys, asset
+    if optional and not any(tsv[k][1].strip() for k in keys):
+        raise Untranslated(label)
+    assert keys, label
     # EN source: legacy text column, or "#n1/n2/.." = slot count per EN segment
     # (public TSV: no original text) -> original EN rebuilt from this yaml's slots
     cnt_mode = [tsv[k][0].startswith("#") for k in keys]
-    assert all(cnt_mode) or not any(cnt_mode), (asset, "mixed EN counts/text")
+    assert all(cnt_mode) or not any(cnt_mode), (label, "mixed EN counts/text")
     en_res = {}
     if all(cnt_mode):
         csi = 0
@@ -342,7 +412,7 @@ def splice_stage(asset, prefixes, tsv, mp):
             n += 1
             if acc == s:
                 break
-        assert acc == s, (asset, k, j, repr(s), repr(acc))
+        assert acc == s, (label, k, j, repr(s), repr(acc))
         seg_slot[(k, j)] = slots[si:si + n]
         seg_end[(k, j)] = slot_end[si + n - 1] if n else None
         si += n
@@ -353,17 +423,39 @@ def splice_stage(asset, prefixes, tsv, mp):
                 _f.write(k + "\t#" + "/".join(str(len(seg_slot[(k, j)])) for j in range(len(en_res[k].split("/")))) + "\n")
     # KO distribution: KO segs fill non-empty groups in order (translators
     # reflowed lines; order preserved). ABSOLUTE intra-script addresses
-    # (SCRIPT_SWITCH cases, UNKNOWN_15 gotos) must keep exact offsets, so
-    # 0x0D (CSOP_SCRIPT_UNKNOWN_13 = 13 decimal) no-op pads are inserted before every such target row (and at the
-    # end), sized to the cumulative EN-KO deficit at that point. 0x0D is a
-    # no-op in every stage interpreter (CSOP_SCRIPT_UNKNOWN_13: continue).
+    # (SCRIPT_SWITCH cases, UNKNOWN_15 gotos) and the C code's entry offsets
+    # must keep exact offsets, so 0x0D (CSOP_SCRIPT_UNKNOWN_13 = 13 decimal)
+    # no-op pads are inserted before every such row (and at the end), sized
+    # to the cumulative EN-KO deficit at that point. 0x0D is a no-op in every
+    # stage interpreter (CSOP_SCRIPT_UNKNOWN_13: continue).
     new_row = {}
     op_repl = {}
     en_total = ko_total = 0
+    entry_set = sorted(entry_row.values())
     for k in keys:
         en = en_res[k]
         ko = tsv[k][1]
         es = en.split("/")
+        groups = []
+        gend = []
+        for j, s in enumerate(es):
+            if s == "":
+                continue
+            grp = seg_slot[(k, j)]
+            assert len(grp) > 0, (label, k, j)
+            groups.append(grp)
+            gend.append(seg_end[(k, j)])
+        en_total += sum(_text_len(x) for x in es if x != "")
+        if optional and ko.strip() == "":
+            # placeholder row: its retail TEXT rows stay as they are
+            ko_total += sum(_text_len(x) for x in es if x != "")
+            continue
+        if groups:
+            # a KO row must not straddle a C entry (its bytes move as one)
+            lo = min(tix for g in groups for slot in g for tix in slot)
+            hi = gend[-1] if gend[-1] is not None else len(rows)
+            bad = [e for e in entry_set if lo < e < hi]
+            assert not bad, (label, k, "row straddles a C entry offset", [hex(o) for o, r in entry_row.items() if r in bad])
         # KO text: "/" = line, "|" = window break (NEXT_DIALOG + speaker re-set)
         knon = []
         winstart = set()
@@ -372,15 +464,6 @@ def splice_stage(asset, prefixes, tsv, mp):
             if wi > 0 and wl:
                 winstart.add(len(knon))
             knon += wl
-        groups = []
-        gend = []
-        for j, s in enumerate(es):
-            if s == "":
-                continue
-            grp = seg_slot[(k, j)]
-            assert len(grp) > 0, (asset, k, j)
-            groups.append(grp)
-            gend.append(seg_end[(k, j)])
         # speaker for the re-set after a window break: the SET_PORTRAIT in force
         # at this row's first text row (+ a SET_SPEED given after it, restored
         # because SET_PORTRAIT resets the typing speed)
@@ -423,7 +506,7 @@ def splice_stage(asset, prefixes, tsv, mp):
         for gi in range(1, min(len(groups), len(knon))):
             if gi in winstart:
                 opi = gend[gi - 1]
-                assert opi is not None and rows[opi][0] == "LINE_BREAK", (asset, k, gi, rows[opi][0] if opi is not None and opi < len(rows) else None)
+                assert opi is not None and rows[opi][0] == "LINE_BREAK", (label, k, gi, rows[opi][0] if opi is not None and opi < len(rows) else None)
                 op_repl[opi] = (wb_rows, len(wb_bytes) - 1)
         # The EN structure keeps one LINE_BREAK after every group. When the KO row has
         # fewer lines than EN groups those trailing LINE_BREAKs (after the last KO line)
@@ -435,7 +518,6 @@ def splice_stage(asset, prefixes, tsv, mp):
             if gi >= len(knon) - 1 and opi is not None and opi < len(rows) and rows[opi][0] == "LINE_BREAK" and opi not in op_repl:
                 op_repl[opi] = ([], -1)
                 DROPPED_LB.append((k, gi))
-        en_total += sum(len(x) for x in es if x != "")
         ko_total += sum(len(enc(x, mp)) for x in knon)
         for gi, grp in enumerate(groups):
             payload = enc(knon[gi], mp) if gi < len(knon) else b""
@@ -451,29 +533,36 @@ def splice_stage(asset, prefixes, tsv, mp):
                     first = False
                 else:
                     new_row[tix] = ("TEXT", b"")
-    # pad points: every intra-symbol absolute target row + end
-    pad_rows = sorted(set([r for r in intra_targets] + [len(rows)]))
+    # pad points: every intra-symbol absolute target row + every C entry row + end
+    pad_rows = sorted(set([r for r in intra_targets] + entry_set + [len(rows)]))
     # retail cumulative TEXT bytes before each row
     en_cum = [0] * (len(rows) + 1)
     for i, (kind, pay, raw) in enumerate(rows):
-        en_cum[i + 1] = en_cum[i] + (len(pay) if kind == "TEXT" else 0)
+        en_cum[i + 1] = en_cum[i] + (_text_len(pay) if kind == "TEXT" else 0)
     # voice sync (sihum39): a window that plays a voice clip (PLAY_SOUND) must not be closed (NEXT_DIALOG ->
     # next speaker's portrait / next window) before the clip has ended -- the Korean text is shorter than
     # the English one the clip was timed for, so without this the portrait switches to the next speaker
     # while the previous voice is still playing. SCRIPT_UNKNOWN_11 = wait while the voice plays (the
     # retail script already uses it at the start of every voiced window); +1 byte, absorbed by the pads.
+    # (optional stages: only in windows whose text was replaced -- a placeholder window keeps retail bytes)
     wait_before = set()
     voiced = False
+    ko_win = False
     for idx, (kind, pay, raw) in enumerate(rows):
+        if idx in new_row:
+            ko_win = True
         if kind == "PLAY_SOUND" and idx + 1 < len(rows) and rows[idx + 1][0] == "WAIT_FOR_SOUND":
             voiced = True  # voice clip: PLAY_SOUND directly followed by WAIT_FOR_SOUND (SFX/music cues are not)
         elif kind == "NEXT_DIALOG":
-            if voiced and idx not in op_repl:
+            # (never at a C entry row: the entry must stay on the retail op)
+            if voiced and idx not in op_repl and idx not in entry_set and (ko_win or not optional):
                 wait_before.add(idx)
             voiced = False
+            ko_win = False
         elif kind in ("CLOSE_DIALOG", "END_CUTSCENE"):
             voiced = False
-    WAITS.append((asset, len(wait_before)))
+            ko_win = False
+    WAITS.append((label, len(wait_before)))
     # emit
     out = []
     ko_cum = 0
@@ -482,7 +571,9 @@ def splice_stage(asset, prefixes, tsv, mp):
     for idx, (kind, pay, raw) in enumerate(rows):
         while pi < len(targets) and targets[pi] == idx:
             need = en_cum[idx] - ko_cum
-            assert need >= 0, (asset, idx, en_cum[idx], ko_cum)
+            assert need >= 0, (label, "KO bytes overrun a jump target / C entry", idx,
+                               "+0x%X" % next((o for o, r in entry_row.items() if r == idx), -1),
+                               "over by %d B" % -need)
             for _ in range(need):
                 out.append("  - [BYTE, 0x0D]")
             ko_cum += need
@@ -506,18 +597,230 @@ def splice_stage(asset, prefixes, tsv, mp):
             if idx in wait_before:
                 out.append("  - [SCRIPT_UNKNOWN_11]")
                 ko_cum += 1
+            if kind == "TEXT":
+                ko_cum += _text_len(pay)  # placeholder row: retail text kept
             out.append(raw.rstrip("\n"))
     # end pad (after last row)
     need = en_cum[len(rows)] - ko_cum
-    assert need >= 0, (asset, "end", en_total, ko_cum)
+    assert need >= 0, (label, "end", en_total, ko_cum)
     for _ in range(need):
         out.append("  - [BYTE, 0x0D]")
     ko_cum += need
     pad = en_total - ko_total
-    assert ko_cum == en_total, (asset, ko_cum, en_total)
+    assert ko_cum == en_total, (label, ko_cum, en_total)
     out.append(MARK + " EN=%d KO=%d pad13=%d" % (en_total, ko_total, pad))
-    io.open(path, "w", encoding="utf-8", newline="").write("\n".join(out) + "\n")
-    return en_total, ko_total, pad, len(keys)
+    return out, (en_total, ko_total, pad, len(keys))
+
+
+# ------------------------------------------------------------ boss (asm) scripts
+def _psp():
+    import psp_script as P  # constants only at import (OPS, disassemble, assemble)
+    return P
+
+
+def boss_regions(ovl):
+    """[(BIN offset, retail tokens, [entry offsets])] of one asm boss overlay:
+    each SetCutsceneScript address up to its END_CUTSCENE (+ the parts its
+    jumps reach, psp_script.retail_script); an address inside an earlier
+    region is that region's entry offset."""
+    P = _psp()
+    binp, _, addrs, _ = EO.BOSS_SCRIPTS[ovl]
+    retail = open(os.path.join(REPO, "disks", "us", binp), "rb").read()
+    regs = []
+    for a in sorted(addrs):
+        off = a - EO.BASE
+        inside = [r for r in regs if r[0] < off < r[0] + len(P.assemble(r[1]))]
+        if inside:
+            r = inside[0]
+            r[2].append(off - r[0])  # (psp_script treats it as its own script; same bytes)
+            continue
+        toks, o2 = P.retail_script(retail, {"addr": a}, ovl)
+        assert o2 == off
+        regs.append((off, toks, []))
+    for i in range(1, len(regs)):
+        assert regs[i - 1][0] + len(P.assemble(regs[i - 1][1])) <= regs[i][0], (ovl, "regions overlap")
+    return retail, regs
+
+
+def toks_to_rows(toks):
+    """psp_script tokens -> split_rows rows (yaml-like lines, latin-1 text)"""
+    lines = []
+    for t in toks:
+        if t[0] == "TEXT":
+            lines.append('  - [TEXT, "%s"]' % t[1])
+        elif t[0] == "BYTE":
+            lines.append("  - [BYTE, 0x%02X]" % t[1])
+        elif len(t) == 1:
+            lines.append("  - [%s]" % t[0])
+        else:
+            lines.append("  - [%s, %s]" % (t[0], ", ".join("0x%X" % a for a in t[1:])))
+    return split_rows(lines)
+
+
+def rows_to_bytes(rows):
+    P = _psp()
+    out = bytearray()
+    for kind, pay, raw in rows:
+        if kind == "RAW":
+            continue
+        if kind == "TEXT":
+            out += pay.encode("latin-1")
+        elif kind == "BYTE":
+            out.append(int(pay, 0))
+        else:
+            args = [int(a.strip(), 0) for a in pay.split(",")] if pay.strip() else []
+            out += P.assemble([tuple([kind] + args)])
+    return bytes(out)
+
+
+def boss_prefix(ovl, off):
+    return "%s_%x" % (ovl, off)
+
+
+def splice_boss(tsv, mp, plan, allow):
+    """asm boss overlays: KO bytes per script region -> plan (for --apply-boss)"""
+    for ovl in sorted(EO.BOSS_SCRIPTS):
+        binp = EO.BOSS_SCRIPTS[ovl][0]
+        if not os.path.exists(os.path.join(REPO, "disks", "us", binp)):
+            print("%s: no retail %s, skipped" % (ovl, binp))
+            continue
+        retail, regs = boss_regions(ovl)
+        for off, toks, entries in regs:
+            rows = toks_to_rows(toks)
+            old = rows_to_bytes(rows)
+            assert old == retail[off:off + len(old)], (ovl, hex(off), "token round trip")
+            pref = boss_prefix(ovl, off)
+            label = "%s@0x%X" % (binp, off)
+            try:
+                out, st = splice_rows(label, rows, off, len(old), entries, [pref], tsv, mp, True)
+            except Untranslated:
+                print("%s: keys=0 (placeholder %s:N) -- retail kept" % (label, pref))
+                continue
+            # fixBOSS: bo5/bo6/rbo6 have the C KO renderer (EO.BOSS_KO_RENDER)
+            assert ovl in EO.BOSS_KO_RENDER or BOSS_ASM_OK, (
+                "%s: KO rows for an asm-rendered boss (no KO glyph path; "
+                "set KO_BOSS_ASM_RENDER=1 only with a KO renderer)" % label)
+            new = rows_to_bytes(split_rows(out))
+            errs = EO.verify_bytes(old, new, [0] + entries, label)
+            assert not errs, errs
+            name = binp.rsplit("/", 1)[-1]
+            plan.append({"ovl": ovl, "bin": name, "off": off, "old": old.hex(),
+                         "new": new.hex(), "entries": entries})
+            for b in [name] + (["BO6RIC2.BIN"] if ovl == "bo6" else []):
+                allow.setdefault(b, []).append([off, len(old)])
+            print("%s: keys=%d EN=%d KO=%d pad=%d entries=%s" % (
+                label, st[3], st[0], st[1], st[2], [hex(e) for e in entries]))
+
+
+def apply_boss():
+    """--apply-boss: write the planned KO bytes into the linked boss BINs"""
+    if not os.path.exists(BOSS_PLAN):
+        print("ko boss splice: no plan (nothing translated)")
+        return 0
+    plan = json.load(open(BOSS_PLAN))
+    n = 0
+    for p in plan:
+        path = os.path.join(REPO, "build", "us", p["bin"])
+        b = bytearray(open(path, "rb").read())
+        old, new, o = bytes.fromhex(p["old"]), bytes.fromhex(p["new"]), p["off"]
+        cur = bytes(b[o:o + len(old)])
+        if cur == new:
+            continue
+        if cur != old:
+            sys.exit("ko boss splice: %s at 0x%X is not the retail script" % (p["bin"], o))
+        b[o:o + len(new)] = new
+        open(path, "wb").write(b)
+        n += 1
+    print("ko boss splice: %d of %d scripts written" % (n, len(plan)))
+    return 0
+
+
+def write_placeholders(out_path, tsv):
+    """rows for the optional stages' keys: one row per dialogue window
+    (NEXT_DIALOG / CLOSE_DIALOG / END_CUTSCENE), EN = "#1/1.." (one segment
+    per text slot), translation empty. OUT.ref.tsv: BIN offset of the first
+    text, voice ids, retail EN (local reference, not for the public TSV)."""
+    jobs = []
+    for asset, overlay, symbol, prefs in STAGES:
+        if overlay in OPTIONAL:
+            path = os.path.join(REPO, "assets", asset)
+            if not os.path.exists(path):
+                print("skip (not extracted): " + asset)
+                continue
+            _, cur = _read_yaml_retail(asset)
+            nm0 = asset.split("/")[-1].rsplit(".", 1)[0]
+            start0 = config_sizes()[0][("assets/" + asset.rsplit("/", 1)[0], nm0)][0]
+            jobs.append((prefs[0], start0, EO.offsets_for("assets/" + asset),
+                         split_rows([l for l in cur.split("\n") if l.strip()])))
+    for ovl in sorted(EO.BOSS_SCRIPTS):
+        binp = EO.BOSS_SCRIPTS[ovl][0]
+        if not os.path.exists(os.path.join(REPO, "disks", "us", binp)):
+            print("skip (no retail BIN): " + binp)
+            continue
+        _, regs = boss_regions(ovl)
+        for off, toks, entries in regs:
+            jobs.append((boss_prefix(ovl, off), off, entries, toks_to_rows(toks)))
+    hdr = io.open(TSV, encoding="utf-8").readline().rstrip("\n").split("\t") \
+        if os.path.exists(TSV) else ["키", "분류", "EN", "번역(v14 확정본)"]
+    o1 = io.open(out_path, "w", encoding="utf-8", newline="")
+    o2 = io.open(out_path + ".ref.tsv", "w", encoding="utf-8", newline="")
+    o1.write("\t".join(hdr) + "\n")
+    o2.write("키\t위치(BIN)\t음성\tEN(retail)\t진입구간\n")
+    total = {}
+    for pref, start, ents, rows in jobs:
+        offs = EO.row_offsets(rows, _row_size)
+        n = 0
+        win, slot, voices, first = [], "", [], None
+        for idx, (kind, pay, raw) in enumerate(rows):
+            if kind == "TEXT" and pay != "":
+                slot += pay
+                if first is None:
+                    first = start + offs[idx]
+            elif kind == "PLAY_SOUND":
+                voices.append(pay.strip())
+            if kind in ("LINE_BREAK", "NEXT_DIALOG", "CLOSE_DIALOG", "END_CUTSCENE") and slot:
+                win.append(slot)
+                slot = ""
+            if kind in ("NEXT_DIALOG", "CLOSE_DIALOG", "END_CUTSCENE") or idx == len(rows) - 1:
+                if slot:
+                    win.append(slot)
+                    slot = ""
+                if win:
+                    key = "%s:%d" % (pref, n)
+                    row = [key, "대사", "#" + "/".join("1" for _ in win), ""]
+                    row += [""] * (len(hdr) - len(row))
+                    if key in tsv and tsv[key][1].strip():
+                        row[3] = "(TSV에 이미 있음)"
+                    o1.write("\t".join(row[:len(hdr)]) + "\n")
+                    seg = [e for e in sorted(ents) if e <= first - start]
+                    o2.write("%s\t0x%X\t%s\t%s\t%s\n" % (
+                        key, first, " ".join(voices), "/".join(win),
+                        "+0x%X" % seg[-1] if seg else "+0"))
+                    n += 1
+                win, voices, first = [], [], None
+        total[pref] = n
+    o1.close()
+    o2.close()
+    for p, n in total.items():
+        print("placeholder %s: %d rows" % (p, n))
+    print("wrote %s (+ .ref.tsv)" % out_path)
+
+
+def check_all_glyphs(tsv, mp):
+    """pre-splice : every character of every KO row must have a glyph cell; list ALL missing at once"""
+    miss = {}
+    for k, (en, ko) in tsv.items():
+        if __import__("re").match(r"(bo|rbo)\d+_|mar_|mod_maria_boss_data", k):
+            continue  # boss rows: apply_boss path (own encoder), not this check
+        for ch in ell(ko.replace("\u2026", "...")):
+            if ord(ch) >= 128 and ch not in PROMO and ch not in mp:
+                miss.setdefault(ch, []).append(k)
+    if miss:
+        print("glyph map misses %d characters:" % len(miss))
+        for ch, ks in sorted(miss.items(), key=lambda x: ord(x[0])):
+            print("  %s U+%04X rows=%d: %s" % (ch, ord(ch), len(ks), ", ".join(sorted(set(ks))[:8])))
+        sys.exit("pre-splice check: %d characters have no glyph cell (list above)" % len(miss))
+    print("pre-splice check: all KO row characters are in the glyph map (%d mapped, %d promoted)" % (len(mp), len(PROMO)))
 
 
 def main():
@@ -534,8 +837,13 @@ def main():
                     n += 1
         print("restored %d yamls" % n)
         return
+    if len(sys.argv) > 1 and sys.argv[1] == "--apply-boss":
+        return apply_boss()
+    if len(sys.argv) > 2 and sys.argv[1] == "--placeholders":
+        return write_placeholders(sys.argv[2], load_tsv())
     tsv = load_tsv()
     mp = load_map()
+    check_all_glyphs(tsv, mp)
     sizes, bins = config_sizes()
     edits = json.load(open(EDITS_PATH)) if os.path.exists(EDITS_PATH) else {}
     managed = [s for (_, o, _, _) in STAGES for s in [o]] + ["stno4"]
@@ -551,8 +859,12 @@ def main():
         start, size = sizes[key]
         tgt = bins[key]
         binname = tgt.rsplit("/", 1)[-1]
+        st = splice_stage(asset, prefs, tsv, mp, overlay in OPTIONAL)
+        if st is None:
+            print("%s: keys=0 (placeholder %s:N) -- retail kept" % (overlay, prefs[0]))
+            continue
+        en, ko, pad, nkeys = st
         allow.setdefault(binname, []).append([start, size])
-        en, ko, pad, nkeys = splice_stage(asset, prefs, tsv, mp)
         edits.setdefault(overlay, []).append([symbol, size])
         total_en += en
         total_ko += ko
@@ -566,6 +878,9 @@ def main():
                 if e[0] != "cutscene_data_ferryman_left"]
         edits["stno4"] = rest + [["cutscene_data_ferryman_left", 0xAC]]
     json.dump(edits, open(EDITS_PATH, "w"), indent=2)
+    plan = []
+    splice_boss(tsv, mp, plan, allow)
+    json.dump(plan, open(BOSS_PLAN, "w"), indent=0)
     json.dump(allow, open(ALLOW_PATH, "w"), indent=2)
     print("TOTAL EN=%d KO=%d" % (total_en, total_ko))
     print("rows with extra LINE_BREAK:", EXTRA_LB)

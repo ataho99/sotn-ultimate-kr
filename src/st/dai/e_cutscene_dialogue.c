@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+#ifdef MOD_KO
+#define KO_DLG16 1 /* Korean dialogue renderer here: 16 px line buffers (src/st/ko_font_params.h) */
+#endif
 #include "dai.h"
 #include "mod_psp_script.h" // the PSP dub toggle's script copies
 #include <cutscene.h>
@@ -346,6 +349,8 @@ void EntityCutsceneDialogue(Entity* self) {
                     g_Dialogue.nextCharY++;
 #ifdef VERSION_PSP
                     g_Dialogue.nextCharY &= CS_LINE_MAX;
+#elif defined(KO_DLG16)
+                g_Dialogue.nextCharY &= 3; /* 4 KO line buffers (y 384..447), same as no3/lib/nz0/sel/top */
 #else
                 if (g_Dialogue.nextCharY > CS_LINE_MAX) {
                     g_Dialogue.nextCharY = 0;
@@ -718,7 +723,11 @@ void EntityCutsceneDialogue(Entity* self) {
         rect.y = ((nextChar & 0xF0) >> 1) + 240;
         rect.w = 2;
         rect.h = 8;
+#ifdef KO_DLG16
+        vCoord = (g_Dialogue.nextCharY * 16) + 384 + KO_DLG_FB_DY; /* 8x8 fallback on the 16 px buffer, KO baseline */
+#else
         vCoord = (g_Dialogue.nextCharY * 12) + 384;
+#endif
 #ifdef VERSION_PSP
         StoreImage(&rect, (u_long*)charBuffer1);
         for (i = 0; i < 32; i++) {

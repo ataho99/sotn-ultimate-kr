@@ -263,7 +263,11 @@ void DebugCaptureVideo(void) {
 // mods/sotn-ultimate/tools/check_dra_layout.sh prints the value to use after a
 // build.
 #if defined(MOD_KO)
-#define MOD_DRA_PAD 696 /* trial25: hand labels (menu.c KO branch) +60B (1908-60); trial24 B1 desc +312B (2220-312); checker verifies 3/3 */
+/* KO_NAMES_DRA_GROW: rodata growth of the generated KO enemy/relic literals (gen_ko_names.py,
+ * signed; the hand-written relic bytes this base was balanced with are its baseline) */
+#include "gen/us/ko_names_pad.h"
+#define MOD_DRA_PAD_KO_BASE 488 /* trial25: hand labels (menu.c KO branch) +60B (1908-60); trial24 B1 desc +312B (2220-312); checker verifies 3/3 */
+#define MOD_DRA_PAD (MOD_DRA_PAD_KO_BASE - KO_NAMES_DRA_GROW)
 #else
 #define MOD_DRA_PAD 40 /* v1.4 upstream */
 #endif

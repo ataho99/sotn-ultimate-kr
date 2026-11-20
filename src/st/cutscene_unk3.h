@@ -7,7 +7,8 @@
 #define CUTSCENE_UNK3_RECT_Y 384
 #endif
 
-#if defined(VERSION_HD) || defined(MOD_KO)
+#if defined(VERSION_HD) || defined(KO_DLG16)
+/* KO_DLG16: the overlay has the Korean renderer (ko_font_params.h); plain MOD_KO keeps 12 */
 #define CUTSCENE_UNK3_RECT_H 16
 #else
 #define CUTSCENE_UNK3_RECT_H 12

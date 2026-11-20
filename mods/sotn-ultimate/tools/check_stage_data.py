@@ -77,6 +77,9 @@ DATA_EDITS = json.load(open(EDITS_PATH)) if os.path.exists(EDITS_PATH) else {}
 # mods/sotn-ultimate/tools/psp_script.py: overlay -> [[offset, size]]
 PSP_PATH = "build/us/psp_script/edits.json"
 PSP_EDITS = json.load(open(PSP_PATH)) if os.path.exists(PSP_PATH) else {}
+# KO boss script splice (gen_ko_splice.py --apply-boss, MOD_KO only): overlay "bo"+ovl -> BIN ranges
+KO_BOSS_PATH = "build/us/ko_boss_splice.json"
+KO_BOSS = json.load(open(KO_BOSS_PATH)) if os.environ.get("MOD_KO") == "1" and os.path.exists(KO_BOSS_PATH) else []
 
 # KO trial (#221/#223, MOD_KO only): ST0 prologue cutscene_script source-baked
 # in Korean (build_ko_trial.sh exports MOD_KO=1; OFF builds via build_disc.sh
@@ -118,6 +121,9 @@ for name, retail_path in STAGES.items():
     for off, size in PSP_EDITS.get(name, []):
         # word-aligned cover of the range (the check walks words)
         edited.append((off & ~3, off + size))
+    for bp in KO_BOSS:
+        if "bo" + bp["ovl"] == name:
+            edited.append((bp["off"] & ~3, bp["off"] + len(bytes.fromhex(bp["old"]))))
     if os.environ.get("MOD_KO") == "1":
         for obj in KO_DATA_OBJS.get(name, []):
             for m in re.finditer(

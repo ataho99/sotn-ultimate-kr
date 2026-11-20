@@ -37,7 +37,14 @@ static char* sealed_door_label;
 
 #include "../get_lang.h"
 #else
+#if defined(MOD_KO)
+#include "ko_field_msg.h" /* gen_ko_fieldmsg.py; a missing macro = placeholder, English kept */
+#endif
 static char sealed_door_label[] = "\x7C\x0EMagically sealed．";
+#if defined(KO_FIELD_SEALED_DOOR_ADDR)
+#define KO_LBL_SEALED                                                          \
+    KO_FIELD_PICK(KO_FIELD_SEALED_DOOR_ADDR, sealed_door_label)
+#endif
 // NZ0 has an extra .word in data vs NO0
 #if defined(STAGE_IS_NZ0)
 STATIC_PAD_DATA(4);
@@ -199,7 +206,10 @@ void EntitySealedDoor(Entity* self) {
                 CreateEntityFromCurrentEntity(E_MESSAGE_BOX, messageBox);
                 messageBox->posX.i.hi = 0x80;
                 messageBox->posY.i.hi = 0xB0;
-                messageBox->ext.messageBox.label = sealed_door_label;
+#ifndef KO_LBL_SEALED
+#define KO_LBL_SEALED sealed_door_label
+#endif
+                messageBox->ext.messageBox.label = KO_LBL_SEALED;
                 break;
             }
             prim = &g_PrimBuf[self->primIndex];

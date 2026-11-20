@@ -38,6 +38,30 @@
 #define KO_TEXT_EXTRA_W 0
 #endif
 
+/* KO_DLG16 (per overlay, opt-in): the overlay draws its dialogue with the Korean renderer (12x16 LoadTPage cells),
+ * so its line buffers are 16 rows: CutsceneUnk3 clears n*16 + y, CutsceneUnk4 / cutscene_script_box.h sample
+ * v = n*16 + offset, 16 rows high, lines rotate &= 3 (4 buffers, y 384..447 on page 16). Define it as
+ *     #ifdef MOD_KO
+ *     #define KO_DLG16 1
+ *     #endif
+ * at the top of the overlay's dialogue .c BEFORE the cutscene_unk3.h / cutscene_unk4.h / cutscene_script_box.h
+ * includes, and ONLY together with the Korean renderer (glyph writes at n*16 + base). An overlay without it keeps the
+ * retail 12 px buffers in every build (the boss overlays mar/bo2/bo5/bo6/rbo2/rbo6 write retail 8x8 glyphs at
+ * n*12 + 0x180; a 16 px buffer there garbles line 2+). fixBOSS: bo5/bo6/rbo6 now have the renderer
+ * (src/boss/ko_boss_dialogue.h) and set KO_DLG16 in MOD_KO; bo2/rbo2 still retail 12 px.
+ * KO_DLG_FB_DY: the original-font 8x8 fallback (MoveImage) inside a 16 px buffer is drawn this many rows down so it
+ * sits on the Korean cells' baseline (n*16 + base + 5). */
+#if defined(KO_DLG16) && !defined(MOD_KO)
+#error "KO_DLG16 needs MOD_KO (Korean renderer)"
+#endif
+#ifdef KO_DLG16
+#define KO_DLG_PITCH 16
+#define KO_DLG_FB_DY 5
+#else
+#define KO_DLG_PITCH 12
+#define KO_DLG_FB_DY 0
+#endif
+
 /* sihum42: resident Hangul glyph uploader of the pickup popup (mods/sotn-ultimate/src/menu/eq_pop.c, dra.h KO_POP_GLYPH) */
 #ifdef MOD_KO
 #define KO_PopGlyph ((void (*)(u16, s32))0x8009F280)
