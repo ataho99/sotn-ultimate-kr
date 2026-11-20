@@ -959,7 +959,7 @@ void func_800F66BC(
 }
 
 #if defined(MOD_KO)
-// ko_equip_jp (#182): equipment-name render lives in the resident tail
+// ko_equip_jp: equipment-name render lives in the resident tail
 // (absolute entries, KO_BLOB_ADDR pattern — no link symbols in DRA).
 // Collect here (stack only), draw in tail. Bundle base/LBA in dra.h.
 #define KO_EqSelDraw ((void (*)(const char**, const s32*, const s32*, s32, MenuContext*))KO_EQUIP_SEL)
@@ -971,7 +971,7 @@ void func_800F98AC(const char* str, u32 y);
 #endif
 
 #if defined(MOD_KO)
-/* sihum40 (CP 904): menu ASCII = variable pen advance from a per-cell table (KO_FONT8_ADV_ADDR, 96 B written by
+/* menu ASCII = variable pen advance from a per-cell table (KO_FONT8_ADV_ADDR, 96 B written by
  * gen_ko_font8.py into ARC_KO): re-baked ASCII cells advance ink width + 2 and are drawn 1 px right of the pen
  * (1 px margin both sides); table value 0 = any other cell (arrows, kana, kanji pictures, icons): advance 8, no
  * offset. Space (cell 0) = 4. Digits of MenuDrawInt/MenuDrawTime/clock/HP: fixed pitch 6 (KO_P), ink centred. */
@@ -990,7 +990,7 @@ void MenuDrawChar(char ch, s32 x, s32 y, MenuContext* ctx) {
 }
 
 #if defined(MOD_KO)
-// Trial10: KO double-byte renderer lives in ARC_KO.BIN (A-gap KO_BLOB_ADDR,
+// KO double-byte renderer lives in ARC_KO.BIN (A-gap KO_BLOB_ADDR,
 // dra.h). Function-pointer macro: no undefined symbol in DRA's link.
 #define MenuDrawKoHook ((void (*)(u16, s32, s32, void*))KO_BLOB_ADDR)
 #endif
@@ -1588,11 +1588,11 @@ void MenuDrawStats(s32 menuDialogue) {
     } else {
 #if defined(VERSION_US) && defined(MOD_SATURN)
 #if defined(MOD_KO)
-        /* trial25 (#CC-1 item 5): the #249 12px KO hand labels below sat in a
-         * dead #elif (MOD_SATURN takes this branch). Measured trial25 RAM:
+        /* The 12px KO hand labels below sat in a
+         * dead #elif (MOD_SATURN takes this branch). Measured RAM:
          * g_MenuStr[85]="Right hand", [86]="Left hand", [90]==[91]="Other",
          * so the slot index (cursorEquip 0 = right, 1 = left) is the test,
-         * not the #249 pointer compare against [90]/[91] (that hit "Other").
+         * not the pointer compare against [90]/[91] (that hit "Other").
          * The holder slot and the other slots keep the Saturn path. */
         if (g_MenuNavigation.cursorEquip == MOD_HOLDER_SLOT) {
             func_800F66BC(KO_SHEET_HOLDER, 8, 40, ctx, true);
@@ -1621,7 +1621,7 @@ void MenuDrawStats(s32 menuDialogue) {
 #endif
 #elif defined(VERSION_US)
 #if defined(MOD_KO)
-        /* #249: hand-slot headers as 12px KO sheet labels (MGalmuri12 1:1).
+        /* Hand-slot headers as 12px KO sheet labels (MGalmuri12 1:1).
          * Other slots keep the 8px English MenuDrawStr. */
         if (g_MenuStr[g_MenuNavigation.cursorEquip + 85] == g_MenuStr[90]) {
             func_800F66BC(KO_SHEET_RIGHT, 8, 40, ctx, true);
@@ -2045,7 +2045,7 @@ void func_800F8754(MenuContext* ctx, s32 x, s32 y) {
 #if defined(MOD_KO)
     // US MenuDrawImg swaps clut to 0x15E while D_8013784C == 1 (HD has no
     // such override). With no familiar set above, row 2 got 0x15E *and* the
-    // no-spells shade below: double-darkened to invisible (trial12 capture).
+    // no-spells shade below: double-darkened to invisible (captured).
     // Zero it so the row dims to grey like row 5 when spells are unlearned.
     D_8013784C = 0;
     func_800F66BC(KO_SHEET_SKILL, x + 12, y + 0x10, ctx, D_801375DC != 0);

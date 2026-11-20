@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// ko_equipreloc #128: selector entry. Must stay the first function
+// ko_equipreloc: selector entry. Must stay the first function
 // (offset 0 of eq_sel.o .text = KO_EQUIP_SEL).
 #include "ko_equip.h"
 

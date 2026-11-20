@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""P153 §2B 근거: 최소 ISO9660 리더 (PVD + 디렉터리 레코드). 재료2 검증·XA 영역 확인용."""
+"""최소 ISO9660 리더 (PVD + 디렉터리 레코드). 재료2 검증·XA 영역 확인용."""
 import struct
 
 SECT = 2352

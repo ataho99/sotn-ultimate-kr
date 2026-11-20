@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Last build step (trial48): the Japanese Konami logo movie.
+"""Last build step: the Japanese Konami logo movie.
 
 Appends the Japanese disc's LOGO15XA.STR (1,680 sectors, Track 1 LBA 23106..)
 verbatim to the end of the image and points the US image at it:

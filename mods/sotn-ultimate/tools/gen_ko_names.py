@@ -20,13 +20,13 @@
 # KO source order per id: table cell -> ko_lib_names.h (decoded with the same map) -> another id with the
 # same EN name that has Korean (name sharing, e.g. 0x059 / 0x12F Medusa Head).
 #
-# DRA layout: the name/desc literals sit in DRA rodata. Rule like gen_ko_equip #177: a KO name that fits
+# DRA layout: the name/desc literals sit in DRA rodata. Rule like gen_ko_equip: a KO name that fits
 # the EN literal is padded to the EN size (no shift); a longer one grows rodata and the growth (4-byte
 # aligned literals, MIPS gcc CONSTANT_ALIGNMENT) is summed with the relic delta into KO_NAMES_DRA_GROW,
 # which 42398.c subtracts from MOD_DRA_PAD. check_dra_layout.sh stays the final judge.
 #
 # Relic familiar cards: the 7 card names hold "{카드}" in the table; it is replaced by the ONE table value
-# config_us.h:g_RelicDefs:card:suffix (owner decision 2026-11-19: 「~의 근원」).
+# config_us.h:g_RelicDefs:card:suffix (decision 2026-11-19: 「~의 근원」).
 import io
 import os
 import re
@@ -100,9 +100,9 @@ def load_ko_lib():
                 s.append(rev[code])
                 i += 2
             elif b == 0xFF and i + 1 < len(bs) and bs[i + 1] == 0x00:
-                break  # fixLIB convention: end = FF 00
+                break  # LIB convention: end = FF 00
             elif b == 0x00:
-                s.append(" ")  # fixLIB convention: space = 00
+                s.append(" ")  # LIB convention: space = 00
                 i += 1
             else:
                 assert 0x20 <= b < 0x7F, ("ko_lib_names.h byte", m.group(2), hex(b))

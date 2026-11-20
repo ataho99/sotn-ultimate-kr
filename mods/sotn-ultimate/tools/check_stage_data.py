@@ -81,7 +81,7 @@ PSP_EDITS = json.load(open(PSP_PATH)) if os.path.exists(PSP_PATH) else {}
 KO_BOSS_PATH = "build/us/ko_boss_splice.json"
 KO_BOSS = json.load(open(KO_BOSS_PATH)) if os.environ.get("MOD_KO") == "1" and os.path.exists(KO_BOSS_PATH) else []
 
-# KO trial (#221/#223, MOD_KO only): ST0 prologue cutscene_script source-baked
+# KO trial (MOD_KO only): ST0 prologue cutscene_script source-baked
 # in Korean (build_ko_trial.sh exports MOD_KO=1; OFF builds via build_disc.sh
 # do not, so retail builds still FAIL on any change here).
 # overlay -> [object file whose .data range is KO-baked]

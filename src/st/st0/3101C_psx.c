@@ -101,7 +101,7 @@ u16* func_801B11E8(u8 ch) {
     u16 jCh;
 #ifndef VERSION_PC
 #if defined(MOD_KO)
-    /* #241: Latin/punct inside KO scroll lines -> MGalmuri12 (v12d
+    /* Latin/punct inside KO scroll lines -> MGalmuri12 (v12d
      * repurposed cells via KO_ENGTAB, 94xu16 in ARC_KO gap at 0x8009EF00).
      * Miss (0) falls through to the JP fullwidth path. TSV untouched. */
     if (ch != ' ' && ch < 0x80 && ((const u16*)0x8009EF00)[ch - 0x21]) {

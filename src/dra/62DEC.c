@@ -5,7 +5,7 @@
 
 #if defined(MOD_KO)
 #include "gen/us/ko_save_str.h"
-#define KOS(en, ko) ko /* sihum40: save-room texts in Hangul (MGalmuri12 cells, no BIOS Kanji ROM glyph) */
+#define KOS(en, ko) ko /* save-room texts in Hangul (MGalmuri12 cells, no BIOS Kanji ROM glyph) */
 #else
 #define KOS(en, ko) en
 #endif

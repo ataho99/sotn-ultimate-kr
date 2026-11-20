@@ -22,7 +22,7 @@ extern char g_InputSaveName[12];
 #define SEL_CANCEL PAD_TRIANGLE
 #endif
 #if defined(MOD_KO)
-#define SEL_DECIDEV 0x60 /* trial26: red circle slot (F_SEL patched), was 0x80 = right-arrow */
+#define SEL_DECIDEV 0x60 /* red circle slot (F_SEL patched), was 0x80 = right-arrow */
 #define SEL_CANCELV 0x70
 #define SEL_CANCELCLUT 0x200
 #else
@@ -705,24 +705,24 @@ char* D_801803A8[10] = {
 #if defined(MOD_KO)
 /* Menu legends via the top-message band path (func_801B2608 ->
  * func_801B2108 12px upload to VRAM (0x180,id*16), one dynamic SPRT
- * per row). Hook path (#229: dead) removed. */
+ * per row). Hook path (dead) removed. */
 /* Words = MGalmuri12 v12c codes. Bands = free ids 2,3,13,14.
  * SPRT y = button-icon top (EN 8px-text y minus 4): icon 16px and SPRT
- * 16px share the same center (#239). */
+ * 16px share the same center. */
 static const char SelLegW[] = "\xF1\xAA\xF2\x1C\x00"
                               "\xF3\x01\xF0\x81\x00"
                               "\xF3\x29\xF0\x65\x00"
                               "\xF0\xDD\xF0\xA4\x00"
-                              /* trial25: Sound Mode hint words (재생, 뒤로) */
+                              /* Sound Mode hint words (재생, 뒤로) */
                               "\xF1\xE3\xF1\xA9\x00"
                               "\xF0\xC3\xF0\xA0\x00";
 static const u8 SelLegFile[] = {0, 13, 5, 14, 10, 2};
 static const u8 SelLegSnd[] = {20, 14, 25, 2};
 static const u8 SelLegName[] = {0, 13, 15, 14, 10, 2, 5, 3};
 static void SelLegRows(s32 x, s32 y, const u8 *t, s32 n) {
-    /* diet (trial18): x/y live in the incoming arg slots (reloaded each
+    /* diet: x/y live in the incoming arg slots (reloaded each
      * row), id is re-read from the table after the first call (jal
-     * clobbers v0). Same rows/ids/positions as #234+#239. */
+     * clobbers v0). Same rows/ids/positions as before. */
     s32 wi;
     while (n > 0) {
         wi = *t++;
@@ -735,7 +735,7 @@ static void SelLegRows(s32 x, s32 y, const u8 *t, s32 n) {
 #endif
 
 #if defined(MOD_KO)
-/* sihum40 (CP 901): save name as ASCII -> func_801B2108 (engtab MGalmuri12 cells, proportional advance)
+/* save name as ASCII -> func_801B2108 (engtab MGalmuri12 cells, proportional advance)
  * instead of fullwidth SJIS -> BIOS Kanji ROM (grey, 12 px fixed). Same 33 entries / order. */
 static char* D_801803D0[] = {
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",

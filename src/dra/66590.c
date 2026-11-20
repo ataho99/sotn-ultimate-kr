@@ -3,7 +3,7 @@
 #include "dra.h"
 
 #if defined(MOD_KO)
-// Korean trial (P65 base, P70 trial10): the Hangul glyphs are not in DRA's
+// Korean trial: the Hangul glyphs are not in DRA's
 // rodata. build_ko_trial.sh packs BIN/ARC_KO.BIN (trial-only disc file) and
 // cd.c's chain loads it to dra.h KO_GLYPH_BLOCK_ADDR (A-gap); this wrapper
 // and the blob renderer both read the block.
@@ -343,7 +343,7 @@ u16* func_80106A28(u16 ch, u16 kind) {
     // Korean trial: KO_GLYPH_BASE + n serves its 30 bytes from ko_glyphs and
     // shares the expansion below (the function returns the expanded scratch
     // buffer, not the raw bitmap, so an early return of raw bytes would skip
-    // it). n is computed once and reused for the address (M7).
+    // it). n is computed once and reused for the address.
     u16 n = ch - KO_GLYPH_BASE;
     u16 ko12 = 0;
     if (n < KO_GLYPH_COUNT) {
@@ -448,7 +448,7 @@ u16* func_80106A28(u16 ch, u16 kind) {
     }
 
 #if defined(MOD_KO)
-    // v13n "ⓐ" (maintainer 08:21): KO cells are already 12x15 final dots; the kind 1
+    // v13n "ⓐ": KO cells are already 12x15 final dots; the kind 1
     // vertical interpolation (15 -> 14 rows, mixes neighbour rows) would squash
     // and blur them, so use the 1:1 row path (kind 0) for KO cells only.
     if (ko12 && kind == 1) {

@@ -1572,7 +1572,7 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
             chPix = (u8*)g_api.func_psp_0913FA28(ch, 1);
 #else
 #ifdef MOD_KO
-                /* fixLIB: pair only real lead bytes (Hangul F0-F3, SJIS
+                /* Pair only real lead bytes (Hangul F0-F3, SJIS
                  * 81-9F/E0-EF). A Hangul lead always takes its 2nd byte,
                  * even 0x00 (codes F100/F200/F300 end in a zero byte);
                  * an SJIS lead never takes the NUL terminator. A
@@ -1610,7 +1610,7 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
             }
             if (ch == RIGHT_DOUBLE_QUOTATION_MARK) {
 #ifdef MOD_KO
-                /* fixLIB: skip only a doubled ”” (retail data); a single ”
+                /* Skip only a doubled ”” (retail data); a single ”
                  * before Hangul (KO data) must not eat the next glyph */
                 if ((u8)str[0] == 0x81 && (u8)str[1] == 0x68)
 #endif
@@ -1637,7 +1637,7 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
                     break;
                 }
 #ifdef MOD_KO
-                /* fixLIB: a blank glyph never gets ink into column 0 */
+                /* A blank glyph never gets ink into column 0 */
                 if (++ko_trim > 12) {
                     break;
                 }
@@ -1699,7 +1699,7 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
             break;
         }
 #ifdef MOD_KO
-        /* fixLIB: pix is cleared/sized for 2 lines; never write a 3rd */
+        /* pix is cleared/sized for 2 lines; never write a 3rd */
         if (s_6 >= 1) {
             break;
         }
@@ -1738,7 +1738,7 @@ loop:
             ko_glyph = (u_long*)g_api.func_80106A28(ko_ch, 1);
             if (ko_glyph) {
                 LoadTPage(ko_glyph, 0, 0, x, y, 0xC, 0x10);
-                /* fixLIB: func_80106A28 returns ONE static buffer and
+                /* func_80106A28 returns ONE static buffer and
                  * LoadTPage only queues the copy: wait before the next glyph
                  * overwrites it (shop menu showed the last glyph in every cell) */
                 DrawSync(0);
@@ -1758,7 +1758,7 @@ loop:
 }
 
 #if defined(MOD_KO)
-/* fixLIB (ko_lib-2): Hangul in the 8x8 SPRT lists (buy/sell, bestiary).
+/* Hangul in the 8x8 SPRT lists (buy/sell, bestiary).
  * Chosen: the 12px func_80106A28 path, not the 8px KO_8P block: the 8px block
  * only holds the equipment-menu character set (371 cells, enemy names miss)
  * and is uploaded into dra menu sheet rows with dirty-signature state the
@@ -1843,7 +1843,7 @@ Primitive* func_us_801B1064(
             }
         }
 #if defined(MOD_KO)
-        /* fixLIB: copy a Hangul pair whole (its 2nd byte may be FF or 00)
+        /* Copy a Hangul pair whole (its 2nd byte may be FF or 00)
          * and stop before buffer[63] so an unterminated name cannot smash
          * the stack */
         if (((u8)ch & 0xFC) == 0xF0) {
@@ -1912,7 +1912,7 @@ Primitive* func_us_801B1064(
 #else
 #if defined(MOD_KO)
         if (((u8)ch & 0xFC) == 0xF0 && length > 1) {
-            /* fixLIB (ko_lib-2): Hangul pair -> one 12x16 glyph SPRT */
+            /* Hangul pair -> one 12x16 glyph SPRT */
             ko_slot = KoLibGlyphSlot(((u16)(u8)ch << 8) | (u8)*chPtr);
             chPtr++;
             --length;
@@ -4252,10 +4252,10 @@ static const char* D_us_801816B0[] = {
 #endif
 
 #if defined(MOD_KO)
-/* ko_equip_jp (#182): tail bundle loader (absolute, ARC_KO resident).
+/* ko_equip_jp: tail bundle loader (absolute, ARC_KO resident).
  * Truth in dra.h (KO_EQUIP_LOAD / KO_JP_BUNDLE_*). */
 #define KO_JP_LOAD ((void (*)(s32))0x8009FF40)
-#define KO_JP_BUNDLE_LBA 0x4928F /* trial17d #236B: 2-pass wired (OFF_BIN_KO_JP, disc end) */
+#define KO_JP_BUNDLE_LBA 0x4928F /* 2-pass wired (OFF_BIN_KO_JP, disc end) */
 #define KO_JP_BUNDLE_SECTORS 1
 #endif
 void func_us_801B56E4(Entity* self) {
@@ -4338,8 +4338,8 @@ void func_us_801B56E4(Entity* self) {
 
     case 2:
 #if defined(MOD_KO)
-        /* ko_equip_jp (#182): one boot-load; menu-open reloads refresh it.
-         * Valid only if stage loads never touch 0x801F0000 (see #182-4). */
+        /* ko_equip_jp: one boot-load; menu-open reloads refresh it.
+         * Valid only if stage loads never touch 0x801F0000 (see the shop note). */
         if (*(volatile u32*)0x8009EEDC == 0) {
             KO_JP_LOAD(KO_JP_BUNDLE_LBA);
             *(volatile u32*)0x8009EEDC = 1;

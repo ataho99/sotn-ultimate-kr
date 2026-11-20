@@ -55,8 +55,8 @@ for path, sha in sorted(retail.items()):
             built = built[:lo] + bytes(hi - lo) + built[hi:]
     if len(orig) != len(built):
         if name == "main.exe" and os.path.exists("build/us/ARC_KO.BIN"):
-            # Trial13/15: main.exe carries ARC_KO.BIN (boot-resident KO font;
-            # 12 sectors trial13, 14 with the ko_equip tail). The head must
+            # main.exe carries ARC_KO.BIN (boot-resident KO font;
+            # 12 sectors at first, 14 with the ko_equip tail). The head must
             # stay retail-identical.
             tail = open("build/us/ARC_KO.BIN", "rb").read()
             import struct as _st

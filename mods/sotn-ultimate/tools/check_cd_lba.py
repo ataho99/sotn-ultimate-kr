@@ -87,7 +87,7 @@ def want(what, value, path, field=0):
                      f"{files[path][field]:#x}")
 
 
-# Trial10: KO_LBA(0x..) literals resolve +1 on trial discs (BIN/ARC_KO.BIN
+# KO_LBA(0x..) literals resolve +1 on trial discs (BIN/ARC_KO.BIN
 # present, layout shifted) and +0 on OFF discs. Image-derived, no flags.
 KO_BIAS = 1 if "BIN/ARC_KO.BIN" in files else 0
 

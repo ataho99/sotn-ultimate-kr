@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""One-off: cut the five title assets out of the trial46 image into ko_assets/title46/
+"""One-off: cut the five title assets out of the live image into ko_assets/title46/
 with a sha256 manifest.   usage: title_extract46.py IMAGE46.bin OUT_DIR"""
 import hashlib, json, os, struct, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

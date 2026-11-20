@@ -7,7 +7,7 @@
 #   4. every window has <= WINDOW_LINES lines (LINE_BREAK count + 1)  [profile window_lines]
 # Sources: retail = assets/st/<stage>/cutscene_script_psx.yaml.ko_retail (EN original);
 #          KO     = the KO-spliced yaml (while the build runs) and the baked header src/st/st0/cutscene_script_ko_st0.h.
-# This cannot catch a translation row whose MEANING crosses the speaker boundary (the sihum43 st0 :2/:3 case);
+# This cannot catch a translation row whose MEANING crosses the speaker boundary (the st0 :2/:3 case);
 # that needs the JP window tables (see 58/57 files).
 import os
 import re

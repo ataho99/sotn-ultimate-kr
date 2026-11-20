@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # gen_ko_end.py — ko_end ending/shop KO byte bake (trial builds only).
 # 입력: 한글작업/번역/번역_v13_통합.tsv (sel_ending:0-29, e_shop.c:D_us_80181310:0-5)
-#       + P4시험/ko_glyph_map_v13p.tsv (ARC_KO 776자, KO_GLYPH_BASE 0xF040).
+#       + P4시험/ko_glyph_map_*.tsv (프로필 map_name) (ARC_KO 776자, KO_GLYPH_BASE 0xF040).
 # 출력: stdout 검증 리포트. --emit-shop 검증용 C 리터럴, --emit-end YAML BYTE 단편.
 # sel 대사 '/'는 줄바꿈 표시(BR재생성)이므로 TEXT 분절점으로 취급, 바이트열에는 넣지 않는다.
 # 생성물(gen/*.h, assets YAML)에는 쓰지 않는다 — 빌드 턴에서 YAML 적용 후 풀빌드 검증.
@@ -22,7 +22,7 @@ def load_map():
         p = line.rstrip("\n").split("\t")
         if len(p) >= 2 and len(p[0]) == 1 and "가" <= p[0] <= "힣":
             mp[p[0]] = int(p[1], 16)
-    assert len(mp) >= 700, len(mp)  # v13p
+    assert len(mp) >= 700, len(mp)  # glyph-map size sanity check
     return mp
 
 

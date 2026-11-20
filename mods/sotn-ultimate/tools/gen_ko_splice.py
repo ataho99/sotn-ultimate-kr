@@ -22,7 +22,7 @@
 # backup exists.
 # Excluded: prologue/opening (separate mechanisms). See 조사_t15_1111.md.
 #
-# fixCUT (2026-11-19):
+# Cutscene fixes (2026-11-19):
 #  * C-side entry offsets (ko_entry_offsets.py, e.g. RCEN cutscene_script +
 #    0x129 = Shaft's pre-fight lines): the 0x0D pads are also placed at every
 #    entry, so the part before it ends exactly at the retail offset (no KO row
@@ -39,7 +39,7 @@
 #    retail EN per row, local reference only).
 #  * the asm renderers have no KO glyph path: a non-empty KO row for them
 #    stops the build unless KO_BOSS_ASM_RENDER=1 (set it once the asm
-#    entities are decompiled / hooked). fixBOSS: bo5/bo6/rbo6 have a C
+#    entities are decompiled / hooked). bo5/bo6/rbo6 have a C
 #    entity with the KO path under MOD_KO (src/boss/ko_boss_dialogue.h,
 #    ko_entry_offsets.BOSS_KO_RENDER) and take KO rows; bo2/rbo2 still gated.
 import io
@@ -66,7 +66,7 @@ STAGES = [
     ("st/top/cutscene_data.yaml", "sttop", "cutscene_data", ["top_maria_richter"]),
     ("st/st0/cutscene_script_psx.yaml", "stst0", "cutscene_script",
      ["st0_richter_dracula"]),
-    # no4 (ferryman, trial17a #225): left EN 60B -> KO 38B (2 segs, pad 22),
+    # no4 (ferryman): left EN 60B -> KO 38B (2 segs, pad 22),
     # right EN 36B -> KO 34B (2 segs, pad 2; TSV trims 4B).
     # US links L+R as ONE array (cutscene_data_ferryman_left, 0xAC) with the
     # right half at absolute 0x801853B7, so each half keeps its own total.
@@ -80,13 +80,13 @@ STAGES = [
      ["dai_huntinggirl"]),
     ("st/dre/cutscene_script_psx.yaml", "stdre", "cutscene_script",
      ["dre_succubus"]),
-    # fixCUT B: Maria (boss MAR, Clock Tower). Optional: keys mar_maria:N.
+    # Maria (boss MAR, Clock Tower). Optional: keys mar_maria:N.
     ("boss/mar/cutscene_data.yaml", "bomar", "cutscene_data", ["mar_maria"]),
 ]
 # stages whose TSV keys may be absent / untranslated (placeholders)
 OPTIONAL = {"bomar"}
 
-# fixCUT B: asm-rendered boss overlays (ko_entry_offsets.BOSS_SCRIPTS);
+# asm-rendered boss overlays (ko_entry_offsets.BOSS_SCRIPTS);
 # key prefix per script region = "<ovl>_<BIN offset hex>" (e.g. bo2_1ccc:N)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ko_entry_offsets as EO  # noqa: E402
@@ -102,8 +102,8 @@ def load_map():
         p = line.rstrip("\n").split("\t")
         if len(p) >= 2 and len(p[0]) == 1 and p[1].startswith("0x"):
             mp[p[0]] = int(p[1], 16)
-    assert len(mp) >= 700, len(mp)  # v13p
-    mp["…"] = 0xF1A0  # trial25: v12f new cell (12px full-width ellipsis)
+    assert len(mp) >= 700, len(mp)  # glyph-map size sanity check
+    mp["…"] = 0xF1A0  # v12f new cell (12px full-width ellipsis)
     return mp
 
 
@@ -126,7 +126,7 @@ PROMO = load_promo()
 
 
 def ell(s):
-    """trial25: 9 dots (silence) -> two ellipsis cells, 3 dots -> one cell."""
+    """9 dots (silence) -> two ellipsis cells, 3 dots -> one cell."""
     return s.replace(".........", "……").replace("...", "…")
 
 
@@ -225,7 +225,7 @@ _OPS = {
     "SET_FLAG": (17, [1]), "SCRIPT_UNKNOWN_18": (18, []),
     "LOAD_PORTRAIT": (19, [4, 1]), "SCRIPT_UNKNOWN_20": (20, [2]),
     "SCRIPT_UNKNOWN_21": (21, []), "SCRIPT_UNKNOWN_22": (22, [1]),
-    # fixCUT: the extractor (tools/sotn-assets cutscene/handler.go) names op
+    # The extractor (tools/sotn-assets cutscene/handler.go) names op
     # 22 RESET_FLAG with a 1-byte arg (MAR's script has it); was missing
     "RESET_FLAG": (22, [1]),
     "SCRIPT_UNKNOWN_23": (23, []), "WAIT_FOR_FLAG_RESET": (24, [1]),
@@ -560,7 +560,7 @@ def splice_rows(label, rows, start0, size0, entries, prefixes, tsv, mp, optional
     en_cum = [0] * (len(rows) + 1)
     for i, (kind, pay, raw) in enumerate(rows):
         en_cum[i + 1] = en_cum[i] + (_text_len(pay) if kind == "TEXT" else 0)
-    # voice sync (sihum39): a window that plays a voice clip (PLAY_SOUND) must not be closed (NEXT_DIALOG ->
+    # voice sync: a window that plays a voice clip (PLAY_SOUND) must not be closed (NEXT_DIALOG ->
     # next speaker's portrait / next window) before the clip has ended -- the Korean text is shorter than
     # the English one the clip was timed for, so without this the portrait switches to the next speaker
     # while the previous voice is still playing. SCRIPT_UNKNOWN_11 = wait while the voice plays (the
@@ -717,7 +717,7 @@ def splice_boss(tsv, mp, plan, allow):
             except Untranslated:
                 print("%s: keys=0 (placeholder %s:N) -- retail kept" % (label, pref))
                 continue
-            # fixBOSS: bo5/bo6/rbo6 have the C KO renderer (EO.BOSS_KO_RENDER)
+            # bo5/bo6/rbo6 have the C KO renderer (EO.BOSS_KO_RENDER)
             assert ovl in EO.BOSS_KO_RENDER or BOSS_ASM_OK, (
                 "%s: KO rows for an asm-rendered boss (no KO glyph path; "
                 "set KO_BOSS_ASM_RENDER=1 only with a KO renderer)" % label)

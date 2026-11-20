@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// ko_equipreloc #128: shared declarations for the 4-TU resident tail.
+// ko_equipreloc: shared declarations for the 4-TU resident tail.
 // One link, fixed entry addresses (linker script): sel/ov/enter + core.
 // No .bss/.data/.rodata (state = A-gap absolute, tables computed/on-stack).
 #include "dra.h"
@@ -9,11 +9,11 @@
 #define KO_EQ_SEL_CELLS 64 // groups 0,1,2 (24+24+16)
 #define KO_EQ_OV_CELLS 41 // groups 3,4 (24+17)
 
-// #243 layout (#246: boot-loaded, base/sectors truth in dra.h for cd.c).
+// Layout (boot-loaded, base/sectors truth in dra.h for cd.c).
 // Layout: u16 count, count x u16 codes (LE), count x 8B cells.
 #define KO_8P_MAX 512
 // Disc LBA: DUMMY.BIN filler (275 zero sectors) at 0x18; KO_8P.BIN spliced
-// into its first 2 sectors (#243 readback; #246 no longer read at runtime).
+// into its first 2 sectors (readback; no longer read at runtime).
 #define KO_8P_LBA 0x18
 
 // Upload-once dirty state: A-gap absolute (zero gap 9EED8~9EEF4, like FLAG).

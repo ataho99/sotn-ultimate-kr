@@ -8,8 +8,8 @@ extern const char* actor_names[];
 #ifndef DRAW_NAME_ACTOR_INDEX
 #define DRAW_NAME_ACTOR_INDEX actorIndex
 #endif
-#if defined(MOD_KO) && defined(KO_HANGUL_NAMES) /* maintainer 결정 20:38: 화자 이름은 원판 영어. 한글 경로는 KO_HANGUL_NAMES 정의 시에만 */
-// KO trial actor name tables (ko_dlg2 #127): F0xx raw bytes + byte lengths
+#if defined(MOD_KO) && defined(KO_HANGUL_NAMES) /* 화자 이름은 원판 영어. 한글 경로는 KO_HANGUL_NAMES 정의 시에만 */
+// KO trial actor name tables (ko_dlg2): F0xx raw bytes + byte lengths
 extern const u8* const actor_names_ko[];
 extern const u8 actor_names_ko_len[];
 #endif
@@ -24,7 +24,7 @@ static void DrawCutsceneActorName(u16 actorIndex, Entity* self) {
     char ch;
     s32 kAdv;
 
-#if defined(MOD_KO) && defined(KO_HANGUL_NAMES) /* maintainer 결정 20:38: 화자 이름은 원판 영어. 한글 경로는 KO_HANGUL_NAMES 정의 시에만 */
+#if defined(MOD_KO) && defined(KO_HANGUL_NAMES) /* 화자 이름은 원판 영어. 한글 경로는 KO_HANGUL_NAMES 정의 시에만 */
     // KO names: ASCII keeps the 8x8 SPRT path; Hangul (F0xx lead) renders
     // 12x16 via func_80106A28 + LoadTPage (same idiom as KO dialogue).
     // SPRTs are zero-size (lifecycle only: alloc count, step-3 show,
@@ -81,14 +81,14 @@ static void DrawCutsceneActorName(u16 actorIndex, Entity* self) {
 #else
                 kY = g_Dialogue.startY + 6 - KO_NAME_DY;
 #endif
-                /* trial29: upload into the dialogue text texture area
+                /* upload into the dialogue text texture area
                  * (page 0x10, row 4 = y 448, hw x = 3*n, n from 6) and draw each glyph
                  * as a real 12x16 SPRT (the old direct write into the display
                  * buffer was erased by the next redraw). */
                 if (kGlyph) {
                     /* func_80106A28 returns ONE shared glyph buffer and the
                      * upload is queued: uploading it 4x in a frame made every
-                     * cell read the last glyph (trial29: 라라라라). Copy each
+                     * cell read the last glyph (라라라라). Copy each
                      * glyph to its own slot first (A-gap F000.., 96B each,
                      * unused while a cutscene runs). DrawSync is not linked
                      * into the stage overlays. */
@@ -114,7 +114,7 @@ static void DrawCutsceneActorName(u16 actorIndex, Entity* self) {
                 prim = prim->next;
                 x += 12;
             }
-            /* trial29: KO name tables are all Hangul pairs (checked); the 8x8
+            /* KO name tables are all Hangul pairs (checked); the 8x8
              * ASCII branch was dead code and its bytes are needed in the
              * stsel/stno3 overlays. */
         }
@@ -172,7 +172,7 @@ static void DrawCutsceneActorName(u16 actorIndex, Entity* self) {
             prim->y0 = g_Dialogue.startY + 6 - KO_NAME_DY;
 #endif
             prim = prim->next;
-            x += KO_NAME_ADV(kAdv); /* KO variable (sihum40), retail FONT_GAP 8 */
+            x += KO_NAME_ADV(kAdv); /* KO variable, retail FONT_GAP 8 */
         }
     }
 }

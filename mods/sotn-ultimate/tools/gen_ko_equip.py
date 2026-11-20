@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 # gen_ko_equip.py — equipment/accessories KO bake (trial builds only).
 # 입력: 한글작업/번역/번역_v4_장비.tsv + P4시험/ko_glyph_map_v4.tsv (desc) +
-#       P4시험/ko_glyph_map_v13p.tsv (name).
+#       P4시험/ko_glyph_map_*.tsv (프로필 map_name) (name).
 # 출력 A (SEL용, retail 레이아웃 유지): src/dra/gen/us/equipment_ko.h,
 #         accessories_ko.h (desc만 KO F0xx, 이름은 bake_names()가 KO raw로).
 #         config_us.h MOD_KO_EQUIP 게이트가 이 파일들을 포함. OFF 빌드는 호출 안 함.
 # 출력 B (DRA용, Ultimate Saturn 레이아웃): src/dra/gen/us/equipment_mod_ko.h,
 #         accessories_mod_ko.h + src/dra/gen/us/ko_jp_bundle.bin (121행 규칙 +
-#         Saturn 신규행, #177/#226). config_us.h MOD_KO 게이트가 이 파일들을
+#         Saturn 신규행). config_us.h MOD_KO 게이트가 이 파일들을
 #         포함 (MOD_SATURN && MOD_DRA_CONFIG 안). DRA retail 고정(#3518 계열).
-# 이름 규칙 (#177, _mod 대상): 공유행은 같은 idx로 equipment.h 키를 찾아 쓰고,
+# 이름 규칙 (_mod 대상): 공유행은 같은 idx로 equipment.h 키를 찾아 쓰고,
 # Saturn 전용행(장비 0xA9-0xAF·0xE0-0xE3, 악세 0x5A-0x5C)은 equipment_mod.h 키.
 # 특수행(retail 0xA9-0xD8 = mod 0xB0-0xDF)은 이름/desc가 비어 있어 스킵.
 # 제자리 148행 규칙: KO 바이트+FF00+NUL이 EN 슬롯 안에 들고 TSV EN과 일치하면
 # 제자리, 아니면 번들 포인터((const char*)0x801Fxxxx, 파일 순서대로).
-# desc 규칙 (#227 1안): 제자리 KO 교체 (KO가 EN보다 짧음, rodata shrinks).
+# desc 규칙 (1안): 제자리 KO 교체 (KO가 EN보다 짧음, rodata shrinks).
 import io
 from ko_paths import KO_WK  # noqa: E402
 import os
@@ -53,7 +53,7 @@ def load_map_v11():
         p = line.rstrip("\n").split("\t")
         if len(p) >= 2 and len(p[0]) == 1 and "가" <= p[0] <= "힣":
             mp[p[0]] = int(p[1], 16)
-    assert len(mp) >= 700, len(mp)  # v13p
+    assert len(mp) >= 700, len(mp)  # glyph-map size sanity check
     return mp
 
 
@@ -65,10 +65,10 @@ MAP_V11 = (KO_WK + "/P4시험/") + __import__("ko_font_profile").P["map_name"] +
 KO_EQ_NAME_MAX = 10
 
 
-# B1 (#CC-1 trial24): description ASCII -> 2-byte MGalmuri codes. ShowText
+# B1: description ASCII -> 2-byte MGalmuri codes. ShowText
 # (func_800F99B8) pairs any non-letter, non-space ASCII byte with the next byte
 # (the "star" garbage) and draws a-z/A-Z via the JP KROM full-width glyphs, so a
-# desc must carry no ASCII except the 0x20 space. Rules (decided 11-14):
+# desc must carry no ASCII except the 0x20 space. Rules:
 #   [ ] -> 「 」 | run of 2+ '.' -> … | '"' odd/even -> “ ” | other ASCII -> engtab251 code.
 P4 = (KO_WK + "/P4시험/")
 B1_ENGTAB = P4 + "ko_engtab_253.bin"
@@ -209,7 +209,7 @@ def bake_names():
         print("%s: %d names" % (dst, n))
 
 
-# --- DRA용 _mod_ko.h (#240: _mod 표를 원본으로, #177/#226 규칙) ---
+# --- DRA용 _mod_ko.h (_mod 표를 원본으로) ---
 MOD_BUNDLE = "ko_jp_bundle.bin"
 MOD_BUNDLE_BASE = 0x801F0000  # KR hanpae name-block address (bundle load target)
 
@@ -279,13 +279,13 @@ def bake_mod():
             if nkey is None and dkey is None:
                 stats["saturn_en"] += 1
                 continue
-            # desc: #227 1안 제자리 KO (공유행 + Saturn 신규행, 빈 칸은 스킵)
+            # desc: 1안 제자리 KO (공유행 + Saturn 신규행, 빈 칸은 스킵)
             dm = re.match(r'^ "(.*)",(.*)$', rest, re.DOTALL)
             assert dm, (mod_src, idx)
             if dkey is not None:
                 rest = ' "%s",%s' % (enc(ko[dkey][1], mp), dm.group(2))
                 stats["desc"] += 1
-            # name: #177 규칙 (제자리 or 번들)
+            # name: 이름 규칙 (제자리 or 번들)
             if nkey is not None:
                 want_en, s = ko[nkey]
                 if not en_match(want_en, en):

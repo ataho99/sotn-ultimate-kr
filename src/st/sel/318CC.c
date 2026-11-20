@@ -259,7 +259,7 @@ void func_801B2108(const char* str, s32 arg1) {
         var_s2 = 0;
         ch = *str++;
 #if defined(MOD_KO)
-        /* #241: Latin/punct inside KO lines -> MGalmuri12 (v12d repurposed
+        /* Latin/punct inside KO lines -> MGalmuri12 (v12d repurposed
          * cells via KO_ENGTAB, 94xu16 in ARC_KO gap at 0x8009EF00).
          * Miss (0) falls through to the JP fullwidth path. TSV untouched. */
         if (ch != ' ' && ch < 0x80 &&
@@ -331,7 +331,7 @@ void func_801B2108(const char* str, s32 arg1) {
             var_a3 += 1;
         }
 #if defined(MOD_KO)
-        /* trial32 (maintainer 결정 22:08): Hangul advance 10 -> 12 px (same as the
+        /* Hangul advance 10 -> 12 px (same as the
          * Korean-patch file-select text). Latin (ch < 0x80) keeps the
          * proportional advance. */
         if ((ch & 0xF0) == 0xF0) {
@@ -402,7 +402,7 @@ void func_801B263C(char* str, s32 id) {
     D_801BAFD4 = 0x180;
     D_801BAFD8 = 0;
 #if defined(MOD_KO)
-    func_801B2108(str, id); /* save name: ASCII via engtab cells, proportional advance (sihum40) */
+    func_801B2108(str, id); /* save name: ASCII via engtab cells, proportional advance */
 #else
     func_801B1FD8(str, id);
 #endif

@@ -16,9 +16,9 @@ extern s32 g_HandId;
 #define g_Animset2 w_021_2
 #include "sfx.h"
 #if defined(MOD_KO)
-/* ko_equip_jp (#182): tail bundle loader (absolute, ARC_KO resident). */
+/* ko_equip_jp: tail bundle loader (absolute, ARC_KO resident). */
 #define KO_JP_LOAD ((void (*)(s32))0x8009FF40)
-#define KO_JP_BUNDLE_LBA 0x4928F /* trial17d #236B: 2-pass wired (OFF_BIN_KO_JP, disc end) */
+#define KO_JP_BUNDLE_LBA 0x4928F /* 2-pass wired (OFF_BIN_KO_JP, disc end) */
 #define KO_JP_BUNDLE_SECTORS 1
 #endif
 
@@ -500,7 +500,7 @@ s32 func_ptr_80170004(Entity* self) {
             }
             g_api.PlaySfx(SFX_ITEM_PICKUP);
 #if defined(MOD_KO)
-            /* ko_equip_jp (#182): one boot-load (see shop note re #182-4). */
+            /* ko_equip_jp: one boot-load (see the shop note). */
             if (*(volatile u32*)0x8009EEDC == 0) {
                 KO_JP_LOAD(KO_JP_BUNDLE_LBA);
                 *(volatile u32*)0x8009EEDC = 1;
@@ -566,7 +566,7 @@ s32 func_ptr_80170004(Entity* self) {
             }
             g_api.PlaySfx(SFX_ITEM_PICKUP);
 #if defined(MOD_KO)
-            /* ko_equip_jp (#182): one boot-load (see shop note re #182-4). */
+            /* ko_equip_jp: one boot-load (see the shop note). */
             if (*(volatile u32*)0x8009EEDC == 0) {
                 KO_JP_LOAD(KO_JP_BUNDLE_LBA);
                 *(volatile u32*)0x8009EEDC = 1;

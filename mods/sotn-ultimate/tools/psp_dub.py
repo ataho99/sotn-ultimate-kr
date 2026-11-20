@@ -77,7 +77,7 @@ GAIN = 0.70
 JP_AT3_DIR = os.path.join(ROOT, "disks/psp/sound/XA")
 JP_WORK = os.path.join(ROOT, "build/us/jp_dub")
 GAIN_JP = 0.95
-# P148 trial46: PSP_DUB_JP=1 (--set psp only) dubs the PSP slot with the
+# PSP_DUB_JP=1 (--set psp only) dubs the PSP slot with the
 # Japanese PSP voices. Source dir / gain / cache follow the switch; the slot
 # set stays the English one (the JP dir is a superset: ungated it would add
 # ~233 non-story slots outside the 239-slot design). Slot 0x3CD takes 202d.
@@ -318,7 +318,7 @@ def main():
     ap.add_argument("--set", choices=("psp", "jp"), default="psp")
     if ap.parse_args().set == "jp":
         return main_jp()
-    # P148 trial46: PSP_DUB_JP=1 -> --set psp encodes the Japanese PSP voices
+    # PSP_DUB_JP=1 -> --set psp encodes the Japanese PSP voices
     # for the same slots (default off = the old behavior byte for byte)
     jp_mode = os.environ.get("PSP_DUB_JP") == "1"
     workdir = JP_PSP_WORK if jp_mode else WORK
@@ -341,7 +341,7 @@ def main():
     keep = set(json.load(open(KEEP_JSON))) if os.path.exists(KEEP_JSON) else set()
     for psp in range(FIRST_PSP, LAST_PSP + 1):
         ps1 = psp + 2
-        # P168/trial48: the English redirect is for a non-JP voice language
+        # The English redirect is for a non-JP voice language
         # only; jp_mode plays at3FileNames[id] itself (like main_jp, L250)
         name = ovr.get(ps1, names[(psp if jp_mode else remap.get(psp, psp)) - 0x300][:-4])
         c = ps1 - 0x300
@@ -361,7 +361,7 @@ def main():
     exe, path_of = ffmpeg()
     todo = sorted(set(jobs.values()) | {names[p - 0x300][:-4] for _, p, _ in EXTRA})
     if jp_mode:
-        # P148 멈춤 조건: a slot with no JP file stops the build (no fallback)
+        # Stop condition: a slot with no JP file stops the build (no fallback)
         missing = sorted(set(todo) - have_jp)
         assert not missing, "PSP_DUB_JP: no JP .at3 for %s" % missing
     with ThreadPoolExecutor(8) as ex:

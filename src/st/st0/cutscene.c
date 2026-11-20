@@ -205,7 +205,7 @@ static u8 SetCutsceneScript(u8* script) {
         return 0;
     }
 #if defined(MOD_KO)
-    // #213: default Dub=PSP played the PSP copy (ST0.BIN 0x27a0e, EN
+    // Default Dub=PSP played the PSP copy (ST0.BIN 0x27a0e, EN
     // "Dracula. Die now...") in English. TSV v13 has no PSP-phrasing
     // st0_richter_dracula rows (only 6 PSX-phrasing rows), so reuse the
     // PSX KO script (cutscene_script_ko_st0.h, 626B unit-exact) for both
@@ -699,7 +699,7 @@ void EntityCutscene(Entity* self) {
         } // This closes the big while loop for psx
         if (nextByte == ' ') {
 #ifdef MOD_KO
-            g_Dialogue.nextCharX += 1; /* 4px space (maintainer 08:16), KO_SPACE_ADV */
+            g_Dialogue.nextCharX += 1; /* 4px space, KO_SPACE_ADV */
 #else
             g_Dialogue.nextCharX += 2;
 #endif
@@ -707,7 +707,7 @@ void EntityCutscene(Entity* self) {
         }
 #endif
 #if defined(MOD_KO) && !defined(VERSION_PSP) && !defined(VERSION_HD)
-        /* #241: ASCII inside KO lines -> MGalmuri12 (v12d repurposed cells
+        /* ASCII inside KO lines -> MGalmuri12 (v12d repurposed cells
          * via KO_ENGTAB, 94xu16 in ARC_KO gap at 0x8009EF00). Miss (0) keeps
          * the 8x8 plate path. TSV untouched. */
         if (nextByte != ' ' && nextByte < 0x80 &&

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # check_xa_table.py -- the DRA song table (g_XaMusicConfigs) must be repack_xa's table (fail closed).
 #
-# Background (sihum39b, 월하 BGM 무음): repack_xa.py rewrites src/dra/gen/us/xa_music_config.h
+# Background (silent BGM): repack_xa.py rewrites src/dra/gen/us/xa_music_config.h
 # (and XA_STR1.), then "make build_assets" regenerated that header from the RETAIL yaml, so DRA was
 # compiled with the retail table (file/channel/LBA of the retail disc) while the disc's XA_STR1 was
-# repacked -> CdlSetfilter file mismatch -> every XA song silent (since sihum24).
+# repacked -> CdlSetfilter file mismatch -> every XA song silent (since an earlier build).
 #
 # Usage: check_xa_table.py dra         compile-side: build/us/dra.elf table == src/dra/gen/us/xa_music_config.h
 #        check_xa_table.py image BIN   disc-side: for every song row the XA sector at

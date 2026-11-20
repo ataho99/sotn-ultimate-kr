@@ -2,18 +2,18 @@
 """mono_xa.py — repack_xa.py dual-mono -> mono 변환의 순수 파이썬 재현.
 
 표준 라이브러리만 사용한다 (numpy 없음, 외부 바이너리 없음, 윈도 단일 exe 목표).
-근거: P148/src_copy/repack_xa.py.txt
+근거: mods/sotn-ultimate/tools/repack_xa.py
   - to_mono (200-214행): 스테레오 그룹 좌유닛 -> 모노 그룹 (리샘플·게인·클립 없음,
     정수 니블 재배열만)
   - units_of (157-165행): 그룹 -> 파라미터·니블 분해
   - sector_bytes (216-219행): 섹터 조립 (서브헤더 file/ch/sm/coding + 데이터)
   - 검증식 (550-561행): 좌유닛 동등 (numpy 동등식; 본 모듈은 정수 연산으로 동일 결과)
   - dual_mono 판정 (168-193행): satxa dec + 부동소수 dB 판정 — 본 모듈은 판정하지
-    않는다. 판정은 빌드 시 이미 끝난 값(P127 비고 mono/stereo 유지, swap_cov.json)
+    않는다. 판정은 빌드 시 이미 끝난 값(교체표 비고의 mono/stereo 유지, swap_cov.json)
     을 사용한다. 즉 본 모듈은 "변환"만 하며, "어느 스트림을 변환할지"는 입력표가 준다.
 
 입력: 일본 PS1 v1.2 XA 섹터 페이로드 (재료2 T1에서 ISO extent로 읽음).
-출력: trial45 해당 모노 섹터의 [24:24+2304] 데이터 (F2 모노 18그룹 x 128B).
+출력: 해당 모노 섹터의 [24:24+2304] 데이터 (F2 모노 18그룹 x 128B).
 
 결정성: 시간·난수·딕셔너리 순서·부동소수 의존 없음 (아래 코드에 import time/random
 없음, dict 순회로 출력 순서가 정해지는 부분 없음, //·&·|·<< 정수 연산만).
@@ -124,7 +124,7 @@ def sector_bytes(sync_mode16, sub, data2304):
 
     sync_mode16: 템플릿 섹터의 [0:16] (sync+헤더; MSF는 호출자가 LBA로 계산).
     sub: 8B 서브헤더 (file/ch/sm/coding x2 — 호출자가 규칙/표로 생성).
-    data2304: 모노 데이터. 꼬리는 0 (F2 EDC=0 규칙 — P154 §2 전수 확인).
+    data2304: 모노 데이터. 꼬리는 0 (F2 EDC=0 규칙 — 전수 확인).
     """
     if len(sync_mode16) != 16:
         raise ValueError("sync_mode16 must be 16B")

@@ -248,9 +248,9 @@ static void SysOptBanks(void) {
 
 // The box's input, while g_MenuStep is MOD_STEP_BOX: only when it is fully
 // open (Up / Down pick, Left / Right / X change, Triangle / Circle close)
-/* KO build: confirm = Circle (JP style, maintainer 11-11; DRA's PAD_MENU_SELECT = Circle|Square,
+/* KO build: confirm = Circle (JP style; DRA's PAD_MENU_SELECT = Circle|Square,
  * PAD_MENU_BACK = Cross); the mod box used the North-American X = confirm / Circle = close
- * (found with the sihum38 control test, 월하 11-16). */
+ * (found with a control test). */
 #if defined(MOD_SYSOPT_JPPAD) /* build_ko_trial.sh: SYSOPT_DEFS=-DMOD_SYSOPT_JPPAD */
 #define SYSOPT_SELECT (PAD_CIRCLE | PAD_SQUARE)
 #define SYSOPT_BACK (PAD_CROSS | PAD_TRIANGLE)

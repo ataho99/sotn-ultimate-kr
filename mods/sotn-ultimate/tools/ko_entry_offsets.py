@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # ko_entry_offsets.py -- the ONE table of C-side cutscene script entry offsets
-# (fixCUT, final-battle freeze).
+# (final-battle freeze).
 #
 # The PS1 C code enters some cutscene scripts in the MIDDLE, at a hardcoded
 # byte offset from the script's start (RCEN: SetCutsceneScript(cutscene_script
@@ -74,7 +74,7 @@ BOSS_SCRIPTS = {
     "rbo6": ("BOSS/RBO6/RBO6.BIN", "borbo6", [0x80181720, 0x801819E7],
              "src/boss/rbo6/e_cutscene_dialogue.c (MOD_KO: C EntityCutscene, ko_boss_dialogue.h)"),
 }
-# fixBOSS: boss overlays whose MOD_KO build draws the dialogue with the KO
+# Boss overlays whose MOD_KO build draws the dialogue with the KO
 # glyph path (src/boss/ko_boss_dialogue.h: engtab / promotion / F0..F3 cells,
 # 16 px line buffers). Only these may take KO rows; the others (still the
 # retail asm renderer, 8x8 font only) need KO_BOSS_ASM_RENDER=1.
@@ -180,7 +180,7 @@ def fix_switch_after_end(script, base, case_index, label=""):
     """script = the bytes of one asm cutscene script region that starts with SCRIPT_SWITCH (op 14);
     base = the region's BIN offset.  The KO text changes the lengths of the boxes, so a hard-coded
     retail address in the SWITCH can end up inside a box (BO6 0x1A2FB: the Shaft route after the orb
-    broke, v0.9.1 / 092_08: the box window was skipped and the dialogue stopped).  Set case
+    broke, v0.9.1: the box window was skipped and the dialogue stopped).  Set case
     `case_index` to the command that follows the first END after the SWITCH (= the next box, which
     must be SET_EVENTS, op 12) and assert it is a command boundary.  Returns the new bytes."""
     b = bytearray(script)

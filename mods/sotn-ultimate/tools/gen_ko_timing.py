@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# gen_ko_timing.py -- trial49 B: retime the KO cutscene windows to the Dub voices.
+# gen_ko_timing.py -- retime the KO cutscene windows to the Dub voices.
 #
 # The engine shows a window for  glyphs * SET_SPEED + sum(SET_WAIT)  frames and
 # never looks at the voice (src/st/*/cutscene.c, EntityCutscene; hangul has far

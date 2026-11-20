@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # gen_ko_sheet2.py -- big (12x16) Hangul labels of the status/equipment screen:
-# second sheet upload list + index strings (sihum37).
+# second sheet upload list + index strings.
 #
 # The menu draws labels from a glyph "sheet" in VRAM: func_800F98AC(list, y)
 # uploads the glyphs of a code list (cell k at x = 3*k words), func_800F66BC

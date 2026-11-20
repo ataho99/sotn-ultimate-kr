@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 """조립 도구 v4 — U 공식 v1.4 + 일본 PS1 v1.2 원판(T1+T2) + 꾸러미_v3 -> 한글 베타1.
 
-v2 대비 변경 2건 (P159):
-  (a) b-copy 확대 137 -> 1784 (T1 /LOGO15XA.STR verbatim 1,647 추가, P159 §1).
+v2 대비 변경 2건:
+  (a) b-copy 확대 137 -> 1784 (T1 /LOGO15XA.STR verbatim 1,647 추가).
       재료 LBA는 ISO 파일+섹터인덱스로 해결 (런타임 ISO 탐색, LBA 고정 없음).
-  (b) mono 삽입 20B shift 버그 수정 (P159 §3): 모듈 출력 2304B를
+  (b) mono 삽입 20B shift 버그 수정: 모듈 출력 2304B를
       [o+24:o+2328]에 넣고 [o+2328:o+2348] 20B 0패딩 + EDC 0.
       v2는 2304B를 2324B 슬롯에 대입해 bytearray가 섹터당 20B씩 줄어
       U2c 전체가 어긋나 있었다 (9378*20=187,560B, 실측 일치).
       델타는 같은 소스로 만들고 적용하므로 v2 시험은 통과했으나
       델타가 불필요하게 컸다. v3 소스는 섹터 정렬 정상 (691,353,936B).
 
-흐름: 재료 검사(리젝트) -> U 재배치+헤더 재계산(U2c: P154 §2) -> b-copy 1784 삽입
-  -> mono-ize 9,378 생성·삽입(P155 §3, v3 수정) -> xdelta 적용(외부 xdelta3)
+흐름: 재료 검사(리젝트) -> U 재배치+헤더 재계산(U2c) -> b-copy 1784 삽입
+  -> mono-ize 9,378 생성·삽입(v3 수정) -> xdelta 적용(외부 xdelta3)
   -> 결과 sha1 검증.
-재배치 규칙(v1과 동일, P154 오라클 전수 검증):
+재배치 규칙(v1과 동일, 오라클 전수 검증):
   same      = U[16:2352] 그대로 + sync/MSF(t45) 재계산 (EDC/ECC는 MSF 무관 — 복사)
   data_only = 서브헤더(subs.bin) + U 데이터 + Form2 EDC 0 규칙(전수 0 확인)
-              Form1은 표준 EDC/ECC 재계산(trial45에 해당 0건, 경로만 유지)
+              Form1은 표준 EDC/ECC 재계산(해당 0건, 경로만 유지)
   new       = 0 채움(델타가 운반)
 툴체인 사용 없음(표준 라이브러리만; numpy 없음). xdelta3 외부 바이너리 필요.
 """
@@ -36,7 +36,7 @@ sys.path.insert(0, HERE)
 import iso9660
 import mono_xa
 
-# P167: xdelta 3.2.2 바이너리를 도구 폴더 상대경로로 사용 (P164 v3b 방식).
+# xdelta 3.2.2 바이너리를 도구 폴더 상대경로로 사용 (v3b 방식).
 XDELTA3 = os.path.normpath(os.path.join(HERE, "..", "_도구", "xdelta31", "xdelta3"))
 # 배포 시: PATH의 xdelta3 또는 동봉 안내. 버전·조건은 README_v3.md에 명시.
 
@@ -44,7 +44,7 @@ XDELTA3 = os.path.normpath(os.path.join(HERE, "..", "_도구", "xdelta31", "xdel
 def find_file_extent(f, path_parts):
     """재료2 T1에서 ISO 경로(path_parts 리스트, 대소문자 무시)의 extent 반환.
 
-    LBA 고정 금지 (P159 §1): recipe의 iso.file + sector_index를
+    LBA 고정 금지: recipe의 iso.file + sector_index를
     런타임에 extent로 환산한다. 없으면 None.
     """
     pvd = iso9660.pvd(f)
@@ -114,7 +114,7 @@ def msf_head(t45, mode=0x02):
     return SYNC + bytes([bcd(f // 75 // 60), bcd((f // 75) % 60), bcd(f % 75), mode])
 
 
-# --- 표준 EDC/ECC (CD-ROM; P154 _tmp/p154/rebuild.c와 동일 알고리즘) ---
+# --- 표준 EDC/ECC (CD-ROM 표준 알고리즘) ---
 _EDC_LUT = None
 _ECC_F = None
 _ECC_B = None
@@ -148,7 +148,7 @@ def edc_bytes(data):
 
 
 def eccedc_form1(sec):
-    """Mode2 Form1 섹터(bytearray 2352)의 EDC+ECC 재계산. (trial45 해당 0건)"""
+    """Mode2 Form1 섹터(bytearray 2352)의 EDC+ECC 재계산. (해당 0건)"""
     sec[0x818:0x81C] = edc_bytes(sec[0x10:0x818])
     _init_tables()
     f = _ECC_F
@@ -296,13 +296,13 @@ def build_u2c(u_path, m2_t1, pkgdir, out_path):
                 if rule == "same":
                     out[o + 16:o + SECT] = S[16:SECT]
                 elif form == "F2":
-                    # subs.bin 서브헤더 + U 데이터 + EDC 0 (P154: 전수 0 확인)
+                    # subs.bin 서브헤더 + U 데이터 + EDC 0 (전수 0 확인)
                     out[o + 16:o + 24] = subs[si:si + 8]
                     si += 8
                     out[o + 24:o + 2348] = S[24:2348]
                     out[o + 2348:o + 2352] = b"\0\0\0\0"
                 else:
-                    # Form1 data_only (trial45 0건): 표준 재계산
+                    # Form1 data_only (0건): 표준 재계산
                     sec = bytearray(SECT)
                     sec[0:16] = msf_head(tl, S[15])
                     sec[16:24] = subs[si:si + 8]
@@ -314,7 +314,7 @@ def build_u2c(u_path, m2_t1, pkgdir, out_path):
                 for b in range(o, o + SECT):
                     out[b] = 0
     assert si == len(subs), (si, len(subs))
-    # b-copy 1784 삽입 (P159 §1: 기존 137 + LOGO15XA 1,647).
+    # b-copy 1784 삽입 (기존 137 + LOGO15XA 1,647).
     # 재료 위치는 ISO 파일+섹터인덱스로 해결 (런타임 ISO 탐색, LBA 고정 없음).
     # src_t1은 폴백용으로만 보관.
     recipe = json.load(open(os.path.join(pkgdir, "recipe_b.json"), encoding="utf-8"))
@@ -354,7 +354,7 @@ def build_u2c(u_path, m2_t1, pkgdir, out_path):
         out[o + 24:o + 2348] = m2[src * SECT + 24:src * SECT + 2348]
         out[o + 2348:o + 2352] = m2[src * SECT + 2348:src * SECT + 2352]
         nb += 1
-    # mono-ize 9,378 생성·삽입 (P155 §3: mono_xa + recipe_mono.json).
+    # mono-ize 9,378 생성·삽입 (mono_xa + recipe_mono.json).
     # 입력 = 재료2 T1의 SD/XA_STR1. (extent는 ISO에서 탐색, LBA 고정 금지).
     mono = json.load(open(os.path.join(pkgdir, "recipe_mono.json"),
                            encoding="utf-8"))
@@ -385,13 +385,13 @@ def build_u2c(u_path, m2_t1, pkgdir, out_path):
             assert ext + off + 8 * (nsec - 1) < n2, (cfg, off, nsec)
             cache[cfg] = mono_xa.run_to_mono_sectors(payload)
         data = cache[cfg][s]
-        assert len(data) == 2304, (t45, len(data))  # P159: 2304B 고정
+        assert len(data) == 2304, (t45, len(data))  # 2304B 고정
         o = t45 * SECT
         out[o:o + 16] = mono_xa.msf_head(t45)
         out[o + 16:o + 24] = sub
         out[o + 24:o + 2328] = data
-        out[o + 2328:o + 2348] = bytes(20)  # F2 spare 20B 0 (trial45 전수 0 확인)
-        out[o + 2348:o + 2352] = b"\0\0\0\0"  # F2 EDC 0 (P154 §2 전수 확인)
+        out[o + 2328:o + 2348] = bytes(20)  # F2 spare 20B 0 (전수 0 확인)
+        out[o + 2348:o + 2352] = b"\0\0\0\0"  # F2 EDC 0 (전수 확인)
         nm += 1
     f2.close()
     with open(out_path, "wb") as g:

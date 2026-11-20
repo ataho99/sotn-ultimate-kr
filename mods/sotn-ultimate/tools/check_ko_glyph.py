@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# check_ko_glyph.py -- KO glyph block v13p consistency checker (fail closed).
+# check_ko_glyph.py -- KO glyph block consistency checker (fail closed).
 #   1. block: 30 B cells (original 16x15 1bpp), size == cells*30, cells == dra.h
 #      KO_GLYPH_COUNT, sha256 == build_ko_trial KO_SHA, 776 + extension cells
 #      <= 776 + 29 (the extension lives in the 896 B dead blob slot)
@@ -25,7 +25,7 @@ import ko_font_profile as _FP  # noqa: E402
 CELL = _FP.P["cell_bytes"]  # 30 = original squeeze path, 23 = 12-col direct path
 BLKNAME = _FP.P["blk_name"]
 MAPNAME = _FP.P["map_name"]
-BLOCK_BYTES = 0x5640  # 960 cells x 23 B: the glyph block slot behind it (0x8009E640..0x8009EAF0) holds the resident KO_PopupText (sihum42)
+BLOCK_BYTES = 0x5640  # 960 cells x 23 B: the glyph block slot behind it (0x8009E640..0x8009EAF0) holds the resident KO_PopupText
 BASE = 0xF040
 MAX_CELLS = 960
 BASE_CELLS = 776
@@ -132,7 +132,7 @@ def main():
     if bad:
         fail("hand-coded sources decode to hangul outside the expected set: %s" % "".join(bad))
     print("hand-coded sources: %d distinct hangul, all expected" % len([c for c in seen if '가' <= c <= '힣']))
-    # fixLIB: LIB hand-coded string forms (the generators are outside this repo).
+    # LIB hand-coded string forms (the generators are outside this repo).
     # (a) KO bestiary descriptions (D_us_80180FB4, func_us_801B0C40 reads every
     #     non-letter byte as an SJIS pair): punctuation/digits must be full-width.
     # (b) KO enemy names (func_us_801B1064): space \x00, \xFF\x00 terminator.
@@ -249,7 +249,7 @@ def main():
     print("big-label sheet2: %d upload glyphs, labels %s OK" % (len(codes2), ",".join(n for n, _ in seen)))
     print("font profile %s: name_dy %d, window %d px x %d lines, space %d px OK" % (
         FP.ACTIVE, FP.P["name_dy"], FP.P["window_px"], FP.P["window_lines"], FP.P["space_px"]))
-    # 8px equipment-name plate: every name character must have a plate cell whose code is its v13p code
+    # 8px equipment-name plate: every name character must have a plate cell whose code is its glyph-map code
     # (a missing one is drawn as a blank, a stale code as another glyph: 숏 / 발 / 멜 bugs)
     import struct
     pb = open(WK + "ko_8p_block_246.bin", "rb").read()

@@ -35,7 +35,7 @@ static u8 SetCutsceneScript(u8* script) {
 
     if (g_Dialogue.primIndex[2] != -1) {
 #if defined(MOD_KO)
-        // KO trial: script selector (ko_dlg2 #127, passthrough until staged)
+        // KO trial: script selector (ko_dlg2, passthrough until staged)
         g_Dialogue.scriptCur = ModKoScript(script);
 #elif defined(MOD_PSP_SCRIPT)
         // Saturn port: the PSP dub toggle's script copies (mod_psp_script.h)

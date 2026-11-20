@@ -59,7 +59,7 @@ def main():
     if old_ops:
         # window breaks (gen_ko_splice): a LINE_BREAK may become NEXT_DIALOG + SET_PORTRAIT [+ SET_SPEED];
         # compare everything else exactly, and these four kinds by their total count only
-        drop = ("LINE_BREAK(", "NEXT_DIALOG(", "SET_PORTRAIT(", "SET_SPEED(", "SCRIPT_UNKNOWN_11(", "SET_WAIT(")  # trial49: gen_ko_timing.py inserts SET_WAIT (paid by 0x0D pads)
+        drop = ("LINE_BREAK(", "NEXT_DIALOG(", "SET_PORTRAIT(", "SET_SPEED(", "SCRIPT_UNKNOWN_11(", "SET_WAIT(")  # gen_ko_timing.py inserts SET_WAIT (paid by 0x0D pads)
         keep = lambda L: [x for x in L if not x.startswith(drop)]
         assert keep(new_ops) == keep(old_ops), "control op sequence differs from retail yaml"
     io.open(OUT, "w", encoding="utf-8", newline="\n").write(HEAD + "\n".join(out) + "\n")

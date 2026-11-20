@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// sihum42 (CP 926): item-pickup popup (src/st/popup.h BottomCornerText) Hangul glyph upload.
+// Item-pickup popup (src/st/popup.h BottomCornerText) Hangul glyph upload.
 // Resident in ARC_KO at KO_POP_GLYPH (dra.h), must stay the first/only function (offset 0 = entry).
 // The stage overlays draw every popup glyph as an SPRT; a Hangul name code (F0xx pair) is uploaded here as one
 // 12x16 4bpp glyph into VRAM slot n (halfword x = 3n, n >= 6 from eq_popt.c -> x >= 18, y = 464: tpage 0x10 below the 4 KO dialogue line buffers

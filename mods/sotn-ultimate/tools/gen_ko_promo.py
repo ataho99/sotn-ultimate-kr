@@ -9,7 +9,7 @@
 # each cutscene overlay maps it to the normal 2-byte glyph code through a
 # u16 table (KO_PROMO_TBL_ADDR, 224 B inside the KO glyph block region).
 #
-# Inputs : 번역_v14.tsv (dialogue rows, 번역 column), ko_glyph_map_v13p.tsv
+# Inputs : 번역_v14.tsv (dialogue rows, 번역 column), ko_glyph_map_*.tsv (프로필 map_name)
 # Outputs: P4시험/ko_promo_tbl.bin (112 x u16 LE), P4시험/ko_promo_map.tsv
 import collections
 from ko_paths import KO_WK  # noqa: E402

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// sihum42 (CP 929): resident port of the US BottomCornerText (src/st/popup.h) for the KO build, with Hangul
+// Resident port of the US BottomCornerText (src/st/popup.h) for the KO build, with Hangul
 // names (12 px glyphs via KO_PopGlyph) and the per-cell advance table (KO_FONT8_ADV). The stage overlays keep only a
 // call stub (popup.h, KO_POP_RESIDENT). Entry = first function at KO_POP_TEXT (dra.h).
 #include "ko_equip.h"

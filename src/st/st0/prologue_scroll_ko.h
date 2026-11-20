@@ -1,5 +1,5 @@
 // prologue_scroll_ko.h -- KO scroll blob for ST0 PrologueScroll (PSX).
-// #219: v13 segs 0-7; P5 7-seg fill (PSX sense, PSP tone; EN 0x20 dropped).
+// v13 segs 0-7; 7-seg fill (PSX sense, PSP tone; EN 0x20 dropped).
 // 0.9.2: JP-line-structure translation (39 lines, 10 paragraphs), per-line centred X offsets (screen 0x78 words, glyph 3, space 2).
 // EN prologue_script_en untouched -> .data layout unchanged.
 // ASCII-only file: must survive iconv UTF-8->Shift-JIS in psx-cc.

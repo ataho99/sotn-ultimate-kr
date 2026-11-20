@@ -1,7 +1,7 @@
 // ko_lib: bestiary enemy names, KO (LIB overlay, MOD_KO only).
 // Generated from v13 (400 rows, 168 KO) + mono7 F040 codes. Do not hand-edit.
 // Empty entry () = fall back to EN name at the call site.
-// fixLIB: entries use the func_us_801B1064 convention: space = \x00, end =
+// Entries use the func_us_801B1064 convention: space = \x00, end =
 // \xFF\x00 (was \x20 + C NUL only: the copy loop ran past the string). The
 // generator is not in this repo; check_ko_glyph.py now asserts this form.
 static const char* const ko_lib_enemy_names[400] = {

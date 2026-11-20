@@ -781,7 +781,7 @@ static void ModCharselDraw(void) {
 #endif
     x += 16 + 4 + 48 + 16;
 #if defined(MOD_KO)
-    /* trial25: confirm = circle (F_SEL sheet slot (0xA0,0x60), clut 0x200 red) */
+    /* confirm = circle (F_SEL sheet slot (0xA0,0x60), clut 0x200 red) */
     func_801B27A8(x, y, 16, 16, 0xA0, 0x60, 0x200, 0xC, 1, 0x80);
     SelLegRows(x + 20, y, &SelLegFile[2], 1);
 #else
@@ -992,7 +992,7 @@ static const ModSoundTrack g_ModSoundTracks[] MOD_RO = {
     {_S("I Am the Wind"), MU_STAFF_CREDITS},                   // SD1D
 };
 const char g_ModSoundText[] MOD_RO = _S("Now playing");
-#if !defined(MOD_KO) /* trial25: KO hint bar uses SelLegW words instead */
+#if !defined(MOD_KO) /* KO hint bar uses SelLegW words instead */
 const char g_ModSoundHint[] MOD_RO = _S("Play/Stop");
 const char g_ModSoundBack[] MOD_RO = _S("Back");
 #endif
@@ -1122,7 +1122,7 @@ static void ModSoundDraw(void) {
 
     // hint bar, as the Player Select's
 #if defined(MOD_KO)
-    /* trial25: 12px KO labels (선택 / 재생 / 뒤로) via SelLegRows, circle =
+    /* 12px KO labels (선택 / 재생 / 뒤로) via SelLegRows, circle =
      * play/stop, cross = back; same 3-slot layout as the Player Select */
     x = MOD_CHARSEL_CENTRE_X - (3 * (16 + 4 + 48) + 2 * 16) / 2;
     y = MOD_CHARSEL_HINT_Y;

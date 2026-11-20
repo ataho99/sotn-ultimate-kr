@@ -462,7 +462,7 @@ void EntityCutscene(Entity* self) {
 #else
     if (nextChar == 0x20) {
 #ifdef MOD_KO
-        g_Dialogue.nextCharX += 1; /* 4px space (maintainer 08:16), KO_SPACE_ADV */
+        g_Dialogue.nextCharX += 1; /* 4px space, KO_SPACE_ADV */
 #else
         g_Dialogue.nextCharX += 2;
 #endif
@@ -471,7 +471,7 @@ void EntityCutscene(Entity* self) {
             }
 #ifndef VERSION_HD
 #ifdef MOD_KO
-            /* ko engtab dialogue ASCII (sihum37b): . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
+            /* ko engtab dialogue ASCII: . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
              * KO_ENGTAB (94xu16 at 0x8009EF00), 12-col direct + kind0, advance KO_ENG_ADV (4/8 px). * A miss (0) keeps the original-font MoveImage path below. */
             if (nextChar > 0x20 && nextChar < 0x7F && ((const u16*)0x8009EF00)[nextChar - 0x21]) {
                 u_long* eng_glyph = (u_long*)g_api.func_80106A28(((const u16*)0x8009EF00)[nextChar - 0x21], 1);

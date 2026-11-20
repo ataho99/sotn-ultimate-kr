@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# gen_ko_glyph16.py -- KO glyph block v13p: Isunshin Regular_ots 16px, original
+# gen_ko_glyph16.py -- KO glyph block: 16px, original
 # 16x15 1bpp 30 B cells, 776 cells (the original 23280 B block), original path
 # (16->12 squeeze + kind1 interpolation) unchanged.
 #
@@ -9,10 +9,10 @@
 # shapes are replaced). ASCII / symbol cells keep the v12g shapes.
 #
 # Rasteriser: 16x supersample, coverage threshold 0.30 (matches the Chrome
-# 1-bit rendering of the _ots file; see mail 20261115-101500).
+# 1-bit rendering of the _ots file).
 #
-# Outputs: P4시험/ko_glyph_block_isunshin16_v13p.bin (776 x 30 B)
-#          P4시험/ko_glyph_map_v13p.tsv, ko_glyph16_report.txt
+# Outputs: P4시험/ko_glyph_block_*.bin (776 x 30 B; the profile's blk_name)
+#          P4시험/ko_glyph_map_*.tsv (the profile's map_name), ko_glyph16_report.txt
 import collections
 from ko_paths import KO_WK  # noqa: E402
 import hashlib
@@ -181,7 +181,7 @@ def main():
             fmap.setdefault(c, v)
     for c, v in assign.items():
         fmap[c] = v
-    # which characters get an Isunshin cell
+    # which characters get a font cell
     render = [c for c in fmap if is_h(c)]
     # global vertical offset: maximise glyphs fully inside rows 0..14
     FK = ImageFont.truetype(FONT, SIZE * K)

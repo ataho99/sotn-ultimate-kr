@@ -5,7 +5,7 @@
 #endif
 #include "sel.h"
 #include "mod_psp_script.h" // the PSP dub toggle's script copies
-#include "../cutscene_ko_wire.h" // KO trial script selector (ko_dlg2 #127)
+#include "../cutscene_ko_wire.h" // KO trial script selector (ko_dlg2)
 #include <cutscene.h>
 
 extern u32 D_801BC3E8;
@@ -48,7 +48,7 @@ u8 SetCutsceneScript(u8* script) {
     g_Dialogue.primIndex[2] = g_api.AllocPrimitives(PRIM_SPRT, 7);
     if (g_Dialogue.primIndex[2] != -1) {
 #if defined(MOD_KO)
-        // KO trial: script selector (ko_dlg2 #127, passthrough until staged)
+        // KO trial: script selector (ko_dlg2, passthrough until staged)
         g_Dialogue.scriptCur = ModKoScript(script);
 #elif defined(MOD_PSP_SCRIPT)
         // Saturn port: the PSP dub toggle's script copies (mod_psp_script.h)
@@ -440,14 +440,14 @@ void EntityCutscene(Entity* self) {
 
         if (nextChar == ' ') {
 #ifdef MOD_KO
-            g_Dialogue.nextCharX += 1; /* 4px space (maintainer 08:16), KO_SPACE_ADV */
+            g_Dialogue.nextCharX += 1; /* 4px space, KO_SPACE_ADV */
 #else
             g_Dialogue.nextCharX += 2;
 #endif
             break;
         }
 #ifdef MOD_KO
-        /* ko engtab dialogue ASCII (sihum37b): . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
+        /* ko engtab dialogue ASCII: . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
          * KO_ENGTAB (94xu16 at 0x8009EF00), 12-col direct + kind0, advance KO_ENG_ADV (4/8 px). * A miss (0) keeps the original-font MoveImage path below. */
         {
             u16 eng_ch = ((u16)(nextChar - 0x21) < 0x5E) ? ((const u16*)0x8009EF00)[nextChar - 0x21] : 0;

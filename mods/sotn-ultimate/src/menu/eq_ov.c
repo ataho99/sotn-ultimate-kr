@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// ko_equipreloc #128: overview entry. Must stay the first function
+// ko_equipreloc: overview entry. Must stay the first function
 // (offset 0 of eq_ov.o .text = KO_EQUIP_OV).
 #include "ko_equip.h"
 

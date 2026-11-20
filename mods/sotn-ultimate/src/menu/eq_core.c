@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// ko_equipreloc #128: resident tail core. Unified selector/overview draw
-// (#243: 8px Mgalmuri 8x8 cells, same 8px advance/pitch as English).
+// ko_equipreloc: resident tail core. Unified selector/overview draw
+// (8px Mgalmuri 8x8 cells, same 8px advance/pitch as English).
 // Linked at KO_EQUIP_CORE; entries (sel/ov/enter) jump here relatively.
 #include "ko_equip.h"
 #include "game.h"
@@ -20,7 +20,7 @@ void KO_8pDrawIdx(const char* idx, const s32* spc, s32 x, s32 y, MenuContext* ct
 
 // 8px block (KO_8P.BIN layout: u16 count, count x u16 codes (LE; F0xx
 // hangul or ascii<0x80), count x 8B cells (1bpp MSB, pixel0 = 0x80,
-// 8 rows)). #246: boot-loaded to KO_8P_BASE via the ARC_KO chain (cd.c),
+// 8 rows)). Boot-loaded to KO_8P_BASE via the ARC_KO chain (cd.c),
 // so this former menu-open CD loader is a stub. Kept as a symbol: the
 // tail link references it.
 void KO_8pLoad(void) {
@@ -163,7 +163,7 @@ s32 KO_EqParseName(const char* str, s32* idx, s32 cap) {
 
 // Expand one 8B 1bpp cell to 32B 4bpp (leftmost pixel = low nibble,
 // same convention as the 12x16 sheet: 0 = transparent, 3 = white core
-// (#248: the sheet CLUT is a 0..3 ramp where 1 = dark edge gray; writing 1
+// (the sheet CLUT is a 0..3 ramp where 1 = dark edge gray; writing 1
 // made every 8px name gray. The blob expander emits up to 3 for solid ink).
 void KO_8pExpand(s32 cell, u8* dst) {
     u8* blk = (u8*)KO_8P_BASE;
@@ -294,8 +294,8 @@ void KO_EqDraw(const char** names, const s32* xs, const s32* ys, s32 count,
 }
 
 // Draw one 8px index string (0xFF ends). 8px advance per cell, 4px for
-// space cells (#249 half-width: spaces were a full 8px like 한글 한 칸).
-// #248: tpage is pinned to 6. The old (ch & 0x10) ? 7 : 6 copied the 12px
+// space cells (half-width: spaces were a full 8px like 한글 한 칸).
+// tpage is pinned to 6. The old (ch & 0x10) ? 7 : 6 copied the 12px
 // 16-wide half-row split, but 8px rows are 24 cells (192px < one 256px page)
 // uploaded contiguously at 0x180: col>=16 drew from tpage 7 (X 0x1C0) and
 // came out blank. u = col*8 stays linear within the same page.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""꾸러미 v4 생성기 — 베이스 U'(얼티밋 공식 v1.4) + 일본 PS1 v1.2 T1 -> 목표 이미지(trial49c 등).
+"""꾸러미 v4 생성기 — 베이스 U'(얼티밋 공식 v1.4) + 일본 PS1 v1.2 T1 -> 목표 이미지.
 
 분류(목표 섹터별, 우선순위):
   same      목표[16:2352] == U'[16:2352] (헤더 MSF 는 조립 때 재계산)
@@ -82,7 +82,7 @@ for l in range(n1):
     idx_t1.setdefault(md(s[24:2352]), []).append(l)
 log("T1 색인", len(idx_t1))
 
-# --- mono 서명 (runs_span.json 은 v3b 것을 재사용: P127 런표·T1 동일) ---
+# --- mono 서명 (runs_span.json 은 v3b 것을 재사용: 런표·T1 동일) ---
 spanspec = json.load(open(os.path.join(OLD, "runs_span.json"), encoding="utf-8"))
 ext = asm.find_xa_extent(f1)
 assert ext is not None
@@ -207,7 +207,7 @@ fp["m1_sha1"] = sha1_file(U_PATH)
 fp["m1_size"] = os.path.getsize(U_PATH)
 fp["m1_sectors"] = nU
 fp["m1_version"] = "공식 v1.4"
-# 공개판 고정 이름 (영문) — #1757
+# 공개판 고정 이름 (영문)
 fp["files"] = {
     "m1_bin": "SOTN_Ultimate_v1.4.bin",
     "m1_cue": "SOTN_Ultimate_v1.4.cue",

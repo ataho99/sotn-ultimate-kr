@@ -52,7 +52,7 @@ awk '/^u8 g_MbScriptPre\[\]/{p=1} p{print} p && /^};/{n++; if (n == 2) exit}' \
     mods/sotn-ultimate/src/maria_saturn/mod_maria_boss_data.h > "$OUT/st/cen_psp/mb_scripts.h"
 grep -q "g_MbScriptPost" "$OUT/st/cen_psp/mb_scripts.h" ||
     { echo "FAIL build_cenp: scripts not found in mod_maria_boss_data.h"; exit 1; }
-# fixCUT C: the KO trial (build_ko_trial.sh exports MOD_KO=1). CEN's own
+# The KO trial (build_ko_trial.sh exports MOD_KO=1). CEN's own
 # sources below go through cpp (the trial's -DMOD_KO wrapper on PATH, and
 # KO_DEFS here as well), but the boss + glue are compiled by gcc, whose
 # built-in preprocessor never sees that wrapper: mod_cenp.c's mb_scripts.h

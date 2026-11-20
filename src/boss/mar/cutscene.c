@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #if defined(MOD_KO) && !defined(VERSION_PSP) && !defined(VERSION_PC) && !defined(VERSION_HD)
-/* MAR draws the Korean glyph cells at n*16 + 0x180 (fixCUT B below); the line buffers (CutsceneUnk3/4)
+/* MAR draws the Korean glyph cells at n*16 + 0x180 (see below); the line buffers (CutsceneUnk3/4)
  * must be 16 rows too, or lines 2+ sample the wrong rows (src/st/ko_font_params.h KO_DLG16) */
 #define KO_DLG16 1
 #endif
@@ -424,7 +424,7 @@ void EntityCutscene(Entity* self) {
             return;
         }
 #ifdef MOD_KO
-        /* fixCUT B: the KO glyph path of the stage renderers (src/st/rcen/
+        /* The KO glyph path of the stage renderers (src/st/rcen/
          * cutscene.c), so MAR can show gen_ko_splice.py's mar_maria rows.
          * ASCII via KO_ENGTAB (0x8009EF00), 1-byte promotion
          * (KO_PROMO_TBL 0x8009F000), 2-byte 0xF0..0xF3 cells. */

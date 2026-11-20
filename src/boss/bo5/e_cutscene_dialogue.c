@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #if defined(MOD_KO) && !defined(VERSION_PSP) && !defined(VERSION_PC) &&        \
     !defined(VERSION_HD)
-/* fixBOSS: Korean dialogue entity in C (src/boss/ko_boss_dialogue.h) with
+/* Korean dialogue entity in C (src/boss/ko_boss_dialogue.h) with
  * 16 px line buffers (src/st/ko_font_params.h); other builds: INCLUDE_ASM */
 #define KO_BOSS_C 1
 #define KO_DLG16 1

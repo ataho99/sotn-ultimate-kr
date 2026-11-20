@@ -277,7 +277,7 @@ def main():
     xa = Xa(IN_XA)
     filler = next(xa.sector(i) for i in range(xa.n) if xa.sm[i] == 0)
 
-    # P127: the JP PS1 (SLPM-86023) takes replace the retail voice runs
+    # The JP PS1 (SLPM-86023) takes replace the retail voice runs
     # (what the PS1 dub plays). The JP runs live in the span file; their
     # sectors are appended to xa so every step below (pack, write, verify)
     # treats them like any other run. (69,6) is not in the TSV: it keeps
@@ -345,7 +345,7 @@ def main():
         if i in dubbed and not dubbed[i].get("psp"):
             continue  # a new config: no retail run
         if i in swap_runs:
-            r = swap_runs[i]  # P127: the JP PS1 take instead of the retail run
+            r = swap_runs[i]  # the JP PS1 take instead of the retail run
         else:
             r = xa.run(addr + ch, f, ch)
             assert r, "config 0x%X has no stream" % (0x300 + i)
@@ -536,7 +536,7 @@ def main():
             new[c][3] = st["ch"]
             if st.get("dub"):
                 new[c][1] = st["dub"]["unk228"]
-            elif c in swap_unk:  # P127: the timer from the JP run length
+            elif c in swap_unk:  # the timer from the JP run length
                 new[c][1] = swap_unk[c]
 
     # 7. verify: re-extract every config from the written file
@@ -554,7 +554,7 @@ def main():
                                              psp[c] if st.get("psp") else new[c])
             r = nx.run(addr + ch, f, ch)
             o = cfg[c]
-            exp_ln = swap_unk[c] if c in swap_runs else o[1]  # P127: swapped timers come from the JP run
+            exp_ln = swap_unk[c] if c in swap_runs else o[1]  # swapped timers come from the JP run
             ok = (ln, vol, u, mode) == (exp_ln, o[4], o[5], o[6])
             if st.get("dub"):
                 ok = (ln == st["dub"]["unk228"] and (vol, u, mode) == (o[4], o[5], o[6])

@@ -23,7 +23,7 @@ def load_map():
         p = line.rstrip("\n").split("\t")
         if len(p) >= 2 and len(p[0]) == 1 and p[1].startswith("0x"):
             mp[p[0]] = int(p[1], 16)
-    assert len(mp) >= 700, len(mp)  # v13p
+    assert len(mp) >= 700, len(mp)  # glyph-map size sanity check
     return mp
 
 

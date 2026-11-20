@@ -1,4 +1,4 @@
-// unecm (Neill Corlett ECM format) — 월하 trial48 LOGO 단계용. 검증 = 결과 sha1 대조.
+// unecm (Neill Corlett ECM format) — LOGO 단계용. 검증 = 결과 sha1 대조.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

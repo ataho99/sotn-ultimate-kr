@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// fixBOSS: Korean dialogue entity of the boss overlays whose retail entity is
+// Korean dialogue entity of the boss overlays whose retail entity is
 // INCLUDE_ASM (bo5 Hippogryph, bo6 Richter, rbo6 Dracula). Compiled only when
 // the overlay sets KO_BOSS_C (MOD_KO, PSX US); every other build keeps the
 // INCLUDE_ASM entity, byte-identical.

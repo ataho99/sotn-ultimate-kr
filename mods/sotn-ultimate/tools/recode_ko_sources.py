@@ -27,7 +27,7 @@ def rd(p):
 
 def main():
     # usage: recode_ko_sources.py [SRC_MAP DST_MAP]   (default v12g -> v13n)
-    # v13n -> v13p is applied ONCE (guard file); the substitution is a single
+    # The final map-code substitution is applied ONCE (guard file); the substitution is a single
     # simultaneous pass, so overlapping old/new code values are fine.
     src = sys.argv[1] if len(sys.argv) > 1 else "ko_glyph_map_v12g.tsv"
     dst = sys.argv[2] if len(sys.argv) > 2 else "ko_glyph_map_v13n.tsv"

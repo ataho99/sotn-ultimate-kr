@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Build step (시험50): the 15 PSP-Japanese voice slots take their sectors from the
+"""Build step: the 15 PSP-Japanese voice slots take their sectors from the
 official Ultimate v1.4 image.
 
 The PSP Japanese voices (psp_dub.py, PSP_DUB_JP=1) are encoded here from the PSP

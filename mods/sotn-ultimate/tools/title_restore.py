@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
-"""Build step (trial49d): put the shipped-title assets back into the image.
+"""Build step: put the shipped-title assets back into the image.
 
-The trial46 title / loading / opening-caption art (F_TITLE0, F_TITLE1, F_SEL,
+The title / loading / opening-caption art (F_TITLE0, F_TITLE1, F_SEL,
 F_GAME, F_GAME2) lives in the repo as sha-pinned files (ko_assets/title46/).
 Each file is written over the same-named disc file, sector by sector, with
 Mode 2 form 1 EDC/ECC rebuilt.  Sizes must match, so the disc layout never
 moves.  Idempotent.  (An out-of-repo post step silently dropped out of the
-trial48 build chain; every replacement is a build step now.)
+build chain; every replacement is a build step now.)
 
 usage: title_restore.py IMAGE.bin ASSET_DIR
 """

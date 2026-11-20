@@ -18,12 +18,12 @@ PROFILES = {
         supersample=16,
         coverage_threshold=0.30,
         vert_offset=-1,        # glyph rows: cell row = font row + vert_offset
-        name_dy=0,             # speaker name moved UP by this many px (C: KO_NAME_DY); 4 in sihum34 (workaround), 0 since the trailing-LINE_BREAK scroll cause is fixed (sihum35)
+        name_dy=0,             # speaker name moved UP by this many px (C: KO_NAME_DY); 4 earlier (workaround), 0 since the trailing-LINE_BREAK scroll cause is fixed
         panel_right=248,       # inner right border of the dialogue panel (G4 prim x1, cutscene_script_text.h)
         text_dx=12,            # text line sprite starts this many px further left (C: KO_TEXT_DX)
         text_extra_w=8,        # ... and is this many px wider (C: KO_TEXT_EXTRA_W); sprite width 0xC0 + this
         start_x=60,            # SET_POS x of every cutscene script
-        window_px=188,         # = panel_right - (start_x + 4 + 8 - text_dx); sihum34/35 used 192 (text clipped/over the border)
+        window_px=188,         # = panel_right - (start_x + 4 + 8 - text_dx); earlier builds used 192 (text clipped/over the border)
         window_lines=3,        # lines per dialogue window (then NEXT_DIALOG)
         space_px=4,            # space advance (cutscene render hooks: nextCharX += 1)
         ascii_px=8,            # ASCII glyph advance (8x8 plate, nextCharX += 2)
@@ -45,13 +45,13 @@ PROFILES = {
         text_extra_w=8,
         start_x=60,
         window_px=188,
-        window_lines=4,        # sihum39: 4 static lines (KO_LINE_STEP 13; scroll only from the 5th line)
+        window_lines=4,        # 4 static lines (KO_LINE_STEP 13; scroll only from the 5th line)
         line_step=13,          # px between lines (C: KO_LINE_STEP, src/st/ko_font_params.h)
         line_up=4,             # first line moves up this many px (C: KO_LINE_UP)
         reflow=True,           # rows over window_lines are re-flowed ignoring the translator's "/" (gen_ko_wrap)
         space_px=4,
         ascii_px=8,
-        glyph_px=12,           # 12-col cell, advance 12: same width table as isunshinR16
+        glyph_px=12,           # 12-col cell, advance 12
         ascii_adv={".": 4, ",": 4, "!": 4},  # KO_ENG_ADV (ko_font_params.h): engtab cells, per-glyph advance (px)
         cell_bytes=23,         # 12 cols x 15 rows 1bpp, 180 bits (KO_GLYPH_12COL on)
         blk_name="ko_glyph_block_mgalmuri12_v14f.bin",  # v14e + 1 Hangul cell (gen_ko_glyph_f.py)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # gen_ko_glyph_lat.py -- add the 16 missing Latin cells (D F J K L O Q U V W X Y Z & - ') to the KO glyph block
-# and fill their KO_ENGTAB entries (sihum40, CP 898). Reason: the file-select save name (func_801ACFBC) and any
+# and fill their KO_ENGTAB entries. Reason: the file-select save name (func_801ACFBC) and any
 # dialogue line with these letters fell back to the console BIOS Kanji ROM (grey, blurry); with a cell for every
 # letter of the name alphabet they go through the MGalmuri12 1bpp path (func_80106A28 KoNameCh / func_801B2108).
 #
@@ -24,7 +24,7 @@ TTF = (KO_FONTS + "/MonadABXY/mgalmuri-font/_ttf/MGalmuri12.ttf")
 CB = 23
 BASE = 0xF040
 NEW = list("DFJKLOQUVWXYZ&-'")
-NEWH = "롯쓸됐"  # Hangul of the save-room texts (sihum40, CP 905) with no cell yet; appended after the Latin cells, map entries added
+NEWH = "롯쓸됐"  # Hangul of the save-room texts with no cell yet; appended after the Latin cells, map entries added
 PREV_BLK = P4 + "ko_glyph_block_mgalmuri12_v14b.bin"
 PREV_MAP = P4 + "ko_glyph_map_v14b.tsv"
 PREV_ENG = P4 + "ko_engtab_251.bin"

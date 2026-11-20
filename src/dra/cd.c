@@ -336,7 +336,7 @@ void CopyRicOvlCallback(void) {
 }
 
 #if defined(MOD_KO)
-// Trial10 A-gap KO loader (+trial17d5 #246: JP bundle + 8px block ride the
+// A-gap KO loader (+ JP bundle + 8px block ride the
 // same Alucard chain into 0x801F0000~/0x801F2000~). Plain copy into fixed
 // RAM (like the stage overlay copy, but fixed dest). Armed with the Alucard
 // chain below. The dest block derives from the completed-block counter

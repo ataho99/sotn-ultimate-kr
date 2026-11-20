@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # gen_ko_dlg.py -- v13 cutscene dialogue KO bake (trial builds only).
-# 입력: 한글작업/번역/번역_v13_통합.tsv (분류=대사) + P4시험/ko_glyph_map_v13p.tsv
+# 입력: 한글작업/번역/번역_v13_통합.tsv (분류=대사) + P4시험/ko_glyph_map_*.tsv (프로필 map_name)
 # 출력: <stage>/gen/cutscene_ko.h (무시됨, 빌드 생성물. 대사 파일은 추출기가
 #   매 빌드 다시 만드는 생성물이라 손 주입 금지 -- 인계문서 §2-2).
 #   행마다 KO 바이트열 1개 (ASCII 1B 그대로, 한글 F0xx 2B raw, `/` -> `\n`
 #   유지(후단에서 LINE_BREAK으로), `…` -> `...`). `_S()` 사용 금지
-#   (sotn_str가 한글을 조용히 버림, #115) -- raw 바이트만.
+#   (sotn_str가 한글을 조용히 버림) -- raw 바이트만.
 # 배선(다음 턴): 각 스테이지 SetCutsceneScript에 MOD_KO 분기로 KO 표 선택.
 #   표는 rodata append라 .data 불변 (check_stage_data) -- ST0 프롤로그 선례
 #   (46fa2bf73, data 32418워드 이동 FAIL) 때문.
@@ -48,7 +48,7 @@ def load_map():
         p = line.rstrip("\n").split("\t")
         if len(p) >= 2 and len(p[0]) == 1 and p[1].startswith("0x"):
             mp[p[0]] = int(p[1], 16)
-    assert len(mp) >= 700, len(mp)  # v13p
+    assert len(mp) >= 700, len(mp)  # glyph-map size sanity check
     return mp
 
 
@@ -59,7 +59,7 @@ def enc(s, mp, key):
         if o < 128:
             out.append(o)
         elif ch == "…":
-            out.extend(b"\xF1\xA0")  # trial25: v12f cell F1A0 (12px ellipsis)
+            out.extend(b"\xF1\xA0")  # v12f cell F1A0 (12px ellipsis)
         else:
             assert ch in mp, (key, repr(ch))
             code = mp[ch]
@@ -85,7 +85,7 @@ def main():
             continue  # 보스 스크립트 행은 gen_ko_splice(--apply-boss)/gen_ko_mar 담당
         assert pre in STAGE, key
         t = r[ti].replace("…", "...").replace("\\n", "/")
-        # trial25: 9 dots -> two ellipsis cells, 3 dots -> one (same rule as
+        # 9 dots -> two ellipsis cells, 3 dots -> one (same rule as
         # gen_ko_splice.py ell())
         t = t.replace(".........", "……").replace("...", "…")
         per.setdefault(pre, []).append((key, enc(t, mp, key)))

@@ -147,7 +147,7 @@ extern u8 cutscene_data_ferryman_right[];
 
 static const char* actor_names[] = {_S("FERRYMAN")};
 #ifdef MOD_KO
-/* trial15 #159: KO actor name only (dialogue stays EN: NO4 VRAM overflows
+/* KO actor name only (dialogue stays EN: NO4 VRAM overflows
  * with the KO render branch). DrawCutsceneActorName's KO path needs these. */
 static const u8 ko_name_0[] = {0xF0, 0xCB, 0xF0, 0xAB, 0xF0, 0xA9};
 static const u8* const actor_names_ko[] = {ko_name_0};
@@ -181,7 +181,7 @@ static bool dialogue_started;
 #endif
 
 // Unused by pspeu and deadstripped
-/* trial17a #225: ScaleCutsceneAvatar is never called in no4 US
+/* ScaleCutsceneAvatar is never called in no4 US
  * (DIALOGUE_LOAD_PORTRAIT anim is open-coded above); the static copy
  * costs ~260B text. Skipped under MOD_KO toward the KO dialogue branch. */
 #ifndef MOD_KO
@@ -603,19 +603,19 @@ void EntityCutscene(Entity* self) {
         } // This closes the big while loop for psx
         if (nextByte == ASCII_SPACE) {
 #ifdef MOD_KO
-            g_Dialogue.nextCharX += 1; /* 4px space (maintainer 08:16), KO_SPACE_ADV */
+            g_Dialogue.nextCharX += 1; /* 4px space, KO_SPACE_ADV */
 #else
             g_Dialogue.nextCharX += 2;
 #endif
             return;
         }
 #endif
-/* trial17a #225: KO dialogue render (same idiom as no3/st0: 2B path via
+/* KO dialogue render (same idiom as no3/st0: 2B path via
  * DRA func_80106A28 + 12x16 LoadTPage, x+=3; spaces stay 1B EN path).
  * KO script is same-length spliced (gen_ko_splice no4 entries), so this
  * branch is the only .text growth (+172B measured, real toolchain). */
 #if defined(MOD_KO) && !defined(VERSION_PSP)
-        /* ko engtab dialogue ASCII (sihum37b): . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
+        /* ko engtab dialogue ASCII: . , ! ? digits/letters in KO dialogue use the MGalmuri12 cells via
          * KO_ENGTAB (94xu16 at 0x8009EF00), 12-col direct + kind0, advance KO_ENG_ADV (4/8 px). * A miss (0) keeps the original-font MoveImage path below. */
         if (nextByte > 0x20 && nextByte < 0x7F && ((const u16*)0x8009EF00)[nextByte - 0x21]) {
             u_long* eng_glyph = (u_long*)g_api.func_80106A28(((const u16*)0x8009EF00)[nextByte - 0x21], 1);

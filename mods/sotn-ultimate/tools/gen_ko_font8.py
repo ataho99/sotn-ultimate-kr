@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # gen_ko_font8.py -- re-bake the ORIGINAL 8x8 menu glyph sheet (English/digits/symbols) with the small
-# Hangul font family (Galmuri7 @ 8, mono) -- sihum40 (CP 834). Cell positions and 8px advance unchanged.
+# Hangul font family (Galmuri7 @ 8, mono). Cell positions and 8px advance unchanged.
 #
 # The sheet: BIN/F_GAME.BIN and BIN/F_GAME2.BIN, 4096-byte block at +0x30000 (128x64, 4bpp, VRAM tpage 0x1E,
 # MenuDrawChar: cell (ch & 15, ch >> 4), ch = ASCII - 0x20 in the menu's own encoding, sheet index i <-> ASCII 0x20+i).

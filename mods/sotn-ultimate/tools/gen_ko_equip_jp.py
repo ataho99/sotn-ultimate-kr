@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# gen_ko_equip_jp.py — trial #177 (branch ko_equip_jp): JP-style expansion.
+# gen_ko_equip_jp.py — (branch ko_equip_jp): JP-style expansion.
 # KR hanpae precedent: table structs stay in DRA, name strings move to an
 # external bundle, rows repoint. Here: 148 rows fit in-place (exact bytes,
-# #129 rule), the other 119 KO rows become absolute pointers to
+# earlier rule), the other 119 KO rows become absolute pointers to
 # KO_JP_BUNDLE_BASE (external bundle file, loaded at menu-open by the tail
 # stub). DRA layout-neutral via PAD: .data same size (ptr<->ptr),
 # .rodata delta compensated by MOD_DRA_PAD (check_dra_layout mechanism).
@@ -36,7 +36,7 @@ def load_map():
         p = line.rstrip("\n").split("\t")
         if len(p) >= 2 and len(p[0]) == 1 and "가" <= p[0] <= "힣":
             mp[p[0]] = int(p[1], 16)
-    assert len(mp) >= 700, len(mp)  # v13p
+    assert len(mp) >= 700, len(mp)  # glyph-map size sanity check
     return mp
 
 

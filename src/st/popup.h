@@ -3,7 +3,7 @@
 #include "ko_font_params.h"
 
 #if defined(MOD_KO) && !defined(KO_POP_NOHANGUL)
-/* sihum42: the KO build runs the popup from the resident ARC_KO function (Hangul names, advance table) */
+/* the KO build runs the popup from the resident ARC_KO function (Hangul names, advance table) */
 void BottomCornerText(u8* str, u8 leftAlign) { KO_PopupText(str, leftAlign); }
 #else
 void BottomCornerText(u8* str, u8 leftAlign) {
@@ -44,7 +44,7 @@ void BottomCornerText(u8* str, u8 leftAlign) {
         }
 #ifdef MOD_KO
         kA = KO_POP_LOOK(ch);
-        textWidth += kA ? KO_NAME_ADV(kA) : KO_NAME_SP; /* KO: per-cell advance table (sihum40) */
+        textWidth += kA ? KO_NAME_ADV(kA) : KO_NAME_SP; /* KO: per-cell advance table */
 #else
         if (ch) {
             textWidth += 8;

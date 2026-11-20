@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # gen_ko_8p.py -- equipment-name 8px plate (KO_8P block) v246: ko_8p_block_243.bin
 # (283 cells) + characters that equipment names use but the plate lacks, and codes
-# re-pointed to the v13p glyph map.
+# re-pointed to the current glyph map.
 #
 # Block layout (eq_core.c): u16 count, count x u16 code (LE), count x 8 B cell
-# (1bpp, MSB = pixel 0, 8 rows). Name bytes are v13p glyph codes (F0xx pairs), so
-# the plate code of a character must be its v13p code.
+# (1bpp, MSB = pixel 0, 8 rows). Name bytes are glyph-map codes (F0xx pairs), so
+# the plate code of a character must be its glyph-map code.
 #
 # Cell source: v11 MGalmuri8 cells; characters v11 lacks come from Galmuri7.ttf at size 8 (mono, top ink
 # row, 8x8) -- the same glyphs, verified bit-exact against all existing plate cells (positive control below).
@@ -128,7 +128,7 @@ def main():
             for ch in q[4]:
                 if is_h(ch) and ch not in pmap and ch not in need:
                     need.append(ch)
-    # re-point plate codes that differ from the v13p map
+    # re-point plate codes that differ from the glyph map
     fixed = []
     for ch, code in pmap.items():
         if is_h(ch) and v13.get(ch) is not None and v13[ch] != code:
