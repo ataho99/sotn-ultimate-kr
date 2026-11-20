@@ -27,7 +27,12 @@ void KO_PopupText(u8* str, u8 leftAlign) {
         *chIdx++ = 0;
     }
     chIdx = toPrint;
-    while (1) {
+    /* A3: a name pointer into the JP name bundle (RAM 0x801F0000.., ko_equip_jp) reads 00 00 while the bundle is not
+     * loaded (Richter prologue) and no FF 00 terminator ever follows: treat it as an empty string */
+    while (!(str[0] == 0 && str[1] == 0)) {
+        if (chIdx - toPrint >= 60) { /* toPrint is 64 B: stop with room for one Hangul pair; the zero fill ends the text */
+            break;
+        }
         ch = *str++;
         if (ch == 0xFF) {
             ch = *str++;

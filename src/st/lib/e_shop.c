@@ -107,6 +107,17 @@ static u16 D_us_80180E90[] = {
 #define LIB_TOP_MAX 0x42
 #endif
 
+#if defined(MOD_KO) && defined(MOD_SATURN)
+// Saturn bestiary descriptions (KO): rows 0..16 of the 18 new entries (bits 146..162,
+// enemies 0x190..0x1A8) are read from the dead ARC_KO slot at 0x8009EAF0 (896 B: 17 LE
+// pointers followed by the literals, 856 B in all). The other two (bit 163 = 0x1A9 and
+// Maria's PSP text) are static literals here. Literal format as the KO rows of
+// D_us_80180FB4: Hangul as \xF0..\xF3 escapes, full-width period as a source literal.
+#define KO_LIBDESC_TBL ((const char* const*)0x8009EAF0)
+#define KO_LIBDESC_SLOT_MAX 16
+static const char g_ModLibKoPlace1A9[] = "\xF1\xF7\xF0\xFF \xF0\xCA\xF2\x30\xF0\xC6 \xF3\x36\xF2\x01 \xF0\x68\xF2\x0F\xF0\x4C\xF2\x24@\xF0\x78\xF2\xFD\xF0\x85 \xF0\xF9\xF0\x5E\xF0\xC6 \xF3\x5D\xF0\xBD \xF1\xDD\xF0\x49．";
+static const char g_ModLibKoPlaceMariaPsp[] = "\xF1\xE4\xF1\xAB\xF0\x7C \xF1\x2C \xF0\x52\xF0\xD2\xF1\xD2 \xF2\x3E\xF1\x14@\xF0\x50\xF2\x4E\xF2\x1E\xF0\xC6 \xF2\xF3\xF0\xBF \xF1\x8D\xF0\x92\xF0\x7D\xF0\x71 \xF2\x43\xF2\x1E．";
+#endif
 static const char* D_us_80180FB4[] = {
     #if defined(MOD_KO)
         "１７９２\xF2\x70 \xF0\x50\xF2\x4E\xF2\x1E\xF0\x40 \xF0\xB0\xF0\x92\xF3\x19\xF0\x49（５\xF2\x70 \xF1\xE4）．",
@@ -1374,19 +1385,19 @@ extern const char** D_us_80181310;
 #else
 static const char* D_us_80181310[] = {
 #if defined(MOD_KO)
-    "\x03\xF0\x44\xF0\xDD",
+    "\x07\xF0\x44\xF0\xDD",
 #else
     "\003"
     "Buy item",
 #endif
 #if defined(MOD_KO)
-    "\x03\xF1\xE4\xF0\x67",
+    "\x07\xF1\xE4\xF0\x67",
 #else
     "\003"
     "Tactics",
 #endif
 #if defined(MOD_KO)
-    "\x01\xF0\xAD\xF1\x84\xF0\x4E",
+    "\x06\xF0\xAD\xF1\x84\xF0\x4E",
 #else
     "\001"
     "Enemy list",
@@ -1404,7 +1415,7 @@ static const char* D_us_80181310[] = {
     "Exit",
 #endif
 #if defined(MOD_KO)
-    "\x03\xF0\xA5\xF0\x62\xF0\x53\xF0\xF2",
+    "\x04\xF0\xA5\xF0\x62\xF0\x53\xF0\xF2",
 #else
     "\003"
     "Sell gem"
@@ -1562,13 +1573,16 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
 #else
 #ifdef MOD_KO
                 /* fixLIB: pair only real lead bytes (Hangul F0-F3, SJIS
-                 * 81-9F/E0-EF) and never take the NUL as a 2nd byte. A
+                 * 81-9F/E0-EF). A Hangul lead always takes its 2nd byte,
+                 * even 0x00 (codes F100/F200/F300 end in a zero byte);
+                 * an SJIS lead never takes the NUL terminator. A
                  * half-width byte is widened to its SJIS full-width code
                  * instead of eating the next byte (a trailing '.' ate the
                  * terminator: run-on text, g_Pix overflow, freeze). */
-                if (((ch & 0xFC) == 0xF0 || (ch >= 0x81 && ch <= 0x9F) ||
-                     (ch >= 0xE0 && ch <= 0xEF)) &&
-                    *str) {
+                if ((ch & 0xFC) == 0xF0 ||
+                    (((ch >= 0x81 && ch <= 0x9F) ||
+                      (ch >= 0xE0 && ch <= 0xEF)) &&
+                     *str)) {
                     ch = (u8)*str++ | (ch << 8);
                 } else if (ch >= '0' && ch <= '9') {
                     ch = ch - '0' + 0x824F; // ０-９
@@ -1602,7 +1616,18 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
 #endif
                     str += 2;
             }
+#ifdef MOD_KO
+            /* 0.9.2: full-width digits / . ( ) of the description (retail Japanese ROM glyphs, bold grey) use
+             * the Korean engtab cells (KO_ENGTAB 0x8009EF00, ascii - 0x21) like the dialogue; 0 = no cell -> keep */
+            {
+                u32 koAsc = (ch >= 0x824F && ch <= 0x8258) ? (ch - 0x824F + '0')
+                          : ch == 0x8144 ? '.' : ch == 0x8169 ? '(' : ch == 0x816A ? ')' : 0;
+                u16 koCell = koAsc ? ((const u16*)0x8009EF00)[koAsc - 0x21] : 0;
+                chPix = (u8*)g_api.func_80106A28(koCell ? koCell : ch, 1);
+            }
+#else
             chPix = (u8*)g_api.func_80106A28(ch, 1);
+#endif
 #endif
 #ifdef MOD_KO
             ko_trim = 0;
@@ -5821,13 +5846,29 @@ void func_us_801B8234(Entity* self) {
             func_us_801B0C40(pix, s3, 0, 0x1D0, 0x6E);
 #elif defined(MOD_SATURN)
             if (LIB_BIT(self->params) >= MOD_LIB_RETAIL_ENEMIES) {
+#if defined(MOD_KO)
+                // [bit-146] <= 16: ARC_KO slot table (0x8009EAF0, 17 rows),
+                // otherwise (bit 163 = 0x1A9) the static literal in the LIB overlay.
+                if (LIB_BIT(self->params) - MOD_LIB_RETAIL_ENEMIES <=
+                    KO_LIBDESC_SLOT_MAX) {
+                    s3 = KO_LIBDESC_TBL[LIB_BIT(self->params) -
+                                        MOD_LIB_RETAIL_ENEMIES];
+                } else {
+                    s3 = g_ModLibKoPlace1A9;
+                }
+#else
                 s3 = g_ModLibDesc[LIB_BIT(self->params) -
                                   MOD_LIB_RETAIL_ENEMIES];
+#endif
                 // Maria: the PSP port's own description with the PSP and
                 // JP dubs (gen_saturn_bestiary.py DESC_PSP)
                 if (LIB_BIT(self->params) == MOD_LIB_DESC_PSP_BIT &&
                     MOD_PSP_DUB_ON()) {
+#if defined(MOD_KO)
+                    s3 = g_ModLibKoPlaceMariaPsp;
+#else
                     s3 = g_ModLibDescPsp;
+#endif
                 }
             } else {
                 s3 = D_us_80180FB4[LIB_BIT(self->params)];
