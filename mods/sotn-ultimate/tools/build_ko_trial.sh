@@ -428,6 +428,9 @@ bash mods/sotn-ultimate/tools/build_prs.sh
 bash mods/sotn-ultimate/tools/build_rprs.sh
 # the Hell Garden, the inverted castle's Garden (TE3.BIN / F_TE3.BIN slots)
 bash mods/sotn-ultimate/tools/build_rgdn.sh
+# KO area name cards (ko_data/cards/*.png): Korean cmpgfx bytes over the English slot of the linked stage BINs,
+# zero padded to the same length; registered in mod_data_edits.json for check_stage_data (idempotent)
+python3 mods/sotn-ultimate/tools/gen_ko_cards.py
 # Left-hand copies of the weapons the mod changes (WEAPON1.BIN; the decomp
 # only builds WEAPON0.BIN). Weapon 21 throws food; weapon 17 (Pentagram /
 # Bat Pentagram) follows the Balance row. 37 (Jewel / Stone sword: gold),
@@ -731,9 +734,9 @@ echo "ko_equip_jp: sel/ov/enter at $EQ_SEL/$EQ_OV/$EQ_ENTER, core $corevma size 
 # ARC_F2's old 178-bake region is zeroed (same length, no LBA moves).
 # #250 task 3(b): v12e (v12c Korean restored in F12A..F28A, English 32 moved
 # to free-code cells) + engtab250. Same 776x30 size, ARC offsets unchanged.
-# v14e (gen_ko_glyph_e.py): v14d + 91 more cells (950 in all, limit 960); KO_SHA = the block's sha256 (check_ko_glyph.py prints it).
-export KO_BLK=${KO_WK}/P4시험/ko_glyph_block_mgalmuri12_v14e.bin
-export KO_SHA=14868a22f7094106d042b337f24f8c6eca26fb89353a0144b18747a67253f558
+# v14f (gen_ko_glyph_f.py): v14e + 1 Hangul cell F3F6 (951 in all, limit 960); v14e (gen_ko_glyph_e.py): v14d + 91 more cells (950); KO_SHA = the block's sha256 (check_ko_glyph.py prints it).
+export KO_BLK=${KO_WK}/P4시험/ko_glyph_block_mgalmuri12_v14f.bin
+export KO_SHA=343e9d2b19c4d95075a2978075cb57a26cd55c23e08c6c2017e5f350d441e370
 # name tag / popup advance table lookup (src/st/ko_font_params.h) is per overlay. KO_NAME_FIXED_OVERLAYS (switches, one
 # `#define KO_NAME_FIXED 1` as first line of the files): sel(cutscene.c) no3(cutscene.c, popup.c) no4(cutscene.c, popup.c) mad(popup.c: MAD.BIN must keep its retail size, check_status_shift).
 # If a later build reports `FAIL stXXX: overlay ends ... past 0x801e0000`, add the define to that overlay's
@@ -743,6 +746,7 @@ export KO_SHEET2=${KO_WK}/P4시험/ko_sheet2.bin
 export KO_PROMO=${KO_WK}/P4시험/ko_promo_tbl.bin
 export KO_ENGTAB=${KO_WK}/P4시험/ko_engtab_253.bin # v14d: 252 + 40 ASCII entries (existing entries unchanged)
 export KO_FIELD=${KO_WK}/P4시험/ko_field.bin
+export KO_LIBDESC=${KO_WK}/P4시험/ko_libdesc.bin # 0.9.2: Saturn bestiary KO rows
 python3 mods/sotn-ultimate/tools/check_ko_glyph.py || { echo 'check_ko_glyph FAILED' >&2; exit 1; }
 python3 - <<'PYEOF'
 import hashlib, io, os, re
@@ -786,9 +790,13 @@ assert len(engtab) == 94 * 2 == 188, len(engtab)
 ENGTAB_OFF = 0x8009EF00 - 0x80099000
 assert ENGTAB_OFF == 24320, ENGTAB_OFF
 # the dead MenuDrawKoHook blob text is replaced by the extension glyph cells
-blob = ext_cells
-assert len(blob) <= slot, (len(blob), slot)
-blob = blob + bytes(slot - len(blob))
+# 0.9.2: the Saturn bestiary KO descriptions (17 rows) live in this slot (RAM 0x8009EAF0, KO_LIBDESC_TBL);
+# the cells above 1012 would overwrite it, so the extension must stay empty
+libdesc = open(os.environ['KO_LIBDESC'], 'rb').read()
+assert len(libdesc) <= 896, len(libdesc)
+assert len(ext_cells) == 0, len(ext_cells)
+blob = libdesc + bytes(slot - len(libdesc))
+assert len(blob) == slot, (len(blob), slot)
 ro = open('build/us/mod/kobob/ko_blob_ro.bin', 'rb').read()
 exp = bytes.fromhex('f080f05eff00 f046f067ff00 f052f141f046ff00 f1abf081ff00 f0abf1ccf052ff00'.replace(' ', ''))
 # #249: hand labels appended (upload +오/른/손/왼 cells 14-17, indices 0e0f10ff 오른손 + 1110ff 왼손)
