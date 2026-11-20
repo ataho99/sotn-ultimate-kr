@@ -82,6 +82,10 @@ CODING_STEREO = 0x01  # 37.8 kHz, 4 bit; bit 0 clear = mono
 # debug stage MAD's BGM (0x34B)
 JP_IDS = list(range(0x341, 0x358)) + list(range(0x52E, 0x531))
 SILENT_SECTORS = 2
+# 0.9.2: JP PS1 id 0x33D (cfg idx 0x3D: cd 0x64D0, unk228 0x1893, file 30 ch 6, vol 0x7A) is the prologue Moonlight
+# Nocturne with the Japanese narration mixed in (US 0x340 = the same tune, music only).  It replaces US cfg idx 0x40
+# (file 6 ch 2).  (US cfg idx, span sector of the JP run start = abs LBA 73457 - 47643, sectors (stride 8), new unk228, JP file, JP ch)
+BGM_SWAP = (0x40, 25814, 1966, 0x1893, 30, 6)
 MONO_DB = -40  # see dual_mono
 SATXA = os.path.join(ROOT, "bin/satxa")  # built by gen_saturn_music.py
 TMP = os.path.join(ROOT, "build/us/xa_repack/stream")
@@ -232,6 +236,7 @@ def main():
     ap.add_argument("--swap-jp", help="P127 TSV (US cfg idx -> JP PS1 span run): retail voice runs take JP takes")
     ap.add_argument("--swap-span", help="P127 JP PS1 XA span file (p110_jp_xa_span.bin)")
     ap.add_argument("--swap-report", help="P127 JSON sidecar for the swapped configs' new tables")
+    ap.add_argument("--swap-bgm", action="store_true", help="0.9.2: the prologue Moonlight Nocturne (US 0x340) takes the JP run 0x33D (narration over the music); needs --swap-span")
     args = ap.parse_args()
     if args.dub_jp and not args.dub:
         sys.exit("repack_xa: --dub-jp needs --dub")
@@ -280,8 +285,8 @@ def main():
     swap_runs = {}  # cfg idx -> appended JP sectors (replaces the retail run)
     swap_unk = {}   # cfg idx -> new unk228 (from the JP run length)
     swap_usec = {}  # cfg idx -> replaced US run length (for the report)
-    if args.swap_jp:
-        assert args.swap_span, "repack_xa: --swap-jp needs --swap-span"
+    if args.swap_jp or args.swap_bgm:
+        assert args.swap_span, "repack_xa: --swap-jp / --swap-bgm need --swap-span"
         span = open(args.swap_span, "rb").read()
         assert len(span) % S == 0 and len(span) // S == 184111, len(span)
         if hashlib.sha1(span).hexdigest() != "cf89a5127ea97b67d1791236e92b23159313b4f3":
@@ -290,7 +295,7 @@ def main():
         ssm, scoding = sa[:, 18], sa[:, 19]
         nojp = {i - 0x300 for i in JP_IDS}
         want = []
-        rows = [l.rstrip("\n").split("\t") for l in open(args.swap_jp, encoding="utf-8")]
+        rows = [l.rstrip("\n").split("\t") for l in open(args.swap_jp, encoding="utf-8")] if args.swap_jp else [["US_cfg_idx"]]
         assert rows[0][0] == "US_cfg_idx", rows[0][:3]
         for col in rows[1:]:
             if len(col) < 13 or col[12] != "교체":
@@ -304,7 +309,19 @@ def main():
                 assert ssm[s] & SM_AUDIO and scoding[s] & CODING_STEREO, \
                     "swap 0x%X span sector %d" % (0x300 + c, s)
             want.append((c, secs, nu))
-        assert len(want) == 243, "swap rows: %d" % len(want)
+        if args.swap_jp:
+            assert len(want) == 243, "swap rows: %d" % len(want)
+        if args.swap_bgm:
+            bc, boff, bnsec, bnu, bfile, bch = BGM_SWAP
+            assert bc not in nojp and tuple(cfg[bc][2:4]) == (6, 2), "swap-bgm: cfg 0x%X is not the Moonlight Nocturne run" % (0x300 + bc)
+            assert all(bc != w[0] for w in want), "swap-bgm: 0x%X is already swapped by --swap-jp" % (0x300 + bc)
+            bsecs = [boff + 8 * k for k in range(bnsec)]
+            for s in bsecs:
+                assert ssm[s] & SM_AUDIO and scoding[s] & CODING_STEREO, "swap-bgm span sector %d" % s
+                assert (sa[s, 16], sa[s, 17]) == (bfile, bch), "swap-bgm span sector %d is not (file %d, ch %d)" % (s, bfile, bch)
+            nxt = boff + 8 * bnsec  # the JP run must end here
+            assert nxt >= len(sa) or (sa[nxt, 16], sa[nxt, 17]) != (bfile, bch) or not (ssm[nxt] & SM_AUDIO), "swap-bgm: the JP run goes on after %d sectors" % bnsec
+            want.append((bc, bsecs, bnu))
         ext = bytearray()
         at = {}
         for c, secs, nu in want:

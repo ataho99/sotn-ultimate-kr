@@ -296,7 +296,14 @@ if [ "$MOD_PSP_DUB" = 1 ] && [ "${PSP_DUB_JP:-0}" = 1 ] && [ "${VOICE_V14:-1}" !
     [ -f "$V14_BIN" ] || { echo "ABORT: voice step needs V14_BIN ($V14_BIN missing); VOICE_V14=0 skips" >&2; exit 3; }
     python3 mods/sotn-ultimate/tools/voice_v14.py build/us/psp_dub/dub.json "$V14_BIN" mods/sotn-ultimate/ko_assets/voice_v14/table.tsv || { echo "ABORT: voice v14 step failed" >&2; exit 3; }
 fi
-PSP_DUB_JP=${PSP_DUB_JP:-0} .venv/bin/python mods/sotn-ultimate/tools/repack_xa.py $DUB_FLAGS ${REPACK_XA_FLAGS:-}
+# 0.9.2: the prologue Moonlight Nocturne takes the JP run 0x33D (the narration is mixed into that run);
+# BGM_JP_RUN=0 keeps the US music-only run.  Needs the JP PS1 XA span (ko_data/recipe/p110_jp_xa_span.bin).
+BGM_FLAGS=""
+if [ "${BGM_JP_RUN:-1}" != 0 ]; then
+    [ -f ko_data/recipe/p110_jp_xa_span.bin ] || { echo "ABORT: --swap-bgm needs ko_data/recipe/p110_jp_xa_span.bin (BGM_JP_RUN=0 skips)" >&2; exit 3; }
+    BGM_FLAGS="--swap-bgm --swap-span ko_data/recipe/p110_jp_xa_span.bin"
+fi
+PSP_DUB_JP=${PSP_DUB_JP:-0} .venv/bin/python mods/sotn-ultimate/tools/repack_xa.py $DUB_FLAGS $BGM_FLAGS ${REPACK_XA_FLAGS:-}
 # Guard vs stale GEN_H (#39): snapshot repack's xa_music_config.h right after
 # its self-verify. The ninja assets-build rewrites this file from retail yaml;
 # the freshness assert before check_psp_dub catches a late clobber.
@@ -1030,7 +1037,7 @@ if [ "$MOD_PSP_DUB" = 1 ]; then
     # Repack once more (deterministic: same XA bytes, no re-disk needed).
     if [ "$(sha1sum src/dra/gen/us/xa_music_config.h | cut -d' ' -f1)" != "$GENH_SHA" ] || [ src/.assets_build_done_us -nt build/us/XA_STR1. ]; then
         echo "GEN_H changed after repack (marker/XA/GENH: $(stat -c %y src/.assets_build_done_us build/us/XA_STR1. src/dra/gen/us/xa_music_config.h | tr '\n' ' ')): repacking once"
-        PSP_DUB_JP=${PSP_DUB_JP:-0} .venv/bin/python mods/sotn-ultimate/tools/repack_xa.py $DUB_FLAGS ${REPACK_XA_FLAGS:-}
+        PSP_DUB_JP=${PSP_DUB_JP:-0} .venv/bin/python mods/sotn-ultimate/tools/repack_xa.py $DUB_FLAGS $BGM_FLAGS ${REPACK_XA_FLAGS:-}
         GENH_SHA=$(sha1sum src/dra/gen/us/xa_music_config.h | cut -d' ' -f1)
     fi
     if [ "$(sha1sum src/dra/gen/us/xa_music_config.h | cut -d' ' -f1)" != "$GENH_SHA" ]; then
