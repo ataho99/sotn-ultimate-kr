@@ -53,7 +53,7 @@ u8 func_801B101C(u8* script) {
     if (g_Dialogue.primIndex != -1) {
         g_Dialogue.scriptCur = script;
         g_Dialogue.nextCharX = 0x200;
-        g_Dialogue.startY = 0x21C; // 0.9.2: centred first KO line (was 0x216, EN offset)
+        g_Dialogue.startY = 0x22A; // 0.9.2: centred first KO line (0x200 + X of line 0)
         g_Dialogue.nextLineX = 0;
         g_Dialogue.nextCharY = 0;
         g_Dialogue.portraitAnimTimer = 0;
