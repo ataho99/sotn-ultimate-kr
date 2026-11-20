@@ -84,7 +84,7 @@ JP_IDS = list(range(0x341, 0x358)) + list(range(0x52E, 0x531))
 SILENT_SECTORS = 2
 # 0.9.2: JP PS1 id 0x33D (cfg idx 0x3D: cd 0x64D0, unk228 0x1893, file 30 ch 6, vol 0x7A) is the prologue Moonlight
 # Nocturne with the Japanese narration mixed in (US 0x340 = the same tune, music only).  It replaces US cfg idx 0x40
-# (file 6 ch 2).  (US cfg idx, span sector of the JP run start = abs LBA 73457 - 47643, sectors (stride 8), new unk228, JP file, JP ch)
+# (retail file 30 ch 6, the same file/channel as the JP run; the repacked disc renumbers it).  (US cfg idx, span sector of the JP run start = abs LBA 73457 - 47643, sectors (stride 8), new unk228, JP file, JP ch)
 BGM_SWAP = (0x40, 25814, 1966, 0x1893, 30, 6)
 MONO_DB = -40  # see dual_mono
 SATXA = os.path.join(ROOT, "bin/satxa")  # built by gen_saturn_music.py
@@ -313,7 +313,7 @@ def main():
             assert len(want) == 243, "swap rows: %d" % len(want)
         if args.swap_bgm:
             bc, boff, bnsec, bnu, bfile, bch = BGM_SWAP
-            assert bc not in nojp and tuple(cfg[bc][2:4]) == (6, 2), "swap-bgm: cfg 0x%X is not the Moonlight Nocturne run" % (0x300 + bc)
+            assert bc not in nojp and tuple(cfg[bc][2:4]) == (bfile, bch), "swap-bgm: cfg 0x%X is not the Moonlight Nocturne run (retail file/ch %s)" % (0x300 + bc, tuple(cfg[bc][2:4]))
             assert all(bc != w[0] for w in want), "swap-bgm: 0x%X is already swapped by --swap-jp" % (0x300 + bc)
             bsecs = [boff + 8 * k for k in range(bnsec)]
             for s in bsecs:
