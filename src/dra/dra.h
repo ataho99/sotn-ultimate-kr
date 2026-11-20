@@ -626,8 +626,11 @@ extern const char* g_MenuStr[110];
 // Trial10 static chain: AlucardPrg -> KoGlyphs -> 0x04 (Alucard's old next,
 // kept as KO struct's next). Zero DRA text (init data only, OFF keeps 0x04).
 #define KO_ALUCARD_NEXT CdFile_KoGlyphs
+// A3: non-Alucard chain RichterPrg -> KoGlyphs -> 0x14 (cd.c sets g_LbaBinKoGlyphs.nextCdFileType per load)
+#define KO_RICHTER_NEXT CdFile_KoGlyphs
 #else
 #define KO_ALUCARD_NEXT 0x04
+#define KO_RICHTER_NEXT 0x14
 #endif
 #if defined(MOD_KO)
 // Trial10 disc: BIN/ARC_KO.BIN at the disc end shifts every post-VAB literal
@@ -644,7 +647,7 @@ extern const char* g_MenuStr[110];
 // file at the disc end) and cd.c's CdFile_KoGlyphs chain loads it to
 // KO_GLYPH_BLOCK_ADDR (A-gap). The 66590.c wrapper and the blob renderer
 // (MenuDrawKoHook at KO_BLOB_ADDR) both read the block.
-#define KO_GLYPH_COUNT 950 /* v14e = v14d + 91 Hangul cells F3CB.. (gen_ko_glyph_e.py; 10 cells kept free below KO_POP_TEXT 0x5640 = 960 cells); v14d = v14c + 40 ASCII cells F373.. (gen_ko_glyph_lat.py d; check_ko_glyph.py fails if a cell was skipped); v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372, sihum40); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
+#define KO_GLYPH_COUNT 951 /* v14f = v14e + 1 Hangul cell F3F6 (gen_ko_glyph_f.py); v14e = v14d + 91 Hangul cells F3CB.. (gen_ko_glyph_e.py; 10 cells kept free below KO_POP_TEXT 0x5640 = 960 cells); v14d = v14c + 40 ASCII cells F373.. (gen_ko_glyph_lat.py d; check_ko_glyph.py fails if a cell was skipped); v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372, sihum40); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
 #define KO_GLYPH_CELL_BYTES 23
 #define KO_GLYPH_12COL 1 /* sihum37: MGalmuri12 "an na" 12-col 23 B direct path + a (kind0); the Isunshin branch keeps it off */
 /* cutscene 1-byte promotion table: 112 x u16 (byte 0x80+i -> glyph code), in the

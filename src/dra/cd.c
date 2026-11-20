@@ -78,7 +78,7 @@ s32 g_LbaServantVbLen[] = {
 CdFile g_LbaServantChr = {0x0000, 15, 0x06000, 0, 0, 0x1D, 0};
 CdFile g_LbaServantVh = {0x0000, 19, 0x00000, 2, 2, 0xFF, 30};
 CdFile g_LbaServantVb = {0x0000, 17, 0x00000, 2, 2, 0xFF, 0};
-CdFile g_LbaBinRichter = {KO_LBA(0x64D6), 10, 0x39A58, 0, 0, 0x14, 0};
+CdFile g_LbaBinRichter = {KO_LBA(0x64D6), 10, 0x39A58, 0, 0, KO_RICHTER_NEXT, 0};
 #if defined(MOD_SATURN)
 #ifndef OFF_BIN_ARC_F2
 #define OFF_BIN_ARC_F2 0 // (the first compile of make disk, as below)
@@ -160,7 +160,7 @@ s32 g_LbaServantVbLen[] = {
 CdFile g_LbaServantChr = {0x0000, 15, 0x06000, 0, 0, 0x1D, 0};
 CdFile g_LbaServantVh = {0x0000, 19, 0x00000, 2, 2, 0xFF, 30};
 CdFile g_LbaServantVb = {0x0000, 17, 0x00000, 2, 2, 0xFF, 0};
-CdFile g_LbaBinRichter = {0x6524, 10, 0x3999C, 0, 0, 0x14, 0};
+CdFile g_LbaBinRichter = {0x6524, 10, 0x3999C, 0, 0, KO_RICHTER_NEXT, 0};
 CdFile g_LbaBinAlucard = {0x61B8, 10, 0x31BEC, 0, 0, KO_ALUCARD_NEXT, 0};
 CdFile g_LbaOpnWsStr = {0x3628, 0, 0x00000, 0, 0, 0xFF, 0};
 CdFile g_LbaStagePrg = {0x0000, 8, 0x00000, 0, 0, 0xFF, 0};
@@ -849,9 +849,17 @@ void UpdateCd(void) {
                 g_PlayableCharacter != PLAYER_ALUCARD) {
                 g_LbaBinGame.loc = OFF_BIN_FGAME2;
                 g_LbaBinGame.nextCdFileType = CdFile_RichterPrg;
+#if defined(MOD_KO)
+                // A3: the ARC_KO chain (glyph block, JP name bundle, 8px block) rides every non-Alucard load too:
+                // RichterPrg -> KoGlyphs (static, KO_RICHTER_NEXT) -> 0x14 (Richter's old next)
+                g_LbaBinKoGlyphs.nextCdFileType = 0x14;
+#endif
             } else {
                 g_LbaBinGame.loc = OFF_BIN_FGAME;
                 g_LbaBinGame.nextCdFileType = CdFile_AlucardPrg;
+#if defined(MOD_KO)
+                g_LbaBinKoGlyphs.nextCdFileType = 0x04; // AlucardPrg -> KoGlyphs -> 0x04
+#endif
             }
         }
 #if defined(MOD_SATURN) && OFF_BIN_RIC2 != 0
