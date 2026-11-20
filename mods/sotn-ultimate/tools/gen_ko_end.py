@@ -64,7 +64,7 @@ def main():
     assert len(end) == 30, len(end)
     assert len(shop) == 6, len(shop)
     # 상점: 선행 제어 1B(원판 x좌표) + KO 바이트. e_shop.c 커밋 리터럴과 대조용.
-    shop_ctrl = ["\x03", "\x03", "\x01", "\x01", "\x06", "\x03"]
+    shop_ctrl = ["\x07", "\x07", "\x06", "\x01", "\x06", "\x04"]  # 0.9.2: centred in the 21-hw cell
     print("shop rows=%d" % len(shop))
     for i in range(6):
         key = "e_shop.c:D_us_80181310:%d" % i

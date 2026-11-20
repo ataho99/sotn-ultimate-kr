@@ -145,6 +145,9 @@ def enc(s, mp):
     return bytes(out)
 
 
+TAIL_SEP = chr(0x1F)  # base row KO text + TAIL_SEP + tail text: the tail is the text of the window behind the last slot (portrait/voice op between the slot's text rows)
+
+
 def load_tsv():
     rows = [l.rstrip("\n").split("\t") for l in io.open(TSV, encoding="utf-8")]
     h = rows[0]
@@ -161,7 +164,10 @@ def load_tsv():
         base = k[:-1]
         assert base in d, k
         if d[k][1].strip() != "":
-            d[base] = (d[base][0], d[base][1] + "/" + d[k][1])
+            if k in ("rcen_shaft:5b",):  # own window: the text goes to the last window of the base row's last slot (TAIL_SEP, see splice_rows); keep in step with gen_ko_wrap.B_SEPARATE
+                d[base] = (d[base][0], d[base][1] + TAIL_SEP + d[k][1])
+            else:
+                d[base] = (d[base][0], d[base][1] + "/" + d[k][1])
         del d[k]
     return d
 
@@ -435,6 +441,9 @@ def splice_rows(label, rows, start0, size0, entries, prefixes, tsv, mp, optional
     for k in keys:
         en = en_res[k]
         ko = tsv[k][1]
+        tail_ko = None
+        if TAIL_SEP in ko:
+            ko, tail_ko = ko.split(TAIL_SEP, 1)
         es = en.split("/")
         groups = []
         gend = []
@@ -519,6 +528,16 @@ def splice_rows(label, rows, start0, size0, entries, prefixes, tsv, mp, optional
                 op_repl[opi] = ([], -1)
                 DROPPED_LB.append((k, gi))
         ko_total += sum(len(enc(x, mp)) for x in knon)
+        tail_row = None
+        if tail_ko:
+            assert len(knon) < len(groups), (label, k, "tail window needs a free last slot")
+            g_rows = sorted(tix for slot in groups[-1] for tix in slot)
+            plays = [i for i in range(g_rows[0], g_rows[-1]) if rows[i][0] == "PLAY_SOUND"]
+            assert plays, (label, k, "tail window: no PLAY_SOUND inside the last slot")
+            cand = [t for t in g_rows if t > plays[-1]]
+            assert cand, (label, k, "tail window: no TEXT row behind the voice op")
+            tail_row = cand[0]
+            ko_total += len(enc(tail_ko, mp))
         for gi, grp in enumerate(groups):
             payload = enc(knon[gi], mp) if gi < len(knon) else b""
             if extra and gi == len(groups) - 1:
@@ -528,7 +547,9 @@ def splice_rows(label, rows, start0, size0, entries, prefixes, tsv, mp, optional
             grp_rows = [tix for slot in grp for tix in slot]
             first = True
             for tix in grp_rows:
-                if first:
+                if tail_row is not None and gi == len(groups) - 1:
+                    new_row[tix] = ("BYTE", enc(tail_ko, mp)) if tix == tail_row else ("TEXT", b"")
+                elif first:
                     new_row[tix] = ("BYTE", payload)
                     first = False
                 else:

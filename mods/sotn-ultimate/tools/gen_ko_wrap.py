@@ -23,6 +23,12 @@ SCENES = ("st0_richter_dracula", "sel_ending", "no3_death", "cen_maria",
           "nz0_slogra_gaibon", "lib_librarian", "no4_ferryman_left",
           "no4_ferryman_right", "rcen_shaft", "dre_succubus",
           "dai_huntinggirl", "top_maria_richter")
+# boss / Maria dialogue rows (keys bo2_/bo5_/bo6_/rbo2_/rbo6_<hex>:N, mar_maria:N): one TSV row = ONE game window,
+# so the window count, speaker order and voice stay as the translator wrote them; only lines wider than the
+# window (W px) are re-broken (carry_wrap) -- 0.9.2: boss windows were overflowing the right border
+# split rows that stay SEPARATE (not folded into the base row, not blanked): gen_ko_splice puts them in the base row's second window (the retail script has an own window, with the Alucard portrait, behind the base row's last slot)
+B_SEPARATE = ("rcen_shaft:5b",)
+BOSS_PREFIX = ("bo2_", "bo5_", "bo6_", "rbo2_", "rbo6_", "mar_maria")
 TAG = FP.ACTIVE
 OVR = OUTD + "줄끊기_수정_%s.tsv" % TAG          # key <TAB> final text <TAB> reason
 OUT = OUTD + "번역_v14_%s_%d줄.tsv" % (TAG, FP.P["window_lines"])
@@ -90,6 +96,36 @@ def reflow_lines(text):
     return out
 
 
+def carry_wrap(text):
+    """boss rows: keep the translator's "/" lines and the row as it is when every line fits in W px.
+    A line wider than W px: B = cut it at the last space that fits and carry the tail to the front of the
+    next line when that still fits in W (line count unchanged); otherwise A = split it into two balanced
+    lines (wrap_line). The sentence text is never changed, only where it breaks."""
+    lines = text.split("/")
+    if not any(FP.text_px_norm(x) > W for x in lines):
+        return text
+    out = []
+    i = 0
+    while i < len(lines):
+        cur = lines[i]
+        i += 1
+        if FP.text_px_norm(cur) <= W:
+            out.append(cur)
+            continue
+        cut = None
+        for k, c in enumerate(cur):
+            if c == " " and FP.text_px_norm(cur[:k]) <= W:
+                cut = k
+        if cut is not None and i < len(lines) and lines[i] != "":
+            tail = cur[cut + 1:]
+            if FP.text_px_norm(tail + " " + lines[i]) <= W:
+                out.append(cur[:cut])
+                lines[i] = tail + " " + lines[i]
+                continue
+        out.extend(wrap_line(cur))
+    return "/".join(out)
+
+
 def layout(text, windows=True):
     lines = []
     for ln in text.split("/"):
@@ -122,12 +158,28 @@ def main():
     # folded into its base row BEFORE layout and its own text is emptied
     bt = {}
     for r in rows[1:]:
-        if len(r) > ti and r[0].endswith("b") and r[0][:-1].split(":")[-1].isdigit():
+        if len(r) > ti and r[0].endswith("b") and r[0][:-1].split(":")[-1].isdigit() and r[0] not in B_SEPARATE:
             bt[r[0][:-1]] = r[ti]
+    nboss = 0
     for r in rows[1:]:
+        if len(r) > ti and r[1] == "대사" and r[0].startswith(BOSS_PREFIX) and not r[0].endswith("b"):
+            orig = r[ti]
+            final = carry_wrap(orig)
+            if final != orig:
+                nboss += 1
+                lines = final.split("/")
+                hand.append(chr(9).join([r[0], orig, final, final, "boss carry_wrap (>%d px)" % W,
+                                         str(len([x for x in orig.split("/") if x])), "1",
+                                         ",".join(str(FP.text_px_norm(l)) for l in lines)]))
+            r[ti] = final
+            out.append(chr(9).join(r))
+            continue
         if len(r) > ti and r[1] == "대사" and r[0].split(":")[0] in SCENES:
             orig = r[ti]
             isb = r[0].endswith("b") and r[0][:-1].split(":")[-1].isdigit()
+            if r[0] in B_SEPARATE:  # one short line: written as it is (gen_ko_splice folds it behind the base row)
+                out.append(chr(9).join(r))
+                continue
             if isb:
                 r[ti] = ""
                 out.append(chr(9).join(r))
@@ -157,8 +209,8 @@ def main():
         out.append(chr(9).join(r))
     io.open(OUT, "w", encoding="utf-8", newline="").write(chr(10).join([chr(9).join(h)] + out) + chr(10))
     io.open(HAND, "w", encoding="utf-8", newline="").write(chr(10).join(hand) + chr(10))
-    print("profile %s: window %d px x %d lines; rows changed %d (re-broken wide rows %d, extra windows %d) -> %s" % (
-        TAG, W, NL, nrow, nwide, nwin, OUT))
+    print("profile %s: window %d px x %d lines; rows changed %d (re-broken wide rows %d, extra windows %d, boss rows re-broken %d) -> %s" % (
+        TAG, W, NL, nrow, nwide, nwin, nboss, OUT))
 
 
 if __name__ == "__main__":

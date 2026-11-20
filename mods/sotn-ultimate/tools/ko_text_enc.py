@@ -19,8 +19,7 @@
 #                end = FF 00.
 #
 # Codes allowed on screen = profile map (Hangul + symbols) + Latin cells
-# (ko_glyph_lat_v14c.tsv) + engtab cells (ko_engtab_252.bin; these are exactly
-# the holes of the v14c map). Anything else fails closed.
+# (ko_glyph_lat_v14d.tsv) + engtab cells (ko_engtab_253.bin). Anything else fails closed.
 import io
 import os
 import struct
@@ -32,8 +31,8 @@ import ko_font_profile as FP  # noqa: E402
 
 P4 = KO_WK + "/P4시험/"
 MAP_PATH = P4 + FP.P["map_name"]
-LAT_PATH = P4 + "ko_glyph_lat_v14c.tsv"
-ENGTAB_PATH = P4 + "ko_engtab_252.bin"
+LAT_PATH = P4 + "ko_glyph_lat_v14d.tsv"
+ENGTAB_PATH = P4 + "ko_engtab_253.bin"
 B1_NEWMAP = P4 + "ko_glyph_map_v12f_new.tsv"
 
 _C = {}

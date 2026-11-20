@@ -71,7 +71,7 @@ KO_EQ_NAME_MAX = 10
 # desc must carry no ASCII except the 0x20 space. Rules (decided 11-14):
 #   [ ] -> 「 」 | run of 2+ '.' -> … | '"' odd/even -> “ ” | other ASCII -> engtab251 code.
 P4 = (KO_WK + "/P4시험/")
-B1_ENGTAB = P4 + "ko_engtab_252.bin"
+B1_ENGTAB = P4 + "ko_engtab_253.bin"
 B1_NEWMAP = P4 + "ko_glyph_map_v12f_new.tsv"
 
 

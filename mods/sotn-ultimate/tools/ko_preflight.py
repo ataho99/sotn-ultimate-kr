@@ -190,11 +190,11 @@ SYM = {}
 if os.path.exists(P4 + "ko_glyph_map_v12f_new.tsv"):
     SYM = rd_map(P4 + "ko_glyph_map_v12f_new.tsv")
 
-ENG252 = {}
+ENG253 = {}
 try:
-    ENG252 = rd_engtab(P4 + "ko_engtab_252.bin")  # what ko_text_enc / gen_ko_save / gen_ko_equip encode with
+    ENG253 = rd_engtab(P4 + "ko_engtab_253.bin")  # what ko_text_enc / gen_ko_save / gen_ko_equip encode with
 except Exception as ex:  # noqa: BLE001
-    fail("6", "ko_engtab_252.bin (read by ko_text_enc / gen_ko_save / gen_ko_equip): %s" % exc(ex))
+    fail("6", "ko_engtab_253.bin (read by ko_text_enc / gen_ko_save / gen_ko_equip): %s" % exc(ex))
 
 
 def build_exports():
@@ -230,7 +230,7 @@ ENG_BUILD_PREDICTED = False
 try:
     ENG_BUILD = rd_engtab(ENG_BUILD_PATH)
 except Exception:  # noqa: BLE001
-    ENG_BUILD = dict(ENG252)
+    ENG_BUILD = dict(ENG253)
     for ch in NEW_D:
         ENG_BUILD.setdefault(ch, -1)  # predicted (code unknown until gen_ko_glyph_lat.py d runs)
     ENG_BUILD_PREDICTED = True
@@ -286,7 +286,7 @@ def chk_show(key, s, enc, linebreak=None):
     for ch in s:
         if ch == " " or (linebreak is not None and ch == linebreak):
             continue
-        if ch == "." and "." in ENG252:
+        if ch == "." and "." in ENG253:
             continue
         if ch == '"' and "“" in MAP and "”" in MAP:
             continue
@@ -299,7 +299,7 @@ def chk_show(key, s, enc, linebreak=None):
                 if is_fw(ch):
                     _agg(FULL, (ch, enc), key)
             continue
-        if ch in ENG252:
+        if ch in ENG253:
             continue
         if ch.isalpha():
             KROM.setdefault(enc, [])
@@ -458,7 +458,7 @@ def c1_equip():
         elif key.endswith(":desc"):
             seen("1")
             seen("3")
-            enc = "ShowText (equipment desc, gen_ko_equip v4 map + engtab_252)"
+            enc = "ShowText (equipment desc, gen_ko_equip v4 map + engtab_253)"
             i = 0
             while i < len(s):
                 ch = s[i]
@@ -466,7 +466,7 @@ def c1_equip():
                     j = i
                     while j < len(s) and s[j] == ".":
                         j += 1
-                    if j - i < 2 and "." not in ENG252:
+                    if j - i < 2 and "." not in ENG253:
                         _agg(HALF, (ch, enc), key)
                     i = j if j - i >= 2 else i + 1
                     continue
@@ -481,7 +481,7 @@ def c1_equip():
                              "the wrong glyph (the 뼈/F05F class; gen_ko_equip.MAP = v4)"
                              % (key, ctext(ch), mp4[ch], "'%s'" % INV.get(mp4[ch], "no cell"), MAP_USED))
                     continue
-                if ord(ch) < 128 and ch in ENG252:
+                if ord(ch) < 128 and ch in ENG253:
                     continue
                 _agg(FULL if is_fw(ch) else HALF, (ch, enc), key)
 
@@ -542,8 +542,8 @@ def c1_save():
             if ord(ch) > 127:
                 if ch not in MAP:
                     miss(ch, key, "save text (gen_ko_save, profile map)")
-            elif ch not in ENG252:
-                _agg(HALF, (ch, "save text (gen_ko_save: every ASCII needs an engtab_252 cell)"), key)
+            elif ch not in ENG253:
+                _agg(HALF, (ch, "save text (gen_ko_save: every ASCII needs an engtab_253 cell)"), key)
 
 
 SHEET = {}
@@ -629,8 +629,8 @@ def flush_13():
         fail("1", "no glyph cell: %s x%d [%s] rows: %s" % (ctext(ch), n, enc, kl(keys)))
     for (ch, enc), (n, keys) in sorted(HALF.items()):
         note = ""
-        if ch in ENG_BUILD and ch not in ENG252:
-            note = " -- %s has it, but the encoder reads ko_engtab_252.bin" % os.path.basename(ENG_BUILD_PATH)
+        if ch in ENG_BUILD and ch not in ENG253:
+            note = " -- %s has it, but the encoder reads ko_engtab_253.bin" % os.path.basename(ENG_BUILD_PATH)
         fail("3", "%s x%d: this encoder has no cell / form for it [%s]%s rows: %s" % (ctext(ch), n, enc, note, kl(keys)))
     for (ch, enc), (n, keys) in sorted(FULL.items()):
         warn("3", "full-width %s x%d where half-width is expected [%s] rows: %s" % (ctext(ch), n, enc, kl(keys)))
@@ -1392,10 +1392,10 @@ def c5_cells():
         for ch, code in sorted(ENG_BUILD.items()):
             if not 0xF040 <= code < 0xF040 + cells:
                 fail("5", "%s: %r -> %04X outside the %d cells" % (os.path.basename(ENG_BUILD_PATH), ch, code, cells))
-        old = ENG252
+        old = ENG253
         chg = [ch for ch, c in old.items() if ENG_BUILD.get(ch) != c]
         if chg:
-            fail("5", "%s changes existing engtab_252 entries %s" % (os.path.basename(ENG_BUILD_PATH), "".join(chg)))
+            fail("5", "%s changes existing engtab_253 entries %s" % (os.path.basename(ENG_BUILD_PATH), "".join(chg)))
     # ARC_KO layout defines the build asserts
     for name, val in (("KO_GLYPH_BASE", 0xF040), ("KO_ARC_SIZE", 34816), ("KO_EQUIP_BASE", 0x8009F500),
                       ("KO_EQUIP_SIZE", 0xB00), ("KO_SHEET2_ADDR", 0x8009F100), ("KO_PROMO_TBL_SLOTS", 112)):
@@ -1446,8 +1446,8 @@ def c6_paths():
         (P4 + PROFILE_BLK, "in", "profile glyph block (KO_BLK, ARC_KO.BIN)"),
         (P4 + "ko_glyph_map_v4.tsv", "in", "gen_ko_equip desc map"),
         (P4 + "ko_glyph_map_v12f_new.tsv", "in", "ko_text_enc / gen_ko_equip symbols"),
-        (P4 + "ko_glyph_lat_v14c.tsv", "in", "ko_text_enc Latin cells"),
-        (P4 + "ko_engtab_252.bin", "in", "ko_text_enc / gen_ko_save / gen_ko_equip engtab"),
+        (P4 + "ko_glyph_lat_v14d.tsv", "in", "ko_text_enc Latin cells"),
+        (P4 + "ko_engtab_253.bin", "in", "ko_text_enc / gen_ko_save / gen_ko_equip engtab"),
         (ENG_BUILD_PATH, "in", "build KO_ENGTAB (ARC_KO.BIN)"),
         (BX.get("KO_FONT8_ADV", P4 + "ko_font8_adv.bin"), "gen", "build KO_FONT8_ADV (gen_ko_font8.py --patch)"),
         (BX.get("KO_PROMO", P4 + "ko_promo_tbl.bin"), "gen", "build KO_PROMO (gen_ko_promo)"),
@@ -1568,10 +1568,10 @@ def c6_env():
         if os.environ.get(name):
             warn("6", "%s is set but no KO tool reads it (the real knob: %s)" % (name, real))
     # encoders vs the engtab the build loads
-    if os.path.basename(ENG_BUILD_PATH) != "ko_engtab_252.bin":
-        extra = sorted(set(ENG_BUILD) - set(ENG252))
+    if os.path.basename(ENG_BUILD_PATH) != "ko_engtab_253.bin":
+        extra = sorted(set(ENG_BUILD) - set(ENG253))
         warn("6", "build loads %s (%d more ASCII cells: %s) but ko_text_enc / gen_ko_save / gen_ko_equip encode with "
-             "ko_engtab_252.bin (and ko_text_enc's Latin list is ko_glyph_lat_v14c.tsv): text using those chars is refused "
+             "ko_engtab_253.bin (and ko_text_enc's Latin list is ko_glyph_lat_v14d.tsv): text using those chars is refused "
              "or drawn by the BIOS font" % (os.path.basename(ENG_BUILD_PATH), len(extra), "".join(extra)))
     info("6", "profile %s, map %s%s, block %s, KO_WK %s, SOTN_KR %s" % (
         FP.ACTIVE, PROFILE_MAP, " (using %s)" % MAP_USED if MAP_USED != PROFILE_MAP else "", PROFILE_BLK, KO_WK, REPO))
