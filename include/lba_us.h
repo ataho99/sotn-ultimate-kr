@@ -31,8 +31,8 @@
 #define OFF_BIN_JP_SD 0xC791
 #define OFF_BIN_ARC_F2 0xCC60
 #define OFF_BIN_NO3RIDE 0xCCC8
-#define OFF_BIN_KO 0x47B62
-#define OFF_BIN_KO_JP 0x47B73
+#define OFF_BIN_KO 0x47B52
+#define OFF_BIN_KO_JP 0x47B63
 #define vab0Len 0x41CB0
 #define SD_ALK_VH_LEN 0x1020
 #define SD_RIH_VH_LEN 0x1020
@@ -175,7 +175,7 @@
 
 #define ST_ST0_F_BIN_OFF 0x90C2
 #define ST_ST0_BIN_OFF 0x9177
-#define ST_ST0_BIN_LEN 0x42EC4
+#define ST_ST0_BIN_LEN 0x42EFC
 #define ST_ST0_VH_OFF 0x9142
 #define ST_ST0_VH_LEN 0x1220
 #define ST_ST0_VB_LEN 0x18BC0
