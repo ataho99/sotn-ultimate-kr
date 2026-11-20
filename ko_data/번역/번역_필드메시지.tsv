@@ -1,5 +1,5 @@
 키	분류	영문	일판 원문(기준)	한글	비고
 field:mist_alucard	필드메시지			이 벽은 안개가 되면/빠져나갈 수 있을 것 같다	안개로 변신해 통과할 수 있다는 알림
 field:mist_richter	필드메시지			이 벽은 나와는 해당 없군	리히터 모드 안개문 앞(2줄)
-field:sealed_door	필드메시지			TODO	마법으로 봉인된 문
-field:no4_bridge	필드메시지			TODO	NO4 나무다리 근처(2줄)
+field:sealed_door	필드메시지			마법으로 잠겨 있다	마법으로 봉인된 문
+field:no4_bridge	필드메시지			폭포 너머의 나무다리에도/무언가 나타난 것 같다	NO4 나무다리 근처(2줄)

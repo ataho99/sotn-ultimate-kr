@@ -6,5 +6,5 @@
 #define KO_FIELD_PICK(a, en) ((*(volatile u8*)(a)) ? (char*)(a) : (en))
 #define KO_FIELD_MIST_ALUCARD_ADDR 0x8009F300 /* 이 벽은 안개가 되면 / 빠져나갈 수 있을 것 같다 (47 B) */
 #define KO_FIELD_MIST_RICHTER_ADDR 0x8009F380 /* 이 벽은 나와는 해당 없군 (27 B) */
-/* KO_FIELD_SEALED_DOOR: placeholder (JP reference: ) */
-/* KO_FIELD_NO4_BRIDGE: placeholder (JP reference: ) */
+#define KO_FIELD_SEALED_DOOR_ADDR 0x8009F400 /* 마법으로 잠겨 있다 (21 B) */
+#define KO_FIELD_NO4_BRIDGE_ADDR 0x8009F480 /* 폭포 너머의 나무다리에도 / 무언가 나타난 것 같다 (49 B) */
