@@ -109,7 +109,7 @@ StageName D_80180128[80] = {
     {_S("Olrox's"), _S("Quarters")},
 #endif,
     #if defined(MOD_KO)
-    {"\xF0\xD8\xF1\x41\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 5 연도 (한패 표기, 이전 버려진 광산) */
+    {"\xF3\xF6\xF1\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", ""}, /* 5 폐광 (이전 연도 F0D8 F141, 버려진 광산) */
 #else
     {_S("Abandoned"), _S("Mine")},
 #endif,

@@ -120,17 +120,18 @@ static s32 g_ModCharselPs1Bal;
 static const char* const g_ModCharselBalTitle MOD_RO = _S("Balance");
 // the panel's rows: version, Alucard's boss Maria, the balance, the dub
 #define MOD_CHARSEL_ROWS(id) (g_ModCharsel[id].title2 ? 4 : 3)
-// every panel's last row: the dub (0 PSP, 1 PS1: game.h MOD_FLAG_PS1_DUB,
-// 2 JP: MOD_FLAG_JP_DUB), shared by the characters, kept between visits
+// every panel's last row: the dub (0 PSP, 1 Saturn: game.h MOD_FLAG_JP_DUB, the
+// Japanese voices with the Saturn's takes; 2 PS1: MOD_FLAG_PS1_DUB), shared by the
+// characters, kept between visits (KO: the order PSP / Saturn / PS1)
 #define MOD_CHARSEL_DUBS 3
 static s32 g_ModCharselDub;
 static const char* const g_ModCharselDubTitle MOD_RO = _S("Dub");
 static const char* const g_ModCharselDubOpts[MOD_CHARSEL_DUBS] MOD_RO = {
-    _S("PSP"), _S("PS1"), _S("JP")};
+    _S("PSP"), _S("Saturn"), _S("PS1")};
 // Maria's panel: PSP / JP only (neither of her versions was ever dubbed for
 // the PS1); a PS1 choice left by another panel shows and starts as PSP
 static const char* const g_ModCharselMarDubOpts[2] MOD_RO = {
-    _S("PSP"), _S("JP")};
+    _S("PSP"), _S("Saturn")};
 #define MOD_CHARSEL_NO_PS1_DUB(id) (g_ModCharsel[id].player == PLAYER_MARIA)
 
 #if defined(VERSION_US)
@@ -721,7 +722,7 @@ static void ModCharselDrawPanel(s32 id) {
     if (MOD_CHARSEL_NO_PS1_DUB(id)) {
         ModCharselDrawRow(
             g_ModCharselDubTitle, g_ModCharselMarDubOpts, 2,
-            g_ModCharselDub == 2, y + (n - 1) * r, ModCharselRowState(n - 1));
+            g_ModCharselDub == 1, y + (n - 1) * r, ModCharselRowState(n - 1));
     } else {
         ModCharselDrawRow(
             g_ModCharselDubTitle, g_ModCharselDubOpts, MOD_CHARSEL_DUBS,
@@ -834,8 +835,8 @@ static void ModCharselUpdate(void) {
             g_api.PlaySfx(SFX_UI_MOVE);
             if (g_ModCharselRow == MOD_CHARSEL_ROWS(id) - 1 &&
                 MOD_CHARSEL_NO_PS1_DUB(id)) {
-                // Maria's two: any direction swaps PSP / JP
-                g_ModCharselDub = g_ModCharselDub == 2 ? 0 : 2;
+                // Maria's two: any direction swaps PSP / Saturn
+                g_ModCharselDub = g_ModCharselDub == 1 ? 0 : 1;
             } else if (g_ModCharselRow == MOD_CHARSEL_ROWS(id) - 1) {
                 g_ModCharselDub += (g_pads[0].tapped & (PAD_RIGHT | PAD_DOWN))
                                        ? 1
@@ -877,9 +878,9 @@ static void ModCharselUpdate(void) {
             if (g_ModCharselPs1Bal) {
                 MOD_STATUS_FLAGS |= MOD_FLAG_PS1_BALANCE;
             }
-            if (g_ModCharselDub == 1 && !MOD_CHARSEL_NO_PS1_DUB(id)) {
+            if (g_ModCharselDub == 2 && !MOD_CHARSEL_NO_PS1_DUB(id)) {
                 MOD_STATUS_FLAGS |= MOD_FLAG_PS1_DUB;
-            } else if (g_ModCharselDub == 2) {
+            } else if (g_ModCharselDub == 1) {
                 MOD_STATUS_FLAGS |= MOD_FLAG_JP_DUB;
             }
             g_ModCharselShown = true;

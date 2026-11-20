@@ -113,8 +113,8 @@ static const SysOptRow g_SysOptRows[ROWS] = {
     {MOD_FLAG_PS1_BALANCE, 2, {MOD_FLAG_PS1_BALANCE, 0}, {0, 1}},
     {MOD_FLAG_PS1_DUB | MOD_FLAG_JP_DUB,
      3,
-     {0, MOD_FLAG_PS1_DUB, MOD_FLAG_JP_DUB},
-     {2, 0, 3}},
+     {0, MOD_FLAG_JP_DUB, MOD_FLAG_PS1_DUB},
+     {2, 1, 0}},
 };
 #define DUB 3
 
