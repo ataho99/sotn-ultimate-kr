@@ -15,3 +15,4 @@ sed -n '1,200p' "$TOOLS/build_ko_trial.sh" | grep -E '^export [A-Za-z_]+=' | sed
 rm -f "$_QEXP"
 export PATH="$KO_WRAPPERS:$PATH"
 export SOTN_KR=$PWD MOD_WORK
+python3 "$TOOLS/stale_asm_guard.py" # drop objects older than their INCLUDE_ASM .s (ninja cannot see them)

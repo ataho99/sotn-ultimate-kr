@@ -176,6 +176,40 @@ def byte_boundaries(b, start=0, stop=None):
     return out
 
 
+def fix_switch_after_end(script, base, case_index, label=""):
+    """script = the bytes of one asm cutscene script region that starts with SCRIPT_SWITCH (op 14);
+    base = the region's BIN offset.  The KO text changes the lengths of the boxes, so a hard-coded
+    retail address in the SWITCH can end up inside a box (BO6 0x1A2FB: the Shaft route after the orb
+    broke, v0.9.1 / 092_08: the box window was skipped and the dialogue stopped).  Set case
+    `case_index` to the command that follows the first END after the SWITCH (= the next box, which
+    must be SET_EVENTS, op 12) and assert it is a command boundary.  Returns the new bytes."""
+    b = bytearray(script)
+    errs = []
+    if b[0] != 14:
+        raise AssertionError("%s: script does not start with SCRIPT_SWITCH" % label)
+    k, words = 1, []
+    while k + 4 <= len(b) and 0x80 <= b[k] < 0xC0 and _is_word(b[k:k + 4]):
+        words.append(k)
+        k += 4
+    if case_index >= len(words):
+        raise AssertionError("%s: SWITCH has %d cases, wanted #%d" % (label, len(words), case_index))
+    i = k
+    while i < len(b):
+        c = b[i]
+        if c < 0x20 and c != 0xF0 and c == 0:  # END_CUTSCENE
+            break
+        i += _op_len(b, i)
+    dest = i + 1
+    if dest >= len(b) or b[dest] != 12:
+        raise AssertionError("%s: the command after the first END (+0x%X) is not SET_EVENTS" % (label, dest))
+    if dest not in byte_boundaries(b, 0, len(b)):
+        raise AssertionError("%s: +0x%X is not a command boundary" % (label, dest))
+    x = base + dest
+    w = [0x80 | ((x & 0xFF000) >> 12), (x & 0xFF00) >> 8, (x & 0xFF0) >> 4, x & 0xFF]
+    b[words[case_index]:words[case_index] + 4] = bytes(w)
+    return bytes(b)
+
+
 def verify_bytes(old, new, entries, label=""):
     errs = []
     if len(old) != len(new):
@@ -186,6 +220,10 @@ def verify_bytes(old, new, entries, label=""):
             errs.append("%s: retail +0x%X is not a boundary (table wrong?)" % (label, e))
         elif e not in bn:
             errs.append("%s: +0x%X is inside a command" % (label, e))
+        elif old[e] == 14 and new[e] == 14:
+            # SCRIPT_SWITCH: its case addresses may be re-pointed (fix_switch_after_end); keep the case count
+            if _op_len(old, e) != _op_len(new, e):
+                errs.append("%s: +0x%X SWITCH has %d bytes, retail %d" % (label, e, _op_len(new, e), _op_len(old, e)))
         elif old[e:e + _op_len(old, e)] != new[e:e + _op_len(new, e)] and old[e] < 0x20:
             errs.append("%s: +0x%X op %02X != retail %02X" % (label, e, new[e], old[e]))
     return errs

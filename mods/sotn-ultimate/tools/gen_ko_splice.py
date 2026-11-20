@@ -722,6 +722,9 @@ def splice_boss(tsv, mp, plan, allow):
                 "%s: KO rows for an asm-rendered boss (no KO glyph path; "
                 "set KO_BOSS_ASM_RENDER=1 only with a KO renderer)" % label)
             new = rows_to_bytes(split_rows(out))
+            if ovl == "bo6" and off == 0x1A2FB:
+                # A1: the Shaft-route case of this SWITCH must follow the Richter route's END (KO boxes moved)
+                new = EO.fix_switch_after_end(new, off, 2, label)
             errs = EO.verify_bytes(old, new, [0] + entries, label)
             assert not errs, errs
             name = binp.rsplit("/", 1)[-1]

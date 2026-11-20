@@ -207,6 +207,7 @@ $NODE --no-warnings mods/sotn-ultimate/tools/builder/node/stage_sounds.ts
 # the main menu's Sound mode button: src/st/sel/mod_sel_soundmode_gfx.h
 .venv/bin/python mods/sotn-ultimate/tools/gen_sel_soundmode.py >/dev/null
 python3 mods/sotn-ultimate/tools/patch_status_asm.py
+python3 mods/sotn-ultimate/tools/stale_asm_guard.py # ninja cannot see INCLUDE_ASM .s files: drop objects older than their .s
 # the Song Lyrics Card: the Saturn Yousei's singing rule in TT_005
 python3 mods/sotn-ultimate/tools/patch_tt005_song.py
 # KO trial15: everything below (including build_assets' header rebuild and
