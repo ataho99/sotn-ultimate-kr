@@ -275,47 +275,11 @@ void PrologueScroll(void) {
             prim->r0 = prim->b0 = prim->g0 -= 4;
             if (i == 0 && !prim->r0) {
                 g_api.FreePrimitives(D_801BEE0C);
-#if defined(MOD_KO) && !defined(VERSION_PSP)
-                g_GameStep = 0x40; // KO: the Japanese narration first (steps 0x40..0x44), then back to 4
-                D_801BEE04 = 0;
-#else
                 g_GameStep++;
-#endif
                 break;
             }
         }
         break;
-#if defined(MOD_KO) && !defined(VERSION_PSP)
-    // KO: the two Japanese narration clips (US ids 0x341 / 0x342, the disc keeps them; repack_xa no longer
-    // silences them) play one after the other before the Moonlight Nocturne.  XA plays one stream at a
-    // time, so each clip is waited for (it starts within 2 s, else it is skipped) before the next call.
-    case 0x40:
-        if (!g_api.func_80131F68()) {
-            g_api.PlaySfx(JP_VO_NARRATOR_KATSUTE);
-            g_GameStep++;
-        }
-        break;
-    case 0x41:
-    case 0x43:
-        D_801BEE04++;
-        if (g_api.func_80131F68() || D_801BEE04 > 120) {
-            D_801BEE04 = 0;
-            g_GameStep++;
-        }
-        break;
-    case 0x42:
-        if (!g_api.func_80131F68()) {
-            g_api.PlaySfx(JP_VO_NARRATOR_SOSHITE);
-            g_GameStep++;
-        }
-        break;
-    case 0x44:
-        if (!g_api.func_80131F68()) {
-            D_801BEE04 = 0;
-            g_GameStep = 4;
-        }
-        break;
-#endif
     case 4: // 0x801B091C
         if (!g_api.func_80131F68()) {
             g_api.PlaySfx(MU_MOONLIGHT_NOCTURNE);

@@ -80,13 +80,7 @@ SM_AUDIO, SM_EOF = 0x04, 0x80
 CODING_STEREO = 0x01  # 37.8 kHz, 4 bit; bit 0 clear = mono
 # JP-only voices (the US disc keeps them, nothing plays them on US) and the
 # debug stage MAD's BGM (0x34B)
-# 0.9.2: the three Japanese narration clips of the prologue (US ids 0x341 KATSUTE / 0x342 SOSHITE / 0x343 AKUMAJO,
-# "Japanese intro") are played by ST0 PrologueScroll (src/st/st0/prologue_scroll.c, MOD_KO steps 0x40..0x44): keep them.
-NARRATOR_IDS = (0x341, 0x342, 0x343)
-_JP_ALL = list(range(0x341, 0x358)) + list(range(0x52E, 0x531))
-JP_IDS = [i for i in _JP_ALL if i not in NARRATOR_IDS]
-assert len(JP_IDS) == len(_JP_ALL) - 3, "narration ids must be 3 of JP_IDS"
-assert all(i in JP_IDS for i in range(0x52E, 0x531)), "0x52E..0x530 stay in JP_IDS"
+JP_IDS = list(range(0x341, 0x358)) + list(range(0x52E, 0x531))
 SILENT_SECTORS = 2
 MONO_DB = -40  # see dual_mono
 SATXA = os.path.join(ROOT, "bin/satxa")  # built by gen_saturn_music.py
