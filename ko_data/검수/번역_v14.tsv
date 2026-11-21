@@ -180,7 +180,7 @@ equipment.h:g_EquipDefs:0x00E:name	장비		해골의 방패			11		통과	신규 
 equipment.h:g_EquipDefs:0x00E:desc	장비		기사 문장 새긴 실드			19	144	통과	신규 번역	
 equipment.h:g_EquipDefs:0x00F:name	장비		플레임 실드			11		통과	신규 번역	
 equipment.h:g_EquipDefs:0x00F:desc	장비		불 속성 지닌 실드			17	144	통과	신규 번역	
-equipment.h:g_EquipDefs:0x010:name	장비		알루카드 실드			11		통과	용어집 채택+신규 혼합	
+equipment.h:g_EquipDefs:0x010:name	장비		알카드 실드			9		통과	용어집 채택+신규 혼합	
 equipment.h:g_EquipDefs:0x010:desc	장비		모든 공격에 강하다			18	144	통과	신규 번역	
 equipment.h:g_EquipDefs:0x011:name	장비		여명의 검			9		통과	신규 번역	
 equipment.h:g_EquipDefs:0x011:desc	장비		새벽의 전사 소환 [양손]			23	144	통과	신규 번역	
@@ -394,7 +394,7 @@ equipment.h:g_EquipDefs:0x079:name	장비		다인슬레이프			13		통과	신�
 equipment.h:g_EquipDefs:0x079:desc	장비		피에 젖으면 강해진다			20	144	통과	신규 번역	
 equipment.h:g_EquipDefs:0x07A:name	장비		몬블레이드			11		통과	신규 번역	
 equipment.h:g_EquipDefs:0x07A:desc	장비		적의 영혼을 먹는다			18	144	통과	신규 번역	
-equipment.h:g_EquipDefs:0x07B:name	장비		알루카드 소드			11		통과	용어집 채택+신규 혼합	
+equipment.h:g_EquipDefs:0x07B:name	장비		알카드 소드			9		통과	용어집 채택+신규 혼합	
 equipment.h:g_EquipDefs:0x07B:desc	장비		어머니 가문의 가보			18	144	통과	신규 번역	
 equipment.h:g_EquipDefs:0x07C:name	장비		렘리아 소드			13		통과	신규 번역	
 equipment.h:g_EquipDefs:0x07C:desc	장비		정령검, 방어력이 오른다			23	144	통과	신규 번역	
@@ -482,9 +482,9 @@ equipment.h:g_EquipDefs:0x0A5:name	장비		야스쓰나			8		통과	신규 번�
 equipment.h:g_EquipDefs:0x0A5:desc	장비		야스쓰나 카타나 [양손]			22	144	통과	신규 번역	
 equipment.h:g_EquipDefs:0x0A6:name	장비		매지컬 티켓			11		통과	신규 번역	
 equipment.h:g_EquipDefs:0x0A6:desc	장비		마법 도서카드 [사용]			20	144	통과	신규 번역	
-equipment.h:g_EquipDefs:0x0A7:name	장비		알루카트 실드			11		통과	용어집 채택+신규 혼합	
+equipment.h:g_EquipDefs:0x0A7:name	장비		알카트 실드			9		통과	용어집 채택+신규 혼합	
 equipment.h:g_EquipDefs:0x0A7:desc	장비		가문의 실드를 닮았다			20	144	통과	신규 번역	
-equipment.h:g_EquipDefs:0x0A8:name	장비		알루카트 소드			11		통과	용어집 채택+신규 혼합	
+equipment.h:g_EquipDefs:0x0A8:name	장비		알카트 소드			9		통과	용어집 채택+신규 혼합	
 equipment.h:g_EquipDefs:0x0A8:desc	장비		가문의 검을 닮았다			18	144	통과	신규 번역	
 equipment.h:g_EquipDefs:0x0A9:name	장비					0		통과	unused(원문 빈 문자열)	
 equipment.h:g_EquipDefs:0x0A9:desc	장비					0		통과	unused(원문 빈 문자열)	
@@ -612,7 +612,7 @@ accessories.h:g_AccessoryDefs:0x0D:name	장비		미러 퀴라스			13		통과	�
 accessories.h:g_AccessoryDefs:0x0D:desc	장비		석화 방지 광택 갑옷			19	144	통과	신규 번역	
 accessories.h:g_AccessoryDefs:0x0E:name	장비		스파이크 브레이커			17		통과	신규 번역	
 accessories.h:g_AccessoryDefs:0x0E:desc	장비		가시를 막는 갑옷			16	144	통과	신규 번역	
-accessories.h:g_AccessoryDefs:0x0F:name	장비		알루카드 메일			11		통과	용어집 채택+신규 혼합	
+accessories.h:g_AccessoryDefs:0x0F:name	장비		알카드 메일			9		통과	용어집 채택+신규 혼합	
 accessories.h:g_AccessoryDefs:0x0F:desc	장비		불, 번개, 얼음에 내성을 가진다			30	144	통과	신규 번역	
 accessories.h:g_AccessoryDefs:0x10:name	장비		사악한 흉갑			11		통과	신규 번역	
 accessories.h:g_AccessoryDefs:0x10:desc	장비		사악한 공격에 무효하다			22	144	통과	신규 번역	
@@ -760,7 +760,7 @@ accessories.h:g_AccessoryDefs:0x57:name	장비		브리싱가멘			10		통과	신
 accessories.h:g_AccessoryDefs:0x57:desc	장비		드워프 목걸이 방어력+15			23	144	통과	신규 번역	
 accessories.h:g_AccessoryDefs:0x58:name	장비		시크릿 부츠			11		통과	신규 번역	
 accessories.h:g_AccessoryDefs:0x58:desc	장비		몰래 키가 커진다!			17	144	통과	신규 번역	
-accessories.h:g_AccessoryDefs:0x59:name	장비		알루카트 메일			11		통과	용어집 채택+신규 혼합	
+accessories.h:g_AccessoryDefs:0x59:name	장비		알카트 메일			9		통과	용어집 채택+신규 혼합	
 accessories.h:g_AccessoryDefs:0x59:desc	장비		불, 번개, 얼음에 내성?			22	144	통과	신규 번역·원문 "?"(불확실)	
 equipment_mod.h:g_EquipDefs:0x0A9:name	장비		스멜리 라이스			13		통과	신규 번역	
 equipment_mod.h:g_EquipDefs:0x0A9:desc	장비		유통기한이 지났다 [사용]			24	144	통과	신규 번역	
@@ -768,7 +768,7 @@ equipment_mod.h:g_EquipDefs:0x0AA:name	장비		딜리셔스 밀			11		통과	신
 equipment_mod.h:g_EquipDefs:0x0AA:desc	장비		별 다섯 코스요리 [사용]			23	144	통과	신규 번역	
 equipment_mod.h:g_EquipDefs:0x0AB:name	장비		사인드 보드			11		통과	신규 번역	
 equipment_mod.h:g_EquipDefs:0x0AB:desc	장비		받았다!!			8	144	통과	신규 번역	
-equipment_mod.h:g_EquipDefs:0x0AC:name	장비		알루카드 스피어			13		통과	용어집 채택+신규 혼합	
+equipment_mod.h:g_EquipDefs:0x0AC:name	장비		알카드 스피어			11		통과	용어집 채택+신규 혼합	
 equipment_mod.h:g_EquipDefs:0x0AC:desc	장비		그가 아끼던 마창			16	144	통과	신규 번역	
 equipment_mod.h:g_EquipDefs:0x0AD:name	장비		우드랜드 실드			13		통과	신규 번역	
 equipment_mod.h:g_EquipDefs:0x0AD:desc	장비		나무 정령 실드, 장미향			22	144	통과	신규 번역	

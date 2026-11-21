@@ -649,6 +649,12 @@ void EntityCutscene(Entity* self) {
                     continue;
                 default:
                     if (g_SkipCutscene) {
+#ifdef MOD_KO
+                        /* A2: skipped 2-byte KO cell: its 2nd byte is not an op (same rule as the normal path / ko_boss_dialogue.h) */
+                        if ((nextChar & 0xFC) == 0xF0) {
+                            g_Dialogue.scriptCur++;
+                        }
+#endif
                         continue;
                     }
                     g_Dialogue.nextCharTimer = g_Dialogue.unk17;

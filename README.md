@@ -1,10 +1,12 @@
-# SOTN Ultimate 한국어화 — v0.9 베타
+# SOTN Ultimate 한국어화 — v0.9.3 베타
 
 [SOTN Ultimate](https://github.com/renanbianchi/sotn-ultimate)에 한국어를 넣는 비공식 포크입니다. 원작자의 작업이 아닙니다. 계획은 [ROADMAP.md](ROADMAP.md) 에 있습니다.
 
-A fork of SOTN Ultimate that adds Korean. **v0.9 (beta, built on Ultimate v1.4)** is installed from a single web page — you supply your own discs; this repository and the page contain no game data. The original mod is by renanbianchi; this fork is unofficial.
+A fork of SOTN Ultimate that adds Korean. **v0.9.3 (beta, built on Ultimate v1.4)** is installed from a single web page — you supply your own discs; this repository and the page contain no game data. The original mod is by renanbianchi; this fork is unofficial.
 
 **웹 패처: https://ataho99.github.io/sotn-ultimate-kr/** (크롬·엣지 최신판, 설치 없음 · GitHub Pages 는 `ko` 브랜치의 `docs/` 폴더에서 게시)
+
+> 0.9.2 는 마무리 시험 중 문제가 다시 발견되어 파일을 내지 않았고, 수정을 넣어 0.9.3 으로 냅니다. 이전 버전을 쓰던 분도 웹 패처로 같은 방법으로 새로 만드세요(버전 간 패치 파일은 따로 없습니다).
 
 **[💖 후원](https://litt.ly/smash99)** — 작업 후원입니다. 게임 파일은 배포하지 않습니다.
 
@@ -15,7 +17,7 @@ A fork of SOTN Ultimate that adds Korean. **v0.9 (beta, built on Ultimate v1.4)*
 | 준비 · 원작 재현 · 조사 · 설계 · 한글 출력 시험 (P0–P4) | 완료 — 원작 v1.4 기준 |
 | 원문 추출 · 용어집 (P5) | 완료 — 원문 1,715행, 용어는 일본판 기준 |
 | 번역 · 삽입 (P6) | 완료(v0.9 범위) — 메뉴·장비·아이템·유물·주문·대사·저장 문구 한글 |
-| **배포 (P7)** | **v0.9 베타 준비 중** — 웹 패처(재료 검사 → 조립 → 지문 확인) |
+| **배포 (P7)** | **v0.9.3 베타** — 웹 패처(재료 검사 → 조립 → 지문 확인) |
 | 원작 추종 · 원작 합류 (P8–P9) | 예정 |
 
 - 번역은 원문에서 새로 했습니다. 기존 PS1 한글패치 문장은 쓰지 않았고, 제작진은 크레딧에 「참고」로 밝힙니다.
@@ -24,7 +26,7 @@ A fork of SOTN Ultimate that adds Korean. **v0.9 (beta, built on Ultimate v1.4)*
 
 ---
 
-# 한글판 v0.9 사용·제작 안내
+# 한글판 v0.9.3 사용·제작 안내
 
 
 ## ⚠ 법적 고지
@@ -39,7 +41,7 @@ A fork of SOTN Ultimate that adds Korean. **v0.9 (beta, built on Ultimate v1.4)*
 1. **재료를 준비합니다.** 아래 「재료」 표의 고정 이름 파일 5개를 한 폴더에 둡니다. 전부 필수이고, 판본이 다르면 패처가 진행하지 않습니다.
 2. **웹 패처 페이지를 엽니다.** 크롬·엣지(최신판) 권장 — 그 밖의 브라우저는 지원 대상이 아닙니다.
 3. **재료를 고릅니다**(「폴더 선택」 또는 「파일 선택」) **→ 「한글 이미지 만들기」.** 재료 검사 → 조립 → 결과 지문 확인까지 자동입니다. 실패하면 `REJECT <종류>: <사유>` 가 나옵니다(아래 「리젝트」).
-4. **`SOTN_Ultimate_v1.4_KR_v0.9.bin` 과 `.cue` 를 저장해 같은 폴더에 두고 `.cue` 를 에뮬레이터에서 엽니다.** 저장 뒤 「임시 파일 지우기」를 누르면 브라우저 안의 작업 사본이 지워집니다. 이상한 곳은 이슈로 제보해 주세요.
+4. **`SOTN_Ultimate_v1.4_KR_v0.9.3.bin` 과 `.cue` 를 저장해 같은 폴더에 두고 `.cue` 를 에뮬레이터에서 엽니다.** 저장 뒤 「임시 파일 지우기」를 누르면 브라우저 안의 작업 사본이 지워집니다. 이상한 곳은 이슈로 제보해 주세요.
 
 ### 재료 (고정 이름 · 왜 필요한가)
 
@@ -79,9 +81,9 @@ A fork of SOTN Ultimate that adds Korean. **v0.9 (beta, built on Ultimate v1.4)*
 | | PS1 일본판 (1997) | PS1 북미/유럽판 (1997) | 새턴판 (1998) | PSP 「드라큘라 X 크로니클」 수록판 (2007) |
 |---|---|---|---|---|
 | 발매 | 일본 1997-03-20 [W1] · 이후 「PlayStation the Best」 1998-03-19 [W1] · 일본판은 디스크 안 SLPM_860.23 파일 날짜로 v1.0(1997-02-19) · v1.1(1997-03-06) · v1.2(1998-01-19) 로 구분: v1.1 은 불 늑대의 카르마 코인 미드롭 수정 + 윙 스매시 연속 사용 추가, v1.2 는 사운드 설정(타이틀에서 Select) 추가이며 「the Best」·「PSOne Books」 및 영어판도 이 빌드 [T1] | 북미 1997-10-03 · 유럽 1997-11 [W1] · 북미 Greatest Hits 1998 [W1] | 일본 전용 1998-06-25, 미국 발매 없음 [W1] | 북미 2007-10-23 · 일본 2007-11-08 · 유럽 2008-02-18 [W1] |
-| 음성(언어·녹음) | 일본어(원본). 성우: 알루카드 오키아유 료타로 · 리히터 야나다 키요유키 · 마리아 시이나 헤키루(어린 시절)/요코야마 치사(성인) · 드라큘라 와카모토 노리오 [C1] | 영어 재녹음. 현지화는 Jeremy Blaustein(녹음 현장엔 없었음) [W1]. 일본판의 게임오버 음성(마리아·서큐버스·리히터·데스)은 영어판에 없음 [T1] | — (일본 전용 발매 [W1]) | 일본판 외 지역: 새 영어 대본 + 새로 녹음한 영어 음성, 원래 일본어 음성 선택 가능 [W1] |
+| 음성(언어·녹음) | 일본어(원본). 성우: 알카드 오키아유 료타로 · 리히터 야나다 키요유키 · 마리아 시이나 헤키루(어린 시절)/요코야마 치사(성인) · 드라큘라 와카모토 노리오 [C1] | 영어 재녹음. 현지화는 Jeremy Blaustein(녹음 현장엔 없었음) [W1]. 일본판의 게임오버 음성(마리아·서큐버스·리히터·데스)은 영어판에 없음 [T1] | — (일본 전용 발매 [W1]) | 일본판 외 지역: 새 영어 대본 + 새로 녹음한 영어 음성, 원래 일본어 음성 선택 가능 [W1] |
 | 번역 | (원문) | 일본판과 뉘앙스가 다름. 오프닝 글을 새로 씀, 지역명 변경(예: "Olrox's Room" → "Olrox's Quarters", "Catacomb" → "Catacombs") [T1]. 번역 문구 추가: "What is a man?" 등 [W1] | 일본어판(일본 전용 발매 [W1]) | 일본 외: 새 대본 [W1] |
-| 플레이어블 | 알루카드 + 리히터(마리아 없음) [C1] | 알루카드 + 리히터(마리아 없음) [C1] | 마리아 플레이 가능 + 보스, 리히터 처음부터 선택 [W1] | 마리아 플레이 가능 + 보스, 「Rondo of Blood」 기반 새 기술 [W1] |
+| 플레이어블 | 알카드 + 리히터(마리아 없음) [C1] | 알카드 + 리히터(마리아 없음) [C1] | 마리아 플레이 가능 + 보스, 리히터 처음부터 선택 [W1] | 마리아 플레이 가능 + 보스, 「Rondo of Blood」 기반 새 기술 [W1] |
 | 추가 지역·보스 | 기준판 | 일본판 치명적 버그 1건 수정 [W1] | 저주받은 감옥·지하 정원 + 신규 보스 [W1] | — |
 | 추가 아이템·사역마 | 기준판 | 사역마 스프라이트(Sprite)·노즈데빌(Nosedevil)이 영어판에서 빠짐 [T1] | 「갓 스피드 슈즈」(리히터식 달리기) 등 새턴 전용 아이템, 세 번째 손(스탯 아이템만) [W1] | 일본판에서 있고 국제판에서 빠졌던 사역마 여러 마리 복원, 영어판 「Nocturne」 추가 [W1] |
 | 음악·효과음 | 기준판 | 사운드 테스트 추가 [W1] | 이전 작품 곡 리믹스 수록 [W1] | 마무리 곡 「I Am the Wind」 → 「Mournful Serenade」(야마네 미치루) [W1] |
@@ -154,7 +156,7 @@ A fork of SOTN Ultimate that adds Korean. **v0.9 (beta, built on Ultimate v1.4)*
                                    ▼
 [사용자] 재료 5개 ─► 웹 패처 (docs/index.html): 재료 검사 → 조립 → 델타 적용 → 지문 확인
                                    ▼
-                      SOTN_Ultimate_v1.4_KR_v0.9.cue / .bin
+                      SOTN_Ultimate_v1.4_KR_v0.9.3.cue / .bin
 ```
 
 상세는 `BUILD.md`(제작·검증)와 `ko_patcher/web/README.md`(웹 패처)를 보세요.

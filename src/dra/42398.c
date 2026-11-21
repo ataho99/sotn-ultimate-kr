@@ -266,7 +266,7 @@ void DebugCaptureVideo(void) {
 /* KO_NAMES_DRA_GROW: rodata growth of the generated KO enemy/relic literals (gen_ko_names.py,
  * signed; the hand-written relic bytes this base was balanced with are its baseline) */
 #include "gen/us/ko_names_pad.h"
-#define MOD_DRA_PAD_KO_BASE 444 /* 0.9.2: spell 0/7 KO names + desc in config_us.h +20B rodata (488-20); hand labels (menu.c KO branch) +60B (1908-60); B1 desc +312B (2220-312); checker verifies 3/3 */
+#define MOD_DRA_PAD_KO_BASE 380 /* 0.9.3: 444-32-32 (+32 more when the 3 Alucart names were shortened; Arcard equip names 알루카드->알카드 in the 3 translation tables grow DRA by 32B; isolated 07:55 by reverting them: BSS ok at 444); 0.9.2: 444 = spell 0/7 KO names + desc in config_us.h +20B rodata (488-20); hand labels (menu.c KO branch) +60B (1908-60); B1 desc +312B (2220-312); checker verifies 3/3 */
 #define MOD_DRA_PAD (MOD_DRA_PAD_KO_BASE - KO_NAMES_DRA_GROW)
 #else
 #define MOD_DRA_PAD 40 /* v1.4 upstream */
