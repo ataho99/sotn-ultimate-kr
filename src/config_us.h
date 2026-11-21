@@ -529,6 +529,18 @@ __asm__(
     ".word 0\n"
     ".word 0x01806821\n" // move $13, $12
     ".word 0x01A00008\n" // 1: jr $13
+    ".word 0\n"
+    // ModSysOptTick (every frame of play, game_handlers.c): $11 = 16 (the
+    // header's fifth word); without the magic it returns at once
+    ".globl ModSysOptTick\n"
+    "ModSysOptTick:\n"
+    "lui $13, %hi(ModSysOptRet)\n"
+    "addiu $13, $13, %lo(ModSysOptRet)\n"
+    ".word 0x1000FFF4\n" // b ModSysOptGo (12 words back)
+    ".word 0x340B0010\n" // li $11, 16 (delay slot)
+    ".globl ModSysOptRet\n"
+    "ModSysOptRet:\n"
+    ".word 0x03E00008\n" // jr $31
     ".word 0\n");
 #endif
 

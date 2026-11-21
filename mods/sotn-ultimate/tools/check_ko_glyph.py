@@ -252,7 +252,7 @@ def main():
     # 8px equipment-name plate: every name character must have a plate cell whose code is its glyph-map code
     # (a missing one is drawn as a blank, a stale code as another glyph: 숏 / 발 / 멜 bugs)
     import struct
-    pb = open(WK + "ko_8p_block_246.bin", "rb").read()
+    pb = open(WK + "ko_8p_block_247.bin", "rb").read()
     pn = struct.unpack("<H", pb[:2])[0]
     pcodes = set(struct.unpack("<%dH" % pn, pb[2:2 + pn * 2]))
     eqc = io.open(os.path.join(ROOT, "mods/sotn-ultimate/src/menu/eq_core.c"), encoding="utf-8").read()
@@ -273,6 +273,29 @@ def main():
     if miss:
         fail("equipment names with characters missing from the 8px plate: %s" % miss[:12])
     print("8px plate: %d cells," % pn + " every equipment-name character has a cell with its v13p code")
+    # the Extra settings popup (xset: rows of 번역_설정화면.tsv, mods/sotn-ultimate/src/menu/sysopt.c): every 8px
+    # label/value character needs a plate cell (Hangul: its glyph-map code, ASCII: its value); the info bar
+    # string (12px) every Hangul in the glyph map
+    xmiss, xch, xbar = [], set(), set()
+    for ln in io.open((KO_WK + "/번역/번역_설정화면.tsv"), encoding="utf-8").read().split(chr(10))[1:]:
+        q = ln.split(chr(9))
+        if len(q) > 4 and q[0].startswith("xset:"):
+            for ch in q[4]:
+                if ch == " ":
+                    continue
+                if q[1].startswith("메뉴"):
+                    xch.add(ch)
+                    code = codes13.get(ch) if "가" <= ch <= "힣" else ord(ch)
+                    if code is None or code not in pcodes:
+                        xmiss.append((q[0], ch))
+                elif "가" <= ch <= "힣":
+                    xbar.add(ch)
+                    if ch not in codes13:
+                        xmiss.append((q[0], ch))
+    if xmiss:
+        fail("Extra settings popup characters without a cell: %s" % xmiss[:12])
+    print("Extra settings popup: %d distinct 8px characters (%s), every one has a plate cell; info bar %d Hangul in the glyph map; 문: %s" % (
+        len(xch), "".join(sorted(xch)), len(xbar), "plate cell F%03X" % (codes13["문"] & 0xFFF) if codes13.get("문") in pcodes else "MISSING"))
     print("check_ko_glyph OK sha", sh[:12])
 
 

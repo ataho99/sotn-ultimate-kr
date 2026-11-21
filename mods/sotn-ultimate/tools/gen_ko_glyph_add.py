@@ -20,8 +20,14 @@ import gen_ko_glyph16 as G  # noqa: E402
 import ko_font_profile as FP  # noqa: E402
 
 P4 = G.P4
-PREV_BLK = P4 + "ko_glyph_block_mgalmuri12_v14a.bin"
-PREV_MAP = P4 + "ko_glyph_map_v14a.tsv"
+# GLYPH_PREV_TAG (e.g. v14f): the previous block/map to extend (default v14a, the original run);
+# GLYPH_OUT_TAG (e.g. v14g): write ko_glyph_block_mgalmuri12_<tag>.bin / ko_glyph_map_<tag>.tsv instead of
+# the profile's names; GLYPH_NO_REUSE=1: never reuse a freed cell (existing cells stay byte-identical,
+# new chars are appended at the end)
+PREV_TAG = os.environ.get("GLYPH_PREV_TAG", "v14a")
+OUT_TAG = os.environ.get("GLYPH_OUT_TAG")
+PREV_BLK = P4 + "ko_glyph_block_mgalmuri12_%s.bin" % PREV_TAG
+PREV_MAP = P4 + "ko_glyph_map_%s.tsv" % PREV_TAG
 CB = 23
 assert FP.P["cell_bytes"] == CB
 
@@ -48,6 +54,8 @@ def main():
     new = [c for c in sorted(used) if G.is_h(c) and c not in pmap]
     free = [c for c in sorted(pmap, key=lambda c: pmap[c])
             if G.is_h(c) and c not in used and c not in prot and pmap[c] not in busy]
+    if os.environ.get("GLYPH_NO_REUSE") == "1":
+        free = []
     print("previous block %d cells; new chars %d %s; free cells %d" % (ncell, len(new), "".join(new), len(free)))
     fmap = dict(pmap)
     blk = bytearray(prev)
@@ -88,8 +96,15 @@ def main():
     for c, v in pmap.items():
         if c in fmap:
             assert fmap[c] == v, ("code moved", c)
-    open(G.P4 + FP.P["blk_name"], "wb").write(bytes(blk))
-    with io.open(G.P4 + FP.P["map_name"], "w", encoding="utf-8") as f:
+    blk_name = ("ko_glyph_block_mgalmuri12_%s.bin" % OUT_TAG) if OUT_TAG else FP.P["blk_name"]
+    map_name = ("ko_glyph_map_%s.tsv" % OUT_TAG) if OUT_TAG else FP.P["map_name"]
+    # positive control: every previous cell is byte-identical in the new block (cells of codes that stay)
+    for c, v in pmap.items():
+        if c in fmap:
+            n0 = v - G.BASE
+            assert bytes(blk[n0 * CB:n0 * CB + CB]) == prev[n0 * CB:n0 * CB + CB], ("cell changed", c)
+    open(G.P4 + blk_name, "wb").write(bytes(blk))
+    with io.open(G.P4 + map_name, "w", encoding="utf-8") as f:
         f.write("글자\t코드\tn\t오프셋\n")
         for c, v in sorted(fmap.items(), key=lambda kv: kv[1]):
             f.write("%s\t0x%04X\t%d\t%d\n" % (c, v, v - G.BASE, (v - G.BASE) * CB))

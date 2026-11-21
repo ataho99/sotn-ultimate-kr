@@ -107,7 +107,23 @@ for name, path in CDFILES.items():
     v = int(m.group(1), 16)
     if "KO_LBA(" in m.group(0):
         v += KO_BIAS
+    if name == "g_LbaBinAlucard" and "VAB/SD_MAR.VB" in files:
+        # (unused by the mod) BIN/ARC_F.BIN follows VAB/SD_MAR.VB: it moves by the sectors that file grew
+        # (the field voices: gen_ps1jp_banks.py); the files after it do not (ARC_F is cut shorter)
+        v += max(0, (files["VAB/SD_MAR.VB"][1] + 2047) // 2048 - 26)
     want(name, v, path)
+
+
+# the VAB files cd.c lists with their byte lengths: the disc's file is that long (the field voices pad them to it;
+# VAB/SD_MAR.VB's length is SD_MAR_VB_LEN, the file's own)
+for name, path, field in (("g_LbaSdAlkVh", "VAB/SD_ALK.VH", 2), ("g_LbaSdAlkVb", "VAB/SD_ALK.VB", 2),
+                          ("g_LbaSdRihVh", "VAB/SD_RIH.VH", 2), ("g_LbaSdRihVb", "VAB/SD_RIH.VB", 2),
+                          ("g_LbaSdMarVh", "VAB/SD_MAR.VH", 2)):
+    m = re.search(r"CdFile %s = \{[^,]+, \d+, (0x[0-9A-Fa-f]+)," % name, us)
+    if not m:
+        fails.append(f"{name}: length not found in cd.c")
+    else:
+        want(f"{name} length", int(m.group(1), 16), path, 1)
 
 
 def table(name):

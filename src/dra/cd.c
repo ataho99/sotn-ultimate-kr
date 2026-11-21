@@ -35,7 +35,12 @@ CdFile g_LbaSdAlkVb = {0x6110, 17, 0x0E160, 1, 1, 0xFF, 0};
 CdFile g_LbaSdRihVh = {0x612D, 19, 0x01020, 1, 1, 0x16, 21};
 CdFile g_LbaSdRihVb = {0x6130, 17, 0x0E190, 1, 1, 0xFF, 0};
 CdFile g_LbaSdMarVh = {0x614D, 19, 0x00E20, 2, 2, 0xFF, 23};
-CdFile g_LbaSdMarVb = {0x614F, 17, 0x0CEA0, 2, 2, 0xFF, 0};
+#if defined(MOD_FIELD_JP_VOICE)
+#define MOD_SD_MAR_VB_LEN SD_MAR_VB_LEN /* the Japanese bank grafted in (gen_ps1jp_banks.py): longer than retail's 0xCEA0 */
+#else
+#define MOD_SD_MAR_VB_LEN 0x0CEA0
+#endif
+CdFile g_LbaSdMarVb = {0x614F, 17, MOD_SD_MAR_VB_LEN, 2, 2, 0xFF, 0};
 CdFile g_LbaSdJ010_1_Vh = {0x6082, 19, 0x02A20, 0, 0, 0x0A, 9};
 CdFile g_LbaSdJ010_1_Vb = {0x6088, 17, 0x41CB0, 0, 0, 0xFF, 0};
 CdFile g_LbaSdJ010_2_Vh = {0x6082, 19, 0x41CB0, 4, 4, 0x0C, 11};
@@ -701,6 +706,31 @@ void func_80107460(void);
 void PlaySfx(s32);
 void SsVabClose(short);
 
+#if defined(MOD_SATURN) && OFF_BIN_RIC2 != 0
+// The Extra settings cheats (mods/sotn-ultimate/src/menu/sysopt.c, Alucard's
+// file) patch DRA's code in place: HandleDamage's entry and the two stair
+// branches in func_80109990 (named by its retail address; here it is at
+// 0x80108490). A Richter / Maria game's file has no such code, so the built
+// words go back when it is loaded (build_sysopt.sh checks them against the
+// built DRA).
+void FlushCache(void);
+void func_80109990(void);
+static void ModCheatUnpatch(void) {
+    u32* hd = (u32*)HandleDamage;
+    u16* s1 = (u16*)((u8*)func_80109990 + 0x2D2);
+    u16* s2 = (u16*)((u8*)func_80109990 + 0x35E);
+
+    if (hd[0] != 0x27BDFFD8 || hd[1] != 0xAFB20018 || *s1 != 0x1482 ||
+        *s2 != 0x1482) {
+        hd[0] = 0x27BDFFD8;
+        hd[1] = 0xAFB20018;
+        *s1 = 0x1482;
+        *s2 = 0x1482;
+        FlushCache();
+    }
+}
+#endif
+
 void UpdateCd(void) {
 #if defined(VERSION_US)
     const bool UseEuWarning = true;
@@ -789,7 +819,7 @@ void UpdateCd(void) {
             // enemy voices; BIN/SFX_PSP.BIN, laid out as SD_Z*.VH + VB,
             // mods/sotn-ultimate/tools/gen_psp_sfx.py). lba_stage.c keeps its
             // sector + 1 in the (unused) name field; CEN has none (below)
-            if (MOD_PSP_DUB_ON() && g_StagesLba[g_LoadOvlIdx].name) {
+            if (MOD_FIELD_PSP_BANKS() && g_StagesLba[g_LoadOvlIdx].name) {
                 g_LbaStageVh.loc =
                     OFF_BIN_SFX_PSP - 1 + (s32)g_StagesLba[g_LoadOvlIdx].name;
 #if OFF_BIN_JP_SD != 0
@@ -838,7 +868,7 @@ void UpdateCd(void) {
             if (g_LoadOvlIdx == STAGE_NO3 &&
                 g_PlayableCharacter != PLAYER_ALUCARD) {
                 g_LbaStageVh.loc = OFF_BIN_NO3RIDE;
-                if (MOD_PSP_DUB_ON()) {
+                if (MOD_FIELD_PSP_BANKS()) {
                     g_LbaStageVh.loc += MOD_NO3RIDE_SECTORS;
                 }
             }
@@ -881,15 +911,16 @@ void UpdateCd(void) {
             // mods/sotn-ultimate/tools/gen_psp_grunts.py). Maria's banks
             // replace it below (the JP dub: BIN/JP_SD.BIN's copy with the
             // Japanese clips, and the prologue Maria's in its SD_MAR)
-            s32 sdOff = MOD_JP_DUB_ON() && OFF_BIN_JP_SD
+            s32 sdOff = MOD_FIELD_JP_BANKS() && OFF_BIN_JP_SD
                             ? OFF_BIN_JP_SD + MOD_JP_SD_RIH - 0x612D
-                        : MOD_PSP_DUB_ON() ? OFF_BIN_RIH_PSP - 0x612D
-                                           : 0;
+                        : MOD_FIELD_PSP_BANKS() ? OFF_BIN_RIH_PSP - 0x612D
+                                                : 0;
 #else
             s32 sdOff = 0;
 #endif
             s32 sdLen = SD_MAR_VB_LEN;
 #endif
+            ModCheatUnpatch(); // (no cheats in a Richter / Maria game)
             g_LbaBinRichter.loc =
                 MOD_RIC_COSTUME2() ? OFF_BIN_RIC2 : OFF_BIN_RIC;
 #if OFF_BIN_MARIA != 0
@@ -960,10 +991,10 @@ void UpdateCd(void) {
         // VAB/SD_ALK.VH/VB; mods/sotn-ultimate/tools/gen_psp_grunts.py). The
         // overlay's load goes on to those two CdFiles
         if (*pLoadFile == CdFile_AlucardPrg) {
-            s32 alkOff = MOD_JP_DUB_ON() && OFF_BIN_JP_SD
+            s32 alkOff = MOD_FIELD_JP_BANKS() && OFF_BIN_JP_SD
                              ? OFF_BIN_JP_SD + MOD_JP_SD_ALK - 0x610D
-                         : MOD_PSP_DUB_ON() ? OFF_BIN_ALK_PSP - 0x610D
-                                            : 0;
+                         : MOD_FIELD_PSP_BANKS() ? OFF_BIN_ALK_PSP - 0x610D
+                                                 : 0;
             ModMarSfxPrio(false); // retail (a Maria game earlier this session)
             g_LbaSdAlkVh.loc = 0x610D + alkOff;
             g_LbaSdAlkVb.loc = 0x6110 + alkOff;
@@ -984,7 +1015,7 @@ void UpdateCd(void) {
             // VB from the next sector; every familiar has one, gen_psp_sfx.py).
             // The Pixie and the Nosedevil (5, 6) are silent in the US PS1:
             // their PSP voices in the PS1 dub too
-            if (MOD_PSP_DUB_ON() || g_LoadOvlIdx >= 5) {
+            if (MOD_FIELD_PSP_BANKS() || g_LoadOvlIdx >= 5) {
                 g_LbaServantVh.loc =
                     OFF_BIN_SFX_PSP - 1 + g_ModPspServantSfx[g_LoadOvlIdx];
                 g_LbaServantVb.loc =

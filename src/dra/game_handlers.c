@@ -412,6 +412,10 @@ s16 AllocPrimitives(u8 type, s32 count);
 #include "../../mods/sotn-ultimate/src/menu/game_handlers_mod_balance.h"
 #endif
 
+#if defined(MOD_SATURN)
+void ModSysOptTick(void);
+#endif
+
 void HandlePlay(void) {
     s32 i;
     u8* ptr;
@@ -421,6 +425,7 @@ void HandlePlay(void) {
 #if defined(MOD_SATURN)
     ModApplyBalance();
     ModApplyDubText();
+    ModSysOptTick(); // the cheats (BIN/ARC_F2.BIN, sysopt.c)
 #endif
 
     switch (g_GameStep) {

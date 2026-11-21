@@ -37,9 +37,13 @@ mkdir -p "$KO_WRAPPERS"
 # 재실행(exec "$0") 때도 PATH 선두의 ko_wrappers를 제외하고 진짜 cpp를 찾는다.
 REALCPP=$(PATH="$(echo "$PATH" | tr ':' '\n' | grep -v ko_wrappers | paste -sd: -)" command -v mipsel-linux-gnu-cpp)
 [ "$REALCPP" != "$KO_WRAPPERS/mipsel-linux-gnu-cpp" ] || { echo "ABORT: cpp wrapper would exec itself" >&2; exit 2; }
+# KO_FIELD_VOICE=1 (default 0, ko_data/빌드레시피.env): the field voices (sound banks) are the Japanese PS1's for every Dub
+# (gen_ps1jp_banks.py + game_mod.h MOD_FIELD_*_BANKS); 0 = the banks of 094_02 (PSP / JP / retail by Dub)
+FV_DEFS=""
+if [ "${KO_FIELD_VOICE:-0}" = 1 ]; then FV_DEFS="-DMOD_FIELD_JP_VOICE"; fi
 cat > "$KO_WRAPPERS/mipsel-linux-gnu-cpp" <<EOF
 #!/usr/bin/env bash
-exec "$REALCPP" "\$@" -DMOD_KO -DMOD_KO_EQUIP # KO trial: equipment_ko.h/accessories_ko.h gate (config_us.h); OFF builds never define it
+exec "$REALCPP" "\$@" -DMOD_KO -DMOD_KO_EQUIP $FV_DEFS # KO trial: equipment_ko.h/accessories_ko.h gate (config_us.h); OFF builds never define it
 EOF
 chmod +x "$KO_WRAPPERS/mipsel-linux-gnu-cpp"
 export PATH="$KO_WRAPPERS:$PATH"
@@ -77,7 +81,7 @@ export NODE=${NODE:-node}
 # they corrupt live data (see tools/dirt_patcher.py)
 export SOTN_MOD_NO_DIRT=1
 export MOD_KO_DUB=1 # KO trial: DUB spans in Korean (gen_menu_text.py)
-export SYSOPT_DEFS=-DMOD_SYSOPT_JPPAD # KO trial: Extra settings box uses the JP pad style (Circle = confirm, Cross = back), build_sysopt.sh
+export SYSOPT_DEFS="-DMOD_SYSOPT_JPPAD -DMOD_SYSOPT_KO $FV_DEFS" # ($FV_DEFS = -DMOD_FIELD_JP_VOICE when KO_FIELD_VOICE=1, game_mod.h) KO trial: Extra settings box uses the JP pad style (Circle = confirm, Cross = back), build_sysopt.sh
 export MOD_KO_EQUIP=1 # KO trial: equipment descs in Korean (gen_ko_equip.py)
 export MOD_KO=1 # KO trial: _mod_ko.h tables + check_stage_data ST0 KO allowlist
 
@@ -284,6 +288,14 @@ fi
 python3 mods/sotn-ultimate/tools/gen_mar2_sounds.py "$JP_MAR2" build/us/MARIA2_SD_JP.BIN
 .venv/bin/python mods/sotn-ultimate/tools/gen_cenp_sounds.py --set jp
 python3 mods/sotn-ultimate/tools/gen_jp_sd.py
+# The field voices (sound banks): the Japanese PS1's grafted into the US ones, for every Dub
+# choice (build/us/SD_*.VH/.VB, which make disk takes over the retail files; needs JP_T1)
+if [ "${KO_FIELD_VOICE:-0}" = 1 ]; then
+    .venv/bin/python mods/sotn-ultimate/tools/gen_ps1jp_banks.py --check
+else
+    # (off: no field-voice files; a leftover of an earlier run would be taken over by make disk)
+    .venv/bin/python mods/sotn-ultimate/tools/gen_ps1jp_banks.py --clean
+fi
 # Pack XA_STR1 (needs the fresh xa_music_config.h): build/us/XA_STR1.unpacked
 # -> build/us/XA_STR1., rewrites the retail and mod XA configs; verifies
 # itself (fails the build on any mismatch). --keep-all keeps the JP-only
@@ -508,6 +520,8 @@ python3 mods/sotn-ultimate/tools/gen_ko_font8.py --patch
 # after Alucard's sprites in build/us/ARC_F2.BIN (mods/sotn-ultimate/src/menu/sysopt.c),
 # against DRA's addresses (checked again after make disk below)
 bash mods/sotn-ultimate/tools/build_sysopt.sh
+# VAB/SD_MAR.VB grows with the field voices on: the unused retail ARC_F.BIN gives its sectors back (build_sysopt.sh removed any earlier one)
+if [ "${KO_FIELD_VOICE:-0}" = 1 ]; then .venv/bin/python mods/sotn-ultimate/tools/gen_ps1jp_banks.py --arcf; fi
 # 776-glyph ARC_KO.BIN (A-gap) + blob renderer. Trial-only disc
 # file at the disc END (the end-append still shifts post-VAB files +1, so
 # cd.c's shifted literals use KO_LBA (check_cd_lba resolves it per image);
@@ -550,12 +564,12 @@ PYEOF
 # KO_8P.BIN (equipment-name 8px block, 2 sectors) spliced
 # into the 17d3 zero tail at LBA 0x492CA (after the 58-sector EXE at
 # 0x49290-0x492C9; readback-asserted, emu-verified -- not manifest-packed).
-# Source: P4시험/ko_8p_block_246.bin (gen_ko_8p.py; 371 cells = the 283-cell block 243 [260H + 8 name-ASCII + 15
+# Source: P4시험/ko_8p_block_247.bin (gen_ko_8p.py v246 = 371 cells, + gen_ko_8p_ext.py: 385 cells = 371 + the Extra settings popup's 14 cells; 371 cells = the 283-cell block 243 [260H + 8 name-ASCII + 15
 # desc-ASCII reserve; Mgalmuri8 @8px, 1:1, sha-pinned).
 python3 - <<'PYEOF'
 import hashlib, io
-b = io.open(__import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_246.bin', 'rb').read()
-assert hashlib.sha256(b).hexdigest() == 'fe8317f331fbbdcc0b2b1753741e40f0dcb47a226aed0c3a23ac88ded19e2e4b', hashlib.sha256(b).hexdigest()
+b = io.open(__import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_247.bin', 'rb').read()
+assert hashlib.sha256(b).hexdigest() == 'f85415c182b951f50d3ffbd9e3b2f5e023a9f76b405889e57c2c7844070f0c24', hashlib.sha256(b).hexdigest()
 assert len(b) <= 4096, len(b)
 open('build/us/KO_8P.BIN', 'wb').write(bytes(b) + bytes(4096 - len(b)))
 print('KO_8P.BIN: block %d -> 4096 (2 sectors)' % len(b))
@@ -742,9 +756,9 @@ echo "ko_equip_jp: sel/ov/enter at $EQ_SEL/$EQ_OV/$EQ_ENTER, core $corevma size 
 # ARC_F2's old 178-bake region is zeroed (same length, no LBA moves).
 # v12e (v12c Korean restored in F12A..F28A, English 32 moved
 # to free-code cells) + engtab250. Same 776x30 size, ARC offsets unchanged.
-# v14f (gen_ko_glyph_f.py): v14e + 1 Hangul cell F3F6 (951 in all, limit 960); v14e (gen_ko_glyph_e.py): v14d + 91 more cells (950); KO_SHA = the block's sha256 (check_ko_glyph.py prints it).
-export KO_BLK=${KO_WK}/P4시험/ko_glyph_block_mgalmuri12_v14f.bin
-export KO_SHA=343e9d2b19c4d95075a2978075cb57a26cd55c23e08c6c2017e5f350d441e370
+# v14g (gen_ko_glyph_add.py): v14f + 1 Hangul cell F3F7 (켬, the Extra settings popup; 952 cells). v14f (gen_ko_glyph_f.py): v14e + 1 Hangul cell F3F6 (951 in all, limit 960); v14e (gen_ko_glyph_e.py): v14d + 91 more cells (950); KO_SHA = the block's sha256 (check_ko_glyph.py prints it).
+export KO_BLK=${KO_WK}/P4시험/ko_glyph_block_mgalmuri12_v14g.bin
+export KO_SHA=e8013d637b19c70a23d646e5cb66b988a9ea3e5fe74f166e756bc07f485f5f90
 # name tag / popup advance table lookup (src/st/ko_font_params.h) is per overlay. KO_NAME_FIXED_OVERLAYS (switches, one
 # `#define KO_NAME_FIXED 1` as first line of the files): sel(cutscene.c) no3(cutscene.c, popup.c) no4(cutscene.c, popup.c) mad(popup.c: MAD.BIN must keep its retail size, check_status_shift).
 # If a later build reports `FAIL stXXX: overlay ends ... past 0x801e0000`, add the define to that overlay's
@@ -883,9 +897,9 @@ img = img + tail
 KO_BUNDLE = 'src/dra/gen/us/ko_jp_bundle.bin'
 bundle = open(KO_BUNDLE, 'rb').read()
 assert 1 <= len(bundle) <= 2048, len(bundle)
-KO_8PBLK = __import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_246.bin'
+KO_8PBLK = __import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_247.bin'
 blk8 = open(KO_8PBLK, 'rb').read()
-assert hashlib.sha256(blk8).hexdigest() == 'fe8317f331fbbdcc0b2b1753741e40f0dcb47a226aed0c3a23ac88ded19e2e4b', hashlib.sha256(blk8).hexdigest()
+assert hashlib.sha256(blk8).hexdigest() == 'f85415c182b951f50d3ffbd9e3b2f5e023a9f76b405889e57c2c7844070f0c24', hashlib.sha256(blk8).hexdigest()
 assert len(blk8) <= 4096, len(blk8)
 img = img + bytes(bundle) + bytes(2048 - len(bundle)) + bytes(blk8) + bytes(4096 - len(blk8))
 assert len(img) == arc_size, (len(img), arc_size)

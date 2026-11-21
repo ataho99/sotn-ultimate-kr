@@ -72,32 +72,56 @@ void ModSysOptBox(MenuContext* ctx, s32 cursorIdx, s32 x, s32 y, s32 w, s32 h,
                   s32 yGap, s32 bColorMode);
 void ModSysOptInput(s32* nav, u8 nOptions, u32 type);
 void ModSysOptSound(MenuContext* ctx);
+void ModSysOptTick(void);
 
 // the header the stubs read (first in .text, at MOD_SYSOPT_ADDR): the
 // magic, the three entries, then the info bar text (MOD_SYSOPT_BAR_TEXT;
 // the info bar reads an ASCII comma as a Shift-JIS lead byte: the
 // full-width comma 81 43 instead)
+#if defined(MOD_SYSOPT_KO)
+#include "sysopt_ko_str.h"
+// KO build: the info bar text is Korean (12px, ShowText's F0xx codes; gen_ko_cfg.py xset:bar)
 __asm__(".text\n"
         ".word " MOD_SYSOPT_MAGIC_STR "\n"
         ".word ModSysOptBox\n"
         ".word ModSysOptInput\n"
         ".word ModSysOptSound\n"
+        ".word ModSysOptTick\n"
+        ".ascii \"" KO_XSET_BAR_ASM "\"\n"
+        ".byte 0\n"
+        ".align 2\n");
+#else
+__asm__(".text\n"
+        ".word " MOD_SYSOPT_MAGIC_STR "\n"
+        ".word ModSysOptBox\n"
+        ".word ModSysOptInput\n"
+        ".word ModSysOptSound\n"
+        ".word ModSysOptTick\n"
         ".asciz \"Boss versions\\201\\103 game balance and voices\"\n"
         ".align 2\n");
+#endif
 
 #define ROW 6     // the row, after the retail six (16 px apart: y 0x90)
-#define ROWS 4    // the popup's options
+#define NOPT 4    // the Player Select's options (rows 0-3 of the popup)
+#define NCHEAT 10 // the cheats (the rows after them)
+#define ROWS (NOPT + NCHEAT)
+#define VIS 8     // rows shown at once: the list scrolls
 #define POP_X 172 // the popup's window (the Sound box's is 172, 112, 57, 32)
-#define POP_Y 124 // (ends at 188: the info bar starts at 193)
+#define POP_H (VIS * 16)
+#define POP_Y (188 - POP_H) // (ends at 188: the info bar starts at 193)
 #define POP_W 168 // (the right margin as wide as the left one)
-#define POP_H 64
 #define VALUE_DX 112
 
-static const char g_SysOptName[5][8] = {
+static const char g_SysOptName[7][8] = {
     _S("PS1"), _S("Saturn"), _S("PSP"), _S("JP"),
-    _S("STN")}; // 0.9.4: the Dub row's "Saturn" overflows its box -> "STN" (index 4)
+    _S("STN"), // 0.9.4: the Dub row's "Saturn" overflows its box -> "STN" (index 4)
+    _S("OFF"), _S("ON")};
 static const char* const g_SysOptLabel[ROWS] = {
-    _S("Boss Richter"), _S("Boss Maria"), _S("Balance"), _S("Dub")};
+    _S("Boss Richter"), _S("Boss Maria"), _S("Balance"), _S("Dub"),
+    // the cheats (all off in a new game; see ModSysOptTick)
+    _S("Inf. MP"), _S("Inf. Hearts"), _S("Fast MP regen"), _S("Fast stairs"),
+    _S("Full heal"), _S("Invincible"), _S("Inf. HP"), _S("Inf. Gold"),
+    _S("Inf. jump"), _S("Moon jump")};
 #define SYSOPT_NAME() _S("Extra settings")
 #define SYSOPT_LABEL(r) g_SysOptLabel[r]
 // each option: the flag bits it owns, and per choice (the Player Select's
@@ -108,7 +132,7 @@ typedef struct {
     u8 val[3];
     u8 name[3];
 } SysOptRow;
-static const SysOptRow g_SysOptRows[ROWS] = {
+static const SysOptRow g_SysOptRows[NOPT] = {
     {MOD_FLAG_BOSS_RIC_SATURN, 2, {0, MOD_FLAG_BOSS_RIC_SATURN}, {0, 1}},
     {MOD_FLAG_MARIA_BOSS_PSP, 2, {0, MOD_FLAG_MARIA_BOSS_PSP}, {1, 2}},
     {MOD_FLAG_PS1_BALANCE, 2, {MOD_FLAG_PS1_BALANCE, 0}, {0, 1}},
@@ -119,8 +143,107 @@ static const SysOptRow g_SysOptRows[ROWS] = {
 };
 #define DUB 3
 
+// ---- the cheats: popup rows NOPT.. (bit i of g_CheatMask = row NOPT + i on).
+// All off in a new game: the mask is this file's data, loaded zero with each
+// game load. ModSysOptTick runs every frame of play (DRA's HandlePlay, through
+// the same kind of stub as the menu's three entries) and is a no-op when
+// this file is not the one loaded (Richter / Maria games).
+#define CHEAT_MP 0
+#define CHEAT_HEARTS 1
+#define CHEAT_MPREGEN 2
+#define CHEAT_STAIRS 3
+#define CHEAT_FOOD 4
+#define CHEAT_INVINC 5
+#define CHEAT_HP 6
+#define CHEAT_GOLD 7
+#define CHEAT_JUMP 8
+#define CHEAT_MOON 9
+#define CHEAT_ON(c) ((g_CheatMask >> (c)) & 1)
+static s32 g_CheatMask = 0;
+
+// absolute symbols from build_sysopt.sh (this build's DRA): HandleDamage's
+// entry and its first two words as built, the upper halfwords of the two
+// stair-slowdown branches in func_80109990 (bne 0x1482, made b 0x1000)
+extern char ModHdEntry;
+extern char ModHdOrig0;
+extern char ModHdOrig1;
+extern char ModStairsA;
+extern char ModStairsB;
+void FlushCache(void); // (main SDK: code changed in place)
+
+static void CodeWord(u32* p, u32 v) {
+    if (*p != v) {
+        *p = v;
+        FlushCache();
+    }
+}
+
+static void CodeHalf(u16* p, u16 v) {
+    if (*p != v) {
+        *p = v;
+        FlushCache();
+    }
+}
+
+void ModSysOptTick(void) {
+    u32* hd = (u32*)&ModHdEntry;
+    s32 m = g_CheatMask;
+
+    if (m & (1 << CHEAT_HP) && g_Status.hp > 0) {
+        g_Status.hp = g_Status.hpMax;
+    }
+    if (m & (1 << CHEAT_MP)) {
+        g_Status.mp = g_Status.mpMax;
+    }
+    if (m & (1 << CHEAT_HEARTS)) {
+        g_Status.hearts = g_Status.heartsMax;
+    }
+    if (m & (1 << CHEAT_GOLD)) {
+        g_Status.gold = 9999999;
+    }
+    // the retail regen is 1 MP per 64 frames (HUD update): 8 times as fast
+    if (m & (1 << CHEAT_MPREGEN) && !(g_GameTimer & 7) &&
+        !(g_Status.D_80097BF8 & 1)) {
+        g_Status.mp++;
+        if (g_Status.mp > g_Status.mpMax) {
+            g_Status.mp = g_Status.mpMax;
+        }
+    }
+    // potions, food: the heal waiting for the next player update (healKind
+    // 1; the Healing Mail's trickle is 2) becomes a full heal
+    if (m & (1 << CHEAT_FOOD) && g_Player.healKind == 1 &&
+        g_Player.healAmount) {
+        g_Player.healAmount = g_Status.hpMax;
+    }
+    // invincible: HandleDamage returns 0 at once ("jr ra; move v0, zero");
+    // off: the built words back (also after a game load left it patched)
+    if (m & (1 << CHEAT_INVINC)) {
+        CodeWord(hd, 0x03E00008);
+        CodeWord(hd + 1, 0x00001021);
+    } else {
+        CodeWord(hd, (u32)&ModHdOrig0);
+        CodeWord(hd + 1, (u32)&ModHdOrig1);
+    }
+    // stairs: no slowdown
+    CodeHalf((u16*)&ModStairsA, m & (1 << CHEAT_STAIRS) ? 0x1000 : 0x1482);
+    CodeHalf((u16*)&ModStairsB, m & (1 << CHEAT_STAIRS) ? 0x1000 : 0x1482);
+    // jumps: the double jump (Leap Stone) is allowed again in the air; the
+    // moon jump holds the rise while Cross is held
+    if (PLAYER.step == Player_Jump || PLAYER.step == Player_Fall) {
+        if (m & (1 << CHEAT_JUMP)) {
+            g_Player.unk44 &= ~1;
+        }
+        if (m & (1 << CHEAT_MOON) && (g_Player.padPressed & PAD_CROSS) &&
+            PLAYER.velocityY > FIX(-3)) {
+            PLAYER.velocityY = FIX(-3);
+        }
+    }
+}
+
 // the popup's cursor (loaded with the file: 0 after each game load)
 static s32 g_PopRow = 0;
+// the first row shown (the popup scrolls: VIS of ROWS rows)
+static s32 g_PopTop = 0;
 // a Dub change made since the current stage's bank was loaded: 1 + the dub
 // bits it was loaded with (0: none). Kept until the bank is reloaded
 static s32 g_StageDubOld = 0;
@@ -212,9 +335,9 @@ static void PopReset(MenuContext* pop) {
 // next area load (its bank goes with the CEN / CENP overlay loaded, which
 // Boss Maria may have changed since)
 static void SysOptBanks(void) {
-    s32 off = MOD_JP_DUB_ON() && OFF_BIN_JP_SD ? OFF_BIN_JP_SD - 0x610D
-              : MOD_PSP_DUB_ON()               ? OFF_BIN_ALK_PSP - 0x610D
-                                               : 0;
+    s32 off = MOD_FIELD_JP_BANKS() && OFF_BIN_JP_SD ? OFF_BIN_JP_SD - 0x610D
+              : MOD_FIELD_PSP_BANKS()               ? OFF_BIN_ALK_PSP - 0x610D
+                                                    : 0;
     s32 stage =
         g_StageDubOld && (g_StageDubOld - 1) != (MOD_STATUS_FLAGS & DUB_BITS) &&
         g_StageId != STAGE_CEN;
@@ -265,28 +388,47 @@ static void PopInput(MenuContext* pop) {
     s32 v;
 
     MenuHandleCursorInput(&g_PopRow, ROWS, 0); // Up / Down, wraps
-    row = &g_SysOptRows[g_PopRow];
+    if (g_PopRow < g_PopTop) {
+        g_PopTop = g_PopRow;
+    }
+    if (g_PopRow >= g_PopTop + VIS) {
+        g_PopTop = g_PopRow - VIS + 1;
+    }
+    if (g_PopRow >= NOPT) {
+        // a cheat: Left / Right / X flips it
+        if (g_pads[0].tapped & (PAD_LEFT | PAD_RIGHT | SYSOPT_SELECT)) {
+            g_CheatMask ^= 1 << (g_PopRow - NOPT);
+            g_api.PlaySfx(SFX_UI_MOVE);
+        }
+    }
+    row = &g_SysOptRows[g_PopRow < NOPT ? g_PopRow : 0];
     // X steps on as Right does
     if (g_pads[0].tapped & SYSOPT_SELECT) {
         g_pads[0].repeat |= PAD_RIGHT;
     }
-    if (g_pads[0].repeat & (PAD_LEFT | PAD_RIGHT)) {
+    if (g_PopRow < NOPT && (g_pads[0].repeat & (PAD_LEFT | PAD_RIGHT))) {
         if ((SysOptLocks() >> g_PopRow) & 1) {
             g_api.PlaySfx(SFX_UI_ERROR);
         } else {
             v = SysOptCur(row);
             MenuHandleCursorInput(&v, row->n, 5); // wraps, SFX_UI_MOVE
+#if !defined(MOD_FIELD_JP_VOICE)
+            // (the field banks are the same for every Dub: the
+            // stage and familiar banks are not reloaded, game_mod.h)
             if (g_PopRow == DUB && !g_StageDubOld) {
                 // the stage's bank was loaded with these
                 g_StageDubOld = 1 + (MOD_STATUS_FLAGS & DUB_BITS);
             }
+#endif
             MOD_STATUS_FLAGS = (MOD_STATUS_FLAGS & ~row->mask) | row->val[v];
+#if !defined(MOD_FIELD_JP_VOICE)
             if (g_PopRow == DUB) {
                 // the familiar's bank has the dub's voices too: the menu's
                 // exit reloads it as when another one is chosen
                 // (CdFile_ServantChr; it is summoned again)
                 g_ServantLoaded = 0;
             }
+#endif
             // the PS1 balance has no third hand: its item back to the
             // inventory
             if (MOD_PS1_BALANCE() && MOD_HOLDER_ITEM) {
@@ -302,6 +444,60 @@ static void PopInput(MenuContext* pop) {
         pop->unk1D = 0;
     }
 }
+
+#if defined(MOD_SYSOPT_KO)
+// KO build: the popup's rows are Korean 8px text (the equipment names' renderer in DRA's resident
+// tail: 8x8 plate cells, mods/sotn-ultimate/src/menu/eq_core.c; strings generated by gen_ko_cfg.py
+// from the xset: rows of 번역_설정화면.tsv). One call draws up to 16 names (a row's label and value);
+// locked rows are drawn apart, grey (D_8013784C), as the English text was
+#define KO_EQUIP_SEL 0x8009F500 // src/dra/dra.h (build_sysopt.sh checks it)
+typedef void (*KoDrawFn)(const char**, const s32*, const s32*, s32, MenuContext*);
+static const char* const g_SysOptLabelKo[ROWS] = {
+    ko_xset_r0, ko_xset_r1, ko_xset_r2, ko_xset_r3, ko_xset_c0, ko_xset_c1,
+    ko_xset_c2, ko_xset_c3, ko_xset_c4, ko_xset_c5, ko_xset_c6, ko_xset_c7,
+    ko_xset_c8, ko_xset_c9};
+// as g_SysOptName: PS1, Saturn (new: 새턴), PSP, JP (never shown), STN, OFF, ON
+static const char* const g_SysOptNameKo[7] = {
+    ko_xset_ps1, ko_xset_sat, ko_xset_psp, ko_xset_psp,
+    ko_xset_stn, ko_xset_off, ko_xset_on};
+
+static void PopDrawKo(MenuContext* ctx, s32 x, s32 y, s32 locks) {
+    const char* names[2 * VIS];
+    s32 xs[2 * VIS];
+    s32 ys[2 * VIS];
+    const SysOptRow* row;
+    s32 r, n, pass, locked, ry;
+
+    for (pass = 0; pass < 2; pass++) {
+        n = 0;
+        for (r = g_PopTop; r < g_PopTop + VIS; r++) {
+            locked = r < NOPT ? (locks >> r) & 1 : 0;
+            if (locked != pass) {
+                continue;
+            }
+            ry = y + (r - g_PopTop) * 16;
+            names[n] = g_SysOptLabelKo[r];
+            xs[n] = x;
+            ys[n] = ry;
+            n++;
+            if (r < NOPT) {
+                row = &g_SysOptRows[r];
+                names[n] = g_SysOptNameKo[row->name[SysOptCur(row)]];
+            } else {
+                names[n] = g_SysOptNameKo[CHEAT_ON(r - NOPT) ? 6 : 5];
+            }
+            xs[n] = x + VALUE_DX;
+            ys[n] = ry;
+            n++;
+        }
+        if (n) {
+            D_8013784C = pass;
+            ((KoDrawFn)KO_EQUIP_SEL)(names, xs, ys, n, ctx);
+        }
+    }
+    D_8013784C = 0;
+}
+#endif
 
 // MenuSystemDraw's cursor box: runs every frame the System window is drawn
 // (the System list, the box, and the menu's closing fade). While the box is
@@ -350,15 +546,25 @@ void ModSysOptSound(MenuContext* ctx) {
         return;
     }
     locks = SysOptLocks();
-    for (r = 0, row = g_SysOptRows; r < ROWS; r++, row++, y += 16) {
-        D_8013784C = (locks >> r) & 1;
+#if defined(MOD_SYSOPT_KO)
+    PopDrawKo(ctx, x, y, locks);
+#else
+    for (r = g_PopTop; r < g_PopTop + VIS; r++, y += 16) {
+        D_8013784C = r < NOPT ? (locks >> r) & 1 : 0;
         MenuDrawStr(SYSOPT_LABEL(r), x, y, ctx);
-        MenuDrawStr(
-            g_SysOptName[row->name[SysOptCur(row)]], x + VALUE_DX, y, ctx);
+        if (r < NOPT) {
+            row = &g_SysOptRows[r];
+            MenuDrawStr(
+                g_SysOptName[row->name[SysOptCur(row)]], x + VALUE_DX, y, ctx);
+        } else {
+            MenuDrawStr(g_SysOptName[CHEAT_ON(r - NOPT) ? 6 : 5],
+                        x + VALUE_DX, y, ctx);
+        }
     }
+#endif
     D_8013784C = 0;
-    func_800F5E68(
-        ctx, g_PopRow, ctx->cursorX + 2, ctx->cursorY + 2, POP_W - 4, 12, 4, 1);
+    func_800F5E68(ctx, g_PopRow - g_PopTop, ctx->cursorX + 2,
+                  ctx->cursorY + 2, POP_W - 4, 12, 4, 1);
 }
 
 // MENU_STEP_SYSTEM's cursor input: the list's 7 rows; X on "Extra

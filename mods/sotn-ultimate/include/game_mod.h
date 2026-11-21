@@ -214,6 +214,18 @@
 // mod_psp_cen.h)
 #define MOD_FLAG_PS1_DUB 8
 #define MOD_PSP_DUB_ON() (!(MOD_STATUS_FLAGS & MOD_FLAG_PS1_DUB))
+// The field voices (the sound banks of the grunts, bosses, enemies and the
+// familiars) of a KO build made with KO_FIELD_VOICE=1 are the Japanese PS1's
+// for every Dub choice: the
+// retail files hold them (mods/sotn-ultimate/tools/gen_ps1jp_banks.py), so
+// the loaders take the retail banks and not the PSP / JP dub's own ones
+#if defined(MOD_FIELD_JP_VOICE)
+#define MOD_FIELD_PSP_BANKS() 0
+#define MOD_FIELD_JP_BANKS() 0
+#else
+#define MOD_FIELD_PSP_BANKS() MOD_PSP_DUB_ON()
+#define MOD_FIELD_JP_BANKS() MOD_JP_DUB_ON()
+#endif
 // PSP Maria game: her two subweapon slots are stored in the two-slot layout
 // (mods/sotn-ultimate/src/maria_psp/mar2.c: D_80097C40 = front, subWeapon =
 // back). Clear = a new game (SEL rewrites the byte) or a save from before the
@@ -268,7 +280,7 @@
 #define MOD_SYSOPT_ADDR 0x8016DBF0
 #define MOD_SYSOPT_MAGIC 0x80170000
 #define MOD_SYSOPT_MAGIC_STR "0x80170000"
-#define MOD_SYSOPT_BAR_TEXT (MOD_SYSOPT_ADDR + 16)
+#define MOD_SYSOPT_BAR_TEXT (MOD_SYSOPT_ADDR + 20)
 #define MOD_ARC_F_LEN 0x34000 // ARC_F2.BIN: up to 0x80170000
 // The JP dub's tables are SEL rodata (no room in DRA): SEL copies them into
 // g_ModDub.jp every frame its menu runs (src/st/sel/2C048.c Update), which

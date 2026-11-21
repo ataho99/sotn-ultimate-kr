@@ -647,7 +647,7 @@ extern const char* g_MenuStr[110];
 // file at the disc end) and cd.c's CdFile_KoGlyphs chain loads it to
 // KO_GLYPH_BLOCK_ADDR (A-gap). The 66590.c wrapper and the blob renderer
 // (MenuDrawKoHook at KO_BLOB_ADDR) both read the block.
-#define KO_GLYPH_COUNT 951 /* v14f = v14e + 1 Hangul cell F3F6 (gen_ko_glyph_f.py); v14e = v14d + 91 Hangul cells F3CB.. (gen_ko_glyph_e.py; 10 cells kept free below KO_POP_TEXT 0x5640 = 960 cells); v14d = v14c + 40 ASCII cells F373.. (gen_ko_glyph_lat.py d; check_ko_glyph.py fails if a cell was skipped); v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
+#define KO_GLYPH_COUNT 952 /* v14g = v14f + 1 Hangul cell F3F7 (켬, Extra settings; gen_ko_glyph_add.py GLYPH_PREV_TAG=v14f GLYPH_NO_REUSE=1); v14f = v14e + 1 Hangul cell F3F6 (gen_ko_glyph_f.py); v14e = v14d + 91 Hangul cells F3CB.. (gen_ko_glyph_e.py; 10 cells kept free below KO_POP_TEXT 0x5640 = 960 cells); v14d = v14c + 40 ASCII cells F373.. (gen_ko_glyph_lat.py d; check_ko_glyph.py fails if a cell was skipped); v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
 #define KO_GLYPH_CELL_BYTES 23
 #define KO_GLYPH_12COL 1 /* MGalmuri12 "an na" 12-col 23 B direct path + a (kind0) */
 /* cutscene 1-byte promotion table: 112 x u16 (byte 0x80+i -> glyph code), in the

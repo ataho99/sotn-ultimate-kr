@@ -47,13 +47,16 @@ snd = words("ModSysOptSound", 4)
 box = words("ModSysOptBox", 4)
 inp = words("ModSysOptInput", 3)
 go = [w for w in words("ModSysOptGo", 10) if w][:7]
+tick = words("ModSysOptTick", 6)  # lui/addiu $13 = ModSysOptRet; b ModSysOptGo; li $11, 16; jr $31; nop
 want_go = [0x3C080000 | hi, 0x8D09DBF0, 0x010B5021, 0x8D4CDBF0, 0x15280002,
            0x01806821, 0x01A00008]
 ok = (snd[2:] == [0x10000008, 0x340B000C] and
       box[2:] == [0x10000004, 0x340B0004] and inp[2] == 0x340B0008 and
       syms["ModSysOptInput"] + 12 == syms["ModSysOptGo"] and
       syms["ModSysOptBox"] + 16 == syms["ModSysOptInput"] and
-      syms["ModSysOptSound"] + 16 == syms["ModSysOptBox"] and go == want_go)
+      syms["ModSysOptSound"] + 16 == syms["ModSysOptBox"] and go == want_go and
+      syms["ModSysOptTick"] == syms["ModSysOptGo"] + 36 and
+      tick[2:] == [0x1000FFF4, 0x340B0010, 0x03E00008, 0])
 if not ok:
     print("FAIL sysopt: DRA's stubs are not as written (config_us.h)")
     sys.exit(1)
@@ -79,7 +82,7 @@ VERSION=us mipsel-linux-gnu-cpp -Iinclude -Iinclude/psxsdk -Isrc/dra -lang-c \
 : > "$OUT/syms.txt"
 for s in func_800F5E68 MenuDrawStr MenuHandleCursorInput D_8013784C \
     g_Entities MenuSoundConfigDraw g_Menus g_MenuInit g_LbaSdAlkVh \
-    g_LbaSdAlkVb g_CdStep g_IsUsingCd g_LoadFile g_ServantLoaded g_MenuStep     g_LoadOvlIdx g_StageId SsUtAllKeyOff; do
+    g_LbaSdAlkVb g_CdStep g_IsUsingCd g_LoadFile g_ServantLoaded g_MenuStep     g_LoadOvlIdx g_StageId SsUtAllKeyOff     g_Status g_Player g_GameTimer FlushCache func_80109990 HandleDamage; do
     a=$(mipsel-linux-gnu-nm build/us/dra.elf | awk -v s="$s" '$3==s{print $1}')
     if [ -z "$a" ]; then # (main SDK functions: config/symbols.us.txt)
         a=$(awk -v s="$s" '$1==s{sub(/;/,"",$3); sub(/^0x/,"",$3); print $3}' config/symbols.us.txt)
@@ -89,6 +92,35 @@ for s in func_800F5E68 MenuDrawStr MenuHandleCursorInput D_8013784C \
     fi
     echo "$s = 0x$a;" >> "$OUT/syms.txt"
 done
+# the KO popup calls DRA's 8px renderer by absolute address (sysopt.c KO_EQUIP_SEL)
+if grep -q "MOD_SYSOPT_KO" <<<"$SYSOPT_DEFS"; then
+    EQSEL=$(grep -hoE "#define KO_EQUIP_SEL 0x[0-9A-Fa-f]+" src/dra/dra.h | awk '{print $3}')
+    SYSSEL=$(grep -hoE "#define KO_EQUIP_SEL 0x[0-9A-Fa-f]+" mods/sotn-ultimate/src/menu/sysopt.c | awk '{print $3}')
+    if [ -z "$EQSEL" ] || [ "$((EQSEL))" -ne "$((SYSSEL))" ]; then
+        echo "FAIL sysopt: KO_EQUIP_SEL in sysopt.c ($SYSSEL) differs from src/dra/dra.h ($EQSEL)"; exit 1
+    fi
+fi
+# the cheats' absolute symbols: HandleDamage's entry and first two words as
+# built, the two stair-slowdown branches (upper halfword 0x1482) in func_80109990
+python3 - "$OUT/syms.txt" <<'PYEOF2'
+import re, struct, sys
+t = open(sys.argv[1]).read()
+a = int(re.search(r"HandleDamage = (0x[0-9a-fA-F]+);", t).group(1), 16)
+b = int(re.search(r"func_80109990 = (0x[0-9a-fA-F]+);", t).group(1), 16)
+dra = open("build/us/DRA.BIN", "rb").read()
+w0, w1 = struct.unpack_from("<II", dra, a - 0x800A0000)
+sa, sb = b + 0x2D2, b + 0x35E
+if (w0, w1) != (0x27BDFFD8, 0xAFB20018):
+    sys.exit("FAIL sysopt: HandleDamage starts 0x%08X 0x%08X, not the words src/dra/cd.c ModCheatUnpatch puts back" % (w0, w1))
+for x in (sa, sb):
+    h = struct.unpack_from("<H", dra, x - 0x800A0000)[0]
+    if h != 0x1482:
+        sys.exit("FAIL sysopt: the stair branch halfword at 0x%08X is 0x%04X (not 0x1482)" % (x, h))
+lines = ["ModHdEntry = 0x%08X;" % a, "ModHdOrig0 = 0x%08X;" % w0,
+         "ModHdOrig1 = 0x%08X;" % w1, "ModStairsA = 0x%08X;" % sa,
+         "ModStairsB = 0x%08X;" % sb]
+open(sys.argv[1], "a").write(chr(10).join(lines) + chr(10))
+PYEOF2
 cat > "$OUT/sysopt.ld" <<EOF
 SECTIONS {
     . = $ADDR;
@@ -112,9 +144,27 @@ size=$(stat -c %s "$OUT/sysopt.bin")
 if [ "$(od -An -tx4 -N4 "$OUT/sysopt.bin" | tr -d ' ')" != "$(printf %08x $MAGIC)" ]; then
     echo "FAIL sysopt: the header is not first"; exit 1
 fi
-# the info bar text: header + 16 (include/game.h MOD_SYSOPT_BAR_TEXT)
-if [ "$(dd if="$OUT/sysopt.bin" bs=1 skip=16 count=5 2>/dev/null)" != "Boss " ]; then
-    echo "FAIL sysopt: the info bar text is not at the header + 16"; exit 1
+# the info bar text: header + 20 (include/game.h MOD_SYSOPT_BAR_TEXT)
+BARHEX="426f737320"; BARLEN=5 # "Boss "
+if grep -q "MOD_SYSOPT_KO" <<<"$SYSOPT_DEFS"; then BARHEX=""; fi
+if [ -n "$BARHEX" ]; then
+    if [ "$(od -An -tx1 -j20 -N$BARLEN "$OUT/sysopt.bin" | tr -d ' ' | tr -d '
+')" != "$BARHEX" ]; then
+        echo "FAIL sysopt: the info bar text is not at the header + 20"; exit 1
+    fi
+else
+    # KO: the WHOLE bar text (sysopt_ko_str.h KO_XSET_BAR_ASM, C octal escapes) must equal the bytes at header + 20
+    python3 - "$OUT/sysopt.bin" "mods/sotn-ultimate/src/menu/sysopt_ko_str.h" <<'PY' || { echo "FAIL sysopt: the info bar text is not the KO_XSET_BAR_ASM bytes at header + 20"; exit 1; }
+import re, sys
+d = open(sys.argv[1], "rb").read()
+m = re.search(r'#define KO_XSET_BAR_ASM "(.*)"', open(sys.argv[2], encoding="utf-8").read())
+want = bytes(int(x, 8) if x else 0 for x in re.findall(r'\\\\([0-7]{3})', m.group(1)))
+lit = re.sub(r'\\\\[0-7]{3}', "", m.group(1))
+assert m and not lit, ("unparsed text in KO_XSET_BAR_ASM", lit)
+assert len(want) > 8, len(want)
+assert d[20:20 + len(want)] == want, (d[20:20 + len(want)].hex(), want.hex())
+print("sysopt: KO info bar %d bytes match KO_XSET_BAR_ASM" % len(want))
+PY
 fi
 if [ $((OFF + size)) -gt $((LEN)) ]; then
     echo "FAIL sysopt: $size bytes, $((OFF + size - LEN)) past MOD_ARC_F_LEN"
