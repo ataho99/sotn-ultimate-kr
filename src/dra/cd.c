@@ -713,7 +713,9 @@ void SsVabClose(short);
 // 0x80108490). A Richter / Maria game's file has no such code, so the built
 // words go back when it is loaded (build_sysopt.sh checks them against the
 // built DRA).
-void FlushCache(void);
+// FlushCache is the main exe's kernel stub (SLUS 0x800192CC: li $t2,0xA0 / jr $t2 / li $t1,0x44); the DRA link has no
+// symbol for it, so it is called by address
+#define MOD_FLUSH_CACHE() ((void (*)(void))0x800192CC)()
 void func_80109990(void);
 static void ModCheatUnpatch(void) {
     u32* hd = (u32*)HandleDamage;
@@ -726,7 +728,7 @@ static void ModCheatUnpatch(void) {
         hd[1] = 0xAFB20018;
         *s1 = 0x1482;
         *s2 = 0x1482;
-        FlushCache();
+        MOD_FLUSH_CACHE();
     }
 }
 #endif
