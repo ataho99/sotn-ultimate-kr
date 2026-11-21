@@ -93,8 +93,9 @@ __asm__(".text\n"
 #define POP_H 64
 #define VALUE_DX 112
 
-static const char g_SysOptName[4][8] = {
-    _S("PS1"), _S("Saturn"), _S("PSP"), _S("JP")};
+static const char g_SysOptName[5][8] = {
+    _S("PS1"), _S("Saturn"), _S("PSP"), _S("JP"),
+    _S("STN")}; // 0.9.4: the Dub row's "Saturn" overflows its box -> "STN" (index 4)
 static const char* const g_SysOptLabel[ROWS] = {
     _S("Boss Richter"), _S("Boss Maria"), _S("Balance"), _S("Dub")};
 #define SYSOPT_NAME() _S("Extra settings")
@@ -114,7 +115,7 @@ static const SysOptRow g_SysOptRows[ROWS] = {
     {MOD_FLAG_PS1_DUB | MOD_FLAG_JP_DUB,
      3,
      {0, MOD_FLAG_JP_DUB, MOD_FLAG_PS1_DUB},
-     {2, 1, 0}},
+     {2, 4, 0}}, // PSP / STN (was Saturn) / PS1
 };
 #define DUB 3
 

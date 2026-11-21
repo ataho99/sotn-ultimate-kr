@@ -458,6 +458,9 @@ NAME_SPACE = 8
 
 def stage_name_pixels():
     """the 128x128 4bpp name image, as packed bytes (low nibble first)"""
+    ko = ga.ko_name_pixels("PRS")
+    if ko is not None:
+        return ko
     strips = {k: ga.name_strip(p) for k, p in NAME_SOURCES.items()}
     masks = {k: ga.glyph_masks(s) for k, s in strips.items()}
     placed, cursor = [], 0

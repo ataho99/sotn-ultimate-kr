@@ -127,11 +127,11 @@ static const char* const g_ModCharselBalTitle MOD_RO = _S("Balance");
 static s32 g_ModCharselDub;
 static const char* const g_ModCharselDubTitle MOD_RO = _S("Dub");
 static const char* const g_ModCharselDubOpts[MOD_CHARSEL_DUBS] MOD_RO = {
-    _S("PSP"), _S("Saturn"), _S("PS1")};
+    _S("PSP"), _S("STN"), _S("PS1")}; // 0.9.4: "Saturn" overflowed the dub box -> "STN"
 // Maria's panel: PSP / JP only (neither of her versions was ever dubbed for
 // the PS1); a PS1 choice left by another panel shows and starts as PSP
 static const char* const g_ModCharselMarDubOpts[2] MOD_RO = {
-    _S("PSP"), _S("Saturn")};
+    _S("PSP"), _S("STN")}; // 0.9.4: "Saturn" -> "STN" (dub box)
 #define MOD_CHARSEL_NO_PS1_DUB(id) (g_ModCharsel[id].player == PLAYER_MARIA)
 
 #if defined(VERSION_US)

@@ -1063,8 +1063,28 @@ def glyph_masks(strip):
     return out
 
 
+def ko_name_pixels(key):
+    """0.9.4 KO: the Korean area-name card ko_data/cards/<key>_ko.png (128x128 indexed, the same 2-half layout as the
+    synthesised English one) packed 4bpp low nibble first; None when MOD_KO is off or the PNG is missing (English)."""
+    if not os.environ.get("MOD_KO"):
+        return None
+    try:
+        from ko_paths import KO_WK
+        from PIL import Image
+    except ImportError:
+        return None
+    path = os.path.join(KO_WK, "cards", "%s_ko.png" % key)
+    if not os.path.exists(path):
+        return None
+    px = Image.open(path).convert("P").load()
+    return bytes(px[x, y] | px[x + 1, y] << 4 for y in range(128) for x in range(0, 128, 2))
+
+
 def stage_name_pixels():
     """the 128x128 4bpp name image, as packed bytes (low nibble first)"""
+    ko = ko_name_pixels("GDN")
+    if ko is not None:
+        return ko
     strips = {k: name_strip(p) for k, p in STAGE_NAME_SOURCES.items()}
     masks = {k: glyph_masks(s) for k, s in strips.items()}
     new = [[0] * 232 for _ in range(40)]
