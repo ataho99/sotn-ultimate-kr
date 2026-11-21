@@ -19,7 +19,7 @@ static const u8* const actor_names_ko[] = {ko_name_0, ko_name_1};
 static const u8 actor_names_ko_len[] = {6, 8};
 #endif
 
-#define CUTSCENE_UNK1_NEXT_X 0
+#define CUTSCENE_UNK1_NEXT_X 2
 #include "../../st/cutscene_unk1.h"
 
 #include "../../st/set_cutscene_script.h"
