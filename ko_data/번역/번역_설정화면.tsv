@@ -20,7 +20,7 @@ cfg:str34	메뉴(8px)			모노럴	사운드 화면
 cfg:str35	메뉴(8px)			윈도우 컬러	설정 화면 4행
 cfg:str36	메뉴(8px)			타임 어택	클리어 후 6행
 cfg:desc1	설명줄(12px)			버튼 할당 변경	아래 설명줄
-cfg:desc2	설명줄(12px)			리버시블 망토의 겉/안 선택	아래 설명줄
+cfg:desc2	설명줄(12px)			리버시블 망토의 겉／안 선택	아래 설명줄
 cfg:desc3	설명줄(12px)			오더메이드 컬러 설정	아래 설명줄
 cfg:desc4	설명줄(12px)			윈도우 컬러 설정	아래 설명줄
 cfg:desc5	설명줄(12px)			사운드 설정	아래 설명줄
@@ -47,4 +47,4 @@ xset:ps1	메뉴(8px)	PS1	－	PS1	Extra settings 값(더빙)
 xset:psp	메뉴(8px)	PSP	－	PSP	Extra settings 값(더빙)
 xset:stn	메뉴(8px)	STN	－	STN	Extra settings 값(더빙, Dub 칸만 STN)
 xset:sat	메뉴(8px)	Saturn	－	새턴	Extra settings 값(더빙 외 행)
-xset:bar	설명줄(12px)	Boss versions, game balance and voices	－	보스 버전/밸런스/음성	Extra settings 안내줄(원래 영문 줄의 뜻만, 11-21 18:58; 문구 후보: 보스 버전과 밸런스 음성)
+xset:bar	설명줄(12px)	Boss versions, game balance and voices	－	보스 버전／밸런스／음성	Extra settings 안내줄(원래 영문 줄의 뜻만, 11-21 18:58; 문구 후보: 보스 버전과 밸런스 음성)

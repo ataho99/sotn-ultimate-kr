@@ -46,6 +46,24 @@ def esc(b):
     return "".join("\\x%02X" % x for x in b)
 
 
+def info_bytes(ch, key, mp):
+    """one char of an info-bar string (12px, ShowText = func_800F99B8): a-z / A-Z / space are single bytes, every other
+    byte is read together with the NEXT byte as a Shift-JIS pair -- a raw ASCII digit / punctuation byte would swallow the
+    next byte and shift the rest of the line. Those are written full-width (cp932 symbols, lead 0x81..0x84, which the
+    retail font has: the Japanese text uses them); a raw ASCII non-letter fails the build."""
+    o = ord(ch)
+    if ch == " " or (o < 128 and ch.isalpha()):
+        return bytes([o])
+    if o < 128:
+        raise AssertionError(("ASCII non-letter in an info-bar row: write the full-width form", ch, key))
+    if is_h(ch):
+        assert ch in mp, ("no glyph code", ch, key)
+        return bytes([mp[ch] >> 8, mp[ch] & 0xFF])
+    sj = ch.encode("cp932")
+    assert len(sj) == 2 and 0x81 <= sj[0] <= 0x84, ("not a full-width symbol the retail font has", ch, key)
+    return sj
+
+
 def main():
     mp = rd(P4 + FP.P["map_name"])
     pb = open(P4 + "ko_8p_block_247.bin", "rb").read()
@@ -75,11 +93,7 @@ def main():
             n8 += 1
         else:
             for ch in ko:
-                if ord(ch) < 128:
-                    b.append(ord(ch))
-                else:
-                    assert is_h(ch) and ch in mp, ("no glyph code", ch, key)
-                    b += bytes([mp[ch] >> 8, mp[ch] & 0xFF])
+                b += info_bytes(ch, key, mp)
             out.append('static const char ko_%s[] = "%s";' % (key, esc(b)))
             nd += 1
     # the Extra settings popup strings (xset:), same encodings, a header of its own
@@ -107,11 +121,7 @@ def main():
             x8 += 1
         else:
             for ch in ko:
-                if ord(ch) < 128:
-                    b.append(ord(ch))
-                else:
-                    assert is_h(ch) and ch in mp, ("no glyph code", ch, key)
-                    b += bytes([mp[ch] >> 8, mp[ch] & 0xFF])
+                b += info_bytes(ch, key, mp)
             xout.append('static const char ko_xset_%s[] = "%s";' % (key, esc(b)))
             xd += 1
             xout.append('#define KO_XSET_%s_ASM "%s"' % (key.upper(), "".join(chr(92) * 2 + "%03o" % x for x in b)))  # gas octal escapes, for the ARC_F2 header

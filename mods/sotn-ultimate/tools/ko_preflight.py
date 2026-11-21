@@ -520,6 +520,12 @@ def c1_cfg():
                         KROM.setdefault("ShowText raw (cfg info bar)", []).append(key)
                     continue
                 if not is_h(ch):
+                    try:
+                        sj = ch.encode("cp932")
+                    except UnicodeEncodeError:
+                        sj = b""
+                    if len(sj) == 2 and 0x81 <= sj[0] <= 0x84:
+                        continue  # a full-width symbol gen_ko_cfg writes as its SJIS pair (the retail font has it)
                     _agg(FULL if is_fw(ch) else HALF, (ch, "ShowText (cfg info bar: Hangul only)"), key)
                 elif ch not in MAP:
                     miss(ch, key, "ShowText (cfg info bar, profile map)")
@@ -597,6 +603,28 @@ def c1_handcoded():
 @guarded("3", "LIB hand-coded strings")
 def c3_lib():
     esc = re.compile(r"\\x[0-9A-Fa-f]{2}")
+    # the Extra settings popup info bar (xset: rows that are not 8px labels) goes through the same ShowText
+    for r in read_rows(GC.TSV)[1:]:
+        if len(r) < 5 or not r[0].startswith("xset:") or r[1].startswith("메뉴"):
+            continue
+        seen("3")
+        for ch in r[4]:
+            o = ord(ch)
+            if ch == " " or (o < 128 and ch.isalpha()):
+                continue
+            if o < 128:
+                _agg(HALF, (ch, "ShowText raw (xset info bar: gen_ko_cfg refuses ASCII non-letters)"), r[0])
+                continue
+            if is_h(ch):
+                if ch not in MAP:
+                    miss(ch, r[0], "ShowText (xset info bar, profile map)")
+                continue
+            try:
+                sj = ch.encode("cp932")
+            except UnicodeEncodeError:
+                sj = b""
+            if not (len(sj) == 2 and 0x81 <= sj[0] <= 0x84):
+                _agg(FULL if is_fw(ch) else HALF, (ch, "ShowText (xset info bar: Hangul + full-width symbols)"), r[0])
     p = os.path.join(REPO, "src/st/lib/e_shop.c")
     if os.path.exists(p):
         t = io.open(p, encoding="utf-8").read()
