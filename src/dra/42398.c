@@ -267,7 +267,7 @@ void DebugCaptureVideo(void) {
  * signed; the hand-written relic bytes this base was balanced with are its baseline) */
 #include "gen/us/ko_names_pad.h"
 #if defined(MOD_FIELD_JP_VOICE)
-#define MOD_DRA_PAD_KO_BASE 488 /* 0.9.4 field voices on: 380 + 108 (object .text: cd.c -124 +8 ModCheatUnpatch calls FlushCache by address, game_handlers.c +8) - measured per file, the link decides (check_dra_layout: 094_04 asked for 488) */
+#define MOD_DRA_PAD_KO_BASE 436 /* 0.9.4 field voices on: 380 + 108 (object .text: cd.c -124 +8 ModCheatUnpatch calls FlushCache by address, game_handlers.c +8) - measured per file, the link decides (check_dra_layout: 094_04 asked for 488) */
 #else
 #define MOD_DRA_PAD_KO_BASE 200 /* 0.9.4 field voices off: 380 - 180 (object .text: cd.c +172 ModCheatUnpatch incl. the by-address FlushCache call, game_handlers.c +8 the cheat tick call) - inferred from the voices-on measurement (same +8 in cd.c), not measured: the link decides (check_dra_layout) */
 #endif
