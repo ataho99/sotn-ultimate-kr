@@ -25,11 +25,11 @@ void KO_8pDrawIdx(const char* idx, const s32* spc, s32 x, s32 y, MenuContext* ct
 // tail link references it.
 void KO_8pLoad(void) {
 }
-// Block present check (pinned count 385 = 371 (283 + the equipment-name chars of the JP-name pass; gen_ko_8p.py) + the 14 cells of the Extra settings popup; gen_ko_8p_ext.py): boot chain fills this before any
+// Block present check (pinned count 390 = 371 (283 + the equipment-name chars of the JP-name pass; gen_ko_8p.py) + the 14 cells of the Extra settings popup + 5 cells (U R O F + one Hangul: the Extra settings row, SATURN, ON/OFF); gen_ko_8p_ext.py): boot chain fills this before any
 // menu opens. The draw gate uploads only when this passes.
 s32 KO_8pValid(void) {
     u16 n = ((u16*)KO_8P_BASE)[0];
-    if (n == 385) {
+    if (n == 390) {
         return 1;
     }
     return 0;
@@ -128,7 +128,7 @@ s32 KO_EqParseName(const char* str, s32* idx, s32 cap) {
         if (b >= 0x80) {
             u8 lo = *str++;
             u16 code = ((u16)b << 8) | lo;
-            if (code < 0xF040 || code > 0xF375) {
+            if (code < 0xF040) { /* no upper bound: KO_8pFind returns -1 for a code the plate lacks (0.9.4: the Hangul cell F3F7 was blanked by the old > 0xF375) */
                 idx[n] = -1;
                 n++;
                 continue;

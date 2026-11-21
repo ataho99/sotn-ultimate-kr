@@ -1918,21 +1918,28 @@ void MenuSystemDraw(MenuContext* ctx) {
 
 #if defined(MOD_KO)
     {
-        const char* kn[6];
-        s32 kx[6];
-        s32 ky[6];
+        const char* kn[7];
+        s32 kx[7];
+        s32 ky[7];
         s32 k;
+        s32 kc = 6;
         kn[0] = ko_str16;
         kn[1] = g_IsCloakLiningUnlocked ? ko_str17 : ko_str19;
         kn[2] = g_IsCloakColorUnlocked ? ko_str18 : ko_str19;
         kn[3] = ko_str35;
         kn[4] = ko_str32;
         kn[5] = g_GameClearFlag ? ko_str36 : ko_str19;
-        for (k = 0; k < 6; k++) {
+#if defined(MOD_ULTIMATE_MENU)
+        /* 0.9.4: the mod's 7th row (Extra settings, Korean label ko_str38) joins the same 8px draw call: a second
+         * KO_EqOvDraw call would re-upload its own cell union over this one's (one signature, one upload) */
+        kn[6] = ko_str38;
+        kc = 7;
+#endif
+        for (k = 0; k < kc; k++) {
             kx[k] = 0x20;
             ky[k] = y + k * 0x10;
         }
-        KO_EqOvDraw(kn, kx, ky, 6, ctx);
+        KO_EqOvDraw(kn, kx, ky, kc, ctx);
     }
 #else
     MenuDrawStr(g_MenuStr[16], 0x20, y, ctx);

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: AGPL-3.0-or-later
-# gen_ko_8p_ext.py -- 8px plate (KO_8P block) v246 (371 cells) -> v247: append the cells the Extra settings popup
+# gen_ko_8p_ext.py -- 8px plate (KO_8P block) v247 (385 cells) -> v248 (0.9.4 / 094_08: 추 U R O F; the v246->v247 step
+# 371 -> 385 was this script's earlier form, in git history). Appends the cells the Extra settings popup
 # needs (rows "xset:" of 번역_설정화면.tsv, kind 메뉴(8px)): Hangul that the plate lacks and ASCII (code = the ASCII
 # value) that it lacks. Existing cells and codes stay byte-identical (the new ones are appended behind them).
 #
@@ -23,10 +24,10 @@ from ko_paths import KO_WK, KO_FONTS  # noqa: E402
 import ko_font_profile as FP  # noqa: E402
 
 P4 = KO_WK + "/P4시험/"
-OLD = P4 + "ko_8p_block_246.bin"
-OLD_MAP = P4 + "ko_8p_map_246.tsv"
-OUT = P4 + "ko_8p_block_247.bin"
-OUTMAP = P4 + "ko_8p_map_247.tsv"
+OLD = P4 + "ko_8p_block_247.bin"
+OLD_MAP = P4 + "ko_8p_map_247.tsv"
+OUT = P4 + "ko_8p_block_248.bin"
+OUTMAP = P4 + "ko_8p_map_248.tsv"
 V11B = P4 + "ko_glyph_block_mgalmuri8_v11.bin"
 V11M = P4 + "ko_glyph_map_mgalmuri8_v11.tsv"
 GMAP = P4 + FP.P["map_name"]
@@ -52,7 +53,7 @@ def rd(path):
 def main():
     old = open(OLD, "rb").read()
     n = struct.unpack("<H", old[:2])[0]
-    assert n == 371 and len(old) == 2 + n * 10, (n, len(old))
+    assert n == 385 and len(old) == 2 + n * 10, (n, len(old))
     codes = list(struct.unpack("<%dH" % n, old[2:2 + n * 2]))
     cells = [old[2 + n * 2 + i * 8:2 + n * 2 + i * 8 + 8] for i in range(n)]
     pmap = rd(OLD_MAP)
@@ -130,7 +131,7 @@ def main():
     need_h, need_a = [], []
     for ln in io.open(TSV, encoding="utf-8").read().split(chr(10))[1:]:
         q = ln.split(chr(9))
-        if len(q) > 4 and q[0].startswith("xset:") and q[1].startswith("메뉴"):
+        if len(q) > 4 and (q[0].startswith("xset:") or q[0].startswith("cfg:")) and q[1].startswith("메뉴"):
             for ch in q[4]:
                 if is_h(ch) and gmap.get(ch) is not None and gmap[ch] not in codes and ch not in need_h:
                     need_h.append(ch)
@@ -168,7 +169,7 @@ def main():
         print("added %s" % ch)
         print("\n".join("".join("#" if (c[r] >> (7 - x)) & 1 else "." for x in range(8)) for r in range(8)))
     print("block %d cells, %d B (%d sectors), sha256 %s" % (len(allcodes), len(blk), (4096 + 2047) // 2048, hashlib.sha256(blk).hexdigest()))
-    print("NEXT: eq_core.c KO_8pValid n == %d; build_ko_trial.sh ko_8p_block_247.bin" % len(allcodes))
+    print("NEXT: eq_core.c KO_8pValid n == %d; build_ko_trial.sh ko_8p_block_248.bin" % len(allcodes))
 
 
 if __name__ == "__main__":

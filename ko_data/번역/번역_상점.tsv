@@ -1,0 +1,15 @@
+키	분류	영문	한글	비고
+shop:label0	상점 라벨(이름 형식)	Number	소지 수	e_shop.c D_us_80181674[0]
+shop:relic0	상점 이름(이름 형식)	Jewel of Open	언록 주얼	D_us_801816AC[0] — 용어는 번역표 g_RelicDefs:16:name 과 같아야 함(생성기가 대조)
+shop:doc0	상점 이름(이름 형식)	Castle Map	성 지도	D_us_801816B0[0]
+shop:doc1	상점 이름(이름 형식)	Magic Scroll 1	마법 두루마리 1	D_us_801816B0[1]
+shop:doc2	상점 이름(이름 형식)	Magic Scroll 2	마법 두루마리 2	D_us_801816B0[2]
+shop:doc3	상점 이름(이름 형식)	Magic Scroll 3	마법 두루마리 3	D_us_801816B0[3]
+shop:doc4	상점 이름(이름 형식)	Magic Scroll 4	마법 두루마리 4	D_us_801816B0[4]
+shop:doc5	상점 이름(이름 형식)	Magic Scroll 5	마법 두루마리 5	D_us_801816B0[5]
+shop:desc0	상점 설명(설명 형식)	Basic map of Dracula's castle	드라큘라 성의 기본 지도	D_us_8018168C[0]
+shop:desc1	상점 설명(설명 형식)	Contains "Dark Metamorphosis"	다크 메타몰포제 수록	D_us_8018168C[1] (마법 이름 = 번역표 g_SpellDefs:0)
+shop:desc2	상점 설명(설명 형식)	Contains "Summon Spirit"	서몬 스피릿 수록	D_us_8018168C[2] (g_SpellDefs:1)
+shop:desc3	상점 설명(설명 형식)	Contains "Hellfire"	헬파이어 수록	D_us_8018168C[3] (g_SpellDefs:2)
+shop:desc4	상점 설명(설명 형식)	Contains "Tetra Spirits"	테트라 스피릿 수록	D_us_8018168C[4] (g_SpellDefs:3)
+shop:desc5	상점 설명(설명 형식)	Contains "Soul Steal"	소울 스틸 수록	D_us_8018168C[5] (g_SpellDefs:5)

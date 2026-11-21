@@ -17,8 +17,8 @@ KS_FMTERR1			초기화 오류
 KS_SLOTSEL			슬롯을 선택하세요
 KS_SLOT1			슬롯 1
 KS_SLOT2			슬롯 2
-KS_WISHFMT			초기화할까요?
-KS_OVERWR			덮어쓸까요?
-KS_WISHSAVE			저장할까요?
-KS_YES			예
+KS_WISHFMT			         초기화할까요?
+KS_OVERWR			          덮어쓸까요?
+KS_WISHSAVE			          저장할까요?
+KS_YES			  예
 KS_NO			아니오

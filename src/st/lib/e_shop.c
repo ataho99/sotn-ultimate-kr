@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "lib.h"
+#if defined(MOD_KO)
+#include "gen/ko_shop_str.h" /* gen_ko_shop.py: the shop's label words, document names and descriptions */
+#endif
 /* the LIB overlay link has no DrawSync symbol (undefined_syms_auto only lists what the retail asm calls);
  * main is at a fixed address, call it directly (same address as symbols.us.txt DrawSync). */
 #define DrawSync(m) (((s32 (*)(s32))0x8001290C)(m))
@@ -3420,7 +3423,24 @@ static char D_us_80181668[] = {
     // clang-format on
 };
 static char* D_us_80181674[] = {
+#if defined(MOD_KO)
+    KO_SHOP_LABEL0, _S("Equipped"), _S("Not equipped"), _S("うれるこすう")}; /* user decision 06:42: Equipped / Not equipped stay English */
+#else
     _S("Number"), _S("Equipped"), _S("Not equipped"), _S("うれるこすう")};
+#endif
+#endif
+
+/* label x positions: the English labels are right-aligned (Number 170 + 48 ends at 218, the digits follow at D_us_80181684).
+ * The Korean Number label is shorter (12 px per Hangul, space 4: 40 px), so KO starts it at 178 to keep the right edge.
+ * Equipped / Not equipped stay English in KO (user decision), so their x stay the retail values. */
+#if defined(MOD_KO)
+#define SHOP_LBL_NUM_X 0xB2
+#define SHOP_LBL_NOTEQ_X 0x9A
+#define SHOP_LBL_EQ_X 0xB6
+#else
+#define SHOP_LBL_NUM_X 0xAA
+#define SHOP_LBL_NOTEQ_X 0x9A
+#define SHOP_LBL_EQ_X 0xB6
 #endif
 
 static u16 D_us_80181684[] = {0xE4, 0xB0, 0xEC, 0xB0};
@@ -3466,7 +3486,7 @@ Primitive* func_us_801B4194(Primitive* prim) {
     s32 i;
     u16* ptr;
 
-    prim = func_us_801B1064(prim, 0xAA, 0xB0, D_us_80181674[0], 0x196);
+    prim = func_us_801B1064(prim, SHOP_LBL_NUM_X, 0xB0, D_us_80181674[0], 0x196);
     prim2 = prim;
     ptr = D_us_80181684;
     for (i = 0; i < 2; i++) {
@@ -3567,10 +3587,10 @@ void func_us_801B420C(Primitive* prim, Entity* arg1) {
         } else {
             if (D_us_801D425C[index] != 0) {
                 prim =
-                    func_us_801B1064(prim, 0x9A, 0xB0, D_us_80181674[2], 0x196);
+                    func_us_801B1064(prim, SHOP_LBL_NOTEQ_X, 0xB0, D_us_80181674[2], 0x196);
             } else {
                 prim =
-                    func_us_801B1064(prim, 0xB6, 0xB0, D_us_80181674[1], 0x196);
+                    func_us_801B1064(prim, SHOP_LBL_EQ_X, 0xB0, D_us_80181674[1], 0x196);
             }
         }
     }
@@ -3956,9 +3976,14 @@ void func_us_801B4830(Entity* self) {
 extern const char** D_us_8018168C;
 #else
 static const char* D_us_8018168C[] = {
+#if defined(MOD_KO)
+    KO_SHOP_DESC0, KO_SHOP_DESC1, KO_SHOP_DESC2,
+    KO_SHOP_DESC3, KO_SHOP_DESC4, KO_SHOP_DESC5};
+#else
     "Basic map of Dracula’s castle", "Contains ””Dark Metamorphosis””",
     "Contains ””Summon Spirit””",    "Contains ””Hellfire””",
     "Contains ””Tetra Spirits””",    "Contains ””Soul Steal””"};
+#endif
 #endif
 
 void func_us_801B4ED4(s16 index, u16 arg1) {
@@ -4241,7 +4266,10 @@ static char D_us_801816A4[] = {
     CH('S'), CH('O'), CH('L'), CH('D'), CH(' '), CH('O'), CH('U'), CH('T')};
 static const char* D_us_801816AC[] = {_S("Jewel of Open")};
 static const char* D_us_801816B0[] = {
-#if defined(MOD_SATURN)
+#if defined(MOD_KO)
+    KO_SHOP_DOC0, KO_SHOP_DOC1, KO_SHOP_DOC2,
+    KO_SHOP_DOC3, KO_SHOP_DOC4, KO_SHOP_DOC5};
+#elif defined(MOD_SATURN)
     // the PSP port's capitals
     _S("Castle Map"),     _S("Magic Scroll 1"), _S("Magic Scroll 2"),
     _S("Magic Scroll 3"), _S("Magic Scroll 4"), _S("Magic Scroll 5")};
@@ -4372,7 +4400,11 @@ void func_us_801B56E4(Entity* self) {
                 name = g_api.accessoryDefs[itemId].name;
                 break;
             case INVENTORY_RELIC:
+#if defined(MOD_KO)
+                name = KO_SHOP_RELIC0; /* Jewel of Open: same term as the relic menu (gen_ko_shop.py asserts it); relicDefs names are ShowText-format (space 20, NUL end) and cannot be drawn by func_us_801B1064 */
+#else
                 name = D_us_801816AC[itemId];
+#endif
                 break;
             case INVENTORY_DOCUMENT:
                 name = D_us_801816B0[itemId];

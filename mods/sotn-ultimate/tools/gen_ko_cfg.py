@@ -66,7 +66,7 @@ def info_bytes(ch, key, mp):
 
 def main():
     mp = rd(P4 + FP.P["map_name"])
-    pb = open(P4 + "ko_8p_block_247.bin", "rb").read()
+    pb = open(P4 + "ko_8p_block_248.bin", "rb").read()
     pn = struct.unpack("<H", pb[:2])[0]
     plate = set(struct.unpack("<%dH" % pn, pb[2:2 + pn * 2]))
     rows = [l.rstrip(chr(10)).split(chr(9)) for l in io.open(TSV, encoding="utf-8")][1:]

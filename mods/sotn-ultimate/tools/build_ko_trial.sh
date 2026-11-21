@@ -191,6 +191,7 @@ python3 mods/sotn-ultimate/tools/gen_menu_text.py
 python3 mods/sotn-ultimate/tools/gen_ko_equip.py
 python3 mods/sotn-ultimate/tools/gen_ko_cfg.py # System (config) screen strings -> src/dra/gen/us/ko_cfg_str.h
 python3 mods/sotn-ultimate/tools/gen_ko_save.py # save-room texts -> src/dra/gen/us/ko_save_str.h
+python3 mods/sotn-ultimate/tools/gen_ko_shop.py # Librarian shop label words / document names / descriptions -> src/st/lib/gen/ko_shop_str.h (0.9.4)
 python3 mods/sotn-ultimate/tools/gen_ko_fieldmsg.py # stage message boxes (mist / sealed door / NO4 bridge) -> src/st/ko_field_msg.h
 # the Saturn Librarian enemy list: src/st/lib/mod_bestiary.h
 python3 mods/sotn-ultimate/tools/gen_saturn_bestiary.py
@@ -564,12 +565,12 @@ PYEOF
 # KO_8P.BIN (equipment-name 8px block, 2 sectors) spliced
 # into the 17d3 zero tail at LBA 0x492CA (after the 58-sector EXE at
 # 0x49290-0x492C9; readback-asserted, emu-verified -- not manifest-packed).
-# Source: P4시험/ko_8p_block_247.bin (gen_ko_8p.py v246 = 371 cells, + gen_ko_8p_ext.py: 385 cells = 371 + the Extra settings popup's 14 cells; 371 cells = the 283-cell block 243 [260H + 8 name-ASCII + 15
+# Source: P4시험/ko_8p_block_248.bin (gen_ko_8p.py v246 = 371 cells, + gen_ko_8p_ext.py: v247 385 cells (+ the Extra settings popup 14) -> v248 390 cells (+ 추 U R O F: 추가 설정 row, SATURN, ON/OFF); 371 cells = the 283-cell block 243 [260H + 8 name-ASCII + 15
 # desc-ASCII reserve; Mgalmuri8 @8px, 1:1, sha-pinned).
 python3 - <<'PYEOF'
 import hashlib, io
-b = io.open(__import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_247.bin', 'rb').read()
-assert hashlib.sha256(b).hexdigest() == 'f85415c182b951f50d3ffbd9e3b2f5e023a9f76b405889e57c2c7844070f0c24', hashlib.sha256(b).hexdigest()
+b = io.open(__import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_248.bin', 'rb').read()
+assert hashlib.sha256(b).hexdigest() == '6869e1b9d54a409e204ed50dfb4f707bdd79001f859bfd45973cded735b01e4b', hashlib.sha256(b).hexdigest()
 assert len(b) <= 4096, len(b)
 open('build/us/KO_8P.BIN', 'wb').write(bytes(b) + bytes(4096 - len(b)))
 print('KO_8P.BIN: block %d -> 4096 (2 sectors)' % len(b))
@@ -897,9 +898,9 @@ img = img + tail
 KO_BUNDLE = 'src/dra/gen/us/ko_jp_bundle.bin'
 bundle = open(KO_BUNDLE, 'rb').read()
 assert 1 <= len(bundle) <= 2048, len(bundle)
-KO_8PBLK = __import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_247.bin'
+KO_8PBLK = __import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_248.bin'
 blk8 = open(KO_8PBLK, 'rb').read()
-assert hashlib.sha256(blk8).hexdigest() == 'f85415c182b951f50d3ffbd9e3b2f5e023a9f76b405889e57c2c7844070f0c24', hashlib.sha256(blk8).hexdigest()
+assert hashlib.sha256(blk8).hexdigest() == '6869e1b9d54a409e204ed50dfb4f707bdd79001f859bfd45973cded735b01e4b', hashlib.sha256(blk8).hexdigest()
 assert len(blk8) <= 4096, len(blk8)
 img = img + bytes(bundle) + bytes(2048 - len(bundle)) + bytes(blk8) + bytes(4096 - len(blk8))
 assert len(img) == arc_size, (len(img), arc_size)

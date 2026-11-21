@@ -23,8 +23,9 @@
 # (merged, as gen_ko_splice.py / gen_card_layouts.py) so check_stage_data.py
 # accepts the in-place edit of the .data section.
 #
-# Not here: Abandoned Mine (CHI, name still open), the mod's own Garden /
-# Prison cards (synthesised by gdn_assets.py / prs_assets.py), Castle Entrance.
+# Not here: the mod's own Garden / Prison cards (synthesised by gdn_assets.py / prs_assets.py),
+# Castle Entrance (NO3: no card slot found in the overlay by the 0.9.4 scan). Outer Wall (NO1) is the 16th row
+# (0.9.4 / 094_08): its English pixels are decoded from the retail overlay (no assets/ PNG).
 import json
 import os
 import re
@@ -57,6 +58,8 @@ CARDS_TBL = [
     ("CHI", "chi", "bn_gfx_stage_name_en", 0x9B38, "CHI_ko.png"),  # Abandoned Mine
     ("NZ1", "nz1", "D_80186530", 0x6530, "NZ1_ko.png"),            # Clock Tower
     ("ST0", "st0", "stage_title_st0_us", 0x1A40C, "ST0b_ko.png"),  # Final Stage "Bloodlines"
+    ("NO1E", "no1", "D_us_80194E14", 0x14E14, "NO1_elev_ko.png"),   # Outer Wall elevator message picture "Elevator activated." (0.9.4 / 094_08; same decode-from-overlay path)
+    ("NO1", "no1", "D_us_8019519C", 0x1519C, "NO1_ko.png"),        # Outer Wall (0.9.4 / 094_08: no assets/ PNG -> English pixels decoded from the retail overlay)
 ]
 
 MJS = """import fs from "node:fs";
@@ -72,6 +75,59 @@ for (const m of man) {
 }
 fs.writeFileSync(out, JSON.stringify(res));
 """
+
+
+def decode_card(retail_bin, off):
+    """DecompressData (src/dra/4AEA4.c) port: the 128x128 4bpp pixel indices of the cmpgfx stream at off.
+    Used for an English card that has no assets/ PNG (NO1: the splat config lists no asset there); the
+    positive control below (English compress == overlay bytes) then checks this decoder + the compressor."""
+    d = open(retail_bin, "rb").read()
+    buf = list(d[off:off + 8])
+    p, half, out = off + 8, False, []
+
+    def rn():
+        nonlocal p, half
+        if not half:
+            half = True
+            return d[p] >> 4
+        half = False
+        v = d[p] & 15
+        p += 1
+        return v
+
+    while True:
+        op = rn()
+        if op == 0:
+            c, c2 = rn(), rn()
+            out += [0] * (c * 16 + c2 + 0x13)
+        elif op == 1:
+            out.append(rn())
+        elif op == 2:
+            v = rn()
+            out += [v, v]
+        elif op == 3:
+            out += [rn(), rn()]
+        elif op == 4:
+            out += [rn(), rn(), rn()]
+        elif op == 5:
+            c, c2 = rn(), rn()
+            out += [c] * (c2 + 3)
+        elif op == 6:
+            out += [0] * (rn() + 3)
+        elif 7 <= op <= 14:
+            ch = buf[op - 7]
+            t = ch & 0xF0
+            if t == 0x20:
+                out += [ch & 15] * 2
+            elif t == 0x10:
+                out += [ch & 15]
+            elif t == 0x60:
+                out += [0] * ((ch & 15) + 3)
+        else:
+            break
+        assert len(out) <= 0x4100, "decode runaway"
+    assert len(out) == 0x4000, ("not a 128x128 4bpp card", len(out))
+    return bytes(out)
 
 
 def indices(path):
@@ -90,7 +146,11 @@ def main():
         for tag, path in (("en", os.path.join(REPO, "assets", "st", stage, asset + ".png")),
                           ("ko", os.path.join(CARDS, ko_png))):
             idx = os.path.join(WORK, "%s_%s.idx" % (key, tag))
-            open(idx, "wb").write(indices(path))
+            if tag == "en" and not os.path.exists(path):
+                # no extracted PNG for this asset: decode the retail overlay (disks/us/ST/<S>/<S>.BIN)
+                open(idx, "wb").write(decode_card(os.path.join(REPO, "disks", "us", "ST", stage.upper(), stage.upper() + ".BIN"), off))
+            else:
+                open(idx, "wb").write(indices(path))
             man.append({"name": key + "_" + tag, "idx": idx})
     mjs = os.path.join(WORK, "cmp_cards.mjs")
     open(mjs, "w").write(MJS)

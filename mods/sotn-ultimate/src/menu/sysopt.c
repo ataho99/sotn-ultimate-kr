@@ -527,7 +527,9 @@ void ModSysOptBox(MenuContext* ctx, s32 cursorIdx, s32 x, s32 y, s32 w, s32 h,
         SysOptBanks();
     }
     func_800F5E68(ctx, cursorIdx, x, y, w, h, yGap, bColorMode);
+#if !defined(MOD_SYSOPT_KO) /* KO: the row's name is the 7th entry of menu.c's 8px KO draw (ko_str38), one call with the six retail rows */
     MenuDrawStr(SYSOPT_NAME(), 0x20, 0x30 + ROW * 0x10, ctx);
+#endif
 }
 
 void ModSysOptSound(MenuContext* ctx) {

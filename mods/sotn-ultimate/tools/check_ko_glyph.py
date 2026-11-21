@@ -252,7 +252,7 @@ def main():
     # 8px equipment-name plate: every name character must have a plate cell whose code is its glyph-map code
     # (a missing one is drawn as a blank, a stale code as another glyph: 숏 / 발 / 멜 bugs)
     import struct
-    pb = open(WK + "ko_8p_block_247.bin", "rb").read()
+    pb = open(WK + "ko_8p_block_248.bin", "rb").read()
     pn = struct.unpack("<H", pb[:2])[0]
     pcodes = set(struct.unpack("<%dH" % pn, pb[2:2 + pn * 2]))
     eqc = io.open(os.path.join(ROOT, "mods/sotn-ultimate/src/menu/eq_core.c"), encoding="utf-8").read()
@@ -279,7 +279,7 @@ def main():
     xmiss, xch, xbar = [], set(), set()
     for ln in io.open((KO_WK + "/번역/번역_설정화면.tsv"), encoding="utf-8").read().split(chr(10))[1:]:
         q = ln.split(chr(9))
-        if len(q) > 4 and q[0].startswith("xset:"):
+        if len(q) > 4 and (q[0].startswith("xset:") or q[0].startswith("cfg:")):  # 0.9.4: cfg rows too (추가 설정, cfg:str38), ASCII included (ord = plate code)
             for ch in q[4]:
                 if ch == " ":
                     continue
