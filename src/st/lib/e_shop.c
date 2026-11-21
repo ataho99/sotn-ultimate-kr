@@ -1783,8 +1783,19 @@ loop:
 #define KO_LIB_TPAGE(k) (0x70 | KO_LIB_PAGE(k))
 #define KO_LIB_GLYPH_DY 3 // 15-row cell vs 8-row ASCII: tune in emulator
 
+/* The glyph ink is palette index 8 (func_80106A28, D_800AC934[16]); the shop
+ * text palette 0x196 has the white ASCII ink at index 6 and a red at 8, so
+ * the Korean names drew red. Remap 8 -> 6 here only (the table is shared
+ * with the menu, where 8 is white). Measured 094_09: names (152,48,24) at 8,
+ * (192,200,200) = the English digits at 6. */
+#define KO_LIB_INK_FROM 8
+#define KO_LIB_INK_TO 6
+
 static s32 KoLibGlyphSlot(u16 code) {
     s32 k;
+    s32 i, n;
+    u16* gl;
+    u16 v, w, nib;
 
     if (KO_LIB_SLOT_TMR != g_Timer) {
         KO_LIB_SLOT_TMR = g_Timer;
@@ -1795,8 +1806,21 @@ static s32 KoLibGlyphSlot(u16 code) {
         return -1; // full this frame: glyph skipped, x still advances
     }
     KO_LIB_SLOT_IDX = k + 1;
-    LoadTPage((u_long*)g_api.func_80106A28(code, 0), 0, 0,
-              KO_LIB_PAGE(k) * 64 + KO_LIB_COL(k) * 3, KO_LIB_SLOT_Y, 12, 16);
+    gl = (u16*)g_api.func_80106A28(code, 0);
+    for (i = 0; i < 48; i++) { // 12x16 4bpp = 48 halfwords
+        v = gl[i];
+        w = 0;
+        for (n = 0; n < 16; n += 4) {
+            nib = (v >> n) & 0xF;
+            if (nib == KO_LIB_INK_FROM) {
+                nib = KO_LIB_INK_TO;
+            }
+            w |= nib << n;
+        }
+        gl[i] = w;
+    }
+    LoadTPage((u_long*)gl, 0, 0, KO_LIB_PAGE(k) * 64 + KO_LIB_COL(k) * 3,
+              KO_LIB_SLOT_Y, 12, 16);
     DrawSync(0); // one shared glyph buffer (see func_us_801B0FBC)
     return k;
 }
