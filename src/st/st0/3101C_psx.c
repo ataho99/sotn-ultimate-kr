@@ -42,7 +42,14 @@ typedef struct {
 // while pspeu uses two independent memory addresses.
 extern DialoguePrologue g_Dialogue;
 
+#if defined(MOD_KO) && !defined(VERSION_PSP)
+// 0.9.4 (A3): KO scroll glyphs are drawn 2x wide (24px box, 6 words); comma/period stay 12px (3 words).
+// 24 slots x 0x60 u16 = same 4608 B as the old 48 x 0x30 buffer (gen_ko_scroll.py asserts <= 24 glyphs per line).
+static u16 D_801BEE90[24][0x60]; // bss
+static u8 D_801BEE90_ring;
+#else
 static u16 D_801BEE90[48][48]; // bss
+#endif
 
 u8 func_801B101C(u8* script) {
     Primitive* prim;
@@ -53,7 +60,7 @@ u8 func_801B101C(u8* script) {
     if (g_Dialogue.primIndex != -1) {
         g_Dialogue.scriptCur = script;
         g_Dialogue.nextCharX = 0x200;
-        g_Dialogue.startY = 0x22A; // 0.9.2: centred first KO line (0x200 + X of line 0)
+        g_Dialogue.startY = 0x21F; // 0.9.2: centred first KO line (0x200 + X of line 0)
         g_Dialogue.nextLineX = 0;
         g_Dialogue.nextCharY = 0;
         g_Dialogue.portraitAnimTimer = 0;
@@ -136,6 +143,44 @@ u16* func_801B11E8(u8 ch) {
 #include "prologue_cutscene_script.h"
 #include "prologue_scroll_ko.h"
 
+#if defined(MOD_KO) && !defined(VERSION_PSP)
+// Draw one scroll glyph into the VRAM line ring. wide: 4bpp column-doubled 24px (6 words); narrow (, .): raw 12px (3 words).
+// A glyph never crosses word 0x3C of its line (SPRT0 width 240px): it jumps to word 0x40 (same rule as gen_ko_scroll.py).
+static void ScrollPutGlyph(u16* glyph, s32 narrow, u16 slot) {
+    u16 w = narrow ? 3 : 6;
+    u16 p;
+    u16* buf;
+    u8* src;
+    u8* dst;
+    s32 i;
+
+    p = g_Dialogue.startY - g_Dialogue.nextCharX;
+    if (p < 0x3C && p + w > 0x3C) {
+        g_Dialogue.startY = g_Dialogue.nextCharX + 0x40;
+    }
+    buf = D_801BEE90[slot];
+    if (narrow) {
+        for (i = 0; i < 0x30; i++) {
+            buf[i] = glyph[i];
+        }
+    } else {
+        src = (u8*)glyph;
+        dst = (u8*)buf;
+        for (i = 0; i < 0x60; i++) {
+            u8 b = src[i];
+            *dst++ = (b & 0xF) * 0x11;
+            *dst++ = (b >> 4) * 0x11;
+        }
+    }
+    LoadTPage((u_long*)buf, 0, 0, g_Dialogue.startY, g_Dialogue.nextLineX * 16, w * 4, 16);
+    g_Dialogue.startY += w;
+    p = g_Dialogue.startY - g_Dialogue.nextCharX;
+    if (0x38 <= p && p < 0x40) {
+        g_Dialogue.startY += 8;
+    }
+}
+#endif
+
 void func_801B1298(Entity* self) {
     s16 y0;
     Primitive* prim;
@@ -174,6 +219,11 @@ void func_801B1298(Entity* self) {
                     glyph = func_801B11E8(nextChar);
                 }
                 if (glyph) {
+#if defined(MOD_KO) && !defined(VERSION_PSP)
+                    ScrollPutGlyph(glyph, nextChar == ',' || nextChar == '.',
+                                   glyphIndex);
+                    glyphIndex++;
+#else
                     glyphPtr = D_801BEE90[glyphIndex];
                     for (i = 0; i < 0x30; ++i) {
                         glyphPtr++[0] = glyph++[0];
@@ -188,6 +238,7 @@ void func_801B1298(Entity* self) {
                         g_Dialogue.startY += 8;
                     }
                     glyphIndex++;
+#endif
                 } else {
                     g_Dialogue.startY += 2;
                     nextChar = g_Dialogue.startY - g_Dialogue.nextCharX;
@@ -253,6 +304,19 @@ void func_801B1298(Entity* self) {
             glyph = func_801B11E8(nextChar);
         }
 
+#if defined(MOD_KO) && !defined(VERSION_PSP)
+        if (glyph) {
+            ScrollPutGlyph(glyph, nextChar == ',' || nextChar == '.',
+                           D_801BEE90_ring);
+            D_801BEE90_ring = (D_801BEE90_ring + 1) % 24;
+        } else {
+            g_Dialogue.startY += 2;
+            nextChar = g_Dialogue.startY - g_Dialogue.nextCharX;
+            if (0x38 <= nextChar && nextChar < 0x40) {
+                g_Dialogue.startY += 8;
+            }
+        }
+#else
         if (glyph) {
             y = g_Dialogue.nextLineX * 16;
             LoadTPage((u_long*)glyph, 0, 0, g_Dialogue.startY, y, 0xC, 0x10);
@@ -264,6 +328,7 @@ void func_801B1298(Entity* self) {
         if (0x38 <= nextChar && nextChar < 0x40) {
             g_Dialogue.startY += 8;
         }
+#endif
         break;
     case 2:
         break;

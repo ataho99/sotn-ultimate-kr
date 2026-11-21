@@ -1,6 +1,6 @@
 # gen_ko_scroll.py -- writes src/st/st0/prologue_scroll_ko.h (KO prologue scroll blob) and the first-line X in 3101C_psx.c
 # from ko_data/번역/프롤로그스크롤_JP계열.tsv (39 lines, 10 paragraphs, same line structure as the Japanese scroll).
-# Width model (3-word glyphs, 2-word spaces, +8 when a position lands in 0x38..0x3F) was checked against the old blob.
+# Width model 0.9.4 (A3): glyph 6 words, space 2, comma/period 3, 0x3C jump, +8 when a position lands in 0x38..0x3F.
 # usage: python3 mods/sotn-ultimate/tools/gen_ko_scroll.py
 import os, sys, re
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -16,15 +16,31 @@ SUBST = {"곧": "즉"}   # '곧' has no cell in the v14f glyph block; '즉' has 
 gm = K.glyph_map()
 
 
-def width_end(text, start):
-    """end X (words) of a line starting at X=start: glyph/ASCII char 3 words, space 2; after each char a position inside
-    0x38..0x3F is pushed +8 (JP/US 0x801B10A0: sltiu 8)"""
+GW, SW, PW = 6, 2, 3   # 0.9.4 (A3): Hangul/Latin glyph 6 words (24px box), space 2 (8px), comma/period 3 (12px)
+PUNCT = ",."
+
+
+def layout(text, start):
+    """(positions, end X) in words for a line starting at X=start. Same rules as 3101C_psx.c ScrollPutGlyph:
+    a glyph never crosses word 0x3C (SPRT0 width): it jumps to 0x40; after each char a position inside 0x38..0x3F is pushed +8"""
     x = start
+    pos = []
     for ch in text:
-        x += 2 if ch == " " else 3
+        if ch == " ":
+            x += SW
+        else:
+            w = PW if ch in PUNCT else GW
+            if x < 0x3C and x + w > 0x3C:
+                x = 0x40
+            pos.append((ch, x, w))
+            x += w
         if 0x38 <= x < 0x40:
             x += 8
-    return x
+    return pos, x
+
+
+def width_end(text, start):
+    return layout(text, start)[1]
 
 
 def best_start(text):
@@ -83,6 +99,7 @@ if __name__ == "__main__":
             else:
                 assert ch in " ,.4C", "unexpected char %r" % ch
                 bs.append(ord(ch))
+        assert sum(1 for ch in txt if ch != ' ') <= 24, 'line %d has more than 24 glyphs (render buffer slots)' % i
         b = best_start(txt)
         assert b is not None, "line %d does not fit" % i
         starts.append(b[1])
@@ -99,12 +116,13 @@ if __name__ == "__main__":
     print("lines", len(lines), "slots", slots, "bytes", len(out), "(old 902)")
     print("start offsets:", " ".join("%02X" % s for s in starts))
     worst = max(b[0] for _, b in data)
+    print("start offsets hex:", " ".join(hex(x) for x in starts))
     print("max centre error (words)", worst, "=", worst * 4, "px; max end X", max(b[2] for _, b in data))
     t = open(H, encoding="utf-8").read()
     m = re.search(r"(prologue_scroll_ko_psx\[\] = \{)(.*?)(\};)", t, re.S)
     body = "\n" + ",\n".join(",".join("0x%02X" % x for x in out[i:i + 24]) for i in range(0, len(out), 24)) + "\n"
     t2 = t[:m.start(2)] + body + t[m.end(2):]
-    t2 = re.sub(r"// X offsets \(0\.9\.2\):[^\n]*", "// 0.9.2: JP-line-structure translation (39 lines, 10 paragraphs), per-line centred X offsets (screen 0x78 words, glyph 3, space 2).", t2, count=1)
+    t2 = re.sub(r"// X offsets \(0\.9\.2\):[^\n]*", "// 0.9.2: JP-line-structure translation (39 lines, 10 paragraphs), per-line centred X offsets (screen 0x78 words, glyph 6, space 2, comma/period 3; A3).", t2, count=1)
     open(H, "w", encoding="utf-8").write(t2)
     c = open(C, encoding="utf-8").read()
     m2 = re.search(r"g_Dialogue\.startY = 0x[0-9A-Fa-f]+;[^\n]*", c)
