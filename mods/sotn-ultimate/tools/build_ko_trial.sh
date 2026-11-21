@@ -1016,13 +1016,23 @@ while read -r s _ a; do
 done < build/us/mod/mar2/mod_syms.txt
 echo "OK   MARIA2 DRA symbols ($(wc -l < build/us/mod/mar2/mod_syms.txt))"
 # the same for the System screen options' code in ARC_F2.BIN
+# (syms.txt also holds the cheats' derived values: ModHdEntry = HandleDamage, ModStairsA/B = func_80109990 + 0x2D2 / + 0x35E,
+# and the two instruction words ModHdOrig0/1, which are not addresses: build_sysopt.sh already checked them against the built DRA)
 while read -r s _ a; do
     a=${a%;}
-    want=$(mipsel-linux-gnu-nm build/us/dra.elf | awk -v s="$s" '$3==s{print "0x" $1}')
+    off=0; w=$s
+    case "$s" in
+        ModHdOrig0|ModHdOrig1) continue ;;
+        ModHdEntry) w=HandleDamage ;;
+        ModStairsA) w=func_80109990; off=$((0x2D2)) ;;
+        ModStairsB) w=func_80109990; off=$((0x35E)) ;;
+    esac
+    want=$(mipsel-linux-gnu-nm build/us/dra.elf | awk -v s="$w" '$3==s{print "0x" $1}')
     if [ -z "$want" ]; then # (a main SDK function: config/symbols.us.txt)
-        want=$(awk -v s="$s" '$1==s{sub(/;/,"",$3); print tolower($3)}' config/symbols.us.txt)
-        a=$(echo "$a" | tr A-F a-f)
+        want=$(awk -v s="$w" '$1==s{sub(/;/,"",$3); print tolower($3)}' config/symbols.us.txt)
     fi
+    if [ -n "$want" ]; then want=$(printf '0x%08x' $((want + off))); fi
+    a=$(printf '0x%08x' $((a)))
     if [ "$want" != "$a" ]; then
         echo "FAIL sysopt linked against $s $a (DRA has $want): run build_disc.sh again"
         exit 1

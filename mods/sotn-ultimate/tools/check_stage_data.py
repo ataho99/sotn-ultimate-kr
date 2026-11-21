@@ -67,6 +67,19 @@ INTENDED = {
     # (mods/sotn-ultimate/tools/gen_no3_sounds.py)
     ("stsel", 0x19AD0): {int(lba["ST_NO3_VB_LEN"], 16)},
 }
+# Field voices (build_ko_trial.sh KO_FIELD_VOICE=1, gen_ps1jp_banks.py): the Japanese tones change the length of most
+# stage / boss sound banks, and make disk then moves every file behind them (include/lba_us.h is regenerated; git HEAD
+# keeps the retail values). SEL's stage table words follow: a changed word is intended when it moves from a macro's
+# retail value to the SAME macro's built value.
+import subprocess
+try:
+    _retail_lba = dict(re.findall(r"#define (\w+) (0x[0-9A-Fa-f]+)", subprocess.run(
+        ["git", "show", "HEAD:include/lba_us.h"], capture_output=True, text=True, check=True).stdout))
+except Exception:
+    _retail_lba = {}
+for _k, _v in _retail_lba.items():
+    if _k in lba and int(lba[_k], 16) != int(_v, 16):
+        INTENDED.setdefault(("stsel", int(_v, 16)), set()).add(int(lba[_k], 16))
 
 # Tilemaps edited in place (same size, contents only), listed by their
 # generators (mods/sotn-ultimate/tools/gen_prs_links.py): overlay -> [[symbol, bytes]]
