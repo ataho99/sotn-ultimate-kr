@@ -335,6 +335,39 @@ def selftest(R, banks):
     print("selftest: %d banks, graft with itself is the identity" % n)
 
 
+def vab_total(vh):
+    ps = struct.unpack_from("<H", vh, 18)[0]
+    vs = struct.unpack_from("<H", vh, 22)[0]
+    vt = 32 + 128 * 16 + ps * 512
+    return sum(struct.unpack_from("<%dH" % (vs + 1), vh, vt)) * 8
+
+
+def assert_vab_total(label, vh, vb):
+    """build assertion (see pad_vh_total): the VH's sample total must equal the VB file length"""
+    if vab_total(vh) != len(vb):
+        sys.exit("gen_ps1jp_banks: %s: VH sample total %d != VB length %d (the loader would send blocks past the VAB: DmaErr, the stage never loads)" % (label, vab_total(vh), len(vb)))
+
+
+def pad_vh_total(vh, vb_len):
+    """The loaders (cd.c) read a VB file to its full length and hand every block to SsVabTransBodyPartly, which marks the
+    VAB finished (used = 1) once the VH's sample sizes are all written: any block after that returns -1 (DmaErr, endless
+    retry: the stage never loads). So the VH's total sample size must equal the VB file length. When a VB is zero padded to
+    its retail (anchored) length, the pad goes into the last sample's size entry (its end-flag frame stops the voice before
+    the padding) and into the header's fsize."""
+    vh = bytearray(vh)
+    ps = struct.unpack_from("<H", vh, 18)[0]
+    vs = struct.unpack_from("<H", vh, 22)[0]
+    vt = 32 + 128 * 16 + ps * 512
+    tot = sum(struct.unpack_from("<%dH" % (vs + 1), vh, vt)) * 8
+    pad = vb_len - tot
+    assert pad >= 0 and pad % 8 == 0, (pad, vb_len, tot)
+    if pad:
+        i = vt + 2 * vs
+        struct.pack_into("<H", vh, i, struct.unpack_from("<H", vh, i)[0] + pad // 8)
+        struct.pack_into("<I", vh, 12, struct.unpack_from("<I", vh, 12)[0] + pad)
+    return bytes(vh)
+
+
 def main():
     args = sys.argv[1:]
     out = os.path.join(ROOT, "build/us")
@@ -454,6 +487,8 @@ def main():
         vb_raw = len(vb)
         if anchored and not mar and len(vb) <= len(usvb):
             vb += bytes(len(usvb) - len(vb))  # the retail length: no table changes
+        vh = pad_vh_total(vh, len(vb)) if anchored and not mar else vh  # (the VH's sample total = the VB file length, see pad_vh_total)
+        assert_vab_total(name, vh, vb)
         assert not anchored or mar or len(vb) == len(usvb) or len(vb) < len(usvb), name
         open(os.path.join(out, base + ".VH"), "wb").write(vh)
         open(os.path.join(out, base + ".VB"), "wb").write(vb)
