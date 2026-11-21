@@ -17,7 +17,7 @@ static const char ko_xset_on[] = "\x2F\x2E\xFF\x00";
 static const char ko_xset_off[] = "\x2F\x26\x26\xFF\x00";
 static const char ko_xset_ps1[] = "\x30\x33\x11\xFF\x00";
 static const char ko_xset_psp[] = "\x30\x33\x30\xFF\x00";
-static const char ko_xset_stn[] = "\x33\x21\x34\x35\x32\x2E\xFF\x00";
-static const char ko_xset_sat[] = "\xF1\xA7\xF2\x1F\xFF\x00";
+static const char ko_xset_stn[] = "\x33\x34\x2E\xFF\x00";
+static const char ko_xset_sat[] = "\x33\x34\x2E\xFF\x00";
 static const char ko_xset_bar[] = "\xF0\xA5\xF0\x68\x20\xF1\x8E\xF1\xE4\x81\x5E\xF2\xAC\xF1\x5E\xF0\x68\x81\x5E\xF0\xAC\xF0\x63\x81\x5E\xF2\x02\xF0\x90";
 #define KO_XSET_BAR_ASM "\\360\\245\\360\\150\\040\\361\\216\\361\\344\\201\\136\\362\\254\\361\\136\\360\\150\\201\\136\\360\\254\\360\\143\\201\\136\\362\\002\\360\\220"

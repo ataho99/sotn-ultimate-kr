@@ -46,6 +46,6 @@ xset:on	메뉴(8px)	ON	－	ON	Extra settings 값
 xset:off	메뉴(8px)	OFF	－	OFF	Extra settings 값
 xset:ps1	메뉴(8px)	PS1	－	PS1	Extra settings 값(더빙)
 xset:psp	메뉴(8px)	PSP	－	PSP	Extra settings 값(더빙)
-xset:stn	메뉴(8px)	STN	－	SATURN	Extra settings 값(더빙 줄만 SATURN; 캐릭터 선택 화면 Dub 칸은 SEL 오버레이 영문 STN 유지)
-xset:sat	메뉴(8px)	Saturn	－	새턴	Extra settings 값(더빙 외 행)
+xset:stn	메뉴(8px)	STN	－	STN	Extra settings 값(더빙 줄, 슨상 07:3x 「기니까 STN으로 줄여」 — SATURN 은 길어서 되돌림; 캐릭터 선택 화면 Dub 칸도 STN)
+xset:sat	메뉴(8px)	Saturn	－	STN	Extra settings 값(더빙 외 행, 슨상 11-22 「이것도 선택 STN 영문으로」)
 xset:bar	설명줄(12px)	Boss versions, game balance and voices	－	보스 버전／밸런스／음성／치트	Extra settings 안내줄(원래 영문 줄의 뜻만, 11-21 18:58; 문구 후보: 보스 버전과 밸런스 음성)
