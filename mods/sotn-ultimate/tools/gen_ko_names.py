@@ -198,7 +198,10 @@ def bake_relics(tbl):
         assert name and desc, ("relic %d: empty table cell" % i)
         name = name.replace(CARD_TOKEN, suffix)
         assert CARD_TOKEN not in desc and "{" not in name, (i, name, desc)
-        if en[i].startswith(" "):  # retail two-column alignment
+        # retail two-column alignment: every left-column (even) name starts with one space. The EN row of God Speed Shoes
+        # (30, left column, added by the Saturn port) has none, so its KO name started 4 px left of the others
+        # (VRAM band probe 2026-11-23: ink at col 0 vs 4); the even-index rule covers it and changes no other row.
+        if en[i].startswith(" ") or i % 2 == 0:
             name = " " + name
         px = E.show_px(name)
         assert px <= RELIC_NAME_PX_MAX, ("relic %d name too wide" % i, name, px)
