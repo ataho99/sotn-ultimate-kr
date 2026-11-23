@@ -281,6 +281,7 @@
 #define MOD_SYSOPT_MAGIC 0x80170000
 #define MOD_SYSOPT_MAGIC_STR "0x80170000"
 #define MOD_SYSOPT_BAR_TEXT (MOD_SYSOPT_ADDR + 20)
+#define MOD_SYSOPT_BAR_TEXT2 (MOD_SYSOPT_ADDR + 52) // 094_12 KO: the Cheats row's text (sysopt.c header .org 52)
 #define MOD_ARC_F_LEN 0x34000 // ARC_F2.BIN: up to 0x80170000
 // The JP dub's tables are SEL rodata (no room in DRA): SEL copies them into
 // g_ModDub.jp every frame its menu runs (src/st/sel/2C048.c Update), which

@@ -164,6 +164,12 @@ assert m and not lit, ("unparsed text in KO_XSET_BAR_ASM", lit)
 assert len(want) > 8, len(want)
 assert d[20:20 + len(want)] == want, (d[20:20 + len(want)].hex(), want.hex())
 print("sysopt: KO info bar %d bytes match KO_XSET_BAR_ASM" % len(want))
+m2 = re.search(r'#define KO_XSET_BAR2_ASM "(.*)"', open(sys.argv[2], encoding="utf-8").read())
+assert m2, "KO_XSET_BAR2_ASM missing"
+want2 = bytes(int(x, 8) if x else 0 for x in re.findall(r'\\\\([0-7]{3})', m2.group(1)))
+assert len(want) < 32 and len(want2) > 8, (len(want), len(want2))
+assert d[52:52 + len(want2)] == want2, (d[52:52 + len(want2)].hex(), want2.hex())
+print("sysopt: KO info bar 2 %d bytes match KO_XSET_BAR2_ASM at header + 52" % len(want2))
 PY
 fi
 if [ $((OFF + size)) -gt $((LEN)) ]; then

@@ -89,6 +89,9 @@ __asm__(".text\n"
         ".word ModSysOptTick\n"
         ".ascii \"" KO_XSET_BAR_ASM "\"\n"
         ".byte 0\n"
+        ".org 52\n" /* 094_12: the Cheats row's info bar text at header + 52 (MOD_SYSOPT_BAR_TEXT2); .org fails if the first overruns */
+        ".ascii \"" KO_XSET_BAR2_ASM "\"\n"
+        ".byte 0\n"
         ".align 2\n");
 #else
 __asm__(".text\n"
@@ -101,14 +104,17 @@ __asm__(".text\n"
         ".align 2\n");
 #endif
 
-#define ROW 6     // the row, after the retail six (16 px apart: y 0x90)
+#define ROW 6     // the row, after the retail six (16 px apart: y 0x90); ROW + 1 = the Cheats row (094_12)
 #define NOPT 4    // the Player Select's options (rows 0-3 of the popup)
 #define NCHEAT 10 // the cheats (the rows after them)
 #define ROWS (NOPT + NCHEAT)
-#define VIS 8     // rows shown at once: the list scrolls
+// 094_12: two popups, no scrolling: the options (rows 0..NOPT-1) and the cheats
+// (rows NOPT..ROWS-1), g_PopMode 0 / 1
 #define POP_X 172 // the popup's window (the Sound box's is 172, 112, 57, 32)
-#define POP_H (VIS * 16)
-#define POP_Y (188 - POP_H) // (ends at 188: the info bar starts at 193)
+#define POPN (g_PopMode ? NCHEAT : NOPT)  // rows of the open popup
+#define POPBASE (g_PopMode ? NOPT : 0)    // its first row
+#define POP_H(n) ((n) * 16)
+#define POP_Y(n) (188 - POP_H(n)) // (ends at 188: the info bar starts at 193)
 #define POP_W 168 // (the right margin as wide as the left one)
 #define VALUE_DX 112
 
@@ -242,8 +248,10 @@ void ModSysOptTick(void) {
 
 // the popup's cursor (loaded with the file: 0 after each game load)
 static s32 g_PopRow = 0;
-// the first row shown (the popup scrolls: VIS of ROWS rows)
+// the first row shown = the popup's first row (POPBASE; no scrolling in 094_12)
 static s32 g_PopTop = 0;
+// the popup open (or last opened): 0 options (Extra settings), 1 cheats
+static s32 g_PopMode = 0;
 // a Dub change made since the current stage's bank was loaded: 1 + the dub
 // bits it was loaded with (0: none). Kept until the bank is reloaded
 static s32 g_StageDubOld = 0;
@@ -387,13 +395,10 @@ static void PopInput(MenuContext* pop) {
     const SysOptRow* row;
     s32 v;
 
-    MenuHandleCursorInput(&g_PopRow, ROWS, 0); // Up / Down, wraps
-    if (g_PopRow < g_PopTop) {
-        g_PopTop = g_PopRow;
-    }
-    if (g_PopRow >= g_PopTop + VIS) {
-        g_PopTop = g_PopRow - VIS + 1;
-    }
+    v = g_PopRow - POPBASE;
+    MenuHandleCursorInput(&v, POPN, 0); // Up / Down, wraps inside this popup
+    g_PopRow = v + POPBASE;
+    g_PopTop = POPBASE;
     if (g_PopRow >= NOPT) {
         // a cheat: Left / Right / X flips it
         if (g_pads[0].tapped & (PAD_LEFT | PAD_RIGHT | SYSOPT_SELECT)) {
@@ -462,15 +467,15 @@ static const char* const g_SysOptNameKo[7] = {
     ko_xset_stn, ko_xset_off, ko_xset_on};
 
 static void PopDrawKo(MenuContext* ctx, s32 x, s32 y, s32 locks) {
-    const char* names[2 * VIS];
-    s32 xs[2 * VIS];
-    s32 ys[2 * VIS];
+    const char* names[2 * NCHEAT];
+    s32 xs[2 * NCHEAT];
+    s32 ys[2 * NCHEAT];
     const SysOptRow* row;
     s32 r, n, pass, locked, ry;
 
     for (pass = 0; pass < 2; pass++) {
         n = 0;
-        for (r = g_PopTop; r < g_PopTop + VIS; r++) {
+        for (r = g_PopTop; r < g_PopTop + POPN; r++) {
             locked = r < NOPT ? (locks >> r) & 1 : 0;
             if (locked != pass) {
                 continue;
@@ -529,6 +534,7 @@ void ModSysOptBox(MenuContext* ctx, s32 cursorIdx, s32 x, s32 y, s32 w, s32 h,
     func_800F5E68(ctx, cursorIdx, x, y, w, h, yGap, bColorMode);
 #if !defined(MOD_SYSOPT_KO) /* KO: the row's name is the 7th entry of menu.c's 8px KO draw (ko_str38), one call with the six retail rows */
     MenuDrawStr(SYSOPT_NAME(), 0x20, 0x30 + ROW * 0x10, ctx);
+    MenuDrawStr(_S("Cheats"), 0x20, 0x30 + (ROW + 1) * 0x10, ctx);
 #endif
 }
 
@@ -551,7 +557,7 @@ void ModSysOptSound(MenuContext* ctx) {
 #if defined(MOD_SYSOPT_KO)
     PopDrawKo(ctx, x, y, locks);
 #else
-    for (r = g_PopTop; r < g_PopTop + VIS; r++, y += 16) {
+    for (r = g_PopTop; r < g_PopTop + POPN; r++, y += 16) {
         D_8013784C = r < NOPT ? (locks >> r) & 1 : 0;
         MenuDrawStr(SYSOPT_LABEL(r), x, y, ctx);
         if (r < NOPT) {
@@ -575,15 +581,18 @@ void ModSysOptSound(MenuContext* ctx) {
 void ModSysOptInput(s32* nav, u8 nOptions, u32 type) {
     MenuContext* pop = &g_Menus[MENU_DG_CFG_SOUND];
 
-    if (*nav > ROW) {
-        *nav = ROW; // (a save from the build with four rows here)
+    if (*nav > ROW + 1) {
+        *nav = ROW + 1; // (a save from the build with four rows here)
     }
-    MenuHandleCursorInput(nav, ROW + 1, type);
-    if (*nav == ROW && (g_pads[0].tapped & SYSOPT_SELECT)) {
+    MenuHandleCursorInput(nav, ROW + 2, type);
+    if ((*nav == ROW || *nav == ROW + 1) && (g_pads[0].tapped & SYSOPT_SELECT)) {
+        g_PopMode = *nav - ROW;
+        g_PopRow = POPBASE;
+        g_PopTop = POPBASE;
         pop->cursorX = POP_X;
-        pop->cursorY = POP_Y;
+        pop->cursorY = POP_Y(POPN);
         pop->cursorW = POP_W;
-        pop->cursorH = POP_H;
+        pop->cursorH = POP_H(POPN);
         pop->unk1C = 3;
         pop->unk1D = 0;
         g_MenuStep = MOD_STEP_BOX;

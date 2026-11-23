@@ -1836,6 +1836,10 @@ s16 D_092F2810[4] = {0};
 #include "../calculate_angle_to_entity.h"
 #include "../step_angle_towards.h"
 #include "../calculate_distance.h"
+#if defined(MOD_KO)
+#define KO_SUB_DEMON 1
+#include "../ko_sub.h"
+#endif
 #include "../play_sfx.h"
 #include "../process_event.h"
 #include "../create_event_entity.h"
