@@ -6,6 +6,7 @@
 // ModGothic: the menu's 16x16 gothic font (DrawString16x16's sheet: a-z
 // from u 0x80 v 0xB0, 8 a row; space at 0xE0/0xF0), the sound mode title.
 #define MOD_MENU_SOUND 5
+#define MOD_MENU_DRAMA 6 // 094_18: "Drama cd", the sound mode screen with its own list
 #define Upd_Eng_ModSound 0x14
 static void ModGothic(const char* s, s32 x, s32 y, s32 clut) {
     s32 i;

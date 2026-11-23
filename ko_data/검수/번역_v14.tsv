@@ -122,16 +122,16 @@ config_us.h:g_RelicDefs:17:desc	유물		뱃사공을 부름			13	144	통과	신�
 config_us.h:g_RelicDefs:18:name	유물		박쥐{카드}			11	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
 config_us.h:g_RelicDefs:18:desc	유물		동료 박쥐 소환			14	144	통과	신규 번역	
 config_us.h:g_RelicDefs:19:name	유물		고스트{카드}			13	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
-config_us.h:g_RelicDefs:19:desc	유물		동료 유령 소환			14	144	통과	신규 번역	
+config_us.h:g_RelicDefs:19:desc	유물		동료 고스트 소환			14	144	통과	신규 번역	
 config_us.h:g_RelicDefs:20:name	유물		요정{카드}			11	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
 config_us.h:g_RelicDefs:20:desc	유물		동료 요정 소환			14	144	통과	신규 번역	
-config_us.h:g_RelicDefs:21:name	유물		자악마{카드}			13	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
+config_us.h:g_RelicDefs:21:name	유물		아기 악마{카드}			13	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
 config_us.h:g_RelicDefs:21:desc	유물		동료 아기 악마 소환			19	144	통과	신규 번역	
 config_us.h:g_RelicDefs:22:name	유물		검마{카드}			11	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
 config_us.h:g_RelicDefs:22:desc	유물		동료 검마 소환			14	144	통과	신규 번역	
 config_us.h:g_RelicDefs:23:name	유물		반요정{카드}			13	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
 config_us.h:g_RelicDefs:23:desc	유물		동료 반요정 소환			16	144	통과	신규 번역	
-config_us.h:g_RelicDefs:24:name	유물		비악마{카드}			13	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
+config_us.h:g_RelicDefs:24:name	유물		코악마{카드}			13	60	통과	용어집 채택 / 카드 접미어는 config_us.h:g_RelicDefs:card:suffix 한 칸(gen_ko_names.py 가 {카드} 자리에 넣음)	
 config_us.h:g_RelicDefs:24:desc	유물		동료 코악마 소환			16	144	통과	신규 번역	
 config_us.h:g_RelicDefs:25:name	유물		심장			4	60	통과	용어집 채택	
 config_us.h:g_RelicDefs:25:desc	유물		5대 보물 중 하나, 저주 무효			27	144	통과	신규 번역	
@@ -987,7 +987,7 @@ config_us.h:g_MenuStr:47	메뉴		고스트			6		통과	신규 번역
 config_us.h:g_MenuStr:48	메뉴		요정			4		통과	신규 번역	
 config_us.h:g_MenuStr:49	메뉴		아기 악마			9		통과	신규 번역	
 config_us.h:g_MenuStr:50	메뉴		검마			4		통과	신규 번역	
-config_us.h:g_MenuStr:51	메뉴		요정			4		통과	신규 번역·용어집 정합 수정	
+config_us.h:g_MenuStr:51	메뉴		반요정			4		통과	신규 번역·용어집 정합 수정	
 config_us.h:g_MenuStr:52	메뉴		코악마			6		통과	신규 번역·용어집 정합 수정	
 config_us.h:g_MenuStr:53	메뉴		리히터 드라큘라 격파			20		확인필요	신규 번역·용어집 정합 수정·10자 초과(표시폭 실측 필요)	
 config_us.h:g_MenuStr:54	메뉴		올록격파			8		통과	신규 번역·용어집 정합 수정	

@@ -85,7 +85,11 @@ const char* D_800A2D48[] = {
     // MOD_MENU_STR) where it was (two more went for the teleport
     // MOD_TP_NO3_TO_GDN, src/dra/5087C.c)
     (const char*)MOD_SYSOPT_BAR_TEXT,
+#if defined(MOD_KO)
+    (const char*)MOD_SYSOPT_BAR_TEXT2, /* 094_12: the Cheats row (row 8) */
+#else
     (const char*)MOD_SYSOPT_BAR_TEXT,
+#endif
 #endif
 #elif defined(VERSION_HD)
     "？？？？？",
@@ -1796,10 +1800,19 @@ void MenuSpellsDraw(MenuContext* ctx) {
 #endif
 }
 
+#if defined(MOD_KO)
+/* 094_20: the Familiar List's seven names as 8px Korean labels (gen_ko_cfg.py rows cfg:fam0..6, packed: ko_famall + ko_famoff[i]) */
+#endif
 void MenuFamiliarsDraw(MenuContext* ctx) {
     s32 i;
     s32 x, y;
     s32 strId;
+#if defined(MOD_KO)
+    const char* kfn[7];
+    s32 kfx[7];
+    s32 kfy[7];
+    s32 kfc = 0;
+#endif
 #if defined(MOD_SATURN)
     FamiliarStats stats;
 #endif
@@ -1832,7 +1845,14 @@ void MenuFamiliarsDraw(MenuContext* ctx) {
             x += 172;
         }
         strId = i + 46;
+#if defined(MOD_KO)
+        kfn[kfc] = ko_famall + ko_famoff[i];
+        kfx[kfc] = x;
+        kfy[kfc] = y;
+        kfc++;
+#else
         MenuDrawStr(g_MenuStr[strId], x, y, ctx);
+#endif
         if (i < FAM_STATS_YOUSEI) {
             strId = 8;
         } else {
@@ -1881,6 +1901,11 @@ void MenuFamiliarsDraw(MenuContext* ctx) {
             break;
         }
     }
+#if defined(MOD_KO)
+    if (kfc != 0) {
+        KO_EqOvDraw(kfn, kfx, kfy, kfc, ctx);
+    }
+#endif
 }
 
 void func_800F82F4(void) {
@@ -1918,9 +1943,9 @@ void MenuSystemDraw(MenuContext* ctx) {
 
 #if defined(MOD_KO)
     {
-        const char* kn[7];
-        s32 kx[7];
-        s32 ky[7];
+        const char* kn[8];
+        s32 kx[8];
+        s32 ky[8];
         s32 k;
         s32 kc = 6;
         kn[0] = ko_str16;
@@ -1933,7 +1958,8 @@ void MenuSystemDraw(MenuContext* ctx) {
         /* 0.9.4: the mod's 7th row (Extra settings, Korean label ko_str38) joins the same 8px draw call: a second
          * KO_EqOvDraw call would re-upload its own cell union over this one's (one signature, one upload) */
         kn[6] = ko_str38;
-        kc = 7;
+        kn[7] = ko_str39; /* 094_12: the Cheats row (8th) */
+        kc = 8;
 #endif
         for (k = 0; k < kc; k++) {
             kx[k] = 0x20;

@@ -15,6 +15,11 @@ set -euo pipefail
 if [ -f ~/.profile ]; then source ~/.profile; fi
 cd "$(dirname "$0")/../../.."
 OUT=${MOD_OUT:-build/sotn_kr_P4_trial1.bin}
+# 3491: a name that already exists is never overwritten (KO_ALLOW_OVERWRITE=1 to override)
+if [ -e "$OUT" ] && [ "${KO_ALLOW_OVERWRITE:-0}" != 1 ]; then
+    echo "ABORT: output $OUT already exists; pick a new name (KO_ALLOW_OVERWRITE=1 overrides)" >&2
+    exit 4
+fi
 # gen_ko_splice.py defaults REPO to ${SOTN_KR} (main),
 # so a worktree build spliced main's yamls, never the worktree's (NO4 KO run
 # missing). Point every SOTN_KR consumer at the tree being built.
@@ -102,10 +107,11 @@ quiet() {
     # are errors; e.g. "`X' undeclared" dropped a statement from UpdateGame
     # and the build still passed, as the cc1 | as pipe exits with as)
     if grep -qiE "(parse|syntax) error|error:|^[^ :]+\.[ch]:[0-9]+: " "$log"; then
-        echo "WARN: $* printed errors:" >&2
+        echo "FAIL: $* printed errors (no image is made; 3491):" >&2
         grep -iE "(parse|syntax) error|error:|^[^ :]+\.[ch]:[0-9]+: " "$log" | head -10 >&2
         grep -iE "(parse|syntax) error|error:|^[^ :]+\.[ch]:[0-9]+: " "$log" \
             >> build/us/cc1_errors.log
+        exit 1
     fi
 }
 rm -f build/us/cc1_errors.log
@@ -190,6 +196,8 @@ python3 mods/sotn-ultimate/tools/gen_ko_names.py
 python3 mods/sotn-ultimate/tools/gen_menu_text.py
 python3 mods/sotn-ultimate/tools/gen_ko_equip.py
 python3 mods/sotn-ultimate/tools/gen_ko_cfg.py # System (config) screen strings -> src/dra/gen/us/ko_cfg_str.h
+python3 mods/sotn-ultimate/tools/gen_ko_sub.py # familiar voice subtitles -> src/servant/ko_sub_str.h (094_15)
+python3 mods/sotn-ultimate/tools/gen_ko_sound.py # Sound Mode strings -> mods/sotn-ultimate/src/menu/mod_sound_ko_str.h (094_12)
 python3 mods/sotn-ultimate/tools/gen_ko_save.py # save-room texts -> src/dra/gen/us/ko_save_str.h
 python3 mods/sotn-ultimate/tools/gen_ko_shop.py # Librarian shop label words / document names / descriptions -> src/st/lib/gen/ko_shop_str.h (0.9.4)
 python3 mods/sotn-ultimate/tools/gen_ko_fieldmsg.py # stage message boxes (mist / sealed door / NO4 bridge) -> src/st/ko_field_msg.h
@@ -904,6 +912,36 @@ assert hashlib.sha256(blk8).hexdigest() == '6869e1b9d54a409e204ed50dfb4f707bdd79
 assert len(blk8) <= 4096, len(blk8)
 img = img + bytes(bundle) + bytes(2048 - len(bundle)) + bytes(blk8) + bytes(4096 - len(blk8))
 assert len(img) == arc_size, (len(img), arc_size)
+# 094_12 Sound Mode text (gen_ko_sound.py): strings live in the A-gap zero runs (resident from the title on), SEL only holds
+# their addresses (SEL has no room). Every run must still be zero (nothing else uses it).
+import json as _js
+_sj = 'src/dra/gen/us/ko_sound_arc.json'
+if os.path.exists(_sj):
+    _done = []  # byte ranges already patched in this loop: text, never a branch (a run can hold several strings back to back)
+    for _a, _h in _js.load(open(_sj))['patches']:
+        _ad = int(_a, 16); _b = bytes.fromhex(_h); _o = _ad - 0x80099000
+        assert 0 <= _o and _o + len(_b) <= 0x7000, ('sound text outside the A-gap', _a)
+        assert not any(img[_o:_o + len(_b)]), ('A-gap run is not zero', _a)
+        # 094_16: a zero is not always free. 094_14 put text on the delay slot (a 0 = nop) of a `jr ra` of the equipment tail code
+        # and the pause menu went black. So: a run must not start at the word that follows a jump/branch, and a run that starts
+        # unaligned must follow a NUL (the terminator of a label / string that precedes it).
+        _w = _o & ~3
+        if _w >= 4 and not any(_s < _w and _w - 4 < _e for _s, _e in _done):
+            _pw = __import__("struct").unpack('<I', bytes(img[_w - 4:_w]))[0]
+            _op = _pw >> 26
+            assert not (_op in (1, 2, 3, 4, 5, 6, 7, 0x14, 0x15, 0x16, 0x17) or (_op == 0 and (_pw & 0x3F) in (8, 9))), \
+                ('A-gap run starts in a branch delay slot', _a, hex(_pw))
+        # label slots (KO_FIELD_BASE 0x8009F300..F4FF): the run must follow the NUL of the label that precedes it (F414 / F4B0 are
+        # 4-aligned, so the alignment test alone missed them); an unaligned run anywhere must follow a NUL as well
+        assert not (0x8009F300 < _ad < 0x8009F500 and img[_o - 1] != 0), ('A-gap run in a label slot does not follow the label NUL', _a)
+        assert _o % 4 == 0 or img[_o - 1] == 0, ('unaligned A-gap run does not follow a NUL', _a)
+        # no run may overlap the real code length of a ko_equip slot (a loader that is ON, e.g. the JP bundle, makes the part longer)
+        for _nm, _sb in (('sel', eq_slots['sel'][0]), ('ov', eq_slots['ov'][0]), ('enter', eq_slots['enter'][0]), ('core', eq_slots['core'][0]), ('load', eq_load)):
+            _ce = _sb + len(parts[_nm])  # a part is the linked section as is: it already holds the delay slot nop of its last jr ra (JP ON: core 0x8FC, load 8); a run right after a branch is guard (1)'s job
+            assert not (_ad < _ce and _ad + len(_b) > _sb), ('A-gap run overlaps the ko_equip code', _nm, _a, hex(_sb), hex(_ce))
+        img[_o:_o + len(_b)] = _b
+        _done.append((_o, _o + len(_b)))
+    print('ARC_KO.BIN: sound mode text placed in the A-gap zero runs')
 img[24308] = 1  # KO_FLAG_ADDR default on (10q-dbg layout)
 open('build/us/ARC_KO.BIN', 'wb').write(bytes(img))
 print('ARC_KO.BIN: glyphs %d + blob slot %d + strings 104 + gap %d + equip %d+%d+%d+%d+%d + bundle %d + 8p %d = %d' % (len(raw), slot, gap_end - 24280, len(parts['sel']), len(parts['ov']), len(parts['enter']), len(parts['core']), len(parts['load']), len(bundle), len(blk8), arc_size))
@@ -1126,6 +1164,11 @@ python3 mods/sotn-ultimate/tools/check_abs_syms.py || true
 echo "--- files that differ from retail:"
 sha1sum -c config/check.us.sha 2>/dev/null | grep -v ": OK$" || true
 
+if [ -s build/us/cc1_errors.log ]; then
+    echo "FAIL: compiler errors before the image copy (build/us/cc1_errors.log); no image is made" >&2
+    sort -u build/us/cc1_errors.log | head -10 >&2
+    exit 1
+fi
 # an emulator holding the disc open blocks the copy: write a second name
 if ! cp build/sotn.us.bin "$OUT" 2>/dev/null; then
     echo "$OUT is in use: writing ${OUT%.bin}2.bin instead"
@@ -1137,6 +1180,8 @@ cue="${OUT%.bin}.cue"
 if [ ! -f "$cue" ]; then
     printf 'FILE "%s" BINARY\r\n  TRACK 01 MODE2/2352\r\n    FLAGS DCP\r\n    INDEX 01 00:00:00\r\n' \
         "$(basename "$OUT")" > "$cue"
+fi
+# 3491: runs on EVERY build (it used to sit inside the "no cue yet" block and was skipped on a same-name rebuild)
 # The linked image must carry the KO fetch (else the menu hangs).
 # addiu v0,a0,4032 (n = ch-0xF040) near sltiu *,*,KO_GLYPH_COUNT (dra.h; v14c 819 = 0x333) in func_80106A28.
 if ! python3 - build/sotn.us.bin <<'PYEOF'
@@ -1153,7 +1198,6 @@ then
     exit 2
 fi
 echo "OK   KO fetch pair in image"
-fi
 echo "copied to $OUT"
 # The Japanese Konami logo movie (LOGO15XA.STR) is the LAST build step, in the repo
 # (it used to be an out-of-repo post step and silently dropped out of the next build).

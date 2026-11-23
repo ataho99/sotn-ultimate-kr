@@ -47,7 +47,6 @@ u32 D_801BD040;
 s32 g_StreamRewindSwitch[1];
 u8 g_StreamImageBuffer[0x14000];
 static s32 D_801D1048;
-s32 D_801D104C[0x1680];
 StreamEnv g_StreamEnv;
 u32 D_801D6B00;
 u32 D_801D6B04;
@@ -61,3 +60,6 @@ u8 g_InputSaveName[12];
 s32 g_MemcardStep;
 #endif
 s32 D_801D6B24;
+// 094_19: moved here from before g_StreamEnv. Last in SEL's bss, so what lies above 0x801E0000 is only this movie decoder buffer's
+// tail (2,476 B, written by the Konami logo / opening / ending movies), not the memory card and menu variables above.
+s32 D_801D104C[0x1680];

@@ -72,6 +72,8 @@ def main():
     rows = [l.rstrip(chr(10)).split(chr(9)) for l in io.open(TSV, encoding="utf-8")][1:]
     out = ["// gen_ko_cfg.py: System (config) screen strings (do not edit)"]
     n8 = nd = 0
+    famall = bytearray()
+    famoff = []
     for r in rows:
         if len(r) < 5 or not r[0].startswith("cfg:"):
             continue
@@ -89,13 +91,22 @@ def main():
                     b += bytes([mp[ch] >> 8, mp[ch] & 0xFF])
             assert len(ko) <= 10, ("label too long for the 10-char plate parse", key, ko)
             b += bytes([0xFF, 0x00])
-            out.append('static const char ko_%s[] = "%s";' % (key, esc(b)))
+            if key.startswith("fam"):
+                # 094_20: the 7 Familiar List names are packed into ONE array + a u8 offset table
+                # (separate arrays cost 4-byte alignment each + a 28-byte pointer table in DRA)
+                famoff.append(len(famall))
+                famall += bytes(b)
+            else:
+                out.append('static const char ko_%s[] = "%s";' % (key, esc(b)))
             n8 += 1
         else:
             for ch in ko:
                 b += info_bytes(ch, key, mp)
             out.append('static const char ko_%s[] = "%s";' % (key, esc(b)))
             nd += 1
+    assert len(famoff) == 7 and famoff[-1] < 256, famoff
+    out.append('static const char ko_famall[] = "%s";' % esc(famall))
+    out.append('static const unsigned char ko_famoff[7] = {%s};' % ", ".join(str(o) for o in famoff))
     # the Extra settings popup strings (xset:), same encodings, a header of its own
     xout = ["// gen_ko_cfg.py: Extra settings popup strings (do not edit)"]
     x8 = xd = 0

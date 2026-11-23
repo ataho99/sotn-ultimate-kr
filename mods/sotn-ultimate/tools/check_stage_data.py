@@ -106,6 +106,12 @@ KO_DATA_OBJS = {
 # castle map / save buffers at 0x801E0000+ (CASTLE_MAP_PTR), for every stage
 # (v1.3: NO3's horse ride neigh once ran past it unnoticed)
 VRAM_LIMITS = {name: 0x801E0000 for name in STAGES}
+# 094_18: SEL (the title / file select stage) may run to 0x801EC000: sentinels (094_17, empty card and the report save card,
+# title -> menu -> every entry -> sound mode -> game start) never saw 0x801E0000-0x801EBFFF written; 0x801EC000-0x801EFFFF is the CD
+# load buffer (D_801EC000 / D_801EE000, cd.c). The Drama cd button picture (2,048 B) pushes the bss end past 0x801E0000.
+# 094_19: the part above 0x801E0000 is the tail of the movie buffer D_801D104C only (bss.c: last in the bss).
+if "stsel" in VRAM_LIMITS:
+    VRAM_LIMITS["stsel"] = 0x801EC000
 
 status = 0
 for name, retail_path in STAGES.items():

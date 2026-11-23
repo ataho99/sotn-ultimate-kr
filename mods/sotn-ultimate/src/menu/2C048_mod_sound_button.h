@@ -11,8 +11,8 @@
 // (InitMainMenuUI).
 #define MOD_RO __attribute__((section(".rodata")))
 #include "../../../../src/st/sel/mod_sel_soundmode_gfx.h"
-#define MOD_MENU_BTN_X(i) (0x10 + ((i) - 1) * 0x34)
-#define MOD_MENU_BTN_Y(i) (0x1C + ((i) - 1) * 0x20)
+#define MOD_MENU_BTN_X(i) (0x10 + ((i) - 1) * 0x29) // 094_18: six buttons, x step 0x29 (094_17 0x34)
+#define MOD_MENU_BTN_Y(i) (0x1C + ((i) - 1) * 0x1C) // y step 0x1C (094_17 0x20)
 #define MOD_SOUND_BTN_TPAGE 0xF // 4bpp, x 960 y 0
 #define MOD_SOUND_BTN_V 96
 static void ModSoundBtnUpload(void) {
@@ -23,4 +23,17 @@ static void ModSoundBtnUpload(void) {
     rect.w = MOD_SOUND_BTN_W / 4;
     rect.h = MOD_SOUND_BTN_H;
     LoadImage(&rect, (u_long*)g_ModSoundBtnPix);
+}
+// 094_18: the 6th button, "Drama cd" (MOD_MENU_DRAMA), VRAM x 960 y 256 = tpage 0x1F u 0 v 0 (unchanged and
+// unreferenced on the title / menu / file select / name entry / sound mode screens, 094_17 dumps)
+#include "../../../../src/st/sel/mod_sel_dramabtn_gfx.h"
+#define MOD_DRAMA_BTN_TPAGE 0x1F
+static void ModDramaBtnUpload(void) {
+    RECT rect;
+
+    rect.x = 960;
+    rect.y = 256;
+    rect.w = MOD_DRAMA_BTN_W / 4;
+    rect.h = MOD_DRAMA_BTN_H;
+    LoadImage(&rect, (u_long*)g_ModDramaBtnPix);
 }

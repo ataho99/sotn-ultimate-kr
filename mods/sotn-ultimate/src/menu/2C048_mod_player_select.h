@@ -945,6 +945,12 @@ typedef struct {
 // dub bits when the track starts): the menu clears them (English), and this
 // id sets the PS1 dub bit while it plays
 #define MOD_SOUND_NOCTURNE_JP (MU_NOCTURNE | 0x8000)
+#if defined(MOD_KO)
+#include "mod_sound_ko_str.h" // g_ModSoundTracks (display strings), the descriptions
+#if defined(MOD_KO)
+#include "mod_drama_sub_str.h" // 094_21: the sound-mode subtitle TEST (prologue scroll lines, SEL .rodata)
+#endif
+#else
 static const ModSoundTrack g_ModSoundTracks[] MOD_RO = {
     {_S("Metamorphosis"), MU_METAMORPHOSIS},                   // SD2E
     {_S("Prologue"), MU_PROLOGUE},                             // SD19
@@ -991,13 +997,24 @@ static const ModSoundTrack g_ModSoundTracks[] MOD_RO = {
     {_S("Maria Battle"), MU_MOD_MARIA_BOSS},                   // SD23
     {_S("I Am the Wind"), MU_STAFF_CREDITS},                   // SD1D
 };
+#endif
 const char g_ModSoundText[] MOD_RO = _S("Now playing");
 #if !defined(MOD_KO) /* KO hint bar uses SelLegW words instead */
 const char g_ModSoundHint[] MOD_RO = _S("Play/Stop");
 const char g_ModSoundBack[] MOD_RO = _S("Back");
 #endif
-#define MOD_SOUND_N LEN(g_ModSoundTracks)
+// 094_18: the screen reads its list through g_ModSndList / g_ModSndN (the sound mode: g_ModSoundTracks, the
+// "Drama cd" entry: g_ModDramaTracks, a stand-in list of three existing tracks until the drama files arrive)
+static const ModSoundTrack* g_ModSndList;
+static s32 g_ModSndN;
+static s32 g_ModSndDrama;
+#define MOD_SOUND_N g_ModSndN
+#if defined(MOD_KO)
+// 094_12: 8 rows 13 px apart (12px Hangul bands), the chain at y157, "연주 중: title" y167, its description y183
+#define MOD_SOUND_ROWS 8
+#else
 #define MOD_SOUND_ROWS 11
+#endif
 #define MOD_SOUND_JUMP 10 // L1 / R1: 10 tracks back / forward
 // the list in the Player Select's framed panel (ModPanelFrame), screen wide
 #define MOD_SOUND_PANEL_X 24
@@ -1008,11 +1025,22 @@ const char g_ModSoundBack[] MOD_RO = _S("Back");
 #define MOD_SOUND_IN_W (MOD_SOUND_PANEL_HALF * 2 - 32)
 #define MOD_SOUND_X (MOD_SOUND_IN_X + 8) // the list's number column
 #define MOD_SOUND_Y 49                   // row 01: 4 px under the upper chain
+#if defined(MOD_KO)
+#define MOD_SOUND_ROW_H 13
+#define MOD_SOUND_CHAIN_Y 157
+#define MOD_SOUND_L1_Y 170
+#define MOD_SOUND_L2_Y 187
+#define MOD_SOUND_BAND_DY 3 // the band sprite's top is 3 px above the text's top (12px glyph in a 16px band)
+#else
 #define MOD_SOUND_ROW_H 12
+#endif
 #define MOD_SOUND_GOLD MOD_RGB(0xA8, 0x90, 0x40) // the current row's text
 static s32 g_ModSoundCursor;  // kept between visits, as on the Saturn
 static s32 g_ModSoundTop;     // the first row shown
 static s32 g_ModSoundPlaying; // the track playing + 1, 0 none
+#if defined(MOD_KO)
+static s32 g_ModDsubT; // 094_21: frames since the Drama cd track started (subtitle test)
+#endif
 // the track to start once the music has stopped + 1, 0 none: sound.c ignores
 // a request for the id already playing, so going between the two Nocturnes
 // (one id) stops the music first
@@ -1020,16 +1048,98 @@ static s32 g_ModSoundPending;
 
 void func_801AE9A8(void);
 
+#if defined(MOD_KO)
+// The Korean text is 12px bands (SEL's func_801B2608 -> func_801B2108: VRAM (0x180, id * 16), 144 bytes wide), the
+// band cache D_801BC398[id] compares the string POINTER: every track has its own string, so a changed row re-uploads.
+// The upload scratch (g_Pix[1..3], 24576 bytes) holds five uploads of 4352 bytes a frame: three go to the hint bands
+// on the first frame, so at most 2 more then, 4 later (a row not uploaded yet is drawn on a later frame).
+// Bands: rows 0 1 3 4 5 6 7 8 (a track keeps its band: k & 7), 9 playing title, 10 description, 11 "연주 중:";
+// 13 14 2 are the hint bar's (SelLegRows)
+extern char* D_801BC398[16];
+void func_801B2608(char* str, s32 id);
+void func_801B1ED0(void);
+#if MOD_SND_PROMO
+extern s32 g_ModSndPromo;
+#endif
+static const u8 g_ModSndRowBand[8] = {0, 1, 3, 4, 5, 6, 7, 8};
+static s32 g_ModSndBudget;
+static s32 g_ModSndFirst;
+
+static s32 ModSndBand(const char* str, s32 id) {
+    if (D_801BC398[id] != str) {
+        if (g_ModSndBudget <= 0) {
+            return 0;
+        }
+        g_ModSndBudget--;
+#if MOD_SND_PROMO
+        g_ModSndPromo = 1;
+#endif
+        func_801B2608((char*)str, id);
+#if MOD_SND_PROMO
+        g_ModSndPromo = 0;
+#endif
+    }
+    return 1;
+}
+
+// the band's ink (the 12px cells' index 3: 0x90A090 in CLUT 0x1A1) times c / 128 gives the colour c
+static u32 ModSndTint(u32 c) {
+    s32 r = MOD_R(c) * 8 / 9, g = MOD_G(c) * 4 / 5, b = MOD_B(c) * 8 / 9;
+
+    return MOD_RGB(r > 255 ? 255 : r, g > 255 ? 255 : g, b > 255 ? 255 : b);
+}
+
+static void ModSndText(const char* str, s32 id, s32 x, s32 y, s32 w, u32 c) {
+    if (ModSndBand(str, id)) {
+        ModCharselSprt(x, y - MOD_SOUND_BAND_DY, w, 16, 0, id * 16,
+                       g_ClutIds[0x1A1], 6, ModSndTint(c));
+    }
+}
+#define MOD_SND_ROW_TEXT(k, y, c)                                              \
+    ModSndText(g_ModSndList[k].name, g_ModSndRowBand[(k)&7],                   \
+               MOD_SOUND_X + 24, (y), 200, (c))
+#else
+#define MOD_SND_ROW_TEXT(k, y, c)                                              \
+    ModCharselTextRGB((const u8*)g_ModSndList[k].name, MOD_SOUND_X + 24,   \
+                      (y), (c))
+#endif
+
+#if defined(MOD_KO)
+static const ModSoundTrack g_ModDramaTracks[] MOD_RO = {
+    {ko_snd_t01, MU_METAMORPHOSIS}, {ko_snd_t02, MU_PROLOGUE}, {ko_snd_t06, MU_DRACULAS_CASTLE}};
+#endif
+static void ModSndSelect(s32 drama) {
+    g_ModSndDrama = drama;
+#if defined(MOD_KO)
+    if (drama) {
+        g_ModSndList = g_ModDramaTracks;
+        g_ModSndN = LEN(g_ModDramaTracks);
+        g_ModSoundCursor = 0;
+        g_ModSoundTop = 0;
+        return;
+    }
+#endif
+    g_ModSndList = g_ModSoundTracks;
+    g_ModSndN = LEN(g_ModSoundTracks);
+}
+
 static void ModSoundInit(void) {
     MenuHideAllGfx();
     ModSeeClutUpload(); // the panel's box
     g_ModSoundPlaying = 0;
     g_ModSoundPending = 0;
+#if defined(MOD_KO)
+    func_801B1ED0(); // the bands are ours now (other screens' text re-uploads)
+    g_ModSndFirst = 1;
+#endif
 }
 
 static void ModSoundStart(s32 k) {
-    u16 id = g_ModSoundTracks[k].id;
+    u16 id = g_ModSndList[k].id;
 
+#if defined(MOD_KO)
+    g_ModDsubT = 0;
+#endif
     MOD_STATUS_FLAGS &= ~(MOD_FLAG_PS1_DUB | MOD_FLAG_JP_DUB);
     if (id == MOD_SOUND_NOCTURNE_JP) {
         MOD_STATUS_FLAGS |= MOD_FLAG_PS1_DUB;
@@ -1061,27 +1171,39 @@ static void ModSoundDraw(void) {
     s32 i, k, x, y, p;
     const u8* s;
 
+#if defined(MOD_KO)
+    g_ModSndBudget = g_ModSndFirst ? 2 : 4;
+    g_ModSndFirst = 0;
+#endif
     ModPanelFrame(MOD_SOUND_PANEL_X, MOD_SOUND_PANEL_Y, MOD_SOUND_PANEL_HALF,
                   MOD_SOUND_PANEL_H);
-    ModGothic(
-        "sound mode", MOD_CHARSEL_CENTRE_X - 80, MOD_SOUND_PANEL_Y + 10, 0x200);
+    if (g_ModSndDrama) {
+        ModGothic("drama cd", MOD_CHARSEL_CENTRE_X - 64, MOD_SOUND_PANEL_Y + 10,
+                  0x200);
+    } else {
+        ModGothic("sound mode", MOD_CHARSEL_CENTRE_X - 80,
+                  MOD_SOUND_PANEL_Y + 10, 0x200);
+    }
     ModPanelChain(MOD_SOUND_IN_X, MOD_SOUND_Y - 12, MOD_SOUND_IN_W, 0x80);
     p = ModPulse();
     for (i = 0; i < MOD_SOUND_ROWS; i++) {
         k = g_ModSoundTop + i;
+        if (k >= g_ModSndN) {
+            break; // a list shorter than the rows (the drama stand-in)
+        }
         y = MOD_SOUND_Y + i * MOD_SOUND_ROW_H;
-        s = (const u8*)g_ModSoundTracks[k].name;
+        s = (const u8*)g_ModSndList[k].name;
         if (k + 1 == g_ModSoundPlaying) {
             ModSoundMark(y);
         }
         if (k == g_ModSoundCursor) {
             ModSoundNumber(k + 1, MOD_SOUND_X, y, MOD_SOUND_GOLD);
-            ModCharselTextRGB(s, MOD_SOUND_X + 24, y, MOD_SOUND_GOLD);
+            MOD_SND_ROW_TEXT(k, y, MOD_SOUND_GOLD);
             ModPulseBox(
                 MOD_SOUND_IN_X, y - 2, MOD_SOUND_IN_W, MOD_SOUND_ROW_H, p);
         } else if (k + 1 == g_ModSoundPlaying) {
             ModSoundNumber(k + 1, MOD_SOUND_X, y, MOD_TITLE_RGB);
-            ModCharselTextRGB(s, MOD_SOUND_X + 24, y, MOD_TITLE_RGB);
+            MOD_SND_ROW_TEXT(k, y, MOD_TITLE_RGB);
             // see-through dark: half the panel behind it plus a little navy
             // (the panel there is darker than behind the Player Select's
             // unchosen boxes, so plain 50% black looked nearly black)
@@ -1090,8 +1212,7 @@ static void ModSoundDraw(void) {
                 MOD_RGB(14, 16, 36), MOD_RGB(14, 16, 36), 1, MOD_DARK_GOLD);
         } else {
             ModSoundNumber(k + 1, MOD_SOUND_X, y, MOD_SOFT_RGB);
-            ModCharselTextRGB(
-                s, MOD_SOUND_X + 24, y, MOD_RGB(0x78, 0x78, 0x78));
+            MOD_SND_ROW_TEXT(k, y, MOD_RGB(0x78, 0x78, 0x78));
         }
     }
     // the playing row's half see-through box (slot 0x1F) needs abr 0
@@ -1108,6 +1229,40 @@ static void ModSoundDraw(void) {
         ModCharselFlat(
             x, y + 2, x + 4, y + 6, x + 8, y + 2, x + 4, y + 6, 0x80, 0x20);
     }
+#if defined(MOD_KO)
+    ModPanelChain(MOD_SOUND_IN_X, MOD_SOUND_CHAIN_Y, MOD_SOUND_IN_W, 0x80);
+    if (g_ModSoundPlaying) {
+        k = g_ModSoundPlaying - 1;
+        ModSoundMark(MOD_SOUND_L1_Y);
+        ModSndText(ko_snd_play, 11, MOD_SOUND_X, MOD_SOUND_L1_Y, 64,
+                   MOD_TITLE_RGB);
+        ModSndText(g_ModSndList[k].name, 9, MOD_SOUND_X + 58, MOD_SOUND_L1_Y,
+                   200, MOD_RGB(0x80, 0x80, 0x80));
+#if MOD_SND_DESC
+        if (!g_ModSndDrama) {
+            ModSndText(MOD_SND_DESC_STR(k), 10, MOD_SOUND_X, MOD_SOUND_L2_Y, 255,
+                       MOD_RGB(0x80, 0x80, 0x80));
+        }
+#endif
+        // 094_21 subtitle TEST: the Drama cd screen has no description line, so band 10 shows a line that changes
+        // with the time since the track started (the prologue stand-in, row 1; the lines = the scroll's own text)
+        if (g_ModSndDrama && k == 1) {
+            s32 q = 0;
+            s32 j;
+
+            for (j = 0; j < MOD_DSUB_N; j++) {
+                if (g_ModDsubT >= g_ModDsubSec[j] * 60) {
+                    q = j;
+                }
+            }
+            ModSndText(g_ModDsubStr[q], 10, MOD_SOUND_X, MOD_SOUND_L2_Y, 255,
+                       MOD_RGB(0x80, 0x80, 0x80));
+            if (!g_ModSoundPending) {
+                g_ModDsubT++;
+            }
+        }
+    }
+#else
     y = MOD_SOUND_Y + MOD_SOUND_ROWS * MOD_SOUND_ROW_H + 1;
     ModPanelChain(MOD_SOUND_IN_X, y, MOD_SOUND_IN_W, 0x80);
     if (g_ModSoundPlaying) {
@@ -1116,9 +1271,10 @@ static void ModSoundDraw(void) {
         ModCharselTextRGB(
             (const u8*)g_ModSoundText, MOD_SOUND_X, y, MOD_TITLE_RGB);
         ModCharselTextRGB(
-            (const u8*)g_ModSoundTracks[g_ModSoundPlaying - 1].name,
+            (const u8*)g_ModSndList[g_ModSoundPlaying - 1].name,
             MOD_SOUND_X + 12 * 8, y, MOD_RGB(0x80, 0x80, 0x80));
     }
+#endif
 
     // hint bar, as the Player Select's
 #if defined(MOD_KO)
@@ -1197,8 +1353,8 @@ static void ModSoundUpdate(void) {
             g_ModSoundPlaying = 0;
         } else {
             if (g_ModSoundPlaying &&
-                ((g_ModSoundTracks[g_ModSoundPlaying - 1].id ^
-                  g_ModSoundTracks[g_ModSoundCursor].id) &
+                ((g_ModSndList[g_ModSoundPlaying - 1].id ^
+                  g_ModSndList[g_ModSoundCursor].id) &
                  0x7FFF) == 0) {
                 g_api.PlaySfx(SET_STOP_MUSIC);
                 g_ModSoundPending = g_ModSoundCursor + 1;
@@ -1212,10 +1368,13 @@ static void ModSoundUpdate(void) {
         g_api.PlaySfx(SFX_UI_ERROR);
         // back to the menu and its music (unless that is what plays)
         if (g_ModSoundPlaying == 0 ||
-            g_ModSoundTracks[g_ModSoundPlaying - 1].id != MU_PRAYER) {
+            g_ModSndList[g_ModSoundPlaying - 1].id != MU_PRAYER) {
             g_api.PlaySfx(MU_PRAYER);
         }
         MOD_STATUS_FLAGS &= ~(MOD_FLAG_PS1_DUB | MOD_FLAG_JP_DUB);
+#if defined(MOD_KO)
+        func_801B1ED0(); // (our bands out of the cache)
+#endif
         func_801AE9A8();
         func_801AD490();
         g_GameEngineStep = Upd_Eng_MainMenuIdle;
