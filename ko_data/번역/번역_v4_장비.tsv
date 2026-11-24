@@ -1,6 +1,6 @@
 키	분류	EN	번역	글자수(B)	폭한계	넘침여부	비고
 equipment.h:g_EquipDefs:0x000:name	장비	#h5bfb752d92	맨손	4		통과	신규 번역·DUB행 존재(런타임 EN 덮어씀)
-equipment.h:g_EquipDefs:0x000:desc	장비	#h7b3d21cb20	무기 없음. 맨손으로 공격한다	28	144	통과	신규 번역
+equipment.h:g_EquipDefs:0x000:desc	장비	#h7b3d21cb20	비어 있음	28	144	통과	신규 번역
 equipment.h:g_EquipDefs:0x001:name	장비	#h0825c54329	캡슐 몬스터 1	13		통과	신규 번역
 equipment.h:g_EquipDefs:0x001:desc	장비	#hbb3f7a8450	머맨 아군 소환 [사용]	21	144	통과	신규 번역
 equipment.h:g_EquipDefs:0x002:name	장비	#he8d78933e2	캡슐 몬스터 2	13		통과	신규 번역

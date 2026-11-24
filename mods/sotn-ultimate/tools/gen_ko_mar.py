@@ -187,13 +187,19 @@ def main():
     else:
         if not os.path.exists(BAK):
             io.open(BAK, "w", encoding="utf-8", newline="").write(src)
-    for arr0 in ("g_MbScriptPre", "g_MbScriptPost"):
+    for arr0 in ("g_MbScriptPre", "g_MbScriptPost", "g_MbScriptPrePsp",
+                 "g_MbScriptPostPsp"):
         assert re.search(r"u8 " + arr0 + r"\[\] MOD_RO = \{\n    \w", src), \
             "unexpected shape (gen_cen_maria.py output changed?): " + arr0
-    for arr, want in (("g_MbScriptPre", "mod_maria_boss_data.h:g_MbScriptPre:"),
-                      ("g_MbScriptPost", "mod_maria_boss_data.h:g_MbScriptPost:")):
+    # the PSP boss' three boxes (0x3C1 / 0x3C2 / 0x3C3, CENP.BIN: the PS1 dub with the PSP boss): keys
+    # g_MbScriptPspPre / g_MbScriptPspPost (not a prefix of the Saturn ones: gen_ko_dlg matches by prefix)
+    for arr, want, nkeys in (
+            ("g_MbScriptPre", "mod_maria_boss_data.h:g_MbScriptPre:", 7),
+            ("g_MbScriptPost", "mod_maria_boss_data.h:g_MbScriptPost:", 7),
+            ("g_MbScriptPrePsp", "mod_maria_boss_data.h:g_MbScriptPspPre:", 7),
+            ("g_MbScriptPostPsp", "mod_maria_boss_data.h:g_MbScriptPspPost:", 6)):
         tsv = dict((k, v) for k, v in load_rows(want).items())
-        assert len(tsv) == 7, (arr, len(tsv))
+        assert len(tsv) == nkeys, (arr, len(tsv))
         m = re.search(r"u8 " + arr + r"\[\] MOD_RO = \{(.*?)\n\};",
                       src, re.S)
         assert m, arr

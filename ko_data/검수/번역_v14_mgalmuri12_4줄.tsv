@@ -149,7 +149,7 @@ config_us.h:g_RelicDefs:31:name	유물					0		-	빈 행
 config_us.h:g_RelicDefs:31:desc	유물					0		-	빈 행	
 config_us.h:g_RelicDefs:card:suffix	유물		의 근원						사역마 카드 7종 이름 접미어(단일 값). 이름 칸의 {카드} 를 이것으로 바꿈	결정(2026-11-19): 「~의 근원」
 equipment.h:g_EquipDefs:0x000:name	장비		맨손			4		통과	신규 번역·DUB행 존재(런타임 EN 덮어씀)	
-equipment.h:g_EquipDefs:0x000:desc	장비		무기 없음. 맨손으로 공격한다			28	144	통과	신규 번역	
+equipment.h:g_EquipDefs:0x000:desc	장비		비어 있음			28	144	통과	신규 번역	
 equipment.h:g_EquipDefs:0x001:name	장비		캡슐 몬스터 1			12		통과	신규 번역	
 equipment.h:g_EquipDefs:0x001:desc	장비		머맨 아군 소환 [사용]			21	144	통과	신규 번역	
 equipment.h:g_EquipDefs:0x002:name	장비		캡슐 몬스터 2			12		통과	신규 번역	
@@ -1760,3 +1760,16 @@ rbo6_19e7:4	대사	#1	………….
 rbo6_19e7:5	대사	#1/1/1	알카드여, 가르쳐 다오./리사는 마지막에 뭐라고 했느냐…?							
 rbo6_19e7:6	대사	#1/1/1/1/1/1/1/1/1/1/1	인간을 원망해서는 안 된다./만약 인간이 용서받지/못할 존재라면/스스로 멸망의 길을/걷게 될 것이다./그 세계의 주민이 아닌 자가/손을 대서는 안 된다고…./그리고, 아버지…./당신을 영원히 사랑한다고….							
 rbo6_19e7:7	대사	#1/1	리사…./나는, 잘못되었던 것인가….							
+mod_maria_boss_data.h:g_MbScriptPspPre:0	대사	#1	알카드?			7		확인필요	PSP 보스전(CENP) = Saturn Pre 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPre:1	대사	#1	그 목소리? 마리아?			18		확인필요	PSP 보스전(CENP) = Saturn Pre 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPre:2	대사	#1/1/1/1	미안해. 네 말이/맞았어. 그가 적과/한패가 되었어...			50		확인필요	PSP 보스전(CENP) = Saturn Pre 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPre:3	대사	#1/1	역시 벨몬드가/맞았군...			23		확인필요	PSP 보스전(CENP) = Saturn Pre 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPre:4	대사	#1/1/1/1	하지만 누군가 그를/조종하고 있을 거야./무슨 일이 있어도/리히터를 해치면 안 돼.			78		확인필요	PSP 보스전(CENP) = Saturn Pre 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPre:5	대사	#1/1	하지만 그를/막아야만 한다.			26		확인필요	PSP 보스전(CENP) = Saturn Pre 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPre:6	대사	#1/1/1/1	알아./그럼 모두를 위해/네 힘을 보여줘/꼭 해내 보겠어!			53		확인필요	신규 번역(PSP 보스전 0x3C1, 뮤즈 M8 초안·마리아 부드러운 반말)	
+mod_maria_boss_data.h:g_MbScriptPspPost:0	대사	#1/1/1/1	넌 나보다 강해./그러니 리히터를/구해줄래?/부탁해...			51		확인필요	신규 번역(PSP 보스전 0x3C2, 뮤즈 M8 초안·마리아 부드러운 반말)	
+mod_maria_boss_data.h:g_MbScriptPspPost:1	대사	#1/1	약속은 못 한다./하지만 반드시 막아내겠다.			41		확인필요	신규 번역(PSP 보스전 0x3C3, 뮤즈 M8 초안·알카드 한다체)	
+mod_maria_boss_data.h:g_MbScriptPspPost:2	대사	#1/1	자... 여기./이걸 가져가.			24		확인필요	PSP 보스전(CENP) = Saturn Post:3 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPost:3	대사	#1	이건 뭐지?			10		확인필요	PSP 보스전(CENP) = Saturn Post:4 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPost:4	대사	#1/1/1	이걸 쓰면/사악한 환영 너머가/보여.			34		확인필요	PSP 보스전(CENP) = Saturn Post:5 와 같은 줄	
+mod_maria_boss_data.h:g_MbScriptPspPost:5	대사	#1/1/1/1	고맙다./그럼 그대는 친구의 영혼을 위해/기도하는 게 좋겠군.			58		확인필요	PSP 보스전(CENP) = Saturn Post:6 와 같은 줄	

@@ -45,7 +45,8 @@ VOICE_LO, VOICE_HI = 0x300, 0x600
 RE_OP = re.compile(r"^(\s*-\s*\[)(\w+)(?:,\s*(.*?))?(\]\s*)$")
 RE_MACRO = re.compile(r"^(\w+)\((.*)\)$")
 MAR_HDR = "mods/sotn-ultimate/src/maria_saturn/mod_maria_boss_data.h"
-MAR_ARRAYS = ("g_MbScriptPre", "g_MbScriptPost")
+MAR_ARRAYS = ("g_MbScriptPre", "g_MbScriptPost", "g_MbScriptPrePsp",
+              "g_MbScriptPostPsp")
 
 FILES = [
     "assets/st/st0/cutscene_script_psx.yaml",

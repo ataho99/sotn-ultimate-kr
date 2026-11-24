@@ -81,7 +81,8 @@ def main():
             continue
         key = r[ki]
         pre = key.rsplit(":", 1)[0]
-        if pre in ("mod_maria_boss_data.h",) or re.match(r"(bo|rbo)\d+_|mar_", pre):
+        if (pre in ("mod_maria_boss_data.h",) or re.match(r"(bo|rbo)\d+_|mar_", pre)
+                or pre.startswith("mod_maria_boss_data.h:g_MbScriptPsp")):  # the PSP boss' boxes: gen_ko_mar
             continue  # 보스 스크립트 행은 gen_ko_splice(--apply-boss)/gen_ko_mar 담당
         assert pre in STAGE, key
         t = r[ti].replace("…", "...").replace("\\n", "/")
