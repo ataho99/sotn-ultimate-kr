@@ -61,7 +61,23 @@ static s32 D_80174F80[11];
 void func_8015F9F0(Entity* entity) {
     s32 i;
     s32 enemyId;
+#if defined(MOD_MARIA_SAT)
+    // Saturn 060ABE94: her attacks never take id 2, which the per-frame
+    // recount below never counts (so every holy water flame got id 2 and the
+    // trail hit as one attacker, once per 16 frames): slots below 32 take
+    // the least-used of ids 3-6, the rest of ids 7-10
+    s32 lo = entity < &g_Entities[32] ? 3 : 7;
 
+    for (i = 0;; i++) {
+        for (enemyId = lo; enemyId < lo + 4; ++enemyId) {
+            if (D_80174F80[enemyId] == i) {
+                ++D_80174F80[enemyId];
+                entity->enemyId = enemyId;
+                return;
+            }
+        }
+    }
+#else
     if (entity < &g_Entities[32]) {
         entity->enemyId = 1;
         return;
@@ -76,6 +92,7 @@ void func_8015F9F0(Entity* entity) {
             }
         }
     }
+#endif
 }
 
 #if defined(VERSION_PSP)
@@ -787,7 +804,9 @@ static FactoryBlueprint blueprints[] = {
     B_MAKE(0x56, 1, 1, 1, 1, 0, 0, 0, 0),
     B_MAKE(0x57, 1, 1, 1, 1, 0, 1, 0, 0),
     B_MAKE(0x58, 1, 1, 0, 1, 0, 7, 3, 0), // 99 fully charged
-    B_MAKE(0x59, 4, 1, 0, 1, 3, 0, 1, 1), // 100 its diamonds
+    // 100 its diamonds: one a frame (the Saturn's table: 3 frames apart);
+    // MarEntityAura holds each back to start 0, 6, 8, 14 (mar_attacks.h)
+    B_MAKE(0x59, 4, 1, 0, 1, 1, 0, 1, 1),
     B_MAKE(0x5A, 1, 1, 1, 1, 0, 0, 1, 0),
     B_MAKE(0x5B, 1, 1, 0, 1, 1, 6, 2, 10),
     B_MAKE(0x5C, 3, 1, 1, 1, 5, 0, 2, 1),

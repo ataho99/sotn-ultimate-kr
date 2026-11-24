@@ -77,12 +77,28 @@ VERSION=us mipsel-linux-gnu-cpp -Iinclude -Iinclude/psxsdk -Isrc/dra -lang-c \
     python3 tools/maspsx/maspsx.py --expand-div --aspsx-version=2.34 |
     mipsel-linux-gnu-as -Iinclude -march=r3000 -mtune=r3000 -no-pad-sections \
         -O1 -G0 -o "$OUT/sysopt.o"
+# the third hand's use and food (src/items/holder_code.c, DRA's context)
+VERSION=us mipsel-linux-gnu-cpp -Iinclude -Iinclude/psxsdk -Isrc/dra -lang-c \
+    -undef -Wall -fno-builtin -Dmips -D__GNUC__=2 -D__OPTIMIZE__ -D__mips__ -D__mips \
+    -Dpsx -D__psx__ -D__psx -D_PSYQ -D__EXTENSIONS__ -D_MIPSEL -D_LANGUAGE_C \
+    -DLANGUAGE_C -DNO_LOGS -DHACKS -DUSE_INCLUDE_ASM -D_internal_version_us -DSOTN_STR \
+    mods/sotn-ultimate/src/items/holder_code.c | tools/sotn_str/target/release/sotn_str process |
+    iconv --from-code=UTF-8 --to-code=Shift-JIS |
+    bin/cc1-psx-26 -G0 -w -funsigned-char -fpeephole -ffunction-cse \
+        -fpcc-struct-return -fcommon -fverbose-asm -msoft-float -g -quiet \
+        -mcpu=3000 -fgnu-linker -mgas -gcoff -O2 |
+    python3 tools/maspsx/maspsx.py --expand-div --aspsx-version=2.34 |
+    mipsel-linux-gnu-as -Iinclude -march=r3000 -mtune=r3000 -no-pad-sections \
+        -O1 -G0 -o "$OUT/holder.o"
 
-# DRA's functions / statics it calls (this build's addresses)
+# DRA's functions / statics they call (this build's addresses)
 : > "$OUT/syms.txt"
-for s in func_800F5E68 MenuDrawStr MenuHandleCursorInput D_8013784C \
-    g_Entities MenuSoundConfigDraw g_Menus g_MenuInit g_LbaSdAlkVh \
-    g_LbaSdAlkVb g_CdStep g_IsUsingCd g_LoadFile g_ServantLoaded g_MenuStep     g_LoadOvlIdx g_StageId SsUtAllKeyOff     g_Status g_Player g_GameTimer FlushCache func_80109990 HandleDamage; do
+# v1.5 auto list covers sysopt.o and holder.o; KO manual list had the same DRA names plus cheat helpers, see M2 report
+# v1.5 port (KO cheats): the auto list is what sysopt.o / holder.o leave undefined, which also names the cheats' DERIVED symbols
+# (ModHdEntry, ModHdOrig0/1, ModStairsA/B: computed by the python block below, not in dra.elf), so those are dropped here; and the
+# python block reads HandleDamage and func_80109990 from syms.txt although sysopt.o does not call them, so they are added by name.
+for s in $({ mipsel-linux-gnu-nm -u "$OUT/sysopt.o" "$OUT/holder.o" | awk 'NF == 2 {print $2}'; echo HandleDamage; echo func_80109990; } \
+            | grep -v -x -E 'ModHdEntry|ModHdOrig0|ModHdOrig1|ModStairsA|ModStairsB' | sort -u); do
     a=$(mipsel-linux-gnu-nm build/us/dra.elf | awk -v s="$s" '$3==s{print $1}')
     if [ -z "$a" ]; then # (main SDK functions: config/symbols.us.txt)
         a=$(awk -v s="$s" '$1==s{sub(/;/,"",$3); sub(/^0x/,"",$3); print $3}' config/symbols.us.txt)
@@ -133,7 +149,7 @@ SECTIONS {
 EOF
 mipsel-linux-gnu-ld -nostdlib --no-check-sections -Map "$OUT/sysopt.map" \
     -T "$OUT/sysopt.ld" -T config/undefined_syms.us.txt -T "$OUT/syms.txt" \
-    -o "$OUT/sysopt.elf" "$OUT/sysopt.o"
+    -o "$OUT/sysopt.elf" "$OUT/sysopt.o" "$OUT/holder.o"
 # its state (.data) is loaded with the file; .bss would not be cleared
 sz=$(mipsel-linux-gnu-objdump -h "$OUT/sysopt.elf" | awk '$2==".bss"{print $3}')
 if [ -n "$sz" ] && [ $((16#$sz)) -ne 0 ]; then
@@ -172,8 +188,8 @@ assert d[52:52 + len(want2)] == want2, (d[52:52 + len(want2)].hex(), want2.hex()
 print("sysopt: KO info bar 2 %d bytes match KO_XSET_BAR2_ASM at header + 52" % len(want2))
 PY
 fi
-if [ $((OFF + size)) -gt $((LEN)) ]; then
-    echo "FAIL sysopt: $size bytes, $((OFF + size - LEN)) past MOD_ARC_F_LEN"
+if [ $((OFF + size)) -gt $((LEN - 16)) ]; then
+    echo "FAIL sysopt: $size bytes, $((OFF + size - LEN + 16)) past MOD_ARC_F_LEN - 16 (the holder table)"
     exit 1
 fi
 # (the file the earlier build patched in place: the disc takes retail again)
@@ -182,11 +198,30 @@ cp $RETAIL build/us/ARC_F2.BIN
 truncate -s $OFF build/us/ARC_F2.BIN
 cat "$OUT/sysopt.bin" >> build/us/ARC_F2.BIN
 truncate -s $((LEN)) build/us/ARC_F2.BIN
+# the third hand's table in the last 16 bytes (game_mod.h MOD_HOLDER_TBL):
+# magic, ModHolderUseCode, EntityModHolderFoodCode
+HMAGIC=$(grep -hoE "#define MOD_HOLDER_MAGIC 0x[0-9A-Fa-f]+" mods/sotn-ultimate/include/game_mod.h | awk '{print $3}')
+python3 - "$OUT/sysopt.elf" "$HMAGIC" "$LEN" <<'PYEOF'
+import subprocess, sys, struct
+syms = {}
+for l in subprocess.run(["mipsel-linux-gnu-nm", sys.argv[1]], capture_output=True,
+                        text=True).stdout.splitlines():
+    p = l.split()
+    if len(p) == 3:
+        syms[p[2]] = int(p[0], 16)
+with open("build/us/ARC_F2.BIN", "r+b") as f:
+    f.seek(int(sys.argv[3], 16) - 16)
+    f.write(struct.pack("<4I", int(sys.argv[2], 16), syms["ModHolderUseCode"],
+                        syms["EntityModHolderFoodCode"], 0))
+PYEOF
 # the other player files loaded at the same address must not hold the magic
 # there (the stubs would call into them)
 for f in disks/us/BIN/RIC.BIN build/us/RIC2.BIN build/us/MARIA.BIN build/us/MARIA2.BIN; do
     if [ -f "$f" ] && [ "$(od -An -tx4 -j $OFF -N4 "$f" | tr -d ' ')" = "$(printf %08x $MAGIC)" ]; then
         echo "FAIL sysopt: $f holds the magic at 0x$(printf %X $OFF)"; exit 1
+    fi
+    if [ -f "$f" ] && [ "$(od -An -tx4 -j $((LEN - 16)) -N4 "$f" | tr -d ' ')" = "$(printf %08x $HMAGIC)" ]; then
+        echo "FAIL sysopt: $f holds the holder magic at 0x$(printf %X $((LEN - 16)))"; exit 1
     fi
 done
 echo "sysopt: $size bytes at $ADDR, ARC_F2.BIN free $((LEN - OFF - size))"

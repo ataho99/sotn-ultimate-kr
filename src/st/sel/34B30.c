@@ -760,13 +760,23 @@ void func_801B5A7C(void) {
     }
 }
 
+#if defined(MOD_PTBR)
+s32 ModPtbrLoad(s32 block);
+#endif
+
 void func_801B60D4(void) {
     Entity* ent;
     s32 i;
 
     switch (g_GameEngineStep) {
     case 0:
+#if defined(MOD_PTBR)
+        if (!g_IsUsingCd &&
+            !(MOD_PTBR_TEXT_PT() ? ModPtbrLoad(3)
+                                 : MOD_JP_DUB_ON() && ModPtbrLoad(4))) {
+#else
         if (!g_IsUsingCd) {
+#endif
 #if defined(MOD_SATURN)
             // Saturn "STAFF" name code: no movie, no cutscene, credits only
             // (case 4 on; the music starts there, after DRA's CD loads).

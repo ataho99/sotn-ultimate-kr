@@ -92,7 +92,15 @@ void EntityBreakable(Entity* entity) {
         }
     } else {
         InitializeEntity(g_EInitBreakable);
+#if defined(STAGE_IS_GDN) || defined(STAGE_IS_RGDN) ||                         \
+    defined(STAGE_IS_PRS) || defined(STAGE_IS_RPRS)
+        // Saturn port stages: the scenery under every enemy part (their
+        // torches covered the Hell Garden's Venus Weed, which draws down to
+        // 0x7E), above the decorations (0x60-0x6A); user, 2026-11-13
+        entity->zPriority = g_unkGraphicsStruct.g_zEntityCenter - 0x20;
+#else
         entity->zPriority = g_unkGraphicsStruct.g_zEntityCenter - 20;
+#endif
         entity->blendMode = blend_modes[breakableType];
         entity->hitboxHeight = g_eBreakableHitboxes[breakableType];
         entity->animSet = g_eBreakableanimSets[breakableType];

@@ -79,6 +79,9 @@ var miscEntries = []lbaEntry{
 	{"OFF_BIN_WEAPON2", "BIN/WEAPON2.BIN", lbaOffset},
 	// Saturn port mod: Richter's alternate costume (mods/sotn-ultimate/tools/build_ric2.py)
 	{"OFF_BIN_RIC", "BIN/RIC.BIN", lbaOffset},
+	// (its size: the mod grew the overlay past retail 0x39A58; RIC2.BIN is
+	// the same size)
+	{"LEN_BIN_RIC", "BIN/RIC.BIN", lbaSize},
 	{"OFF_BIN_RIC2", "BIN/RIC2.BIN", lbaOffset},
 	// Saturn port mod: boss Richter in the coat (mods/sotn-ultimate/tools/build_bo6ric2.py)
 	{"OFF_BIN_BO6RIC2", "BIN/BO6RIC2.BIN", lbaOffset},

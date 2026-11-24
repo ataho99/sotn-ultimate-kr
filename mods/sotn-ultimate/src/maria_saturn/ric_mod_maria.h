@@ -25,9 +25,10 @@ void MarDoKick(void);
 void MarSetBackdash(void);
 // her buttons. The Saturn's C (kick) and R (backdash) first went to the PS1's
 // Triangle and R1; players asked for Circle and Triangle, the PS1 Alucard's
-// backdash button, keeping R1 for the backdash too
+// backdash button (R1 also backdashed until her Button set-up, in the
+// Ultimate menu, could move it there)
 #define MAR_PAD_KICK PAD_CIRCLE
-#define MAR_PAD_BACKDASH (PAD_TRIANGLE | PAD_R1)
+#define MAR_PAD_BACKDASH PAD_TRIANGLE
 void MarCharge(s32 allowed);
 void MarSetDiveKick(s32 moving);
 void MarLand(void);
@@ -53,6 +54,8 @@ extern AnimationFrame mar_anim_backdash_end[];
 extern AnimationFrame mar_anim_backdash_end_b[];
 extern AnimationFrame mar_anim_throw[];
 extern AnimationFrame mar_anim_throw_b[];
+extern AnimationFrame mar_anim_stop_run_b[];
+extern AnimationFrame mar_anim_hit_air[];
 // her command specials (mar_specials.h)
 void MarCheckSpecials(void);
 void MarStepSpecial(void);

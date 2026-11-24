@@ -59,6 +59,10 @@ for tbl, pid, sid, field, ps1, sat, note in CHANGES:
     if tbl == "EQ":  # same item on both (icon matches)
         assert DRA[pbase + pid * stride + 0x2C:pbase + pid * stride + 0x2E] == \
             GAME[sbase + sid * stride + 0x2C:sbase + sid * stride + 0x2E][::-1], pid
+    if (tbl, field) == ("EQ", "comboMain"):
+        # the Woodland Shield (a Saturn item) combos on both balances (user,
+        # 2026-11-15): the PS1 balance gets the Saturn value too
+        ps1 = sat
     out.append("MOD_BAL_%s(0x%03X, %s, 0x%X, 0x%X),%s\n" % (
         tbl, pid, field, ps1, sat, " // " + note if note else ""))
 text = "".join(out)

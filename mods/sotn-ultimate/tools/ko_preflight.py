@@ -237,11 +237,11 @@ except Exception:  # noqa: BLE001
 
 PLATE = set()
 try:
-    _pb = open(P4 + "ko_8p_block_248.bin", "rb").read()
+    _pb = open(P4 + "ko_8p_block_249.bin", "rb").read()
     _pn = struct.unpack("<H", _pb[:2])[0]
     PLATE = set(struct.unpack("<%dH" % _pn, _pb[2:2 + _pn * 2]))
 except Exception as ex:  # noqa: BLE001
-    fail("6", "ko_8p_block_248.bin (8px plate, gen_ko_cfg / check_ko_glyph / KO_8P.BIN): %s" % exc(ex))
+    fail("6", "ko_8p_block_249.bin (8px plate, gen_ko_cfg / check_ko_glyph / KO_8P.BIN): %s" % exc(ex))
 
 # ===================================================================== aggregators (checks 1 / 3)
 MISS = {}      # (char, encoder) -> [count, keys]   no glyph cell
@@ -444,7 +444,7 @@ def c1_equip():
                 o = ord(ch)
                 if ch == " " or 0x20 <= o < 0x7F:
                     if ch != " " and o not in PLATE:
-                        miss(ch, key, "8px plate (equipment name, ko_8p_block_248)")
+                        miss(ch, key, "8px plate (equipment name, ko_8p_block_249)")
                     continue
                 if not is_h(ch):
                     _agg(FULL if is_fw(ch) else HALF, (ch, "_S 8px (equipment name: Hangul + ASCII only)"), key)
@@ -452,7 +452,7 @@ def c1_equip():
                 if ch not in MAP:
                     miss(ch, key, "_S 8px (equipment name, profile map)")
                 elif MAP[ch] not in PLATE:
-                    miss(ch, key, "8px plate (equipment name, ko_8p_block_248)")
+                    miss(ch, key, "8px plate (equipment name, ko_8p_block_249)")
                 elif MAP[ch] > 0xF375:
                     fail("5", "%s: %s code %04X > F375 (gen_ko_equip enc_name assert)" % (key, ctext(ch), MAP[ch]))
         elif key.endswith(":desc"):
@@ -510,7 +510,7 @@ def c1_cfg():
                 elif ch not in MAP:
                     miss(ch, key, "_S 8px (cfg label, profile map)")
                 elif MAP[ch] not in PLATE:
-                    miss(ch, key, "8px plate (cfg label, ko_8p_block_248)")
+                    miss(ch, key, "8px plate (cfg label, ko_8p_block_249)")
             else:
                 if o < 128:
                     if ch != " " and not ch.isalpha():
@@ -1449,7 +1449,7 @@ def c5_tables():
     sh = P4 + "ko_sheet2.bin"
     if os.path.exists(sh) and len(open(sh, "rb").read()) > 0x100:
         fail("5", "ko_sheet2.bin > 0x100 B (KO_FONT8_ADV follows at 0x6200)")
-    pb = P4 + "ko_8p_block_248.bin"
+    pb = P4 + "ko_8p_block_249.bin"
     if os.path.exists(pb):
         b = open(pb, "rb").read()
         pn = struct.unpack("<H", b[:2])[0]
@@ -1458,9 +1458,9 @@ def c5_tables():
         pin = re.search(r"if [(]n == ([0-9]+)[)]", io.open(eqc, encoding="utf-8").read()) if os.path.exists(eqc) else None
         if len(b) != 2 + pn * 10 or len(b) > 4096 or not pin or int(pin.group(1)) != pn:
             fail("5", "8px plate: %d cells / %d B (want 2+10n <= 4096), eq_core.c pins %s" % (pn, len(b), pin and pin.group(1)))
-        m = re.search(r"ko_8p_block_248\.bin', 'rb'\)\.read\(\)\nassert hashlib\.sha256\(b\)\.hexdigest\(\) == '([0-9a-f]{64})'", BUILD_TXT)
+        m = re.search(r"ko_8p_block_249\.bin', 'rb'\)\.read\(\)\nassert hashlib\.sha256\(b\)\.hexdigest\(\) == '([0-9a-f]{64})'", BUILD_TXT)
         if m and hashlib.sha256(b).hexdigest() != m.group(1):
-            fail("5", "ko_8p_block_248.bin sha256 != the KO_8P.BIN pin in build_ko_trial.sh")
+            fail("5", "ko_8p_block_249.bin sha256 != the KO_8P.BIN pin in build_ko_trial.sh")
 
 
 # ===================================================================== check 6: paths / env
@@ -1481,7 +1481,7 @@ def c6_paths():
         (BX.get("KO_PROMO", P4 + "ko_promo_tbl.bin"), "gen", "build KO_PROMO (gen_ko_promo)"),
         (BX.get("KO_SHEET2", P4 + "ko_sheet2.bin"), "gen", "build KO_SHEET2 (gen_ko_sheet2)"),
         (P4 + "ko_promo_map.tsv", "in", "gen_ko_splice import (gen_ko_promo rewrites)"),
-        (P4 + "ko_8p_block_248.bin", "in", "KO_8P.BIN / gen_ko_cfg / check_ko_glyph"),
+        (P4 + "ko_8p_block_249.bin", "in", "KO_8P.BIN / gen_ko_cfg / check_ko_glyph"),
         (P4 + "ko_8p_block_243.bin", "in", "gen_ko_font8"),
         (P4 + "ko_8p_map_243.tsv", "in", "gen_ko_font8"),
         (P4 + "ko_handcoded_chars.txt", "in", "check_ko_glyph hand-coded sources"),

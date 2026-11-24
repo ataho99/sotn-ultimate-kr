@@ -1164,6 +1164,17 @@ s32 ApplySaveData(SaveData* save) {
     if (g_PlayableCharacter != PLAYER_ALUCARD) {
         g_Settings.isSoundMono = false;
     }
+    // (once) the three bosses an older Richter / Maria save had marked
+    // beaten from its start, so they can be fought (game_mod.h
+    // MOD_FLAG_BOSSES_ON; 5F60C.c InitStatsAndGear no longer marks them)
+    if (g_PlayableCharacter != PLAYER_ALUCARD &&
+        !(MOD_STATUS_FLAGS & MOD_FLAG_BOSSES_ON)) {
+        g_Settings.timeAttackRecords[TIMEATTACK_EVENT_SUCCUBUS_DEFEAT] = 0;
+        g_Settings
+            .timeAttackRecords[TIMEATTACK_EVENT_MINOTAUR_WEREWOLF_DEFEAT] = 0;
+        g_Settings.timeAttackRecords[TIMEATTACK_EVENT_DEATH_DEFEAT] = 0;
+        MOD_STATUS_FLAGS |= MOD_FLAG_BOSSES_ON;
+    }
 #endif
 
     for (i = 0; i < LEN(g_CastleFlags); i++) {

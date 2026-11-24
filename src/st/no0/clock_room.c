@@ -145,6 +145,12 @@ void EntityClockRoomController(Entity* self) {
     }
 
     self->ext.clockRoom.unk8A = g_unkGraphicsStruct.D_800973FC;
+#if defined(MOD_SATURN)
+    // the PSP Maria has no Stopwatch: this statue stays open for her
+    if (g_PlayableCharacter == PLAYER_MARIA && MOD_MARIA_PSP()) {
+        g_Statues[RIGHT_STATUE] = true;
+    }
+#endif
 
     // Every other minute the top left statue opens
     if (timer_minutes & 1) {

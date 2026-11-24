@@ -31,7 +31,9 @@ export interface NumArray {
 // link map addresses (RAM) the scripts use
 export interface Ric2Syms {
     // build/us/ric.map (build_ric2.py's ric_syms: the last definition of a name)
-    ric: { richter_sprites: number; spritebank0: number; spritebank1: number };
+    ric: { richter_sprites: number; spritebank0: number; spritebank1: number;
+        // Richter's Ultimate stairs stance facing down (gen_ric_stairs.py)
+        g_RicStairSpr?: number; g_RicStairFrame?: number };
     // build/us/bobo6.map (build_bo6ric2.syms: the first)
     bo6: { richter_sprites: number; D_us_801A39B0: number; D_us_801A43A4: number; D_us_8019E9A0: number };
     // build/us/sttop.map
@@ -186,6 +188,109 @@ function packPsx(img: Img): Uint8Array {
         out[i] = (img.d[2 * i] | (img.d[2 * i + 1] << 4)) & 0xff;
     }
     return out;
+}
+
+// Richter's Ultimate stairs stances (mods/sotn-ultimate/tools/gen_ric_stairs.py:
+// the same constants): his idle (frame 1) above the waist on the legs of
+// frame 211 (facing up, in sprite 0xC3's slot) or 212 (facing down, in
+// g_RicStairSpr; RicInit points sprite 0xC4 / frame 212 there)
+const ST_IDLE = 1;
+const ST_UP = 211;
+const ST_DOWN = 212;
+const ST_WAIST = 5;
+const ST_THIGH = 0;
+const ST_FRAME_X = -16;
+const ST_FRAME_Y = -24;
+const ST_BUF = 4 + ((24 * 45) >> 1);
+const ST_SLOT = 0xc3;
+
+type Part = [Img, number, number]; // image, left, top (frame coordinates)
+
+// gen_ric_stairs.compose: the legs below the waist, the idle above, and a
+// raised thigh grown up from the waist line through the pixels the idle
+// leaves empty; cropped, its width padded to a multiple of 4
+function stairsCompose(top: Part, legs: Part): Part {
+    const [ti, tx, ty] = top;
+    const [li, lx, ly] = legs;
+    const x0 = Math.min(tx, lx);
+    const y0 = Math.min(ty, ly);
+    const W = Math.max(tx + ti.w, lx + li.w) - x0;
+    const H = Math.max(ty + ti.h, ly + li.h) - y0;
+    const c = new Img(W, H);
+    const paint = (img: Img, ox: number, oy: number, keep: (fy: number) => boolean): void => {
+        for (let r = 0; r < img.h; r++) {
+            if (!keep(oy + r)) {
+                continue;
+            }
+            for (let x = 0; x < img.w; x++) {
+                const v = img.at(r, x);
+                if (v) {
+                    c.d[(oy + r - y0) * W + ox - x0 + x] = v;
+                }
+            }
+        }
+    };
+    paint(li, lx, ly, (fy) => fy >= ST_WAIST);
+    paint(ti, tx, ty, (fy) => fy < ST_WAIST);
+    const lg = new Img(W, H);
+    for (let r = 0; r < li.h; r++) {
+        for (let x = 0; x < li.w; x++) {
+            lg.d[(ly - y0 + r) * W + lx - x0 + x] = li.at(r, x);
+        }
+    }
+    const w0 = ST_WAIST - y0;
+    if (0 <= w0 && w0 < H) {
+        const todo: [number, number][] = [];
+        const seen = new Set<number>();
+        for (let x = 0; x < W; x++) {
+            if (lg.at(w0, x)) {
+                todo.push([w0, x]);
+                seen.add(w0 * W + x);
+            }
+        }
+        while (todo.length) {
+            const [y, x] = todo.pop()!;
+            for (const [ny, nx] of [[y - 1, x], [y, x - 1], [y, x + 1], [y + 1, x]]) {
+                if (seen.has(ny * W + nx) || !(ST_THIGH - y0 <= ny && ny < w0)) {
+                    continue;
+                }
+                if (0 <= nx && nx < W && lg.at(ny, nx) && !c.at(ny, nx)) {
+                    seen.add(ny * W + nx);
+                    c.d[ny * W + nx] = lg.at(ny, nx);
+                    todo.push([ny, nx]);
+                }
+            }
+        }
+    }
+    let xa = W;
+    let xb = -1;
+    let ya = H;
+    let yb = -1;
+    for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+            if (c.at(y, x)) {
+                xa = Math.min(xa, x);
+                xb = Math.max(xb, x);
+                ya = Math.min(ya, y);
+                yb = Math.max(yb, y);
+            }
+        }
+    }
+    check(xb >= 0, "stairs stance empty");
+    const cw = xb - xa + 1;
+    const pw = cw + (-cw & 3);
+    const out = new Img(pw, yb - ya + 1);
+    for (let y = 0; y < out.h; y++) {
+        for (let x = 0; x < cw; x++) {
+            out.d[y * pw + x] = c.at(ya + y, xa + x);
+        }
+    }
+    return [out, x0 + xa, y0 + ya];
+}
+
+function spriteBytes(img: Img, px: number, py: number): Uint8Array {
+    check(0 <= px && px <= 255 && 0 <= py && py <= 255, "stairs pivot");
+    return concat([new Uint8Array([img.w, img.h, px, py]), packPsx(img)]);
 }
 
 class Saturn {
@@ -482,7 +587,7 @@ export interface Ric2Bin {
 }
 
 export function makeRic2(ric: Uint8Array, syms: Ric2Syms["ric"], s1: Saturn, s2: Saturn, g2: Uint8Array,
-                         w2: Uint8Array): Ric2Bin {
+                         w2: Uint8Array, retail: Uint8Array): Ric2Bin {
     check(syms.spritebank0 - RAM === SHEET_END, "RIC's sprite sheet moved");
     const table = syms.richter_sprites - RAM;
     // the PS1 sheet
@@ -504,6 +609,14 @@ export function makeRic2(ric: Uint8Array, syms: Ric2Syms["ric"], s1: Saturn, s2:
         const [w, h, px, py] = [ric[q], ric[q + 1], ric[q + 2], ric[q + 3]];
         return [w, h, px, py, unpackPsx(ric, q + 4, w, h), q];
     });
+    // sprite 0xC3's slot holds the facing-up stairs stance: the coat is
+    // matched with its original art (the retail RIC, same sheet layout)
+    {
+        const q = sprites[ST_SLOT][5];
+        const [w, h, px, py] = [retail[q], retail[q + 1], retail[q + 2], retail[q + 3]];
+        check(w === ric[q] && h === ric[q + 1], "stairs slot size");
+        sprites[ST_SLOT] = [w, h, px, py, unpackPsx(retail, q + 4, w, h), q];
+    }
     // PS1 frames: (sprite, x, y, clut, offset)
     const frames: ([number, number, number, number, number] | null)[] = [];
     {
@@ -624,6 +737,25 @@ export function makeRic2(ric: Uint8Array, syms: Ric2Syms["ric"], s1: Saturn, s2:
         }
         newImg.set(off, concat([new Uint8Array([c.w, c.h, npx, npy]), packPsx(c)]));
     }
+    // the coat's stairs stances: its idle above the waist on its own frame
+    // 211 / 212 legs (build_ric2.py stairs_part / stairs_coat_up / _down)
+    const stairsPart = (f: number): Part => {
+        const [i, x, y, , q] = frames[f]!;
+        const b = newImg.get(sprites[i][5])!;
+        const [fx, fy] = frameFix.get(q) ?? [0, 0];
+        return [unpackPsx(b, 4, b[0], b[1]), x + fx + b[2], y + fy + b[3]];
+    };
+    {
+        const [img, left, top] = stairsCompose(stairsPart(ST_IDLE), stairsPart(ST_UP));
+        const [, x, y, , q] = frames[ST_UP]!;
+        const [fx, fy] = frameFix.get(q) ?? [0, 0];
+        const ox = Math.min(x + fx, left);
+        const oy = Math.min(y + fy, top);
+        if (ox !== x || oy !== y) {
+            frameFix.set(q, [ox - x, oy - y]);
+        }
+        newImg.set(sprites[ST_SLOT][5], spriteBytes(img, left - ox, top - oy));
+    }
     // palettes
     const base = retailPal(g2, 0x120);
     const r1b0 = s1.palette(0);
@@ -728,6 +860,21 @@ export function makeRic2(ric: Uint8Array, syms: Ric2Syms["ric"], s1: Saturn, s2:
         put16(out, q + 4, les16(out, q + 4) + fy);
         ranges.push({ offset: q + 2, bytes: out.slice(q + 2, q + 6) });
     }
+    if (syms.g_RicStairSpr !== undefined && syms.g_RicStairFrame !== undefined) {
+        const [img, left, top] = stairsCompose(stairsPart(ST_IDLE), stairsPart(ST_DOWN));
+        const spr = syms.g_RicStairSpr - RAM;
+        const frm = syms.g_RicStairFrame - RAM;
+        const fx = Math.min(ST_FRAME_X, left);
+        const fy = Math.min(ST_FRAME_Y, top);
+        const b = spriteBytes(img, left - fx, top - fy);
+        check(b.length <= ST_BUF, "stairs stance too big");
+        out.fill(0, spr, spr + ST_BUF);
+        out.set(b, spr);
+        put16(out, frm + 2, fx);
+        put16(out, frm + 4, fy);
+        ranges.push({ offset: spr, bytes: out.slice(spr, spr + ST_BUF) });
+        ranges.push({ offset: frm + 2, bytes: out.slice(frm + 2, frm + 6) });
+    }
     return { out, ranges };
 }
 
@@ -790,7 +937,10 @@ export function makeBo6Ric2(ric: Uint8Array, ric2: Uint8Array, bo6: Uint8Array, 
     const r2p = sheet(ric2, RAM, rs.richter_sprites);
     const bp = sheet(bo6, BO6_RAM, bs.richter_sprites);
     check(rp.length === bp.length && bp.length === r2p.length, "sheet sizes");
-    rp.forEach((a, i) => check(sameBytes(sprite(ric, RAM, a), sprite(bo6, BO6_RAM, bp[i])), "BO6 sheet"));
+    // (sprite 0xC3: Richter's stairs stance in RIC, which the boss never
+    // shows: it keeps the boss's own art)
+    rp.forEach((a, i) => check(i === ST_SLOT || sameBytes(sprite(ric, RAM, a), sprite(bo6, BO6_RAM, bp[i])),
+        "BO6 sheet"));
     const start = Math.min(...bp) - BO6_RAM;
     let end = 0;
     for (const b of bp) {
@@ -800,15 +950,16 @@ export function makeBo6Ric2(ric: Uint8Array, ric2: Uint8Array, bo6: Uint8Array, 
     check(start === tab + 4 * bp.length, "BO6 sheet start");
     const out = bo6.slice();
     let pos = start;
-    const placed = new Map<number, number>();
+    const placed = new Map<number | string, number>();
     r2p.forEach((p, i) => {
-        if (!placed.has(p)) {
-            const s = sprite(ric2, RAM, p);
-            placed.set(p, pos);
+        const key: number | string = i === ST_SLOT ? "bo6" : p; // the boss's own (see above)
+        if (!placed.has(key)) {
+            const s = i === ST_SLOT ? sprite(bo6, BO6_RAM, bp[i]) : sprite(ric2, RAM, p);
+            placed.set(key, pos);
             out.set(s, pos);
             pos = (pos + s.length + 3) & ~3;
         }
-        put32(out, tab + 4 * i, BO6_RAM + placed.get(p)!);
+        put32(out, tab + 4 * i, BO6_RAM + placed.get(key)!);
     });
     check(pos <= ((end + 3) & ~3), "coat sheet too big");
     if (end > pos) {
@@ -827,6 +978,9 @@ export function makeBo6Ric2(ric: Uint8Array, ric2: Uint8Array, bo6: Uint8Array, 
             return;
         }
         check(b !== null && sameBytes(ric.subarray(a, a + 8), bo6.subarray(b, b + 8)), "BO6 frame");
+        if (i === ST_UP) {
+            return; // the stairs stance's frame (the boss's own art)
+        }
         if (!sameBytes(ric2.subarray(a, a + 8), ric.subarray(a, a + 8)) && !done.has(b!)) {
             out.set(ric2.subarray(a, a + 8), b!);
             done.add(b!);
@@ -922,7 +1076,7 @@ export async function buildRic2(saturn: DiscRead, ps1: DiscRead, built: DiscRead
     const w2 = await saturn("RIC_W2.CHR");
     const g2 = await ps1("BIN/F_GAME2.BIN");
     const ric = await built(RIC2_PATHS.ric);
-    const r2 = makeRic2(ric, syms.ric, s1, s2, g2, w2);
+    const r2 = makeRic2(ric, syms.ric, s1, s2, g2, w2, await ps1(RIC2_PATHS.ric));
     const bo6 = makeBo6Ric2(ric, r2.out, await built(RIC2_PATHS.bo6), syms, g2);
     const top = makeTopRic2(ric, r2.out, await built(RIC2_PATHS.top), syms);
     const sel = makeSelRic2(ric, r2.out, await built(RIC2_PATHS.sel), syms, g2);

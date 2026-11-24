@@ -368,6 +368,17 @@ void func_801B248C(char* str, s32 id) {
 
 void func_801B24F8(char* str, s32 id) {
     if (D_801BC398[id] != str) {
+#if defined(MOD_KO)
+        /* the slot clear (0x800) and the 12px draw (0x900) of the frame's pixel buffer (g_Pix[1..4]):
+         * the file lists ask for a dozen of these in their first frame (095 card-check AdES: the pointer
+         * ran past g_Pix[4] into the primitive buffer). Out of room: wait for the rows staged so far to
+         * reach VRAM and start the buffer again (a skipped line stayed stale: 095_08, the message lines are
+         * drawn once, when the state starts) */
+        if (D_801BAFD0 + 0x1100 > g_Pix[4]) {
+            DrawSync(0); /* the staged rows are in VRAM: the buffer starts again */
+            D_801BAFD0 = g_Pix[1];
+        }
+#endif
         func_801B1F4C(id);
         D_801BC398[id] = str;
         func_801B2108(str, id);
@@ -399,10 +410,32 @@ void func_801B2608(char* str, s32 id) {
 }
 
 void func_801B263C(char* str, s32 id) {
+#if defined(MOD_KO)
+    u32 h = 0x811C9DC5;
+    char* p;
+#endif
     D_801BAFD4 = 0x180;
     D_801BAFD8 = 0;
 #if defined(MOD_KO)
-    func_801B2108(str, id); /* save name: ASCII via engtab cells, proportional advance */
+    /* save name: ASCII via engtab cells, proportional advance. func_801B2108 takes 0x900 bytes of the
+     * pixel buffer (g_Pix[1..4], 0x6000, rewound every frame by func_801B1F34) for each call, and the
+     * file lists call this for every slot every frame: 095 mednafen measurement (0x801B1F6C AdES, the
+     * card check never ended): the pointer ran past g_Pix[4] into the primitive buffer and the clear
+     * wiped the primitive chain. So: the same cache as func_801B24F8 (a hash of the name in
+     * D_801BC398[id], never a real pointer), and the buffer starts again when it is used up */
+    for (p = str; *p; p++) {
+        h = (h ^ (u8)*p) * 0x01000193;
+    }
+    h = (h & ~3U) | 2;
+    if (D_801BC398[id] == (char*)h) {
+        return;
+    }
+    if (D_801BAFD0 + 0x900 > g_Pix[4]) {
+        DrawSync(0);
+        D_801BAFD0 = g_Pix[1];
+    }
+    D_801BC398[id] = (char*)h;
+    func_801B2108(str, id);
 #else
     func_801B1FD8(str, id);
 #endif

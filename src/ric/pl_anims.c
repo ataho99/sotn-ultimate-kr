@@ -27,6 +27,12 @@ AnimationFrame ric_anim_stand[] = {
     POSE(4, 4, 1),  POSE(4, 5, 1),  POSE(4, 6, 1),  POSE(64, 7, 1),
     POSE_END};
 AnimationFrame ric_anim_stand_relax[] = {POSE(64, 7, 1), POSE_LOOP(0)};
+#if defined(MOD_SATURN)
+// Ultimate: standing on stairs, facing up / down them (RicSetStand; frames
+// 211 / 212 are his stairs stances, mods/sotn-ultimate/tools/gen_ric_stairs.py)
+AnimationFrame ric_anim_stairs_up[] = {POSE(64, 211, 1), POSE_LOOP(0)};
+AnimationFrame ric_anim_stairs_down[] = {POSE(64, 212, 1), POSE_LOOP(0)};
+#endif
 AnimationFrame ric_anim_walk[] = {
     POSE(3, 8, 1),  POSE(6, 9, 1),  POSE(5, 10, 1), POSE(6, 11, 1),
     POSE(7, 12, 1), POSE(6, 13, 1), POSE(5, 14, 1), POSE(6, 15, 1),

@@ -105,17 +105,29 @@ __asm__(".text\n"
 #endif
 
 #define ROW 6     // the row, after the retail six (16 px apart: y 0x90); ROW + 1 = the Cheats row (094_12)
-#define NOPT 4    // the Player Select's options (rows 0-3 of the popup)
-#define NCHEAT 10 // the cheats (the rows after them)
+#define NOPT 4    // the Player Select options, rows 0 to 3 of the popup
+#define NCHEAT 10 // the cheats, rows NOPT and after
 #define ROWS (NOPT + NCHEAT)
 // 094_12: two popups, no scrolling: the options (rows 0..NOPT-1) and the cheats
 // (rows NOPT..ROWS-1), g_PopMode 0 / 1
-#define POP_X 172 // the popup's window (the Sound box's is 172, 112, 57, 32)
+#if defined(MOD_PTBR)
+// v1.5 PTBR here was LANG = ROWS = 4 and POP_ROWS = 5 with window 156 108 200 80; merged ROWS = 14, LANG = NOPT = 4, same POP_ROWS numbers, see M2 report
+#define LANG NOPT
+#define POP_ROWS (NOPT + 1)
+#else
+#define POP_ROWS NOPT
+#endif
+#define POP_X 172 // the popup window (the Sound box is 172, 112, 57, 32)
+#if defined(MOD_PTBR)
+#define POPN (g_PopMode ? NCHEAT : (NOPT + 1))
+#else
 #define POPN (g_PopMode ? NCHEAT : NOPT)  // rows of the open popup
+#endif
 #define POPBASE (g_PopMode ? NOPT : 0)    // its first row
 #define POP_H(n) ((n) * 16)
-#define POP_Y(n) (188 - POP_H(n)) // (ends at 188: the info bar starts at 193)
-#define POP_W 168 // (the right margin as wide as the left one)
+#define POP_Y(n) (188 - POP_H(n)) // ends at 188: the info bar starts at 193
+#define POP_W 168 // the right margin as wide as the left one
+// v1.5 non-PTBR window was POP_X 172 POP_Y 124 POP_W 168 POP_H 64; merged POP_Y(NOPT) = 124 and POP_H(NOPT) = 64 match, PTBR width differs, see M2 report
 #define VALUE_DX 112
 
 static const char g_SysOptName[7][8] = {
@@ -128,8 +140,16 @@ static const char* const g_SysOptLabel[ROWS] = {
     _S("Inf. MP"), _S("Inf. Hearts"), _S("Fast MP regen"), _S("Fast stairs"),
     _S("Full heal"), _S("Invincible"), _S("Inf. HP"), _S("Inf. Gold"),
     _S("Inf. jump"), _S("Moon jump")};
+#if defined(MOD_PTBR)
+#include "mod_ptbr_sysopt.h"
+#define SYSOPT_NAME()                                                          \
+    (MOD_PTBR_TEXT_PT() ? g_ModPtbrSysOptName : _S("Extra settings"))
+#define SYSOPT_LABEL(r)                                                        \
+    (MOD_PTBR_TEXT_PT() ? g_ModPtbrSysOptLabel[r] : g_SysOptLabel[r])
+#else
 #define SYSOPT_NAME() _S("Extra settings")
 #define SYSOPT_LABEL(r) g_SysOptLabel[r]
+#endif
 // each option: the flag bits it owns, and per choice (the Player Select's
 // order, src/st/sel/2C048.c) their value and its name
 typedef struct {
@@ -194,6 +214,8 @@ static void CodeHalf(u16* p, u16 v) {
 void ModSysOptTick(void) {
     u32* hd = (u32*)&ModHdEntry;
     s32 m = g_CheatMask;
+
+    g_ModDub.cheats = 0; // (Richter's / the Marias' cheats, DRA HandlePlay: none in his game)
 
     if (m & (1 << CHEAT_HP) && g_Status.hp > 0) {
         g_Status.hp = g_Status.hpMax;
@@ -378,6 +400,18 @@ static void SysOptBanks(void) {
     g_CdStep = CdStep_LoadInit;
 }
 
+#if defined(MOD_PTBR)
+static void SysOptLang(void) {
+    if (MOD_PTBR_BLOB[1] != MOD_PTBR_MAGIC) {
+        g_api.PlaySfx(SFX_UI_ERROR);
+        return;
+    }
+    MOD_PTBR_BLOB[2] ^= 1;
+    g_api.PlaySfx(SFX_UI_MOVE);
+    (*(void (**)(s32))MOD_PTBR_CODE)(1);
+}
+#endif
+
 // The box's input, while g_MenuStep is MOD_STEP_BOX: only when it is fully
 // open (Up / Down pick, Left / Right / X change, Triangle / Circle close)
 /* KO build: confirm = Circle (JP style; DRA's PAD_MENU_SELECT = Circle|Square,
@@ -399,7 +433,7 @@ static void PopInput(MenuContext* pop) {
     MenuHandleCursorInput(&v, POPN, 0); // Up / Down, wraps inside this popup
     g_PopRow = v + POPBASE;
     g_PopTop = POPBASE;
-    if (g_PopRow >= NOPT) {
+    if (g_PopMode && g_PopRow >= NOPT) {
         // a cheat: Left / Right / X flips it
         if (g_pads[0].tapped & (PAD_LEFT | PAD_RIGHT | SYSOPT_SELECT)) {
             g_CheatMask ^= 1 << (g_PopRow - NOPT);
@@ -411,8 +445,15 @@ static void PopInput(MenuContext* pop) {
     if (g_pads[0].tapped & SYSOPT_SELECT) {
         g_pads[0].repeat |= PAD_RIGHT;
     }
+#if defined(MOD_PTBR)
+    if ((g_pads[0].repeat & (PAD_LEFT | PAD_RIGHT)) && (g_PopRow < NOPT || g_PopRow == LANG)) {
+        if (g_PopRow == LANG) {
+            SysOptLang();
+        } else
+#else
     if (g_PopRow < NOPT && (g_pads[0].repeat & (PAD_LEFT | PAD_RIGHT))) {
-        if ((SysOptLocks() >> g_PopRow) & 1) {
+#endif
+            if ((SysOptLocks() >> g_PopRow) & 1) {
             g_api.PlaySfx(SFX_UI_ERROR);
         } else {
             v = SysOptCur(row);
@@ -571,6 +612,11 @@ void ModSysOptSound(MenuContext* ctx) {
     }
 #endif
     D_8013784C = 0;
+#if defined(MOD_PTBR)
+    MenuDrawStr(
+        MOD_PTBR_TEXT_PT() ? g_ModPtbrLangLabel : _S("Language"), x, y, ctx);
+    MenuDrawStr(g_ModPtbrLangName[MOD_PTBR_BLOB[2] != 0], x + VALUE_DX, y, ctx);
+#endif
     func_800F5E68(ctx, g_PopRow - g_PopTop, ctx->cursorX + 2,
                   ctx->cursorY + 2, POP_W - 4, 12, 4, 1);
 }

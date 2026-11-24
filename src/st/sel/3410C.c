@@ -18,12 +18,21 @@ static char* D_801804D8[] = {
 };
 const char D_801A7B80[] = "SELECT ！！";
 
+#if defined(MOD_PTBR)
+s32 ModPtbrLoad(s32 block);
+#endif
+
 void HandleTitleScreen(void) {
     Primitive* prim;
     Primitive* prim15;
     s32 i;
 
     func_801B1F34();
+#if defined(MOD_PTBR)
+    if (g_GameEngineStep - 1 < 5U && ModPtbrLoad(1)) {
+        return;
+    }
+#endif
     switch (g_GameEngineStep) {
     case 0:
         if (g_UseDisk != 0) {
@@ -109,6 +118,11 @@ void HandleTitleScreen(void) {
         D_801BB014 += 8;
         while (prim != NULL) {
             prim->drawMode = DRAW_COLORS;
+#if defined(MOD_PTBR)
+            if (i < 7) {
+                prim->drawMode = DRAW_HIDE;
+            }
+#endif
             SetPrimGrey(prim, D_801BB014);
             if (i == 7 || i == 8 || i == 9 || i == 10) {
                 prim->r0 = D_801BB014 * 3 / 4;

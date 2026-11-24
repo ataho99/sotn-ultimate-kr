@@ -14,6 +14,10 @@ set -euo pipefail
 # Go and Rust may live in the user's home; make sure they are on PATH
 if [ -f ~/.profile ]; then source ~/.profile; fi
 cd "$(dirname "$0")/../../.."
+# v1.5 port: game_mod.h includes this generated header (build_ptbr.py --header writes it; PT-BR is off in the KO build)
+[ -f mods/sotn-ultimate/include/mod_ptbr_build.h ] ||
+    printf '// Written by mods/sotn-ultimate/tools/build_ptbr.py --header\n' \
+        > mods/sotn-ultimate/include/mod_ptbr_build.h
 OUT=${MOD_OUT:-build/sotn_kr_P4_trial1.bin}
 # 3491: a name that already exists is never overwritten (KO_ALLOW_OVERWRITE=1 to override)
 if [ -e "$OUT" ] && [ "${KO_ALLOW_OVERWRITE:-0}" != 1 ]; then
@@ -218,7 +222,7 @@ $NODE --no-warnings mods/sotn-ultimate/tools/builder/node/stage_sounds.ts
 # the New Game character select's portraits: src/st/sel/mod_charsel_gfx.h
 .venv/bin/python mods/sotn-ultimate/tools/gen_title_portraits.py
 # the main menu's Sound mode button: src/st/sel/mod_sel_soundmode_gfx.h
-.venv/bin/python mods/sotn-ultimate/tools/gen_sel_soundmode.py >/dev/null
+MOD_PTBR=0 .venv/bin/python mods/sotn-ultimate/tools/gen_sel_soundmode.py >/dev/null
 python3 mods/sotn-ultimate/tools/patch_status_asm.py
 python3 mods/sotn-ultimate/tools/stale_asm_guard.py # ninja cannot see INCLUDE_ASM .s files: drop objects older than their .s
 # the Song Lyrics Card: the Saturn Yousei's singing rule in TT_005
@@ -230,6 +234,8 @@ python3 mods/sotn-ultimate/tools/patch_tt005_song.py
 python3 mods/sotn-ultimate/tools/gen_ko_splice.py --restore-only
 [ -f assets/boss/mar/cutscene_data.yaml.ko_retail ] && cp -f assets/boss/mar/cutscene_data.yaml.ko_retail assets/boss/mar/cutscene_data.yaml  # timing edits this unspliced yaml in place; psp_script reads it as retail
 make build_assets >/dev/null
+# v1.5 port: Richter's Ultimate stairs stances: src/ric/gen/mod_ric_stairs.h, from his own frames in assets/ric
+.venv/bin/python mods/sotn-ultimate/tools/gen_ric_stairs.py
 # KO build: gen_cen_maria.py derives the Saturn Maria scripts from the CEN
 # cutscene gen header, so it runs here (retail-fresh after build_assets), not
 # with the other gen tools above (a previous build may have left a
@@ -250,8 +256,11 @@ if [ "$MOD_PSP_DUB" = 1 ]; then
     python3 mods/sotn-ultimate/tools/psp_script.py
     PSP_DUB_JP=${PSP_DUB_JP:-0} .venv/bin/python mods/sotn-ultimate/tools/psp_dub.py | grep -v "^  skipped"
     DUB_FLAGS="--dub build/us/psp_dub/dub.json"
+    # v1.5 port: the prologue scroll per dub (ST0 mod_prologue_scroll.h)
+    python3 mods/sotn-ultimate/tools/prologue_scroll.py
 else
     python3 mods/sotn-ultimate/tools/psp_script.py --off
+    python3 mods/sotn-ultimate/tools/prologue_scroll.py --off
 fi
 # the PSP dub's player grunts: build/us/ALK_PSP.BIN, RIH_PSP.BIN (Alucard's /
 # Richter's vab 1 with the PSP clips, from disks/psp sd_alk/sd_rih.spk;
@@ -289,6 +298,12 @@ else
     .venv/bin/python mods/sotn-ultimate/tools/gen_psp_sfx.py --set jp --off
 fi
 .venv/bin/python mods/sotn-ultimate/tools/gen_psp_grunts.py --set jp | grep -v "^  "
+# v1.5 port: the translation build machinery (PT-BR), off in the KO build
+if [ "${MOD_PTBR:-0}" = 1 ]; then
+    python3 mods/sotn-ultimate/tools/ptbr_script.py
+else
+    python3 mods/sotn-ultimate/tools/ptbr_script.py --off
+fi
 JP_MAR2=build/us/mod/mar2/sfx_jp
 if [ ! -f "$JP_MAR2/SD_RIH.VB" ]; then
     cargo run --quiet --release --manifest-path tools/maria-sfx/Cargo.toml -- build \
@@ -333,6 +348,8 @@ cp src/dra/gen/us/xa_music_config.h build/us/xa_music_config.h.repack # BGM fix:
 # Saturn balance (equipment + enemy fields) as a runtime patch list for
 # ModApplyBalance (src/dra/game_handlers.c, the Player Select Balance row)
 python3 mods/sotn-ultimate/tools/gen_saturn_balance.py
+# v1.5 port: the PT-BR build header (stub when PT-BR is off)
+.venv/bin/python mods/sotn-ultimate/tools/build_ptbr.py --header
 # KO build: cutscene KO splice. psp_script.py planning above reads the
 # retail cutscene yamls, so this runs after all yaml readers: gen_ko_dlg.py
 # bakes/verifies the 145 lines, gen_ko_splice.py rewrites the 11 stage
@@ -376,6 +393,13 @@ fi
 # g_SfxScripts) at its retail address, MOD_DRA_PAD keeps the BSS there.
 # The data pad goes first because it also moves everything after it.
 SKIP_CHECK=1 quiet bin/sotn-assets build us
+# v1.5 port: v1.5 changed the asset tool (tools/sotn-assets), so this build extracts the generated headers again and
+# replaces repack_xa.py's XA configs. That case already has its restart below ("start again once, the tool is current
+# then"), but the sha check right after this line failed first. Restart here, before the check.
+if [ src/.assets_build_done_us -nt build/us/XA_STR1. ]; then
+    echo "the asset build replaced the XA configs: building again"
+    exec bash mods/sotn-ultimate/tools/build_ko_trial.sh "$@"
+fi
 # the compile must have used repack's table, not a regenerated retail one
 if [ "$(sha1sum src/dra/gen/us/xa_music_config.h | cut -d' ' -f1)" != "$GENH_SHA" ]; then
     echo "FAIL xa_music_config.h changed during the DRA build (sha != repack's)" >&2
@@ -447,6 +471,7 @@ python3 mods/sotn-ultimate/tools/gen_ko_splice.py --apply-boss
 # the PSP English script into the built overlays (before BO6RIC2 copies BO6)
 if [ "$MOD_PSP_DUB" = 1 ]; then
     python3 mods/sotn-ultimate/tools/psp_script.py --apply
+    python3 mods/sotn-ultimate/tools/prologue_scroll.py --apply
 fi
 
 # The Saturn's new stages (TE1.BIN / F_TE1.BIN slots); needs the WRP build
@@ -523,12 +548,17 @@ cat build/us/MARIA2_SD_PS1.BIN >> build/us/MARIA_SD_PS1.BIN
 bash mods/sotn-ultimate/tools/build_cenp.sh
 # her Saturn HUD art in F_GAME2's empty VRAM: build/us/F_GAME2.BIN
 .venv/bin/python mods/sotn-ultimate/tools/gen_mar_hud.py
+.venv/bin/python mods/sotn-ultimate/tools/build_ptbr.py --apply
 # Original 8x8 English menu sheet re-baked with the small Hangul font (F_GAME/F_GAME2 +0x30000)
 python3 mods/sotn-ultimate/tools/gen_ko_font8.py --patch
 # the pause menu System screen's "Ultimate settings" (Alucard games): code
 # after Alucard's sprites in build/us/ARC_F2.BIN (mods/sotn-ultimate/src/menu/sysopt.c),
 # against DRA's addresses (checked again after make disk below)
 bash mods/sotn-ultimate/tools/build_sysopt.sh
+# v1.5 port: Richter's / the Marias' pause menu drawing (Ultimate balance), read into g_Pix[1] when it opens
+# the Richter / Maria pause menu in Korean: strings from 번역_리히터마리아메뉴.tsv (8px plate cells + info bar font)
+.venv/bin/python mods/sotn-ultimate/tools/gen_ko_cm.py
+CHARMENU_DEFS="-DMOD_CHARMENU_KO" bash mods/sotn-ultimate/tools/build_charmenu.sh
 # VAB/SD_MAR.VB grows with the field voices on: the unused retail ARC_F.BIN gives its sectors back (build_sysopt.sh removed any earlier one)
 if [ "${KO_FIELD_VOICE:-0}" = 1 ]; then .venv/bin/python mods/sotn-ultimate/tools/gen_ps1jp_banks.py --arcf; fi
 # 776-glyph ARC_KO.BIN (A-gap) + blob renderer. Trial-only disc
@@ -573,12 +603,12 @@ PYEOF
 # KO_8P.BIN (equipment-name 8px block, 2 sectors) spliced
 # into the 17d3 zero tail at LBA 0x492CA (after the 58-sector EXE at
 # 0x49290-0x492C9; readback-asserted, emu-verified -- not manifest-packed).
-# Source: P4시험/ko_8p_block_248.bin (gen_ko_8p.py v246 = 371 cells, + gen_ko_8p_ext.py: v247 385 cells (+ the Extra settings popup 14) -> v248 390 cells (+ 추 U R O F: 추가 설정 row, SATURN, ON/OFF); 371 cells = the 283-cell block 243 [260H + 8 name-ASCII + 15
+# Source: P4시험/ko_8p_block_249.bin (gen_ko_8p.py v246 = 371 cells, + gen_ko_8p_ext.py: v247 385 cells (+ the Extra settings popup 14) -> v248 390 cells (+ 추 U R O F: 추가 설정 row, SATURN, ON/OFF); 371 cells = the 283-cell block 243 [260H + 8 name-ASCII + 15
 # desc-ASCII reserve; Mgalmuri8 @8px, 1:1, sha-pinned).
 python3 - <<'PYEOF'
 import hashlib, io
-b = io.open(__import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_248.bin', 'rb').read()
-assert hashlib.sha256(b).hexdigest() == '6869e1b9d54a409e204ed50dfb4f707bdd79001f859bfd45973cded735b01e4b', hashlib.sha256(b).hexdigest()
+b = io.open(__import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_249.bin', 'rb').read()
+assert hashlib.sha256(b).hexdigest() == 'c1692763d58a381e6e1249f494ef23b80f40689855b0261a7ebf25dbac0f7095', hashlib.sha256(b).hexdigest()
 assert len(b) <= 4096, len(b)
 open('build/us/KO_8P.BIN', 'wb').write(bytes(b) + bytes(4096 - len(b)))
 print('KO_8P.BIN: block %d -> 4096 (2 sectors)' % len(b))
@@ -906,9 +936,9 @@ img = img + tail
 KO_BUNDLE = 'src/dra/gen/us/ko_jp_bundle.bin'
 bundle = open(KO_BUNDLE, 'rb').read()
 assert 1 <= len(bundle) <= 2048, len(bundle)
-KO_8PBLK = __import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_248.bin'
+KO_8PBLK = __import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_249.bin'
 blk8 = open(KO_8PBLK, 'rb').read()
-assert hashlib.sha256(blk8).hexdigest() == '6869e1b9d54a409e204ed50dfb4f707bdd79001f859bfd45973cded735b01e4b', hashlib.sha256(blk8).hexdigest()
+assert hashlib.sha256(blk8).hexdigest() == 'c1692763d58a381e6e1249f494ef23b80f40689855b0261a7ebf25dbac0f7095', hashlib.sha256(blk8).hexdigest()
 assert len(blk8) <= 4096, len(blk8)
 img = img + bytes(bundle) + bytes(2048 - len(bundle)) + bytes(blk8) + bytes(4096 - len(blk8))
 assert len(img) == arc_size, (len(img), arc_size)
@@ -953,10 +983,12 @@ sysopt = open('build/us/mod/sysopt/sysopt.bin', 'rb').read()
 off = (sysopt_addr - 0x8013C000) + len(sysopt)
 p = 'build/us/ARC_F2.BIN'
 b = bytearray(open(p, 'rb').read())
-assert len(b) == arc_len, len(b)
-b[off:off + 5340] = bytes(5340)
+# v1.5 port: build_charmenu.sh appends the Richter/Maria pause-menu code (24576 B) after MOD_ARC_F_LEN; the part zeroed below is inside the first part
+assert len(b) in (arc_len, arc_len + 24576), len(b)
+end = min(off + 5340, arc_len - 16)  # v1.5: the pause-menu blob follows arc_len and the holder table is the last 16 bytes: the zeroing must not reach either
+b[off:end] = bytes(end - off)
 open(p, 'wb').write(bytes(b))
-print('ARC_F2: old 178-bake zeroed at file+%d, len still %d' % (off, arc_len))
+print('ARC_F2: old 178-bake zeroed at file+%d, len still %d' % (off, len(b)))
 PYEOF
 # ARC_KO.BIN (34816B = +17 sectors) would push every post-SLUS file +17
 # (check_cd_lba measured uniform +0xC), so: SLUS_000.67 goes last on the disc
@@ -1021,12 +1053,14 @@ fi
 # again and remake the image (BO6, copied into BO6RIC2 above, must not be
 # among them: --check compares both)
 if [ "$MOD_PSP_DUB" = 1 ]; then
-    out=$(python3 mods/sotn-ultimate/tools/psp_script.py --apply)
+    out=$(python3 mods/sotn-ultimate/tools/psp_script.py --apply;
+          python3 mods/sotn-ultimate/tools/prologue_scroll.py --apply)
     echo "$out"
     if echo "$out" | grep -q "BIN"; then
         VERSION=us quiet ./sotn.sh disk
     fi
     python3 mods/sotn-ultimate/tools/psp_script.py --check
+    python3 mods/sotn-ultimate/tools/prologue_scroll.py --check
 fi
 # SELRIC2 from the final SEL (relinked and patched above)
 out=$(cd mods/sotn-ultimate/tools && python3 build_selric2.py)
@@ -1078,6 +1112,25 @@ while read -r s _ a; do
     fi
 done < build/us/mod/sysopt/syms.txt
 echo "OK   sysopt DRA symbols ($(wc -l < build/us/mod/sysopt/syms.txt)), ARC_F2.BIN $(stat -c %s build/us/ARC_F2.BIN) bytes"
+# v1.5 port: the same for the character menu's code (its address is g_Pix + 0x2000)
+while read -r s _ a; do
+    a=${a%;}
+    want=$(mipsel-linux-gnu-nm build/us/dra.elf | awk -v s="$s" '$3==s{print "0x" $1}')
+    if [ -z "$want" ]; then
+        want=$(awk -v s="$s" '$1==s{sub(/;/,"",$3); print tolower($3)}' config/symbols.us.txt)
+        a=$(echo "$a" | tr A-F a-f)
+    fi
+    if [ "$want" != "$a" ]; then
+        echo "FAIL charmenu linked against $s $a (DRA has $want): run build_disc.sh again"
+        exit 1
+    fi
+done < build/us/mod/charmenu/syms.txt
+pix=$(printf "0x%08X" $((0x$(mipsel-linux-gnu-nm build/us/dra.elf | awk '$3=="g_Pix"{print $1}') + 0x2000)))
+if [ "$pix" != "$(cat build/us/mod/charmenu/addr.txt)" ]; then
+    echo "FAIL charmenu linked at $(cat build/us/mod/charmenu/addr.txt) (g_Pix[1] is $pix): run build_disc.sh again"
+    exit 1
+fi
+echo "OK   charmenu DRA symbols ($(wc -l < build/us/mod/charmenu/syms.txt))"
 # The same for the KO blob in ARC_KO.BIN (A-gap)
 while read -r s _ a; do
     a=${a%;}

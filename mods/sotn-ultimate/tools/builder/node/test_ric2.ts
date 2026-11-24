@@ -57,8 +57,8 @@ for line in open("build/us/ric.map"):
 bo6, top, sel = B.syms("build/us/bobo6.map"), B.syms("build/us/sttop.map"), B.syms("build/us/stsel.map")
 pick = lambda d, ks: {k: d[k] for k in ks}
 print(json.dumps({
-    "ric": pick(ric, ["richter_sprites", "spritebank0", "spritebank1"]),
-    "rics": pick(B.syms("build/us/ric.map"), ["richter_sprites", "spritebank0", "spritebank1"]),
+    "ric": pick(ric, ["richter_sprites", "spritebank0", "spritebank1", "g_RicStairSpr", "g_RicStairFrame"]),
+    "rics": pick(B.syms("build/us/ric.map"), ["richter_sprites", "spritebank0", "spritebank1", "g_RicStairSpr", "g_RicStairFrame"]),
     "bo6": pick(bo6, ["richter_sprites", "D_us_801A39B0", "D_us_801A43A4", "D_us_8019E9A0"]),
     "top": pick(top, ["richter_sprites", "g_ModTopRic2"]),
     "sel": pick(sel, ["D_8018C718", "D_8018C92C", "D_8018CB4C", "D_8018D5D4"]),

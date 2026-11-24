@@ -20,6 +20,11 @@
 // of the PSP dub's new line MOD_VO_DID_YOU_NOT; ids without one play the
 // PSP / PS1 line as before.
 #include "../../../../src/dra/mod_psp_xa.h"
+// the new configs' JP versions (psp_dub.py EXTRA order from
+// MOD_VO_DID_YOU_NOT; 0 = the English take): DRA rodata, SEL has no room
+// (the rest of the JP table is SEL's, copied into g_ModDub.jp)
+#include "../../../../src/st/sel/mod_jp_xa.h"
+static const u32 g_ModJpXaExtra[] = MOD_JP_XA_EXTRA;
 // the place of voice id bit k among the set bits, -1 when clear
 static s32 ModXaIndex(const u8* bits, s32 k) {
     s32 n;
@@ -60,8 +65,10 @@ static const XaMusicConfig* ModXaConfig(s32 i) {
     if (MOD_JP_DUB_ON() && g_ModDub.jp.magic == MOD_JP_MAGIC) {
         e = 0;
 #ifdef MOD_VO_DID_YOU_NOT
-        if (i == MOD_VO_DID_YOU_NOT - 0x300) {
-            e = g_ModDub.jp.didYouNot;
+        // the new configs (psp_dub.py EXTRA, from MOD_VO_DID_YOU_NOT)
+        n = i - (MOD_VO_DID_YOU_NOT - 0x300);
+        if ((u32)n < LEN(g_ModJpXaExtra)) {
+            e = g_ModJpXaExtra[n];
         }
 #endif
         n = ModXaIndex(g_ModDub.jp.xaBits, k);
@@ -74,9 +81,20 @@ static const XaMusicConfig* ModXaConfig(s32 i) {
             goto build;
         }
     }
+    // the PS1 dub with the PSP Maria boss: her fight's lines 0x3C1-0x3C3
+    // (only CENP.BIN's scripts play them) take the PSP English recordings
+    // (mods/sotn-ultimate/tools/gen_cen_maria.py PSP_PRE / PSP_POST)
+#if defined(MOD_PTBR)
     if (i >= MOD_XA_RETAIL_CONFIGS || !MOD_PSP_DUB_ON()) {
         return c;
     }
+#else
+    if (i >= MOD_XA_RETAIL_CONFIGS ||
+        (!MOD_PSP_DUB_ON() && !((MOD_STATUS_FLAGS & MOD_FLAG_MARIA_BOSS_PSP) &&
+                                i >= 0x3C1 - 0x300 && i <= 0x3C3 - 0x300))) {
+        return c;
+    }
+#endif
     n = ModXaIndex(g_ModPspXaBits, k);
     if (n < 0) {
         return c;

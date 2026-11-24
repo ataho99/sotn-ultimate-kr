@@ -130,8 +130,10 @@ s32 func_801B3164(void) {
     s32 ret;
     s32 i;
 
+#if !defined(MOD_PTBR)
     FntPrint("\nrstep:%d,%d\n", g_MemCardRStep, g_MemCardRStepSub);
     FntPrint("retry:%d\n", g_MemCardRetryCount);
+#endif
 
     port = g_MemCardRStepSub / 15;
     slot = g_MemCardRStepSub % 15;
@@ -278,8 +280,10 @@ s32 TryLoadFromMemcard(void) {
     s32 blockId;
     s32 ret;
 
+#if !defined(MOD_PTBR)
     FntPrint("\nrstep:%d,%d\n", g_MemCardRStep, g_MemCardRStepSub);
     FntPrint("retry:%d\n", g_MemCardRetryCount);
+#endif
 
     port = g_MemCardRStepSub / 15;
     slot = g_MemCardRStepSub % 15;
@@ -373,9 +377,11 @@ s32 func_801B3A94(s32 arg0) {
     SaveData* save;
     bool create;
 
+#if !defined(MOD_PTBR)
     FntPrint("\nrstep:%d,%d,%d\n", g_MemCardRStep,
              D_801BB000 + (D_801BAFFC * 15), D_801BB008 + (D_801BB004 * 15));
     FntPrint("retry:%d\n", g_MemCardRetryCount);
+#endif
     switch (g_MemCardRStep) {
     case 0:
         MemcardInit();

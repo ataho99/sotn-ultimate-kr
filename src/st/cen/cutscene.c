@@ -125,12 +125,21 @@ void EntityCutscene(Entity* self) {
     }
     switch (self->step) {
     case 0:
-        if (g_CastleFlags[MET_MARIA_IN_CEN] != 0) {
+        if (CEN_MARIA_DONE()) {
             DestroyEntity(self);
             return;
         }
 #ifdef VERSION_HD
         if (SetCutsceneScript(cutscene_data) & 0xFF) {
+#elif defined(MOD_CENP) && !defined(MOD_PTBR)
+        // the PSP boss (CENP.BIN): with the PS1 dub, the PSP English lines
+        // (mods/sotn-ultimate/tools/gen_cen_maria.py PSP_PRE / PSP_POST)
+        if (SetCutsceneScript(
+                !MOD_MARIA_BOSS_ON() ? cutscene_data
+                : !MOD_PSP_DUB_ON()
+                    ? (self->params == 1 ? g_MbScriptPostPsp : g_MbScriptPrePsp)
+                : self->params == 1 ? g_MbScriptPost
+                                    : g_MbScriptPre)) {
 #elif defined(MOD_MARIA_BOSS)
         // Saturn port: the Saturn's two scripts around Maria's fight
         if (SetCutsceneScript(!MOD_MARIA_BOSS_ON() ? cutscene_data

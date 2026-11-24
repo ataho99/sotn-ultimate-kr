@@ -37,6 +37,7 @@ enum StageNameDissolveSubsteps {
 };
 
 #include "stage_name_dissolver.h"
+#include "../../mods/sotn-ultimate/src/ptbr/stage_name_ptbr.h"
 
 extern EInit g_EInitInteractable;
 
@@ -48,6 +49,7 @@ void EntityStageNamePopup(Entity* self) {
     u8 primsSet;
     s16 primIndex;
     s32 drawMode;
+    SN_LOCAL;
 
     switch (self->step) {
     case STAGE_NAME_INIT:
@@ -57,7 +59,11 @@ void EntityStageNamePopup(Entity* self) {
         }
 
         InitializeEntity(g_EInitInteractable);
-        primIndex = g_api.AllocPrimitives(PRIM_GT4, 87);
+        ModPtbrStageName(self);
+#if defined(MOD_PTBR) && !defined(MOD_PTBR_NAME_NONE)
+        SN_LOAD();
+#endif
+        primIndex = g_api.AllocPrimitives(PRIM_GT4, 7 + 2 * SN_STRIPS);
         if (primIndex == -1) {
             DestroyEntity(self);
             return;
@@ -77,11 +83,11 @@ void EntityStageNamePopup(Entity* self) {
             prim->u0 = prim->u2 = 4;
             prim->u1 = prim->u3 = 120;
             prim->v0 = prim->v1 = 0;
-            prim->v2 = prim->v3 = 40;
+            prim->v2 = prim->v3 = SN_ROWS;
             prim->x2 = prim->x0 = 12;
-            prim->y1 = prim->y0 = 157;
+            prim->y1 = prim->y0 = SN_TOP;
             prim->x3 = prim->x1 = 128;
-            prim->y3 = prim->y2 = 197;
+            prim->y3 = prim->y2 = SN_TOP + SN_ROWS;
             prim->priority = 192 - i;
             prim->drawMode = DRAW_HIDE;
             prim = prim->next;
@@ -91,11 +97,11 @@ void EntityStageNamePopup(Entity* self) {
             prim->u0 = prim->u2 = 8;
             prim->u1 = prim->u3 = 124;
             prim->v0 = prim->v1 = 64;
-            prim->v2 = prim->v3 = 104;
+            prim->v2 = prim->v3 = 64 + SN_ROWS;
             prim->x2 = prim->x0 = 128;
-            prim->y1 = prim->y0 = 157;
+            prim->y1 = prim->y0 = SN_TOP;
             prim->x3 = prim->x1 = 244;
-            prim->y3 = prim->y2 = 197;
+            prim->y3 = prim->y2 = SN_TOP + SN_ROWS;
             prim->priority = 192 - i;
             prim->drawMode = DRAW_HIDE;
             prim = prim->next;
@@ -108,11 +114,11 @@ void EntityStageNamePopup(Entity* self) {
         prim->u0 = prim->u2 = 4;
         prim->u1 = prim->u3 = 120;
         prim->v0 = prim->v1 = 0;
-        prim->v2 = prim->v3 = 40;
+        prim->v2 = prim->v3 = SN_ROWS;
         prim->x2 = prim->x0 = 12;
-        prim->y1 = prim->y0 = 157;
+        prim->y1 = prim->y0 = SN_TOP;
         prim->x3 = prim->x1 = 128;
-        prim->y3 = prim->y2 = 197;
+        prim->y3 = prim->y2 = SN_TOP + SN_ROWS;
         prim->priority = 191;
         prim->drawMode = DRAW_HIDE;
         prim = prim->next;
@@ -121,11 +127,11 @@ void EntityStageNamePopup(Entity* self) {
         prim->u0 = prim->u2 = 8;
         prim->u1 = prim->u3 = 124;
         prim->v0 = prim->v1 = 64;
-        prim->v2 = prim->v3 = 104;
+        prim->v2 = prim->v3 = 64 + SN_ROWS;
         prim->x2 = prim->x0 = 128;
-        prim->y1 = prim->y0 = 157;
+        prim->y1 = prim->y0 = SN_TOP;
         prim->x3 = prim->x1 = 244;
-        prim->y3 = prim->y2 = 197;
+        prim->y3 = prim->y2 = SN_TOP + SN_ROWS;
         prim->priority = 191;
         prim->drawMode = DRAW_HIDE;
         prim = prim->next;
@@ -142,9 +148,9 @@ void EntityStageNamePopup(Entity* self) {
         prim->v2 = 255;
         prim->v3 = prim->v2;
         prim->x2 = prim->x0 = STAGE_NAME_BOX_LEFT_X;
-        prim->y1 = prim->y0 = 155;
+        prim->y1 = prim->y0 = SN_TOP - 2;
         prim->x3 = prim->x1 = STAGE_NAME_BOX_RIGHT_X;
-        prim->y3 = prim->y2 = 199;
+        prim->y3 = prim->y2 = SN_TOP + SN_ROWS + 2;
         prim->r0 = 16;
         prim->g0 = 40;
         prim->b0 = 0;
@@ -157,16 +163,16 @@ void EntityStageNamePopup(Entity* self) {
         prim->drawMode = DRAW_TRANSP | DRAW_TPAGE | DRAW_COLORS | DRAW_HIDE;
         prim = prim->next;
         self->ext.stpopup.firstDissolvePrim = prim;
-        for (i = 0; i < 40; i++) {
+        for (i = 0; i < SN_STRIPS; i++) {
             prim->tpage = 17;
             prim->clut = PAL_UNK_19F; // Black to white gradient
-            prim->v2 = prim->v3 = i + 1;
-            prim->y1 = prim->y0 = i + 157;
+            prim->v2 = prim->v3 = (i << SN_SH) + (1 << SN_SH);
+            prim->y1 = prim->y0 = (i << SN_SH) + SN_TOP;
             prim->r0 = 120;
             prim->g0 = 120;
             prim->b0 = 168;
-            prim->y3 = prim->y2 = i + 158;
-            prim->v0 = prim->v1 = i;
+            prim->y3 = prim->y2 = (i << SN_SH) + SN_TOP + (1 << SN_SH);
+            prim->v0 = prim->v1 = i << SN_SH;
             prim->x2 = prim->x0 = 12;
             prim->x3 = prim->x1 = 128;
             prim->u2 = prim->u0 = 4;
@@ -179,17 +185,17 @@ void EntityStageNamePopup(Entity* self) {
             LOW(prim->r3) = LOW(prim->r0);
             prim = prim->next;
         }
-        for (i = 0; i < 40; i++) {
+        for (i = 0; i < SN_STRIPS; i++) {
             prim->tpage = 17;
             prim->clut = PAL_UNK_19F;
-            prim->y1 = prim->y0 = i + 157;
-            prim->y3 = prim->y2 = i + 158;
-            prim->v0 = prim->v1 = i + 64;
+            prim->y1 = prim->y0 = (i << SN_SH) + SN_TOP;
+            prim->y3 = prim->y2 = (i << SN_SH) + SN_TOP + (1 << SN_SH);
+            prim->v0 = prim->v1 = (i << SN_SH) + 64;
             prim->x2 = prim->x0 = 128;
             prim->x3 = prim->x1 = 244;
             prim->u2 = prim->u0 = 8;
             prim->u1 = prim->u3 = 124;
-            prim->v2 = prim->v3 = i + 65;
+            prim->v2 = prim->v3 = (i << SN_SH) + 64 + (1 << SN_SH);
             prim->r0 = 120;
             prim->g0 = 120;
             prim->b0 = 168;
@@ -219,7 +225,7 @@ void EntityStageNamePopup(Entity* self) {
         case STAGE_NAME_EXPAND_BOX:
             primsSet = 0;
             prim = self->ext.stpopup.boxPrim;
-            if (prim->y0 > 155) {
+            if (prim->y0 > SN_TOP - 2) {
                 prim->y0 -= 4;
                 prim->y1 = prim->y0;
                 prim->y2 += 4;
@@ -338,8 +344,27 @@ void EntityStageNamePopup(Entity* self) {
             }
 
             prim = self->ext.stpopup.firstDissolvePrim;
+#if defined(MOD_PTBR) && !defined(MOD_PTBR_NAME_NONE)
+            for (i = 0; i < 2 * SN_STRIPS; i++) {
+                primIndex = i < SN_STRIPS ? i : i - SN_STRIPS;
+                prim->r0 = 128;
+                prim->g0 = 128;
+                prim->b0 = 128;
+                LOW(prim->r1) = LOW(prim->r0);
+                LOW(prim->r2) = LOW(prim->r0);
+                LOW(prim->r3) = LOW(prim->r0);
+                prim->p1 = primIndex < (SN_STRIPS >> 1)
+                               ? primIndex * 4
+                               : -((SN_STRIPS - primIndex) * 4);
+                prim->p2 = Random() & 3;
+                prim->p3 = 0;
+                prim->drawMode =
+                    DRAW_TPAGE2 | DRAW_TPAGE | DRAW_COLORS | DRAW_TRANSP;
+                prim = prim->next;
+            }
+#else
             // Left side, upper half
-            for (i = 0; i < 20; i++) {
+            for (i = 0; i < (SN_ROWS >> 1); i++) {
                 prim->r0 = 128;
                 prim->g0 = 128;
                 prim->b0 = 128;
@@ -354,14 +379,14 @@ void EntityStageNamePopup(Entity* self) {
                 prim = prim->next;
             }
             // Left side, lower half
-            for (i = 0; i < 20; i++) {
+            for (i = 0; i < SN_ROWS - (SN_ROWS >> 1); i++) {
                 prim->r0 = 128;
                 prim->g0 = 128;
                 prim->b0 = 128;
                 LOW(prim->r1) = LOW(prim->r0);
                 LOW(prim->r2) = LOW(prim->r0);
                 LOW(prim->r3) = LOW(prim->r0);
-                prim->p1 = -((20 - i) * 4);
+                prim->p1 = -((SN_ROWS - (SN_ROWS >> 1) - i) * 4);
                 prim->p2 = Random() & 3;
                 prim->p3 = 0;
                 prim->drawMode =
@@ -369,7 +394,7 @@ void EntityStageNamePopup(Entity* self) {
                 prim = prim->next;
             }
             // Right side, upper half
-            for (i = 0; i < 20; i++) {
+            for (i = 0; i < (SN_ROWS >> 1); i++) {
                 prim->r0 = 128;
                 prim->g0 = 128;
                 prim->b0 = 128;
@@ -384,14 +409,14 @@ void EntityStageNamePopup(Entity* self) {
                 prim = prim->next;
             }
             // Right side, lower half
-            for (i = 0; i < 20; i++) {
+            for (i = 0; i < SN_ROWS - (SN_ROWS >> 1); i++) {
                 prim->r0 = 128;
                 prim->g0 = 128;
                 prim->b0 = 128;
                 LOW(prim->r1) = LOW(prim->r0);
                 LOW(prim->r2) = LOW(prim->r0);
                 LOW(prim->r3) = LOW(prim->r0);
-                prim->p1 = -((20 - i) * 4);
+                prim->p1 = -((SN_ROWS - (SN_ROWS >> 1) - i) * 4);
                 prim->p2 = Random() & 3;
                 prim->p3 = 0;
                 prim->drawMode =
@@ -399,6 +424,7 @@ void EntityStageNamePopup(Entity* self) {
                 prim = prim->next;
             }
 
+#endif
             self->ext.stpopup.timer = 112;
             self->step_s++;
             break;
@@ -435,6 +461,8 @@ void EntityStageNamePopup(Entity* self) {
         }
         break;
     }
+#if !defined(MOD_PTBR) || defined(MOD_PTBR_NAME_NONE)
     FntPrint("t_step   %x\n", self->step);
     FntPrint("t_step_s %x\n", self->step_s);
+#endif
 }

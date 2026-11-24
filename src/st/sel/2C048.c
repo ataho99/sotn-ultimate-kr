@@ -692,6 +692,17 @@ char* D_801803A8[10] = {
     _S("Yes"),    _S("No"),     _S("Confirm"), _S("Error"), _S("matted"),
 };
 
+#if defined(MOD_PTBR)
+#define MOD_TIP_X 0x18
+#define MOD_TIP_TX 0x2C
+#define MOD_TIP_IN_X 0x116
+#define MOD_TIP_IN_TX 0x128
+#else
+#define MOD_TIP_X 0x20
+#define MOD_TIP_TX 0x34
+#define MOD_TIP_IN_X 0x120
+#define MOD_TIP_IN_TX 0x134
+#endif
 #define STR_SELECT D_801803A8[0]
 #define STR_DECIDE D_801803A8[1]
 #define STR_CANCEL D_801803A8[2]
@@ -796,13 +807,13 @@ void PrintFileSelectPlaceName(s32 port, s32 slot, s32 y) {
 }
 
 void func_801AD1D0(void) {
-    DrawImages8x8(STR_YES, 0x34, 0xC4, 1);
-    DrawImages8x8(STR_NO, 0x34, 0xD4, 1);
+    DrawImages8x8(STR_YES, MOD_TIP_TX, 0xC4, 1);
+    DrawImages8x8(STR_NO, MOD_TIP_TX, 0xD4, 1);
 }
 
 void func_801AD218(void) {
-    DrawImages8x8(STR_NO, 0x34, 0xC4, 1);
-    DrawImages8x8(STR_YES, 0x34, 0xD4, 1);
+    DrawImages8x8(STR_NO, MOD_TIP_TX, 0xC4, 1);
+    DrawImages8x8(STR_YES, MOD_TIP_TX, 0xD4, 1);
 }
 
 void DrawNavigationTips(NavigationTips mode) {
@@ -813,37 +824,37 @@ void DrawNavigationTips(NavigationTips mode) {
 
     switch (mode) {
     case Tips_Generic:
-        SetPrimRect(prim, 0x20, 0xB0, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_X, 0xB0, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         prim = prim->next;
-        SetPrimRect(prim, 0x20, 0xC0, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_X, 0xC0, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         prim = prim->next;
-        SetPrimRect(prim, 0x20, 0xD0, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_X, 0xD0, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         break;
 
     case Tips_Input:
-        SetPrimRect(prim, 0x120, 0x20, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_IN_X, 0x20, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         prim = prim->next;
-        SetPrimRect(prim, 0x120, 0x30, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_IN_X, 0x30, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         prim = prim->next;
-        SetPrimRect(prim, 0x120, 0x40, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_IN_X, 0x40, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         prim = prim->next;
-        SetPrimRect(prim, 0x120, 0x50, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_IN_X, 0x50, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         break;
 
     case Tips_YesNo:
     case Tips_NoYes:
         prim = prim->next;
-        SetPrimRect(prim, 0x20, 0xC0, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_X, 0xC0, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         prim = prim->next;
-        SetPrimRect(prim, 0x20, 0xD0, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_X, 0xD0, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         if (mode == Tips_YesNo) {
             func_801AD1D0();
@@ -854,16 +865,16 @@ void DrawNavigationTips(NavigationTips mode) {
 
     case Tips_Confirm:
         prim = prim->next;
-        SetPrimRect(prim, 0x20, 0xC0, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_X, 0xC0, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
-        DrawImages8x8(STR_CONFIRM, 0x34, 0xC4, 1);
+        DrawImages8x8(STR_CONFIRM, MOD_TIP_TX, 0xC4, 1);
         break;
 
     case Tips_MenuNavigation:
-        SetPrimRect(prim, 0x20, 0xB8, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_X, 0xB8, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         prim = prim->next;
-        SetPrimRect(prim, 0x20, 0xC8, 0x10, 0x10);
+        SetPrimRect(prim, MOD_TIP_X, 0xC8, 0x10, 0x10);
         prim->drawMode = DRAW_DEFAULT;
         break;
     }
@@ -881,8 +892,8 @@ void func_801AD490(void) {
 #if defined(MOD_KO)
     SelLegRows(0x34, 0xB8, SelLegFile, 2);
 #else
-    DrawImages8x8(STR_SELECT, 0x34, 0xBC, 1);
-    DrawImages8x8(STR_DECIDE, 0x34, 0xCC, 1);
+    DrawImages8x8(STR_SELECT, MOD_TIP_TX, 0xBC, 1);
+    DrawImages8x8(STR_DECIDE, MOD_TIP_TX, 0xCC, 1);
 #endif
     DrawString16x16("select", 0xF0, 0x20, 1);
     DrawString16x16("your", 0x100, 0x30, 1);
@@ -1037,10 +1048,10 @@ void func_801AD78C(void) {
 #if defined(MOD_KO)
     SelLegRows(0x134, 0x20, SelLegName, 4);
 #else
-    DrawImages8x8(STR_SELECT, 0x134, 0x24, 1);
-    DrawImages8x8(STR_INPUT, 0x134, 0x34, 1);
-    DrawImages8x8(STR_CANCEL, 0x134, 0x44, 1);
-    DrawImages8x8(STR_DECIDE, 0x134, 0x54, 1);
+    DrawImages8x8(STR_SELECT, MOD_TIP_IN_TX, 0x24, 1);
+    DrawImages8x8(STR_INPUT, MOD_TIP_IN_TX, 0x34, 1);
+    DrawImages8x8(STR_CANCEL, MOD_TIP_IN_TX, 0x44, 1);
+    DrawImages8x8(STR_DECIDE, MOD_TIP_IN_TX, 0x54, 1);
 #endif
     DrawString16x16("a b c d e f g h", 0x48, 0x70, 1);
     DrawString16x16("i j k l m n o p", 0x48, 0x88, 1);
@@ -1229,9 +1240,9 @@ void func_801ADF94(s32 flags, s32 yOffset) {
 #if defined(MOD_KO)
         SelLegRows(0x34, 0xB0, SelLegFile, 3);
 #else
-        DrawImages8x8(STR_SELECT, 0x34, 0xB4, 1);
-        DrawImages8x8(STR_DECIDE, 0x34, 0xC4, 1);
-        DrawImages8x8(STR_CANCEL, 0x34, 0xD4, 1);
+        DrawImages8x8(STR_SELECT, MOD_TIP_TX, 0xB4, 1);
+        DrawImages8x8(STR_DECIDE, MOD_TIP_TX, 0xC4, 1);
+        DrawImages8x8(STR_CANCEL, MOD_TIP_TX, 0xD4, 1);
 #endif
     }
 
@@ -1459,6 +1470,12 @@ static void func_801AEE74(void) {
     }
 }
 
+#if defined(MOD_PTBR)
+#include "disk.h"
+#include "lba.h"
+#include "../../../mods/sotn-ultimate/src/menu/2C048_mod_ptbr.h"
+#endif
+
 void Update(void) {
     s32 i;
     s32 port;
@@ -1466,8 +1483,18 @@ void Update(void) {
     s32 temp_s1;
     s32 var_s4;
 
+#if defined(MOD_PTBR)
+    if (MOD_PTBR_BLOB[1] == MOD_PTBR_MAGIC) {
+        MOD_PTBR_FRAME(0);
+    }
+#endif
 #if defined(MOD_SATURN) && defined(VERSION_US)
     ModJpDubCopy();
+#endif
+#if defined(MOD_PTBR)
+    if (MOD_PTBR_BLOB[1] == MOD_PTBR_MAGIC) {
+        MOD_PTBR_FRAME(1);
+    }
 #endif
     func_801B1F34();
     switch (g_GameEngineStep) {
@@ -1477,6 +1504,11 @@ void Update(void) {
         g_GameEngineStep--;
         break;
     case Upd_Eng_MenuInit:
+#if defined(MOD_PTBR)
+        if (ModPtbrLoad(MOD_PTBR_BLOCK_MENU)) {
+            break;
+        }
+#endif
         g_api.PlaySfx(MU_PRAYER);
         g_GameTimer = 0;
         D_801BAF08 = 0;

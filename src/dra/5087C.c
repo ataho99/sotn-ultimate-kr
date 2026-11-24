@@ -646,131 +646,7 @@ void func_800F14CC(void) {
 }
 
 #if defined(MOD_SATURN_STAGE_TEST)
-// Test aid (include/game.h): the Library card walks the game's dialogue
-// scenes in story order, to hear the dubs point to point. Each stop lands
-// just before its scene with the story state the scene needs (its "seen"
-// flag cleared). The good route first (Richter freed with the Holy Glasses,
-// inverted castle, Dracula), then optionally the Richter-killed ending.
-// test_checklist.md "Dialogue warp chain" lists what to do at each stop.
-void AddToInventory(u16 id, EquipKind kind);
-typedef struct {
-    u8 stageId;
-    u8 teleport; // D_800A245C index (the arrival, as in retail)
-} ModDlgStop;
-static const ModDlgStop g_ModDlgStops[] = {
-    {STAGE_MAR, 0x64},              // 1 Marble Gallery clock room: Maria
-    {STAGE_NZ0, MOD_TP_DLG_NZ0},    // 2 Alchemy Lab: Maria again
-    {STAGE_LIB, 0x27},              // 3 Long Library: Master Librarian
-    {STAGE_NO4, MOD_TP_DLG_FERRY1}, // 4 Caverns: ferryman, 1st
-    {STAGE_NO4, MOD_TP_DLG_FERRY2}, // 5 Caverns: ferryman, 2nd
-    {STAGE_BO5, 0x68},              // 6 Royal Chapel: Hippogryph, Maria
-    {STAGE_BO2, 0x72},              // 7 Colosseum: Richter, M+W
-    {STAGE_DAI, MOD_TP_DLG_DAI},    // 8 Royal Chapel: Maria on Richter
-    {STAGE_DRE, 0x33},              // 9 Nightmare: Lisa / Succubus
-    {STAGE_CEN, 0x05},              // 10 Castle Center: Maria, glasses
-    {STAGE_BO6, 0x65},              // 11 Castle Keep: Richter, orb, Shaft
-    {STAGE_RBO2, 0x5B},             // 12 Cave (inverted): Death
-    {STAGE_RCEN, 0x05},             // 13 Reverse Center: Shaft
-    {STAGE_RBO6, 0x08},             // 14 Dracula + good ending
-    {STAGE_BO6, 0x65},              // 15 Castle Keep, no glasses: bad end
-};
-// the last stop warped to, 0xFF = none yet (initialised: DRA's BSS layout
-// must not change)
-static u8 g_ModDlgStop = 0xFF;
-
-static void ModDlgHead(u32 item) {
-    u32* eq = g_Status.equipment;
-    u32 old = eq[HEAD_SLOT];
-
-    if (old == item) {
-        return;
-    }
-    if (item != ITEM_EMPTY_HEAD) {
-        if (!g_Status.equipBodyCount[item]) {
-            return;
-        }
-        g_Status.equipBodyCount[item]--;
-    }
-    eq[HEAD_SLOT] = item;
-    if (old != ITEM_EMPTY_HEAD) {
-        AddToInventory(old, EQUIP_HEAD);
-    }
-    make_all();
-}
-
-// picks the next stop (L2 held: the same one, R2 held: the previous one),
-// sets its story state and returns its arrival teleport; g_StageId becomes
-// the destination
-static s32 ModDlgWarp(void) {
-    const s32 n = LEN(g_ModDlgStops);
-    s32 stop = g_ModDlgStop;
-    u8* cf = g_CastleFlags;
-
-    if (stop < n && (g_pads[0].pressed & PAD_L2)) {
-    } else if (stop < n && (g_pads[0].pressed & PAD_R2)) {
-        stop = stop ? stop - 1 : n - 1;
-    } else {
-        stop = stop + 1 >= n ? 0 : stop + 1;
-    }
-    g_ModDlgStop = stop;
-
-    switch (stop) {
-    case 1:
-        cf[MET_MARIA_IN_NZ0] = 0;
-        break;
-    case 2:
-        cf[MET_LIBRARIAN] = 0;
-        break;
-    case 3:
-        cf[MET_FERRYMAN_1] = 0;
-        break;
-    case 4:
-        // the east lake's ferryman only comes with the Merman Statue
-        g_Status.relics[RELIC_MERMAN_STATUE] |=
-            RELIC_FLAG_FOUND | RELIC_FLAG_ACTIVE;
-        cf[MET_FERRYMAN_2] = 0;
-        break;
-    case 5:
-        cf[MET_MARIA_AFTER_HIPPOGRYPH] = 0;
-        break;
-    case 6:
-        cf[RICHTER_CS_AFTER_M_AND_W] = 0;
-        break;
-    case 7:
-        cf[MET_MARIA_IN_DAI] = 0;
-        break;
-    case 8:
-        cf[SUCCUBUS_CS] = 0;
-        break;
-    case 9:
-        cf[CEN_OPEN] = 1;
-        cf[MET_MARIA_IN_CEN] = 0;
-        cf[INVERTED_CASTLE_UNLOCKED] = 0;
-        break;
-    case 10:
-    case 14:
-        // stop 11 with the Holy Glasses on (orb -> Shaft -> Richter freed
-        // -> Maria + Richter in the keep), stop 15 without (Richter dies)
-        cf[SHAFT_ORB_DEFEATED] = 0;
-        cf[INVERTED_CASTLE_UNLOCKED] = 0;
-        ModDlgHead(stop == 10 ? ITEM_HOLY_GLASSES : ITEM_EMPTY_HEAD);
-        break;
-    case 11:
-        cf[INVERTED_CASTLE_UNLOCKED] = 1;
-        cf[DEATH_FIGHT_CS] = 0;
-        break;
-    case 12:
-        cf[INVERTED_CASTLE_UNLOCKED] = 1;
-        cf[SHAFT_FIGHT_CS_UNK1] = 0;
-        cf[SHAFT_FIGHT_CS_UNK2] = 0;
-        break;
-    case 13:
-        cf[INVERTED_CASTLE_UNLOCKED] = 1;
-        break;
-    }
-    g_StageId = g_ModDlgStops[stop].stageId;
-    return g_ModDlgStops[stop].teleport;
-}
+#include "../../mods/sotn-ultimate/src/castle/5087C_mod_test_warp.h"
 #endif
 
 s32 func_800F16D0(void) {
@@ -1082,26 +958,59 @@ void RevealSecretPassageAtPlayerPositionOnMap(s32 castleFlagId) {
                              g_Tilemap.top + (g_PlayerY >> 8), castleFlagId);
 }
 
+#if defined(MOD_SATURN)
+// Saturn port (user, 2026-11-15): the Reverse Caverns' flooded ferryman
+// rooms' ceiling cells, which only the swimming wolf reached (inverted map
+// coordinates; the six repaintMapTilesOnCastleBlueprint makes rooms there)
+static const u8 g_ModRcavCeil[][2] = {
+    {49, 20}, {47, 20}, {20, 21}, {19, 21}, {18, 21}, {15, 21}};
+#endif
+
 void func_800F2014(void) {
     s32 tileX;
     s32 tileY;
     s32 subMap;
     s32 idx;
+#if defined(MOD_SATURN)
+    s32 i, k;
+#endif
 
     if (g_canRevealMap && (g_StageId != STAGE_ST0)) {
         tileX = g_Tilemap.left + (g_PlayerX >> 8);
         tileY = g_Tilemap.top + (g_PlayerY >> 8);
-        subMap = 1 << ((3 - (tileX & 3)) * 2);
-        idx = (tileX >> 2) + (tileY * 16);
-        if (g_StageId & STAGE_INVERTEDCASTLE_FLAG) {
-            idx += 2 * 4 * WIDTH_OF_MAP_ROW_IN_BYTES;
+#if defined(MOD_SATURN)
+        // the cell under the player, then (Reverse Caverns) the cell above
+        // him if it is one of those six ceilings
+        for (i = 0; i < 2; i++, tileY--) {
+            if (i) {
+                if (g_StageId != STAGE_RNO4) {
+                    break;
+                }
+                for (k = 0; k < LEN(g_ModRcavCeil); k++) {
+                    if (g_ModRcavCeil[k][0] == tileX &&
+                        g_ModRcavCeil[k][1] == tileY) {
+                        break;
+                    }
+                }
+                if (k == LEN(g_ModRcavCeil)) {
+                    break;
+                }
+            }
+#endif
+            subMap = 1 << ((3 - (tileX & 3)) * 2);
+            idx = (tileX >> 2) + (tileY * 16);
+            if (g_StageId & STAGE_INVERTEDCASTLE_FLAG) {
+                idx += 2 * 4 * WIDTH_OF_MAP_ROW_IN_BYTES;
+            }
+            if (!(g_CastleMap[idx] & subMap)) {
+                g_CastleMap[idx] |= subMap;
+                g_RoomCount++;
+                func_800F1B08(tileX, tileY, 0);
+                RevealSecretPassageOnMap(tileX, tileY, 0xFFFF);
+            }
+#if defined(MOD_SATURN)
         }
-        if (!(g_CastleMap[idx] & subMap)) {
-            g_CastleMap[idx] |= subMap;
-            g_RoomCount++;
-            func_800F1B08(tileX, tileY, 0);
-            RevealSecretPassageOnMap(tileX, tileY, 0xFFFF);
-        }
+#endif
     }
 }
 
@@ -1864,7 +1773,14 @@ void RunMainEngine(void) {
         if ((g_pads[0].tapped & PAD_START) && CAN_PAUSE) {
             HideMap();
             if ((g_StageId == STAGE_ST0) ||
-                (g_PlayableCharacter != PLAYER_ALUCARD)) {
+                (g_PlayableCharacter != PLAYER_ALUCARD
+#if defined(MOD_SATURN)
+                 // Richter / the Marias: Classic, the retail banner (their
+                 // menu on a held START, below); Ultimate, their menu at
+                 // once (user, 2026-11-17)
+                 && MOD_PS1_BALANCE()
+#endif
+                     )) {
 #if !defined(VERSION_PSP)
                 if (!StatusPause(0)) {
                     return;
@@ -1925,6 +1841,22 @@ void RunMainEngine(void) {
             }
 #endif
         }
+#if defined(MOD_SATURN)
+        // Richter / the Marias: START held MOD_PAUSE_HOLD frames, their
+        // menu (the banner goes as when unpaused, the music goes on and the
+        // menu's fade stops it, as Alucard's)
+        else if (MOD_CHAR_MENU() && (g_pads[0].pressed & PAD_START)) {
+            if (++g_ModDub.pauseHold >= MOD_PAUSE_HOLD && StatusPause(1)) {
+                D_800974A4 = 0;
+                ModPauseCd(1);
+                SetFadeMode(FADE_TO_BLACK);
+                g_GameEngineStep = Engine_Menu;
+                g_MenuStep = MENU_STEP_INIT;
+            }
+        } else {
+            g_ModDub.pauseHold = 0;
+        }
+#endif
 #endif
         UpdateFade(true);
         break;

@@ -902,6 +902,13 @@ void PlayerStepCrouch(void) {
             return;
         }
     }
+#if defined(MOD_SATURN)
+    // Saturn balance: rising from a crouch, a backdash (0x40000) goes first,
+    // before the crouch guard / attacks (player report, 2026-11-15)
+    if (PLAYER.step_s == 2 && !MOD_PS1_BALANCE() && func_8010FDF8(0x40000)) {
+        return;
+    }
+#endif
     if (func_8010FDF8(0x100C) != 0) {
         return;
     }

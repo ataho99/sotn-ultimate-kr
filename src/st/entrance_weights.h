@@ -147,7 +147,13 @@ void EntityPathBlockSmallWeight(Entity* self) {
     }
 
     if (self->step < 3) {
+#if defined(MOD_SATURN) && !defined(INVERTED_STAGE)
+        // solid from below too, as on the Saturn: a super jump from under
+        // it went straight through (user report, 2026-11-13)
+        collision = GetPlayerCollisionWith(self, 16, 16, 7);
+#else
         collision = GetPlayerCollisionWith(self, 16, 16, 5);
+#endif
         if (collision & 4) {
             Entity* player = &PLAYER;
 

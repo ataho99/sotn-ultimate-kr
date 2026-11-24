@@ -402,12 +402,27 @@ static void MarPsxMain() {
     g_Status.subWeapon = g_Mar2SecRic = Mar2MariaToRic(g_Mar2Sec);
 }
 
-#include "gen/maria.h"
 void MarUpdatePlayerEntities(void);
+// DRA calls her entities' update apart from MarMain (UpdatePlayerEntities):
+// it runs in her PSP layout as well (her ids: subWeapon = the thrown one),
+// as on the PSP. Its item crash check (the heart count's green,
+// PLAYER_STATUS_UNK200000) read the other slot, as Richter's id
+static void MarPsxUpdate(void) {
+    u32 other = g_Status.subWeapon;
+    u32 thrown = g_Status.D_80097C40;
+
+    g_Status.subWeapon = g_Mar2Pri;
+    g_Status.D_80097C40 = g_Mar2Sec;
+    MarUpdatePlayerEntities();
+    g_Status.subWeapon = other;
+    g_Status.D_80097C40 = thrown;
+}
+
+#include "gen/maria.h"
 void MarGetPlayerSensor(Collider* col);
 // needs to stay at the bottom for the struct to fall to 0x8013C000
 // (build_mar2.sh checks it and maria_sprites at 0x8013C020)
 PlayerOvl MARIA_override = {
-    MarPsxMain,    MarPsxInit,    MarUpdatePlayerEntities, MarGetPlayerSensor,
-    maria_sprites, maria_sprites, maria_sprites,           maria_sprites,
+    MarPsxMain,    MarPsxInit,    MarPsxUpdate,  MarGetPlayerSensor,
+    maria_sprites, maria_sprites, maria_sprites, maria_sprites,
 };

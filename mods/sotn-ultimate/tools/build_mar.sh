@@ -42,6 +42,18 @@ echo "g_CdVolume = 0x8013B668;" >> "$OUT/mar_syms.txt"
 echo "g_XaMusicVolume = 0x80139820;" >> "$OUT/mar_syms.txt"
 # DRA's stopwatch music-mute state (main BSS), for her time stop
 echo "D_8006BB00 = 0x8006BB00;" >> "$OUT/mar_syms.txt"
+# the Richter animations she never uses are aliases (gen_mar_assets.py
+# MAR_UNUSED): stop if her code refers to one
+if [ -s "$OUT/mar_unused.txt" ]; then
+    used=$(mipsel-linux-gnu-objdump -r "$OUT"/*.c.o | awk '{print $3}' | sort -u |
+        grep -xFf "$OUT/mar_unused.txt" || true)
+    if [ -n "$used" ]; then
+        echo "FAIL MAR uses animations gen_mar_assets.py MAR_UNUSED drops: $used"
+        exit 1
+    fi
+fi
+# her byte-identical animations, written once (gen_mar_assets.py)
+cat "$OUT/mar_alias.txt" >> "$OUT/mar_syms.txt"
 mipsel-linux-gnu-ld -nostdlib --no-check-sections -Map "$OUT/mar.map" -T "$OUT/mar.ld" \
     -T config/undefined_syms.us.txt -T build/us/config/undefined_funcs_auto.us.ric.txt \
     -T build/us/config/undefined_syms_auto.us.ric.txt -T "$OUT/mar_syms.txt" -o "$OUT/mar.elf"

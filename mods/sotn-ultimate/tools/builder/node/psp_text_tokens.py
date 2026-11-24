@@ -3,7 +3,8 @@
 """The PSP script text the release blanks (mods/sotn-ultimate/tools/builder/node/
 psp_text_scan.ts): every TEXT token mods/sotn-ultimate/tools/psp_script.py wrote (its
 build/us/psp_script/patches.json copies, PSP and JP, and CEN's C-array copies
-in src/st/cen/mod_psp_script.h, disassembled), and the disc files that hold
+in src/st/cen/mod_psp_script.h, disassembled; the PSP prologue scroll's
+lines, mods/sotn-ultimate/tools/prologue_scroll.py), and the disc files that hold
 the copies with the retail overlay each was built from. Prints JSON."""
 import json
 import os
@@ -39,6 +40,10 @@ def main():
         b = bytes(int(x, 16) for x in re.findall(r"0x([0-9A-Fa-f]+)", m.group(1)))
         toks, _ = P.disassemble(b, 0)
         tokens.update(t[1] for t in toks if t[0] == "TEXT")
+    # the PSP prologue scroll's lines (mods/sotn-ultimate/tools/prologue_scroll.py)
+    scroll = os.path.join(ROOT, "build/us/psp_script/prologue_tokens.json")
+    if os.path.exists(scroll):
+        tokens.update(json.load(open(scroll))["tokens"])
     files = {retail: retail for retail, _, _ in P.OVERLAYS.values()}
     files.update(COPIES)
     print(json.dumps({"tokens": sorted(tokens), "files": files}))

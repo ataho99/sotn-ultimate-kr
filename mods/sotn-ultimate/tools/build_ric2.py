@@ -264,6 +264,7 @@ def main():
         q = p - RAM
         w, h, px, py = ric[q:q + 4]
         sprites.append((w, h, px, py, unpack_psx(bytes(ric[q + 4:]), w, h), q))
+    stairs_original(sprites)
     # PS1 frames (spritebank0, the {0x8000|sprite, x, y, clut} format)
     b0 = syms["spritebank0"] - RAM
     frames = []
@@ -353,6 +354,7 @@ def main():
         new[off] = bytes([c.shape[1], c.shape[0], npx, npy]) + pack_psx(c)
         report.append((members, j, mism, int(np.count_nonzero(ps)),
                        (w, h), c.shape[::-1]))
+    stairs_coat_up(frames, sprites, new, frame_fix)
     # palettes
     g2 = open(path("disks/us/BIN/F_GAME2.BIN"), "rb").read()
 
@@ -429,6 +431,7 @@ def main():
     for q, (fx, fy) in frame_fix.items():
         x, y = struct.unpack_from("<hh", out, q + 2)
         struct.pack_into("<hh", out, q + 2, x + fx, y + fy)
+    stairs_coat_down(out, frames, sprites, new, frame_fix, syms)
     assert len(out) == len(ric)
     open(path("build/us/RIC2.BIN"), "wb").write(out)
     bad = [r for r in report if r[2] > 0.1 * max(r[3], 1)]
@@ -442,6 +445,66 @@ def main():
         for k, q in pals:
             print("  pal 0x%03X %s" % (k, " ".join("%04x" % v for v in q)))
     preview(ric, out, frames, syms, pals, base)
+
+
+def stairs_original(sprites):
+    """Sprite 0xC3's slot holds Richter's Ultimate facing-up stairs stance
+    (gen_ric_stairs.py): match the coat with its original art, from the
+    extracted assets (assets/ric)."""
+    import gen_ric_stairs as st
+    from PIL import Image
+    import yaml
+    e = yaml.safe_load(open(os.path.join(st.ASSETS, "richter.yaml")))[st.SLOT]
+    img = np.array(Image.open(os.path.join(st.ASSETS, e["name"])))
+    q = sprites[st.SLOT][5]
+    sprites[st.SLOT] = (img.shape[1], img.shape[0], e["pivotx"], e["pivoty"],
+                        img, q)
+
+
+def stairs_part(frames, sprites, new, frame_fix, f):
+    i, x, y, _, q = frames[f]
+    b = new[sprites[i][5]]
+    w, h, px, py = b[:4]
+    fx, fy = frame_fix.get(q, (0, 0))
+    return unpack_psx(b[4:], w, h), x + fx + px, y + fy + py
+
+
+def stairs_coat_up(frames, sprites, new, frame_fix):
+    """The coat's facing-up stance in sprite 0xC3 (frame 211): its idle above
+    the waist on its frame 211 legs."""
+    import gen_ric_stairs as st
+    idle = stairs_part(frames, sprites, new, frame_fix, st.IDLE)
+    img, left, top = st.compose(idle, stairs_part(frames, sprites, new,
+                                                  frame_fix, st.UP))
+    _, x, y, _, q = frames[st.UP]
+    fx, fy = frame_fix.get(q, (0, 0))
+    ox, oy = min(x + fx, left), min(y + fy, top)
+    if (ox, oy) != (x, y):
+        frame_fix[q] = (ox - x, oy - y)
+    h, w = img.shape
+    px, py = left - ox, top - oy
+    flat = img.reshape(-1)
+    new[sprites[st.SLOT][5]] = bytes([w, h, px, py]) + bytes(
+        (flat[0::2] | (flat[1::2] << 4)).tolist())
+
+
+def stairs_coat_down(out, frames, sprites, new, frame_fix, syms):
+    """The coat's facing-down stance in g_RicStairSpr / g_RicStairFrame
+    (RicInit points sprite 0xC4 / frame 212 there): its idle above the waist
+    on its frame 212 legs."""
+    import gen_ric_stairs as st
+    if "g_RicStairSpr" not in syms:
+        return
+    idle = stairs_part(frames, sprites, new, frame_fix, st.IDLE)
+    img, left, top = st.compose(idle, stairs_part(frames, sprites, new,
+                                                  frame_fix, st.DOWN))
+    spr = syms["g_RicStairSpr"] - RAM
+    frm = syms["g_RicStairFrame"] - RAM
+    fx, fy = min(st.FRAME_X, left), min(st.FRAME_Y, top)
+    out[spr:spr + st.BUF] = st.pack(img, left, top, fx, fy)
+    struct.pack_into("<hh", out, frm + 2, fx, fy)
+    print("RIC2 stairs: facing down %dx%d (%d of %d bytes)" % (
+        img.shape[1], img.shape[0], 4 + img.size // 2, st.BUF))
 
 
 def preview(ric, out, frames, syms, pals, base):

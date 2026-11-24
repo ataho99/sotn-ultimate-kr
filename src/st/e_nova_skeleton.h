@@ -77,9 +77,16 @@ typedef enum {
     NOVA_DEAD
 } NovaSkeletonSteps;
 
+#if defined(MOD_SATURN)
+#include "../../mods/sotn-ultimate/src/enemies/e_nova_skeleton_mod_slope.h"
+#endif
+
 static void TryShoot(void) {
     // return value not used, but function has side effects
     s32 unused = UnkCollisionFunc2(&sensors2);
+#if defined(MOD_SATURN)
+    NovaStepUpSlope();
+#endif
     // if cooldown has expired...
     if (!g_CurrentEntity->ext.nova.cooldown) {
         if (GetDistanceToPlayerX() >= 0x80) {

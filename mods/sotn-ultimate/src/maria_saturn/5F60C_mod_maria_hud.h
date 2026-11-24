@@ -98,7 +98,7 @@ static void MarHudInit(void) {
     D_8003C744 = 0;
     g_PlayerHud.unk28 = 0;
     g_PlayerHud.unk24 = 0;
-    g_PlayerHud.primIndex1 = AllocPrimitivesReverse(PRIM_GT4, 8);
+    g_PlayerHud.primIndex1 = AllocPrimitivesReverse(PRIM_GT4, 9);
     MarHudUpdate();
 }
 
@@ -128,22 +128,34 @@ static void MarHudUpdate(void) {
     prim = MarHudSprite(prim, 2, 24, 38, 96, 128, MAR_HUD_V);
     p->clut = MAR_HUD_CLUT + 2;
     p->priority = 0x1EF;
-    // the bars rise from y 116 (the Saturn's bottom row) in its tubes
-    n = n * 90 / g_Status.hpMax;
+    // the bars rise from y 116 (the Saturn's bottom row) in its tubes, up
+    // to their tops (HP y 26, MP y 59: the holder art's tube insides; one
+    // row short and the MP bar one column narrow left gaps, player report
+    // 2026-11-15)
+    // (down to row 117, the tubes' grey glass bottoms: user, 2026-11-15)
+    n = n * 92 / g_Status.hpMax;
     p = prim;
-    prim = MarHudSprite(prim, 6, 117 - n, 4, n, 240, MAR_HUD_V);
+    prim = MarHudSprite(prim, 6, 118 - n, 4, n, 240, MAR_HUD_V);
     if (n <= 0) {
         p->drawMode = DRAW_HIDE;
     }
-    n = g_Status.mp * 57 / g_Status.mpMax;
+    n = g_Status.mp * 59 / g_Status.mpMax;
     p = prim;
-    prim = MarHudSprite(prim, 21, 117 - n, 3, n, 245, MAR_HUD_V);
+    // 4 px wide like its tube (x 20-23): the HP fill's columns (u240, colour
+    // indices 2 1 2 3), all one colour in its palette
+    prim = MarHudSprite(prim, 20, 118 - n, 4, n, 240, MAR_HUD_V);
     p->clut = MAR_HUD_CLUT + 1;
-    // under the holder, whose glass highlight in this tube shows over it
-    p->priority = 0x1EE;
+    // over the holder, like the HP bar (under it, the holder's grey tube
+    // bottom showed over the bar's lower left)
     if (n <= 0) {
         p->drawMode = DRAW_HIDE;
     }
+    // the MP tube's glass reflection line (holder column 20: x 22, rows
+    // 60-115) back over the fill (user, 2026-11-15)
+    p = prim;
+    prim = MarHudSprite(prim, 22, 60, 1, 56, 128 + 20, MAR_HUD_V + 36);
+    p->clut = MAR_HUD_CLUT + 2;
+    p->priority = 0x1F1;
     // hearts, ones first: the tens only from 10, the hundreds from 100
     for (i = 0, n = g_Status.hearts; i < 3; i++, n /= 10) {
         p = prim;

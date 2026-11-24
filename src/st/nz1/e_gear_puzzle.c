@@ -133,7 +133,13 @@ void EntitySecretAreaDoor(Entity* self) {
         }
         break;
     }
-    GetPlayerCollisionWith(self, 8, 0x20, 5);
+#if defined(MOD_SATURN)
+    // Saturn port fix (retail bug, as src/st/rnz1/e_gear_puzzle.c): parked
+    // open past the room's edge (step 2) it stayed solid and could stop the
+    // player at the exit: solid only while closed or moving
+    if (self->step != 2 || self->step_s != 0)
+#endif
+        GetPlayerCollisionWith(self, 8, 0x20, 5);
     if (D_us_80180FD0 == 0xF) {
         var_a1 = &D_us_80180FDC[4];
     } else {

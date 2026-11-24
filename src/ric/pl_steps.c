@@ -52,6 +52,25 @@ void RicStepStand(void) {
         RicDecelerateX(FIX(0.125));
         switch (PLAYER.step_s) {
         case 0:
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+            // his stairs stance whenever he stands on stairs: his idles or
+            // any finished pose (landings; a costume / version switch
+            // reloads him in his relax idle), and his idle off them
+            facing = (s32)RicStairsAnim();
+            if (facing) {
+                if (PLAYER.anim != (AnimationFrame*)facing &&
+                    (PLAYER.anim == ric_anim_stand ||
+                     PLAYER.anim == ric_anim_stand_relax ||
+                     PLAYER.anim == ric_anim_stairs_up ||
+                     PLAYER.anim == ric_anim_stairs_down ||
+                     PLAYER.poseTimer < 0)) {
+                    RicSetAnimation((AnimationFrame*)facing);
+                }
+            } else if (PLAYER.anim == ric_anim_stairs_up ||
+                       PLAYER.anim == ric_anim_stairs_down) {
+                RicSetAnimation(ric_anim_stand);
+            }
+#endif
             if (RicCheckFacing()) {
                 RicSetWalk(0);
             } else if (g_Player.padPressed & PAD_UP) {
@@ -194,11 +213,25 @@ void RicStepRun(void) {
             CHECK_ATTACK | CHECK_CROUCH | RIC_OR_MAR(0, CHECK_BACKDASH))) {
         RicDecelerateX(FIX(0.125));
         if (RicCheckFacing() == 0) {
+#if defined(MOD_MARIA_SAT)
+            // Saturn 060A6A94: she stands with half her speed and, after a
+            // long enough run away from a wall, skids (user report
+            // 2026-11-19: she stopped dead)
+            RicSetStand(PLAYER.velocityX >> 1);
+#else
             RicSetStand(0);
+#endif
+            // (on stairs too: the skid, then RicStepStand his stairs stance)
             if (g_Player.timers[PL_T_RUN] == 0) {
                 if (!(g_Player.vram_flag &
                       (TOUCHING_L_WALL | TOUCHING_R_WALL))) {
+#if defined(MOD_MARIA_SAT)
+                    RicSetAnimation(g_Player.vram_flag & 0x20
+                                        ? mar_anim_stop_run_b
+                                        : ric_anim_stop_run);
+#else
                     RicSetAnimation(ric_anim_stop_run);
+#endif
                     RicCreateEntFactoryFromEntity(
                         g_CurrentEntity, BP_SKID_SMOKE, 0);
                 }
@@ -714,6 +747,11 @@ void RicStepHit(s32 damageEffect, u32 damageKind, s16 prevStep, s32 prevStepS) {
             switch (damageKind) {
             case 2:
                 switch (prevStep) {
+#if defined(MOD_SATURN)
+                // (the run and the slide had no case: no step_s, a frozen
+                // second until the hit ran out)
+                default:
+#endif
                 case PL_S_STAND:
                 case PL_S_WALK:
                     PLAYER.velocityY = 0;
@@ -783,7 +821,8 @@ void RicStepHit(s32 damageEffect, u32 damageKind, s16 prevStep, s32 prevStepS) {
                     PLAYER.velocityY = FIX(-3);
                     func_8015CAAC(FIX(-1.25));
                     PLAYER.step_s = 1;
-                    PLAYER.anim = ric_anim_stun;
+                    // Saturn 060A7870: hers has its own pose in the air
+                    PLAYER.anim = RIC_OR_MAR(ric_anim_stun, mar_anim_hit_air);
                     g_api.PlaySfx(
                         RIC_OR_MAR(SFX_VO_RIC_PAIN_B, MAR_SFX_HURT_B));
                     break;
@@ -978,6 +1017,29 @@ void RicStepHit(s32 damageEffect, u32 damageKind, s16 prevStep, s32 prevStepS) {
         if (!(g_Player.vram_flag & TOUCHING_GROUND)) {
             RicSetFall();
         }
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+        // (Richter only: the Saturn Maria's overlay has no room, and her
+        // stagger never showed the hold)
+        // the stagger's last pose holds 32 frames (retail): any input ends
+        // it, acted on at once (user, 2026-11-15); untouched, as retail.
+        // Not at the prologue's last hit (unk5C, no HP: its death follows)
+        // (Ultimate balance only: Classic keeps retail's)
+        if (PLAYER.poseTimer > 0 && !MOD_PS1_BALANCE() &&
+            PLAYER.anim[PLAYER.pose + 1].duration == 0xFFFF &&
+            !(g_Player.unk5C && g_Status.hp <= 0) &&
+            ((g_Player.padPressed & (PAD_LEFT | PAD_RIGHT | PAD_DOWN)) ||
+             (g_Player.padTapped &
+              (PAD_CROSS | PAD_SQUARE | PAD_TRIANGLE | PAD_CIRCLE)))) {
+            // still invincible for the hold's remaining frames and the
+            // usual 16 after it (pl_main.c, flash included)
+            RicSetInvincibilityFrames(1, PLAYER.poseTimer + 16);
+            RicSetStand(PLAYER.velocityX);
+            RicCheckInput(CHECK_FALL | CHECK_FACING | CHECK_JUMP | CHECK_CRASH |
+                          CHECK_ATTACK | CHECK_CROUCH | CHECK_SLIDE |
+                          RIC_OR_MAR(0, CHECK_BACKDASH));
+            break;
+        }
+#endif
         if (PLAYER.poseTimer < 0) {
             if (g_Player.unk5C) {
                 if (g_Status.hp <= 0) {

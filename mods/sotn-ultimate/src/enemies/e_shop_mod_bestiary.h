@@ -5,7 +5,13 @@
 // "No.") is the Saturn's; the bestiary bit and everything looked up with it
 // (enemy, description, preview) is LIB_BIT.
 #include "../../../../src/st/lib/mod_bestiary.h"
+#if defined(MOD_PTBR)
+#include "../../../../src/st/lib/mod_ptbr_lib.h"
+static void ModPtbrLibText(void);
+#define MOD_LIB_DESC_Y 0x1B0
+#else
 #define MOD_LIB_DESC_Y 0x1C0
+#endif
 #define LIB_BIT(i) g_ModLibBit[i]
 #define LIB_ENEMY(i) g_ModLibEnemy[LIB_BIT(i)]
 // two names a row, 7 rows shown: the last top row (an odd count, i.e. the

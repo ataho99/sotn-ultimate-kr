@@ -454,8 +454,18 @@ static AnimationFrame D_800AEB64[] = {
 };
 
 static AnimationFrame D_800AEB84[] = {
-    POSE(4, 0xCB, 3), POSE(6, 0xCC, 3), POSE(5, 0xCD, 3),
-    POSE(5, 0xCE, 3), POSE(5, 0xCF, 3), POSE(64, 0x0F, 3),
+    POSE(4, 0xCB, 3),
+    POSE(6, 0xCC, 3),
+    POSE(5, 0xCD, 3),
+    POSE(5, 0xCE, 3),
+    POSE(5, 0xCF, 3),
+    POSE(64, 0x0F, 3),
+#if defined(MOD_SATURN)
+    // the crouch slashes' end: retail has no POSE_END here, so after the
+    // crouch hold it runs into D_800AEB9C (the crouch slash's swing) and
+    // holding Down swings again with no weapon (user report, 2026-11-13)
+    POSE_END,
+#endif
 };
 
 static AnimationFrame D_800AEB9C[] = {

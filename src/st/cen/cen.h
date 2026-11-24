@@ -5,6 +5,13 @@
 #define STAGE_IS_CEN
 
 #include <stage.h>
+#if defined(MOD_SATURN)
+// Richter and both Marias see the Castle Center as after Maria's scene: no
+// Maria, no scene, the Holy Glasses chamber done (user, 2026-11-14)
+#define CEN_MARIA_DONE() (g_CastleFlags[MET_MARIA_IN_CEN] || MOD_RIC_ULTIMATE())
+#else
+#define CEN_MARIA_DONE() (g_CastleFlags[MET_MARIA_IN_CEN])
+#endif
 
 enum Palettes {
     PAL_NONE = 0,

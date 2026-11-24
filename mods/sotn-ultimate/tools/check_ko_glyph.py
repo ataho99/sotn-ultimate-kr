@@ -252,7 +252,7 @@ def main():
     # 8px equipment-name plate: every name character must have a plate cell whose code is its glyph-map code
     # (a missing one is drawn as a blank, a stale code as another glyph: 숏 / 발 / 멜 bugs)
     import struct
-    pb = open(WK + "ko_8p_block_248.bin", "rb").read()
+    pb = open(WK + "ko_8p_block_249.bin", "rb").read()
     pn = struct.unpack("<H", pb[:2])[0]
     pcodes = set(struct.unpack("<%dH" % pn, pb[2:2 + pn * 2]))
     eqc = io.open(os.path.join(ROOT, "mods/sotn-ultimate/src/menu/eq_core.c"), encoding="utf-8").read()

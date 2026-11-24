@@ -85,8 +85,16 @@
 // Test aid: the Library card warps along the game's dialogue scenes instead
 // (off normally; src/dra/5087C.c ModDlgWarp, list in test_checklist.md
 // "Dialogue warp chain"). Hold L2 during the card's flash to repeat the last
-// stop, R2 to go back one.
-// #define MOD_SATURN_STAGE_TEST // test aids off (warp chain, cards, gift)
+// stop, R2 to go back one. Turn it OFF before any release build.
+#include "mod_ptbr_build.h"
+// test aids (warp chain, cards, gift): OFF since 2026-11-17 (the user: the
+// whole game is tested; DRA needed the room for the Richter / Maria
+// Classic balance and the held-START menu)
+// #define MOD_SATURN_STAGE_TEST
+// Test aid, with MOD_SATURN_STAGE_TEST: the Library card walks the areas
+// with a first-visit name banner instead of the dialogue scenes, the
+// banners' "seen" flags cleared at each warp (src/dra/5087C.c)
+// #define MOD_TEST_AREA_NAMES // off
 #if defined(MOD_SATURN_STAGE_TEST)
 // its arrival teleports that no retail one covers
 #define MOD_TP_DLG_FERRY1 0x8C // Underground Caverns room 25, west lake
@@ -136,6 +144,15 @@
 // mods/sotn-ultimate/tools/gdn_tile_swap.py with the cells in
 // mods/sotn-ultimate/tools/prs_ps1_tiles. Read by the asset tools only.
 #define MOD_PRS_PS1_TILES
+#include "mod_ptbr_build.h"
+#if defined(MOD_PTBR)
+#define MOD_PTBR_BLOB ((u32*)0x801F0000)
+#define MOD_PTBR_MAGIC 0x31425450
+#define MOD_PTBR_MAX 0x7800
+#define MOD_PTBR_CODE 0x801F0090
+#define MOD_PTBR_TEXT_PT()                                                     \
+    (MOD_PTBR_BLOB[1] == MOD_PTBR_MAGIC && !MOD_PTBR_BLOB[2])
+#endif
 // The Saturn's New Game character select (src/st/sel/2C048.c): Maria's
 // portrait, and she can be chosen.
 #define MOD_SATURN_MARIA
@@ -254,7 +271,61 @@
 // balance also brings back Alucard's time-stop dim (src/dra/692E8.c BP_120),
 // which the Saturn lacks.
 #define MOD_FLAG_PS1_BALANCE 0x40
+// Richter / Maria game: the Succubus, Minotaur & Werewolf and Death can be
+// fought (their time attack records are real victories). Unset in a save
+// from before 2026-11-15, whose records the game's start set: the title's
+// load clears them once (src/save_mgr.h ApplySaveData), then sets this
+#define MOD_FLAG_BOSSES_ON 0x80
 #define MOD_PS1_BALANCE() (MOD_STATUS_FLAGS & MOD_FLAG_PS1_BALANCE)
+// Richter and the Marias have a pause menu, Alucard's trimmed
+// (mods/sotn-ultimate/src/menu/menu_mod_charmenu.h), and their own button
+// set-up, in both balances. Ultimate: START opens it. Classic: START gives
+// the retail PAUSE banner; held MOD_PAUSE_HOLD frames while paused, their
+// menu (src/dra/5087C.c; user, 2026-11-17). Never at the prologue.
+#define MOD_CHAR_MENU()                                                        \
+    (g_PlayableCharacter != PLAYER_ALUCARD && g_StageId != STAGE_ST0)
+#define MOD_PAUSE_HOLD 90 // 1.5 s
+// Richter / a Maria with the Ultimate balance (Player Select "Classic" =
+// MOD_FLAG_PS1_BALANCE = the retail rules): every room open
+// (src/menu/game_handlers_mod_access.h, the stage hooks), the Succubus,
+// Minotaur & Werewolf and Death fightable, 100 HP, running in save rooms,
+// Richter's stagger cancel (user, 2026-11-17)
+#define MOD_RIC_ULTIMATE()                                                     \
+    (g_PlayableCharacter != PLAYER_ALUCARD && !MOD_PS1_BALANCE())
+// the menu open is theirs (set when it opens: src/dra/menu.c)
+#define MOD_IN_CHAR_MENU() (g_ModDub.charMenu)
+#define MOD_MAIN_ROWS() (MOD_IN_CHAR_MENU() ? 2 : 5) // the main box's rows
+// its drawing code, src/menu/charmenu.c (after ARC_F2.BIN's loaded part), read
+// into g_Pix[1] while the menu is open (the demo-key load with g_LoadOvlIdx
+// MOD_CHARMENU_OVL, src/dra/cd.c): the magic, then its entries
+#define MOD_CHARMENU_MAGIC 0x554E4D43
+#define MOD_CHARMENU_MAGIC_STR "0x554E4D43"
+#define MOD_CHARMENU_OVL 0x7E
+// its size: g_Pix[1] to [3] (24 KB; tools/build_charmenu.sh checks it)
+#define MOD_CHARMENU_SIZE 0x6000
+typedef struct {
+    u32 magic;
+    void (*main)(void* ctx, s32 x, s32 y); // the main box's rows
+    void (*stats)(void* ctx);              // the status screen
+    void (*sysDraw)(void* ctx);            // MenuSystemDraw
+    void (*sysStep)(void);                 // MENU_STEP_SYSTEM
+    void (*btnDraw)(void* ctx);            // MenuButtonConfigDraw
+    void (*btnStep)(void);                 // MENU_STEP_SYSTEM_BUTTONS
+    s32 (*popDraw)(void* ctx);  // MenuSoundConfigDraw: Extra settings' popup
+    void (*cmdDraw)(void* ctx); // MenuSpellsDraw: Commands
+    void (*cmdStep)(void);      // MENU_STEP_SPELL_INIT: Commands
+} ModCharMenuBlob;
+// Richter's / the Marias' own button set-up (their menu's System screen),
+// saved with the game: one word each in g_Settings.timeAttackRecords'
+// unused slots 28..30 (zero at a new game; the time attack reads 0..27
+// only). 3 bits per action f (Alucard's row order, the default button
+// g_ButtonMask[f]): its button ^ f, so 0 = the default buttons. Applied in
+// gameplay by src/dra/pads.c (MOD_CHAR_MENU: not at the prologue)
+#define MOD_PAD_CHAR()                                                         \
+    (g_PlayableCharacter == PLAYER_RICHTER ? 0 : MOD_MARIA_PSP() ? 1 : 2)
+#define MOD_PAD_WORD(c) (g_Settings.timeAttackRecords[28 + (c)])
+#define MOD_CHARMENU_BLOB ((ModCharMenuBlob*)g_Pix[1])
+#define MOD_CHARMENU_OK() (MOD_CHARMENU_BLOB->magic == MOD_CHARMENU_MAGIC)
 // The Saturn's third hand ("Holder", its equipment[2];
 // mods/sotn-ultimate/src/items/mod_holder.h): Saturn balance, Alucard only. Its
 // item id is kept in saveName[10] (name entry writes 0..9, the save summary
@@ -276,12 +347,17 @@
 // stubs (src/config_us.h) check the magic, its header's first word: the
 // address its %hi loads, (ADDR + 0x8000) & ~0xFFFF (build_sysopt.sh checks
 // it and that no other player file holds it there). Header: magic, the
-// three entries, then the row's info bar text (menu.c D_800A2D48[7])
+// three entries plus Tick, then the row's info bar text (menu.c D_800A2D48[7])
 #define MOD_SYSOPT_ADDR 0x8016DBF0
 #define MOD_SYSOPT_MAGIC 0x80170000
 #define MOD_SYSOPT_MAGIC_STR "0x80170000"
 #define MOD_SYSOPT_BAR_TEXT (MOD_SYSOPT_ADDR + 20)
+// v1.5 had +16 here for its 3-entry header; merged header has Tick so +20, see M2 report
 #define MOD_SYSOPT_BAR_TEXT2 (MOD_SYSOPT_ADDR + 52) // 094_12 KO: the Cheats row's text (sysopt.c header .org 52)
+// the third hand's code there too (src/items/holder_code.c): its table in the
+// file's last 16 bytes (tools/build_sysopt.sh): magic, use, food entity
+#define MOD_HOLDER_TBL ((u32*)(0x80170000 - 16))
+#define MOD_HOLDER_MAGIC 0x484F4C44
 #define MOD_ARC_F_LEN 0x34000 // ARC_F2.BIN: up to 0x80170000
 // The JP dub's tables are SEL rodata (no room in DRA): SEL copies them into
 // g_ModDub.jp every frame its menu runs (src/st/sel/2C048.c Update), which
@@ -292,8 +368,7 @@
 #define MOD_JP_SFX_MAX 28
 typedef struct {
     u32 magic;
-    u32 xaBase;    // the JP streams' first sector (repack_xa.py --dub-jp)
-    u32 didYouNot; // MOD_VO_DID_YOU_NOT's JP stream (as xa[])
+    u32 xaBase; // the JP streams' first sector (repack_xa.py --dub-jp)
     // the stage / familiar banks whose JP clips differ from the PSP's:
     // {the PSP bank (its SFX_PSP.BIN sector + 1, as lba_stage.c / cd.c
     // keep it), the JP one: its sector in BIN/JP_SD.BIN + 1, or 0xFFFF =
@@ -338,6 +413,8 @@ typedef struct {
     } e[MOD_DUB_TEXT_MAX];
     u8 bytes[MOD_DUB_TEXT_BYTES];
 } ModDubText;
+#define MOD_GRATE_MAX 128
+#define MOD_GRATE_MAGIC 0x47520000
 // DRA's dead VSync-effect buffers (4 KB, src/dra/47BB8.c)
 typedef struct {
     u32 cfg[4]; // ModXaConfig's redirected XaMusicConfig
@@ -350,7 +427,36 @@ typedef struct {
     // DRA's StoreSaveData, set every frame (game_handlers.c UpdateGame):
     // SEL's saves go through it (save_mgr.h)
     void* storeSave;
+    // the castle-access hook's room key and scan countdown
+    // (src/menu/game_handlers_mod_access.h): here, not in DRA's BSS, so
+    // g_ModDub keeps the address SEL writes to
+    u32 accessRoom;
+    s32 accessScan;
+    // the pause menu open is Richter's / a Maria's, and where its file is
+    // (src/menu/menu_mod_charmenu.h: 0 not asked, 1 reading, 2 done)
+    u8 charMenu;
+    u8 charMenuLoad;
+    // their Extra settings changed the costume / version: 1 to load (the
+    // menu's exit), 2 loading, 3 loaded (src/menu/menu_mod_charmenu.h
+    // ModCharSwapLoad / ModCharSwap)
+    u8 charSwap;
+    u8 pauseHold; // frames START held while paused (src/dra/5087C.c)
+    // the grate tiles the castle-access hook took out (they are the stage
+    // overlay's own room data: out until the stage reloads), with their
+    // tiles, so a switch to Classic (src/menu/charmenu.c PopBalance) puts
+    // them back: grateStage = MOD_GRATE_MAGIC | the stage they are in
+    u32 grateStage;
+    u32 grateCount;
+    struct {
+        u16* p;
+        u16 v;
+        u16 pad;
+    } grate[MOD_GRATE_MAX];
+    // Richter's / the Marias' cheats, set in their Extra settings (src/menu/charmenu.c): bit 0 infinite
+    // HP, bit 1 hearts, bit 2 MP (the Saturn Maria's); DRA HandlePlay refills them every frame
+    u8 cheats;
     u8 unused[4096 - 16 - sizeof(ModJpDubTable) - sizeof(ModDubText) -
-              MOD_FIXED_TEXT_BYTES - sizeof(void*)];
+              MOD_FIXED_TEXT_BYTES - sizeof(void*) - 12 - 8 -
+              MOD_GRATE_MAX * 8 - 1];
 } ModDubState;
 extern ModDubState g_ModDub;

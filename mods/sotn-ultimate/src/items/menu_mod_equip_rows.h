@@ -10,7 +10,11 @@
 // the equip select's other hand (two-handed weapons): none for the holder
 #define MOD_HAND_PAIR() (D_801375D0 < 2)
 static const char* const g_ModHolderStr = _S("Holder");
+#if defined(MOD_PTBR)
+#define MOD_HOLDER_STR (*(const char* const volatile*)&g_ModHolderStr)
+#else
 #define MOD_HOLDER_STR g_ModHolderStr
+#endif
 // the holder shows as the 3rd row, after the hands, as on the Saturn; its
 // slot (cursorEquip) stays MOD_HOLDER_SLOT. Slot -> row on screen, and back
 static s32 ModEquipRow(s32 slot) {

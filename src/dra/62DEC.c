@@ -1371,7 +1371,10 @@ void func_80105428(void) {
         func_80103ED4();
     }
     temp_s3 = D_801379C8.vy;
-#if defined(VERSION_US)
+#if defined(VERSION_US) && !defined(MOD_SATURN)
+    // (Saturn port: no run block in save rooms, as on the Saturn; see
+    // func_8010E334, which keeps it for Richter / the Marias' Classic
+    // balance)
     g_Player.unk7A = 1;
 #endif
     switch (temp_s0 = D_801379BC) {

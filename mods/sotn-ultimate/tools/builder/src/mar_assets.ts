@@ -880,7 +880,10 @@ async function generate(readSaturn: Reader, readPs1?: Reader): Promise<Headers> 
             throw new Error("sprite size");
         }
     }
-    const frOut: ([number, number, number, number, number] | null)[] = frames.map((fr) => {
+    // WALK_FIX (gen_mar_assets.py): her walk levelled, {frame: dy} (+ down)
+    const walkFix = new Map<number, number>([[24, 1], [26, -1], [27, -1], [28, -1],
+        [32, -1], [33, -1], [34, -1]]);
+    const frOut: ([number, number, number, number, number] | null)[] = frames.map((fr, f) => {
         if (!fr) {
             return null;
         }
@@ -889,7 +892,8 @@ async function generate(readSaturn: Reader, readPs1?: Reader): Promise<Headers> 
         const left = x - fdiv(im.w, 2);
         const [, , x0, y0] = sprites[j];
         // SAT_Y (gen_mar_assets.py): the Saturn frame y is 1 below the PS1's
-        return [j, mapcol(keptCols(left, im.w)[0]) + x0, y - fdiv(im.h, 2) + y0 - 1, 0, fl];
+        return [j, mapcol(keptCols(left, im.w)[0]) + x0,
+            y - fdiv(im.h, 2) + y0 - 1 + (walkFix.get(f) ?? 0), 0, fl];
     });
     // hitboxes
     const hb: number[] = [];

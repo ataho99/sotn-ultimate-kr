@@ -124,7 +124,14 @@ s32 CheckMoveDirection(void) {
 }
 
 s32 func_8010E334(s32 xStart, s32 xEnd) {
-    g_Player.unk7A = 1;
+    // the save point's run block (g_Player.unk7A, "run_disable_f"); the
+    // Saturn lets Alucard, Maria and Richter run in save rooms (saving starts
+    // when the player stands in the range below, not through this flag):
+    // Saturn port, but Richter's / the Marias' Classic balance
+#if defined(MOD_SATURN)
+    if (g_PlayableCharacter != PLAYER_ALUCARD && MOD_PS1_BALANCE())
+#endif
+        g_Player.unk7A = 1;
     // Interesting - this could have been all && conditions, but if you try,
     // PS1 optimizes into loading PLAYER.step as a word, rather than doing
     // two accesses for step and step_s. Breaking it up like this prevents

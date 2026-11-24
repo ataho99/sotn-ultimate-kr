@@ -121,10 +121,11 @@ MOD_DUB_ADDR = 0x8013644C  # src/st/sel/2C048.c MOD_DUB_STATE
 
 def jp_table():
     """mod_jp_xa.h -> ({voice id: [cd_addr, unk228, file, channel]}, the
-    MOD_VO_DID_YOU_NOT entry or None, base, its word, the words)"""
+    extras' entries (None = none), base, their words, the words)"""
     h = open(JP_H).read()
     base = int(re.search(r"#define MOD_JP_XA_BASE (\d+)", h)[1])
-    dyn = int(re.search(r"#define MOD_JP_XA_DID_YOU_NOT (0x[0-9A-F]+)", h)[1], 16)
+    dyn = [int(x, 0) for x in re.search(r"#define MOD_JP_XA_EXTRA \{([^}]*)\}", h)[1].split(",")
+           if x.strip()]
     bits = [int(x, 0) for x in re.search(r"MOD_JP_XA_BITS \{([^}]*)\}", h)[1].split(",") if x.strip()]
     body = re.search(r"MOD_JP_XA_WORDS \{(.*?)\}", h, re.S)[1].replace("\\", "")
     words = [int(x, 0) for x in body.split(",") if x.strip()]
@@ -138,7 +139,7 @@ def jp_table():
             out[P.VOICE_LO + k] = dec(words[n])
             n += 1
     assert n == int(re.search(r"#define MOD_JP_XA_COUNT (\d+)", h)[1])
-    return out, (dec(dyn) if dyn else None), base, dyn, words
+    return out, [dec(w) if w else None for w in dyn], base, dyn, words
 
 
 def sym(mapfile, name):
@@ -334,6 +335,16 @@ def main():
                     if not set(P.NO_PSP) & set(text_voices(ps1)) <= set(jv):
                         bad("%s: the JP copy %d lacks %s" % (binpath, k, P.NO_PSP))
                     njcopies += 1
+                elif os.environ.get("MOD_PTBR") == "1" and ovl in P.PTBR_JP_OUT:
+                    jo = next((x for x in json.load(open(P.JP_OUT)) if x["ovl"] == ovl and
+                               x["off"] == off), None) if os.path.exists(P.JP_OUT) else None
+                    if jo is None:
+                        bad("%s: %s: no PT-BR JP copy for 0x%X in %s" % (binpath, ovl, off, P.JP_OUT))
+                        continue
+                    jb = P.assemble(P.resolve([tuple(tuple(x) if isinstance(x, list) else x
+                                                     for x in t) for t in jo["tokens"]], P.BASE))
+                    jt, jpos = read_pos(jb, 0, len(jb))
+                    njcopies += 1
                 else:
                     jt, jpos = read_pos(b, copy, copy + len(P.assemble(P.resolve(
                         [tuple(tuple(x) if isinstance(x, list) else x for x in t)
@@ -385,11 +396,13 @@ def main():
     nj = 0
     jitems = [(vid, jp[vid], e) for vid, e in
               ((0x300 + int(c), e) for c, e in jdub["replace"].items()) if vid in jp]
+    first = min(xid.values()) if xid else 0
     for e in jdub["extra"]:
-        if jp_dyn is None:
+        k = xid[e["define"]] - first
+        if k >= len(jp_dyn) or jp_dyn[k] is None:
             bad("JP: no %s version" % e["define"])
         else:
-            jitems.append((xid[e["define"]], jp_dyn, e))
+            jitems.append((xid[e["define"]], jp_dyn[k], e))
     for vid, (addr, ln, f, ch), e in jitems:
         need = math.ceil(e["seconds"] * 60)
         if not need <= ln <= need + 6:
@@ -409,18 +422,22 @@ def main():
             bad("JP 0x%X: shares the PSP stream" % vid)
         nj += 1
     longest = max((e["seconds"] for _, _, e in jitems), default=0)
-    # SEL's built table (ModJpDubTable: magic, base, MOD_VO_DID_YOU_NOT, sfx
-    # pairs (MOD_JP_SFX_MAX x 2 u16), bits (60), words)
+    # SEL's built table (ModJpDubTable: magic, base, sfx pairs
+    # (MOD_JP_SFX_MAX x 2 u16), bits (60), words); the extras' JP words are
+    # DRA rodata (sound_mod_music.h g_ModJpXaExtra)
     sfx_max = int(re.search(r"#define MOD_JP_SFX_MAX (\d+)",
                             read_src("include/game.h")).group(1))
     sel = open(os.path.join(ROOT, "build/us/SEL.BIN"), "rb").read()
-    tbl = sel.find(struct.pack("<III", JP_MAGIC, jp_base, jp_dyn_word))
+    tbl = sel.find(struct.pack("<II", JP_MAGIC, jp_base))
     if tbl < 0:
         bad("SEL.BIN: no JP dub table")
     else:
-        w = struct.unpack_from("<%dI" % len(jp_words), sel, tbl + 12 + sfx_max * 4 + 60)
+        w = struct.unpack_from("<%dI" % len(jp_words), sel, tbl + 8 + sfx_max * 4 + 60)
         if list(w) != jp_words:
             bad("SEL.BIN: the JP table's words differ from mod_jp_xa.h")
+    dra = open(os.path.join(ROOT, "build/us/DRA.BIN"), "rb").read()
+    if jp_dyn_word and dra.find(struct.pack("<%dI" % len(jp_dyn_word), *jp_dyn_word)) < 0:
+        bad("DRA.BIN: no g_ModJpXaExtra with mod_jp_xa.h's MOD_JP_XA_EXTRA")
     a = sym("build/us/dra.map", "g_ModDub")
     if a != MOD_DUB_ADDR:
         bad("DRA g_ModDub at %s, SEL writes 0x%X (src/st/sel/2C048.c MOD_DUB_STATE)" % (

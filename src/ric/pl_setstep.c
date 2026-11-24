@@ -61,9 +61,18 @@ void RicSetStand(s32 velocityX) {
         RicSetAnimation(mar_anim_stand_edge);
         return;
     }
+#elif defined(MOD_SATURN)
+    if (RicStairsAnim()) {
+        RicSetAnimation(RicStairsAnim());
+        return;
+    }
 #endif
     RicSetAnimation(ric_anim_stand);
 }
+
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+#include "../../mods/sotn-ultimate/src/richter_saturn/pl_setstep_mod_stairs.h"
+#endif
 
 #if defined(VERSION_HD) || defined(VERSION_PSP) || defined(VERSION_PC)
 // only on US, this is moved after RicSetWalk

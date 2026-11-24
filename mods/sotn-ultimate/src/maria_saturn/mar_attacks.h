@@ -755,27 +755,43 @@ void MarEntityCharged(Entity* self) {
 }
 
 // 89, Saturn 060BD244: a diamond in front of her growing (params 0x0000)
-// or shrinking (0x0100) every other frame
+// or shrinking (0x0100) every other frame. The Saturn's prim type 4 is a
+// VDP1 polyline (AllocPrimitives 0600DB38: 0x1005), opaque, in RGB555
+// 0xFE94: an outline, not a filled diamond; here 4 lines. Blueprint 100
+// starts four of them a few frames apart, so they show nested.
+// The Saturn starts them 3 frames apart: growing every other frame, its
+// rings sit 2, 1 and 2 steps apart (outer ring, a joined middle pair, inner
+// ring). A step moves a side only ~0.9 PS1 px, so here they start 0, 6, 8
+// and 14 frames after the first (3, 1, 3 steps): the same pattern with
+// clear gaps. The factory makes them one a frame (params low byte = their
+// index); each waits its turn before making its lines (unk7C counts up)
+static const u8 mar_aura_wait[] = {0, 5, 6, 11};
 void MarEntityAura(Entity* self) {
     Primitive* prim;
     s16 cx;
     s16 cy;
     s16 w;
     s16 h;
+    s16 px[5];
+    s16 py[5];
+    s32 i;
 
     switch (self->step) {
     case 0:
-        self->primIndex = g_api.AllocPrimitives(PRIM_G4, 1);
+        if (self->ext.factory.unk7C++ < mar_aura_wait[self->params & 3]) {
+            return;
+        }
+        self->primIndex = g_api.AllocPrimitives(PRIM_LINE_G2, 4);
         if (self->primIndex == -1) {
             DestroyEntity(self);
             return;
         }
-        prim = &g_PrimBuf[self->primIndex];
-        prim->r0 = prim->r1 = prim->r2 = prim->r3 = 0xA0;
-        prim->g0 = prim->g1 = prim->g2 = prim->g3 = 0xA0;
-        prim->b0 = prim->b1 = prim->b2 = prim->b3 = 0xF8;
-        prim->priority = PLAYER.zPriority + 4;
-        prim->drawMode = DRAW_TPAGE2 | DRAW_TPAGE | DRAW_TRANSP;
+        for (prim = &g_PrimBuf[self->primIndex]; prim; prim = prim->next) {
+            prim->r0 = prim->r1 = prim->g0 = prim->g1 = 0xA0;
+            prim->b0 = prim->b1 = 0xF8;
+            prim->priority = PLAYER.zPriority + 4;
+            prim->drawMode = DRAW_DEFAULT;
+        }
         self->flags = FLAG_HAS_PRIMS | FLAG_POS_PLAYER_LOCKED | FLAG_UNK_20000;
         if (!(self->params & 0xFF00)) {
             self->ext.factory.unk80 = 1;
@@ -823,15 +839,30 @@ void MarEntityAura(Entity* self) {
     }
     cx = PLAYER.posX.i.hi + (PLAYER.facingLeft ? -18 : 18);
     cy = PLAYER.posY.i.hi - 4;
-    w = self->ext.factory.unk80 * 4 / 5;
+    // one pixel less than the Saturn's width (its unk80, in its wider
+    // pixels). Its 11 steps need 11 different widths for the rings to nest
+    // without touching; x 4/5 (8.8 at most) can only give about 9 on the
+    // PS1 grid, so two pairs of rings crossed at the sides. This keeps
+    // every step distinct (0-10), about 14% wider than the Saturn's look
+    // (the user's pick from a mock of the options). Shrinking reaches 0
+    w = self->ext.factory.unk80 ? self->ext.factory.unk80 - 1 : 0;
     h = self->ext.factory.unk82;
+    // the four sides, each drawn from the top or bottom tip out to a side
+    // corner: the GPU's line start is exact and its end can round a pixel
+    // off, so a side drawn into a tip left a blunt foot there (and crossed
+    // the next ring's sides); the rounding now lands in the wide side
+    // corners, where it does not show
+    px[0] = px[1] = cx + w;
+    px[2] = px[3] = cx - w;
+    py[0] = py[2] = cy - h;
+    py[1] = py[3] = cy + h;
     prim = &g_PrimBuf[self->primIndex];
-    prim->x0 = prim->x3 = cx;
-    prim->y0 = cy - h;
-    prim->y3 = cy + h;
-    prim->x1 = cx + w;
-    prim->x2 = cx - w;
-    prim->y1 = prim->y2 = cy;
+    for (i = 0; prim; i++, prim = prim->next) {
+        prim->x0 = cx;
+        prim->y0 = py[i];
+        prim->x1 = px[i];
+        prim->y1 = cy;
+    }
 }
 
 // her shot / charge palettes and the holy water flames' (RAM copy and VRAM;

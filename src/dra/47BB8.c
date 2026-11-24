@@ -652,6 +652,6 @@ s32 LoadFileSim(s32 fileId, SimFileType type) {
     D_800A04EC = 0;
     return 0;
 }
-#else
+#elif !defined(MOD_DRA_STRIP) // every call is in a g_UseDisk == 0 branch
 s32 LoadFileSim(s32 fileId, SimFileType type) { return -1; }
 #endif // !MOD_SATURN

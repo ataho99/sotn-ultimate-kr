@@ -267,15 +267,17 @@ void DebugCaptureVideo(void) {
  * signed; the hand-written relic bytes this base was balanced with are its baseline) */
 #include "gen/us/ko_names_pad.h"
 #if defined(MOD_FIELD_JP_VOICE)
-#define MOD_DRA_PAD_KO_BASE 284 /* 094_20 r6 (names packed ko_famall+ko_famoff, check asked 284; earlier probe: 204/220 gave a NEGATIVE g_ModDraPad = stale DRA object, so the asked 220/204/188 were not real; KO_NAMES_DRA_GROW is 232 now), the first 292 was measured without them): -124 (the Familiar List: 7 Korean 8px names ko_fam0..6 + the KO_EqOvDraw call in menu.c; check_dra_layout asked for 292). 094_12: -20 (the 8th System row: ko_str39 + the two menu.c entries; check_dra_layout asked for 416). 0.9.4 field voices on: 380 + 108 (object .text: cd.c -124 +8 ModCheatUnpatch calls FlushCache by address, game_handlers.c +8) - measured per file, the link decides (check_dra_layout: 094_04 asked for 488) */
+#define MOD_DRA_PAD_KO_BASE 248 /* v1.5 merge 095_01h: 368 + 40 (check: BSS 0x80136284 vs retail 0x801362ac after cd_mod_char_sd.h took the field-voice macros); 095_01f: 284 + 80 (check) + 4 (MOD_DATA_PAD 12 -> 8 pulls the BSS 4 B earlier); was 284 in 094_20 r6 (names packed ko_famall+ko_famoff, check asked 284; earlier probe: 204/220 gave a NEGATIVE g_ModDraPad = stale DRA object, so the asked 220/204/188 were not real; KO_NAMES_DRA_GROW is 232 now), the first 292 was measured without them): -124 (the Familiar List: 7 Korean 8px names ko_fam0..6 + the KO_EqOvDraw call in menu.c; check_dra_layout asked for 292). 094_12: -20 (the 8th System row: ko_str39 + the two menu.c entries; check_dra_layout asked for 416). 0.9.4 field voices on: 380 + 108 (object .text: cd.c -124 +8 ModCheatUnpatch calls FlushCache by address, game_handlers.c +8) - measured per file, the link decides (check_dra_layout: 094_04 asked for 488) */
 #else
 #define MOD_DRA_PAD_KO_BASE 200 /* 0.9.4 field voices off: 380 - 180 (object .text: cd.c +172 ModCheatUnpatch incl. the by-address FlushCache call, game_handlers.c +8 the cheat tick call) - inferred from the voices-on measurement (same +8 in cd.c), not measured: the link decides (check_dra_layout) */
 #endif
 #define MOD_DRA_PAD (MOD_DRA_PAD_KO_BASE - KO_NAMES_DRA_GROW)
 #else
-#define MOD_DRA_PAD 32 /* v1.4 upstream, -8 for the cheat tick call */
+#define MOD_DRA_PAD 104
 #endif
+#if MOD_DRA_PAD > 0 // (a 0-size array with an initializer still takes a word)
 const u8 g_ModDraPad[MOD_DRA_PAD] = {1};
+#endif
 #endif
 
 // Saturn port: the palette viewer and its colour editor below, and the GPU

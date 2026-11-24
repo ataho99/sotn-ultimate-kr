@@ -25,11 +25,11 @@ void KO_8pDrawIdx(const char* idx, const s32* spc, s32 x, s32 y, MenuContext* ct
 // tail link references it.
 void KO_8pLoad(void) {
 }
-// Block present check (pinned count 390 = 371 (283 + the equipment-name chars of the JP-name pass; gen_ko_8p.py) + the 14 cells of the Extra settings popup + 5 cells (U R O F + one Hangul: the Extra settings row, SATURN, ON/OFF); gen_ko_8p_ext.py): boot chain fills this before any
+// Block present check (pinned count 394 (390 + 템 상 전 밋 of the Richter/Maria pause menu, gen_ko_8p_ext249.py) = 371 (283 + the equipment-name chars of the JP-name pass; gen_ko_8p.py) + the 14 cells of the Extra settings popup + 5 cells (U R O F + one Hangul: the Extra settings row, SATURN, ON/OFF); gen_ko_8p_ext.py): boot chain fills this before any
 // menu opens. The draw gate uploads only when this passes.
 s32 KO_8pValid(void) {
     u16 n = ((u16*)KO_8P_BASE)[0];
-    if (n == 390) {
+    if (n == 394) {
         return 1;
     }
     return 0;
@@ -194,6 +194,10 @@ void KO_8pUpload(s32* cells, s32 nCells, s32 isSel) {
         KO_8pExpand(cells[i], tmp);
         LoadTPage((u_long*)tmp, 0, 0, 0x180 + col * 2, KO_8pRow(grp) * 16,
                   8, 8);
+        // LoadTPage only queues the upload and tmp is this frame's stack: with the GPU busy (the
+        // Richter / Maria Commands list before it) every cell sampled the last one (095_13: the status
+        // name showed one glyph three times). As eq_pop.c
+        DrawSync(0);
     }
 }
 
@@ -225,7 +229,7 @@ void KO_EqDraw(const char** names, const s32* xs, const s32* ys, s32 count,
             s32 cell = -1;
             s32 cix = pi[k];
             if (cix < 0) {
-                cix = KO_8pFind(0x20); // unseen -> blank (space cell)
+                cix = spaceCix; // unseen -> blank (space cell)
             }
             if (cix < 0) {
                 continue; // block missing: char dropped from union
@@ -270,7 +274,7 @@ void KO_EqDraw(const char** names, const s32* xs, const s32* ys, s32 count,
             s32 cell = -1;
             s32 cix = pi[k];
             if (cix < 0) {
-                cix = KO_8pFind(0x20);
+                cix = spaceCix; // (the same cell as above; the code is the room DrawSync took)
             }
             if (cix < 0) {
                 continue;

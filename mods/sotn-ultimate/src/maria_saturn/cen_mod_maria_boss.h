@@ -18,6 +18,8 @@ extern s32 g_ModMariaFight;
 extern u8 g_MbScriptPre[];
 extern u8 g_MbScriptPost[];
 #if defined(MOD_CENP)
+extern u8 g_MbScriptPrePsp[]; // the PS1 dub's PSP lines (gen_cen_maria.py)
+extern u8 g_MbScriptPostPsp[];
 void EntityMariaPsp(
     Entity* self); // mods/sotn-ultimate/src/maria_psp/mod_cenp.c
 u16 CenpDealDamage(Entity* enemy, Entity* attacker); // (collision.h)

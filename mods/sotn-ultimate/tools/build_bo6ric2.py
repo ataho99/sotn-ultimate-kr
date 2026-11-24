@@ -88,8 +88,12 @@ def main():
     r2p = sheet(ric2, RIC_RAM, rs["richter_sprites"])
     bp = sheet(bo6, BO6_RAM, bs["richter_sprites"])
     assert len(rp) == len(bp) == len(r2p), (len(rp), len(bp), len(r2p))
-    for a, b in zip(rp, bp):
-        assert sprite(ric, RIC_RAM, a) == sprite(bo6, BO6_RAM, b), "BO6 sheet"
+    # (sprite 0xC3: Richter's Ultimate stairs stance in RIC, which the boss
+    # never shows; gen_ric_stairs.py: it keeps the boss's own art)
+    import gen_ric_stairs as st
+    for i, (a, b) in enumerate(zip(rp, bp)):
+        if i != st.SLOT:
+            assert sprite(ric, RIC_RAM, a) == sprite(bo6, BO6_RAM, b), "BO6 sheet"
     start = min(bp) - BO6_RAM
     end = max(b - BO6_RAM + len(sprite(bo6, BO6_RAM, b)) for b in bp)
     assert start == bs["richter_sprites"] - BO6_RAM + 4 * len(bp)
@@ -98,8 +102,12 @@ def main():
     pos = start
     placed = {}
     for i, p in enumerate(r2p):
+        if i == st.SLOT:  # the boss's own (see above)
+            s = sprite(bo6, BO6_RAM, bp[i])
+            p = ("bo6", i)
         if p not in placed:
-            s = sprite(ric2, RIC_RAM, p)
+            if i != st.SLOT:
+                s = sprite(ric2, RIC_RAM, p)
             placed[p] = pos
             out[pos:pos + len(s)] = s
             pos = (pos + len(s) + 3) & ~3
@@ -114,11 +122,13 @@ def main():
     assert len(rf) == len(bf), (len(rf), len(bf))
     moved = 0
     done = set()
-    for a, b in zip(rf, bf):
+    for f, (a, b) in enumerate(zip(rf, bf)):
         if a is None:
             assert b is None
             continue
         assert ric[a:a + 8] == bo6[b:b + 8], "BO6 frame"
+        if f == st.UP:  # the stairs stance's frame (the boss's own art)
+            continue
         if ric2[a:a + 8] != ric[a:a + 8] and b not in done:
             out[b:b + 8] = ric2[a:a + 8]
             done.add(b)

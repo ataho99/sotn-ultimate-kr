@@ -106,6 +106,14 @@ void MarStepStand(void) {
 }
 
 void MarStepWalk(void) {
+#if defined(MOD_SATURN)
+    // Saturn port fix (the PSP's bug): the Doll crash from a walk keeps the
+    // walk step with its pose (MarDoCrash); once the pose ends, the walk's
+    // animation again (else she glided in its last frame)
+    if (PLAYER.anim == mar_80155588 && PLAYER.poseTimer < 0) {
+        MarSetAnimation(g_Player.unk4C ? D_pspeu_092C04A8 : D_pspeu_092C0498);
+    }
+#endif
     if (!MarCheckInput(CHECK_FALL | CHECK_FACING | CHECK_JUMP | CHECK_CRASH |
                        CHECK_400 | CHECK_800 | CHECK_ATTACK | CHECK_CROUCH)) {
         MarDecelerateX(FIX(0.125));
@@ -473,6 +481,11 @@ void MarStepHit(s32 damageEffect, u32 damageKind, s16 prevStep, s32 prevStepS) {
             switch (damageKind) {
             case 2:
                 switch (prevStep) {
+#if defined(MOD_SATURN)
+                // (the run and the slide had no case: no step_s, a frozen
+                // second until the hit ran out)
+                default:
+#endif
                 case PL_S_STAND:
                 case PL_S_WALK:
                     PLAYER.velocityY = 0;

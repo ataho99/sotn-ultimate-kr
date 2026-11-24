@@ -295,8 +295,17 @@ void EntitySpikes(Entity* self) {
             tileType = g_Tilemap.fg[tileIdx];
             collisionType = g_Tilemap.tileDef->collision[tileType];
             if (collisionType > 243 && collisionType < 248) {
+#if defined(MOD_SATURN)
+                // every room for Richter and both Marias (user,
+                // 2026-11-14): spikes break for them as with the Spike
+                // Breaker (game_handlers_mod_access.h)
+                if (MOD_RIC_ULTIMATE() ||
+                    g_api.CheckEquipmentItemCount(
+                        ITEM_SPIKE_BREAKER, EQUIP_ARMOR)) {
+#else
                 if (g_api.CheckEquipmentItemCount(
                         ITEM_SPIKE_BREAKER, EQUIP_ARMOR)) {
+#endif
 #if defined(STAGE_IS_NZ1) || defined(STAGE_IS_RNZ1)
                     g_Tilemap.fg[tileIdx] = 0x58B;
 #elif defined(HAS_ORIENTATIONS)

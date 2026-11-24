@@ -98,7 +98,7 @@ void EntityPlatform(Entity* self) {
             self->zPriority = 0x80;
 
 #ifndef VERSION_PSP
-            if (g_CastleFlags[MET_MARIA_IN_CEN]) {
+            if (CEN_MARIA_DONE()) {
                 self->step = 9;
             }
 #endif
@@ -676,7 +676,7 @@ void EntityRoomDarkness(Entity* self) {
         }
 #endif
         /* Has player seen Maria Holy Glasses Cutscene? */
-        if (g_CastleFlags[MET_MARIA_IN_CEN]) {
+        if (CEN_MARIA_DONE()) {
             DestroyEntity(self);
             return;
         }

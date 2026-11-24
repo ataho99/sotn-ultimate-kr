@@ -44,6 +44,11 @@ HITBOX_TABLE = 0x060C37CC  # right after her animations, up to the palettes
 # through "centre - h // 2", so her frames move up 1 (she stood 1 px into the
 # floor)
 SAT_Y = -1
+# her walk (Saturn 060C29B0) isn't level in its Saturn data (PS1 Richter's
+# walk is): 26-28 and 32-34 end one row below her standing frame (lifted 1
+# px), 24 one row above it (lowered 1 px), so she neither sinks into the
+# floor mid-stride nor floats (user report, 2026-11-13). {frame: dy}, + down
+WALK_FIX = {24: 1, 26: -1, 27: -1, 28: -1, 32: -1, 33: -1, 34: -1}
 STAND = 0x060C28E8  # her idle (Saturn 060A9210 off a ledge)
 
 # PS1 pl_anims.c symbol -> Saturn Maria animation (see the module doc)
@@ -64,6 +69,8 @@ ANIM_MAP = {
     "D_801555E8": 0x060C2ED8,
     "D_80155638": 0x060C2F00,
     "ric_anim_run": 0x060C2A18,
+    # her skid after a run (Saturn 060A6A94; user report 2026-11-19)
+    "ric_anim_stop_run": 0x060C2A40,
     "ric_anim_stun": 0x060C2C28,
     "D_8015569C": 0x060C2D84,
     "D_801556C4": 0x060C2C28,
@@ -109,6 +116,10 @@ EXTRA_ANIMS = {
     "mar_anim_backdash_end_b": 0x060C2E40,  # same, vram_flag & 0x20
     "mar_anim_throw": 0x060C2E78,  # sub-weapons but the dagger (060A973C)
     "mar_anim_throw_b": 0x060C2EA8,  # same, vram_flag & 0x20
+    "mar_anim_stop_run_b": 0x060C2A74,  # her skid, vram_flag & 0x20
+    # hit in the air (060A7870: damage kinds but 2, 4, 5, while jumping or
+    # falling; user report 2026-11-20, never seen in the port)
+    "mar_anim_hit_air": 0x060C2DA8,
     # her command specials (060A9F54 table; 060A9064 runs steps 0x30-0x35).
     # Their POSE_JUMPs (into the Saturn's own group) end the animation here;
     # MarStepSpecial sets the next one (mar_sp_next)
@@ -126,6 +137,14 @@ EXTRA_ANIMS = {
     "mar_anim_sp_summon": 0x060C3258,  # Suzaku, Four Beasts
     "mar_anim_sp_summon2": 0x060C3284,
 }
+# animations src/ric compares PLAYER.anim with: never merged with a twin
+ANIM_COMPARED = {"D_80155534", "D_801556C4"}
+# Richter animations her code never uses (compiled out under MOD_MARIA_SAT):
+# no data, a linker alias to her idle (MAR's room in the player region;
+# build_mar.sh fails if her objects ever refer to one)
+MAR_UNUSED = {"ric_anim_land_from_air_run", "ric_anim_crouch_from_stand",
+              "ric_anim_brandish_whip", "D_80155738", "D_801558B4",
+              "D_801558D4", "D_801558DC"}
 ANIM_GROUPS = 0x060C28A0  # her POSE_JUMP table (14 animations)
 JUMP_ENDS = {n for n in EXTRA_ANIMS if n.startswith("mar_anim_sp_")}
 
@@ -818,7 +837,8 @@ def main():
         left = x - w // 2
         kept = [c for c in range(left, left + w) if c % 5 != PHASE]
         _, _, x0, y0, _ = sprites[j]
-        fr_out.append((j, mapcol(kept[0]) + x0, y - h // 2 + y0 + SAT_Y, 0, fl))
+        fr_out.append((j, mapcol(kept[0]) + x0,
+                       y - h // 2 + y0 + SAT_Y + WALK_FIX.get(f, 0), 0, fl))
     # hitboxes: 4 signed bytes x, y, w, h up to the palette table
     hb = []
     o = HITBOX_TABLE - SAT
@@ -866,7 +886,30 @@ def main():
         lines.append(f"AnimationFrame {name}[] = {{{vals}}};")
     lines.append("AnimationFrame* D_8015538C[] = {" +
                  ", ".join(rev[a] for a in groups) + "};")
-    open(os.path.join(OUT, "mar_anims.h"), "w").write("\n".join(lines) + "\n")
+    # byte-identical animations once, the other names linker aliases
+    # (build_mar.sh links mar_alias.txt): MAR's room in the player region.
+    # Not the ones the code compares PLAYER.anim with
+    keep, alias, out, unused = {}, [], [], []
+    for ln in lines:
+        if ln.startswith("AnimationFrame ") and "[] = {" in ln:
+            name, body = ln[len("AnimationFrame "):].split("[] = ", 1)
+            if name in MAR_UNUSED:
+                unused.append(name)
+                continue
+            if name not in ANIM_COMPARED:
+                if body in keep:
+                    alias.append(f"{name} = {keep[body]};")
+                    continue
+                keep[body] = name
+        out.append(ln)
+    open(os.path.join(OUT, "mar_anims.h"), "w").write("\n".join(out) + "\n")
+    stand = "ric_anim_stand"
+    for ln in alias:
+        if ln.startswith(stand + " = "):
+            stand = ln.split(" = ")[1].rstrip(";")
+    alias += [f"{n} = {stand};" for n in unused]
+    open(os.path.join(OUT, "mar_alias.txt"), "w").write("\n".join(alias) + "\n")
+    open(os.path.join(OUT, "mar_unused.txt"), "w").write("\n".join(unused) + "\n")
     gen_fx(prg)
     gen_sp(prg)
     # sprites

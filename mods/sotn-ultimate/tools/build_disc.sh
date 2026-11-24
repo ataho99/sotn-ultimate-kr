@@ -14,6 +14,9 @@ export NODE=${NODE:-node}
 # Retail dirt bytes are patched at fixed offsets; on the mod's moved layout
 # they corrupt live data (see tools/dirt_patcher.py)
 export SOTN_MOD_NO_DIRT=1
+[ -f mods/sotn-ultimate/include/mod_ptbr_build.h ] ||
+    printf '// Written by mods/sotn-ultimate/tools/build_ptbr.py --header\n' \
+        > mods/sotn-ultimate/include/mod_ptbr_build.h
 
 # Run a noisy build step with its output kept in build/us/mod_step.log: on a
 # failure show its errors (else its tail) and stop; compile errors printed by
@@ -88,11 +91,18 @@ $NODE --no-warnings mods/sotn-ultimate/tools/builder/node/stage_sounds.ts
 # the New Game character select's portraits: src/st/sel/mod_charsel_gfx.h
 .venv/bin/python mods/sotn-ultimate/tools/gen_title_portraits.py
 # the main menu's Sound mode button: src/st/sel/mod_sel_soundmode_gfx.h
-.venv/bin/python mods/sotn-ultimate/tools/gen_sel_soundmode.py >/dev/null
+MOD_PTBR=0 .venv/bin/python mods/sotn-ultimate/tools/gen_sel_soundmode.py >/dev/null
+if [ "${MOD_PTBR:-0}" = 1 ]; then
+    MOD_PTBR=1 .venv/bin/python mods/sotn-ultimate/tools/gen_sel_soundmode.py \
+        --bin build/us/ptbr_sound_btn.bin >/dev/null
+fi
 python3 mods/sotn-ultimate/tools/patch_status_asm.py
 # the Song Lyrics Card: the Saturn Yousei's singing rule in TT_005
 python3 mods/sotn-ultimate/tools/patch_tt005_song.py
 make build_assets >/dev/null
+# Richter's Ultimate stairs stances: src/ric/gen/mod_ric_stairs.h, from his
+# own frames in assets/ric (src/ric/pl_main.c RicInit)
+.venv/bin/python mods/sotn-ultimate/tools/gen_ric_stairs.py
 # The PSP (Dracula X Chronicles) English dub and script next to the PS1 ones,
 # toggled in game (Player Select "Dub" row, include/game.h MOD_PSP_DUB_ON);
 # MOD_PSP_DUB=0 builds the PS1 dub and script only. Voices:
@@ -108,8 +118,11 @@ if [ "$MOD_PSP_DUB" = 1 ]; then
     python3 mods/sotn-ultimate/tools/psp_script.py
     .venv/bin/python mods/sotn-ultimate/tools/psp_dub.py | grep -v "^  skipped"
     DUB_FLAGS="--dub build/us/psp_dub/dub.json"
+    # the prologue scroll per dub (ST0 mod_prologue_scroll.h)
+    python3 mods/sotn-ultimate/tools/prologue_scroll.py
 else
     python3 mods/sotn-ultimate/tools/psp_script.py --off
+    python3 mods/sotn-ultimate/tools/prologue_scroll.py --off
 fi
 # the PSP dub's player grunts: build/us/ALK_PSP.BIN, RIH_PSP.BIN (Alucard's /
 # Richter's vab 1 with the PSP clips, from disks/psp sd_alk/sd_rih.spk;
@@ -147,6 +160,11 @@ else
     .venv/bin/python mods/sotn-ultimate/tools/gen_psp_sfx.py --set jp --off
 fi
 .venv/bin/python mods/sotn-ultimate/tools/gen_psp_grunts.py --set jp | grep -v "^  "
+if [ "${MOD_PTBR:-0}" = 1 ]; then
+    python3 mods/sotn-ultimate/tools/ptbr_script.py
+else
+    python3 mods/sotn-ultimate/tools/ptbr_script.py --off
+fi
 JP_MAR2=build/us/mod/mar2/sfx_jp
 if [ ! -f "$JP_MAR2/SD_RIH.VB" ]; then
     cargo run --quiet --release --manifest-path tools/maria-sfx/Cargo.toml -- build \
@@ -163,6 +181,8 @@ python3 mods/sotn-ultimate/tools/gen_jp_sd.py
 # Saturn balance (equipment + enemy fields) as a runtime patch list for
 # ModApplyBalance (src/dra/game_handlers.c, the Player Select Balance row)
 python3 mods/sotn-ultimate/tools/gen_saturn_balance.py
+
+.venv/bin/python mods/sotn-ultimate/tools/build_ptbr.py --header
 
 # Build, then rebalance DRA's two pads: MOD_DATA_PAD keeps sound_data (and
 # g_SfxScripts) at its retail address, MOD_DRA_PAD keeps the BSS there.
@@ -207,6 +227,10 @@ fi
 # the PSP English script into the built overlays (before BO6RIC2 copies BO6)
 if [ "$MOD_PSP_DUB" = 1 ]; then
     python3 mods/sotn-ultimate/tools/psp_script.py --apply
+    python3 mods/sotn-ultimate/tools/prologue_scroll.py --apply
+fi
+if [ "${MOD_PTBR:-0}" = 1 ]; then
+    python3 mods/sotn-ultimate/tools/ptbr_script.py --apply
 fi
 
 # The Saturn's new stages (TE1.BIN / F_TE1.BIN slots); needs the WRP build
@@ -280,10 +304,14 @@ cat build/us/MARIA2_SD_PS1.BIN >> build/us/MARIA_SD_PS1.BIN
 bash mods/sotn-ultimate/tools/build_cenp.sh
 # her Saturn HUD art in F_GAME2's empty VRAM: build/us/F_GAME2.BIN
 .venv/bin/python mods/sotn-ultimate/tools/gen_mar_hud.py
+.venv/bin/python mods/sotn-ultimate/tools/build_ptbr.py --apply
 # the pause menu System screen's "Ultimate settings" (Alucard games): code
 # after Alucard's sprites in build/us/ARC_F2.BIN (mods/sotn-ultimate/src/menu/sysopt.c),
 # against DRA's addresses (checked again after make disk below)
 bash mods/sotn-ultimate/tools/build_sysopt.sh
+# Richter's / the Marias' pause menu drawing (Ultimate balance), read into
+# g_Pix[1] when it opens: after ARC_F2.BIN loaded part (src/menu/charmenu.c)
+bash mods/sotn-ultimate/tools/build_charmenu.sh
 # Richter in the coat in the endings: build/us/SELRIC2.BIN (SEL.BIN + the
 # RIC2 art); made again below from the final SEL
 (cd mods/sotn-ultimate/tools && python3 build_selric2.py)
@@ -300,12 +328,17 @@ fi
 # again and remake the image (BO6, copied into BO6RIC2 above, must not be
 # among them: --check compares both)
 if [ "$MOD_PSP_DUB" = 1 ]; then
-    out=$(python3 mods/sotn-ultimate/tools/psp_script.py --apply)
+    out=$(python3 mods/sotn-ultimate/tools/psp_script.py --apply;
+          python3 mods/sotn-ultimate/tools/prologue_scroll.py --apply)
+    if [ "${MOD_PTBR:-0}" = 1 ]; then
+        python3 mods/sotn-ultimate/tools/ptbr_script.py --apply >/dev/null
+    fi
     echo "$out"
     if echo "$out" | grep -q "BIN"; then
         VERSION=us quiet ./sotn.sh disk
     fi
     python3 mods/sotn-ultimate/tools/psp_script.py --check
+    python3 mods/sotn-ultimate/tools/prologue_scroll.py --check
 fi
 # SELRIC2 from the final SEL (relinked and patched above)
 out=$(cd mods/sotn-ultimate/tools && python3 build_selric2.py)
@@ -355,6 +388,25 @@ while read -r s _ a; do
     fi
 done < build/us/mod/sysopt/syms.txt
 echo "OK   sysopt DRA symbols ($(wc -l < build/us/mod/sysopt/syms.txt)), ARC_F2.BIN $(stat -c %s build/us/ARC_F2.BIN) bytes"
+# the same for the character menu's code (its address is g_Pix + 0x2000)
+while read -r s _ a; do
+    a=${a%;}
+    want=$(mipsel-linux-gnu-nm build/us/dra.elf | awk -v s="$s" '$3==s{print "0x" $1}')
+    if [ -z "$want" ]; then
+        want=$(awk -v s="$s" '$1==s{sub(/;/,"",$3); print tolower($3)}' config/symbols.us.txt)
+        a=$(echo "$a" | tr A-F a-f)
+    fi
+    if [ "$want" != "$a" ]; then
+        echo "FAIL charmenu linked against $s $a (DRA has $want): run build_disc.sh again"
+        exit 1
+    fi
+done < build/us/mod/charmenu/syms.txt
+pix=$(printf "0x%08X" $((0x$(mipsel-linux-gnu-nm build/us/dra.elf | awk '$3=="g_Pix"{print $1}') + 0x2000)))
+if [ "$pix" != "$(cat build/us/mod/charmenu/addr.txt)" ]; then
+    echo "FAIL charmenu linked at $(cat build/us/mod/charmenu/addr.txt) (g_Pix[1] is $pix): run build_disc.sh again"
+    exit 1
+fi
+echo "OK   charmenu DRA symbols ($(wc -l < build/us/mod/charmenu/syms.txt))"
 bash mods/sotn-ultimate/tools/check_no_dirt.sh
 python3 mods/sotn-ultimate/tools/check_stage_data.py
 if [ "$MOD_PSP_DUB" = 1 ]; then

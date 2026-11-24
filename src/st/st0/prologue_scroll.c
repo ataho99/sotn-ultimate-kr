@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 #include "st0.h"
 #include "disk.h"
+#if defined(MOD_SATURN) && defined(VERSION_US)
+#include "../../dra/mod_xa_music.h" // MU_MOD_PROLOGUE_JP / _EN
+#endif
 
 #ifdef VERSION_PSP
 #define GET_CLUT(x, y) getClut(x, y)
@@ -282,7 +285,23 @@ void PrologueScroll(void) {
         break;
     case 4: // 0x801B091C
         if (!g_api.func_80131F68()) {
+#if defined(MU_MOD_PROLOGUE_JP)
+            // Saturn port: the narrated Nocturne by dub (JP: the Saturn's
+            // Japanese narration; PSP: the PSP's English one)
+            if (MOD_JP_DUB_ON()) {
+                g_api.PlaySfx(MU_MOD_PROLOGUE_JP);
+            }
+#if defined(MU_MOD_PROLOGUE_EN)
+            else if (MOD_PSP_DUB_ON()) {
+                g_api.PlaySfx(MU_MOD_PROLOGUE_EN);
+            }
+#endif
+            else {
+                g_api.PlaySfx(MU_MOONLIGHT_NOCTURNE);
+            }
+#else
             g_api.PlaySfx(MU_MOONLIGHT_NOCTURNE);
+#endif
             g_GameStep++;
         }
         break;

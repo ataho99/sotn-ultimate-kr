@@ -231,7 +231,13 @@ void EntitySuccubus(Entity* self) {
         CreateEntityFromCurrentEntity(E_ID(SUCCUBUS_WING_OVERLAY), entity);
 
     case SUCCUBUS_CS_1: // Disguised as Lisa
-        if (g_CastleFlags[SUCCUBUS_CS] || (g_DemoMode != Demo_None)) {
+        // (Saturn port: Richter / the Marias have no dialog here, retail
+        // skips it for them, so she starts the fight as after a seen scene)
+        if (g_CastleFlags[SUCCUBUS_CS] || (g_DemoMode != Demo_None)
+#if defined(MOD_SATURN)
+            || g_PlayableCharacter != PLAYER_ALUCARD
+#endif
+        ) {
             self->facingLeft = 0;
             self->posX.i.hi = 416 - g_Tilemap.scrollX.i.hi;
             self->posY.i.hi = 175 - g_Tilemap.scrollY.i.hi;

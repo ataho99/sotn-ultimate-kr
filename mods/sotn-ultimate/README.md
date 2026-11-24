@@ -926,5 +926,11 @@ affiliated with or endorsed by Konami.
 - Knight0fDragon: the Saturn English fan translation (v1.021), the source of
   the English bestiary descriptions for the Saturn enemies, used with his
   permission.
+- Gemini (hacking), throughhim413 (translation) and Tom (editing): the 2009
+  English retranslation of the Saturn's Japanese script
+  (`mods/sotn-ultimate/tools/retrans/`), the Japanese dub's English text,
+  used with their permission.
+- Sakitoshi: Saturn Maria's Circle kick / Triangle backdash layout, first
+  made in his fork of this mod (adopted in v1.4).
 - The Castlevania Wiki (Fandom): reference for the Saturn-only items.
 - Redump: the reference checksums.

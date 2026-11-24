@@ -97,7 +97,15 @@ TRACKS = [
     ("MU_MOD_OLD_LIBRARIAN", "SD24.PCM", 0.40),  # Saturn 0x124 (RMS 8062)
     ("MU_MOD_SOUND_2D", "SD2D.PCM", 0.70),  # Saturn 0x12D (RMS 4597)
     ("MU_MOD_SOUND_28", "SD28.PCM", 0.49),  # Saturn 0x128 (RMS 6584)
+    # the prologue scroll's Moonlight Nocturne with the Saturn's Japanese
+    # narration (JP dub; src/st/st0/prologue_scroll.c): no loop, 104.8 s (the
+    # PSP's res/ps/sound PS_OP_NA.at3 is the same recording, correlation
+    # 0.93). RMS 2918; 1.10 (16 clipped samples of 9.2 M) brings it near the
+    # retail config 0x40's 3456, played at its volume (TRACK_VOLUME)
+    ("MU_MOD_PROLOGUE_JP", "SD21.PCM", 1.10),  # Saturn 0x121
 ]
+# a track's config volume other than VOLUME (retail's for the one it replaces)
+TRACK_VOLUME = {"MU_MOD_PROLOGUE_JP": 122}
 # (MU_ name, PSP .at3, gain, retail config it stands in for, that config's
 # volume): one config each, mode 2 (a one-shot, timer + 20) as retail's.
 # PS_HEKIRU.at3 ("Hekiru" = Hekiru Shiina, the singer) is the fairy's
@@ -107,6 +115,10 @@ TRACKS = [
 PSP_BGM = os.path.join(ROOT, "disks/psp/snd_e/PS_BGM")
 ONESHOTS = [
     ("MU_MOD_NOCTURNE_EN", "PS_HEKIRU.at3", 0.44, 0x3F, 64),
+    # the prologue scroll's Moonlight Nocturne with the PSP's English
+    # narration (PSP dub; src/st/st0/prologue_scroll.c), as retail config 0x40
+    # (105.4 s, RMS 3456, volume 122): RMS 5697, 0.56 = the JP one's level
+    ("MU_MOD_PROLOGUE_EN", "PS_OP_NA.at3", 0.56, 0x40, 122),
 ]
 # a one-shot's timer ends this many VSyncs after its last sound
 ONESHOT_MARGIN = 3
@@ -199,8 +211,9 @@ def build():
         loop = round(reps * float(info["loop_seconds"]) * VSYNC_HZ)
         loop_addr = reg + int(info["intro_sectors"]) * 8
         f, ch = MOD_XA_FILE + k // 8, k % 8
-        return ([reg, intro, f, ch, VOLUME, 0, 1],
-                [loop_addr, loop, f, ch, VOLUME, 0, 0])
+        vol = TRACK_VOLUME.get(TRACKS[k][0], VOLUME)
+        return ([reg, intro, f, ch, vol, 0, 1],
+                [loop_addr, loop, f, ch, vol, 0, 0])
 
     def oneshot(j):
         k = len(TRACKS) + j

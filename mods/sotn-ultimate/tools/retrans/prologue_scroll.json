@@ -1,0 +1,65 @@
+{
+  "_note": "The prologue scroll (after the Dracula fight) for the JP dub: the English retranslation of 'Akumajou Dracula X: Gekka no Yasoukyoku' (2009) by Gemini (hacking), throughhim413 (translation) and Tom (editing), used with permission. Their text, unchanged; only the line breaks of the 4th and last paragraphs differ, because the PS1 scroll's fixed-width font fits 116 units a line (3 per letter, 2 per space) and two of their lines were wider. One list per paragraph, one string per line. tools/prologue_scroll.py turns it into the scroll script.",
+  "paragraphs": [
+    [
+      "After a series of exhausting battles,",
+      "Richter Belmont finally succeeded",
+      "in destroying Count Dracula,",
+      "the ancient vampire who had been",
+      "most recently resurrected by",
+      "Shaft, the dark priest."
+    ],
+    [
+      "However, one night four years later,",
+      "under the bright glare of the moon,",
+      "Richter mysteriously vanished."
+    ],
+    [
+      "With no idea of where to begin",
+      "her search, Maria Renard set out",
+      "to look for him. Along the way,",
+      "something happened that would",
+      "reveal his possible whereabouts."
+    ],
+    [
+      "The demonic castle of Dracula,",
+      "which is rumored to appear only",
+      "once every century, took form to",
+      "the surprise of all, for a century",
+      "had not passed."
+    ],
+    [
+      "At that same moment, one man was",
+      "struck with misfortune. A man who",
+      "goes by the name of Alucard."
+    ],
+    [
+      "The very same Alucard who had",
+      "previously teamed up with",
+      "Ralph C. Belmont, and destroyed",
+      "his own father, Count Dracula."
+    ],
+    [
+      "Alucard, in order to rid the world",
+      "of his own cursed blood line,",
+      "sealed off his powers and entered",
+      "into what was supposed to have been",
+      "an eternal slumber."
+    ],
+    [
+      "But now, that sleep has been disturbed",
+      "and Alucard is aware of the evil that",
+      "has once again arisen in his homeland."
+    ],
+    [
+      "And at this moment, these souls,",
+      "interwined by the fates, gather",
+      "together in Dracula's castle..."
+    ],
+    [
+      "And perhaps only the moon hovering",
+      "in the dark night knows the truth",
+      "that awaits them."
+    ]
+  ]
+}

@@ -114,11 +114,16 @@ static s32 g_ModCharselOpt[LEN(g_ModCharsel)]; // version per character
 static s32 g_ModCharselOpt2; // Alucard's second row (boss Maria: 1 PSP)
 static s32 g_ModCharselRow;  // the panel's row under the cursor
 // every panel's row before the dub: the balance (game.h MOD_FLAG_PS1_BALANCE;
-// 0 = Saturn, the default, shown as the second of the "PS1" / "Saturn"
-// choices, as the Boss Richter row), shared, kept between visits
+// 0 = Saturn / Ultimate, the default, shown second), shared, kept between
+// visits. Alucard's choices are "PS1" / "Saturn" (as the Boss Richter row);
+// Richter's and the Marias' "Classic" / "Ultimate" (user, 2026-11-17):
+// Classic = the retail rules (no castle access or extra bosses, 50 HP, no
+// stagger cancel, no running in save rooms), the same flag
 static s32 g_ModCharselPs1Bal;
 static const char* const g_ModCharselBalTitle MOD_RO = _S("Balance");
-// the panel's rows: version, Alucard's boss Maria, the balance, the dub
+static const char* const g_ModCharselBalOpts[2] MOD_RO = {
+    _S("Classic"), _S("Ultimate")};
+// the panel's rows: version, (Alucard's boss Maria,) the balance, the dub
 #define MOD_CHARSEL_ROWS(id) (g_ModCharsel[id].title2 ? 4 : 3)
 // every panel's last row: the dub (0 PSP, 1 Saturn: game.h MOD_FLAG_JP_DUB, the
 // Japanese voices with the Saturn's takes; 2 PS1: MOD_FLAG_PS1_DUB), shared by the
@@ -144,12 +149,8 @@ static const char* const g_ModCharselMarDubOpts[2] MOD_RO = {
 #include "../../../../src/st/sel/mod_jp_sfx.h"
 #define MOD_DUB_STATE ((ModDubState*)0x8013644C)
 static const ModJpDubTable g_ModJpDubTable MOD_RO = {
-    MOD_JP_XA_COUNT ? MOD_JP_MAGIC : 0,
-    MOD_JP_XA_BASE,
-    MOD_JP_XA_DID_YOU_NOT,
-    MOD_JP_SFX_PAIRS,
-    MOD_JP_XA_BITS,
-    MOD_JP_XA_WORDS};
+    MOD_JP_XA_COUNT ? MOD_JP_MAGIC : 0, MOD_JP_XA_BASE, MOD_JP_SFX_PAIRS,
+    MOD_JP_XA_BITS, MOD_JP_XA_WORDS};
 // The PSP port's menu text (mods/sotn-ultimate/tools/gen_menu_text.py; DRA's
 // tables stay retail). Fixed strings: copied into g_ModDub.fixedText, DRA's
 // entries pointed at them. Strings that follow the Dub row: their DRA address
@@ -662,7 +663,7 @@ static void ModCharselDrawRow(const char* title, const char* const* opts,
                       : state == 0 ? MOD_SOFT_RGB
                                    : MOD_RGB(0x5C, 0x56, 0x4E));
     p = ModPulse();
-    w = nopts > 2 ? 40 : 60;
+    w = nopts > 2 ? 40 : 66; // (66: "Ultimate" is 64 px)
     y += g_ModCharselBoxDy;
     for (i = 0; i < nopts; i++) {
         s = (const u8*)opts[i];
@@ -716,9 +717,11 @@ static void ModCharselDrawPanel(s32 id) {
         ModCharselDrawRow(g_ModCharsel[id].title2, g_ModCharsel[id].opts2, 2,
                           g_ModCharselOpt2, y + r, ModCharselRowState(1));
     }
+    // the balance (Alucard: PS1 / Saturn; the others: Classic / Ultimate)
     ModCharselDrawRow(
-        g_ModCharselBalTitle, g_ModCharsel[0].opts, 2, !g_ModCharselPs1Bal,
-        y + (n - 2) * r, ModCharselRowState(n - 2));
+        g_ModCharselBalTitle,
+        n == 4 ? g_ModCharsel[0].opts : g_ModCharselBalOpts, 2,
+        !g_ModCharselPs1Bal, y + (n - 2) * r, ModCharselRowState(n - 2));
     if (MOD_CHARSEL_NO_PS1_DUB(id)) {
         ModCharselDrawRow(
             g_ModCharselDubTitle, g_ModCharselMarDubOpts, 2,
@@ -736,6 +739,16 @@ static void ModCharselDrawPanel(s32 id) {
     // the tags' half see-through fills (slot 0x1F) need abr 0 too
     func_801B2700(MOD_CHARSEL_BOX_TPAGE, 0x1F);
 }
+
+#if defined(MOD_PTBR)
+#define MOD_HINT_W0 64
+#define MOD_HINT_W1 72
+#define MOD_HINT_W2 64
+#else
+#define MOD_HINT_W0 48
+#define MOD_HINT_W1 48
+#define MOD_HINT_W2 48
+#endif
 
 static void ModCharselDraw(void) {
     s32 i, id, x, y, u;
@@ -769,31 +782,33 @@ static void ModCharselDraw(void) {
         }
     }
 
+#if defined(MOD_KO)
     // hint bar, as the Saturn's (D-pad select, A/C confirm, B cancel) with
     // the PS1 menus' own button icons and words
     x = MOD_CHARSEL_CENTRE_X - (3 * (16 + 4 + 48) + 2 * 16) / 2;
     y = MOD_CHARSEL_HINT_Y;
     func_801B27A8(x, y, 16, 16, 0xA0, 0x50, 0x200, 0xC, 1, 0x80);
-#if defined(MOD_KO)
     SelLegRows(x + 20, y, &SelLegFile[0], 1);
-#else
-    DrawImages8x8(STR_SELECT, x + 20, y + 4, 1);
-#endif
     x += 16 + 4 + 48 + 16;
-#if defined(MOD_KO)
     /* confirm = circle (F_SEL sheet slot (0xA0,0x60), clut 0x200 red) */
     func_801B27A8(x, y, 16, 16, 0xA0, 0x60, 0x200, 0xC, 1, 0x80);
     SelLegRows(x + 20, y, &SelLegFile[2], 1);
-#else
-    func_801B27A8(x, y, 16, 16, 0xA0, 0x70, 0x200, 0xC, 1, 0x80);
-    DrawImages8x8(STR_DECIDE, x + 20, y + 4, 1);
-#endif
     x += 16 + 4 + 48 + 16;
-#if defined(MOD_KO)
     /* cancel = cross (slot (0xA0,0x70), clut 0x200) */
     func_801B27A8(x, y, 16, 16, 0xA0, 0x70, 0x200, 0xC, 1, 0x80);
     SelLegRows(x + 20, y, &SelLegFile[4], 1);
 #else
+    // hint bar, as the Saturn's (D-pad select, A/C confirm, B cancel) with
+    // the PS1 menus' own button icons and words
+    x = MOD_CHARSEL_CENTRE_X -
+        (3 * (16 + 4) + MOD_HINT_W0 + MOD_HINT_W1 + MOD_HINT_W2 + 2 * 16) / 2;
+    y = MOD_CHARSEL_HINT_Y;
+    func_801B27A8(x, y, 16, 16, 0xA0, 0x50, 0x200, 0xC, 1, 0x80);
+    DrawImages8x8(STR_SELECT, x + 20, y + 4, 1);
+    x += 16 + 4 + MOD_HINT_W0 + 16;
+    func_801B27A8(x, y, 16, 16, 0xA0, 0x70, 0x200, 0xC, 1, 0x80);
+    DrawImages8x8(STR_DECIDE, x + 20, y + 4, 1);
+    x += 16 + 4 + MOD_HINT_W1 + 16;
     func_801B27A8(x, y, 16, 16, 0xA0, 0x60, 0x202, 0xC, 1, 0x80);
     DrawImages8x8(STR_CANCEL, x + 20, y + 4, 1);
 #endif
@@ -843,6 +858,7 @@ static void ModCharselUpdate(void) {
                                        : MOD_CHARSEL_DUBS - 1;
                 g_ModCharselDub %= MOD_CHARSEL_DUBS;
             } else if (g_ModCharselRow == MOD_CHARSEL_ROWS(id) - 2) {
+                // the balance
                 g_ModCharselPs1Bal ^= 1;
             } else if (g_ModCharselRow) {
                 g_ModCharselOpt2 ^= 1;
@@ -875,7 +891,7 @@ static void ModCharselUpdate(void) {
                 // maybe left by an earlier game
                 g_Status.D_80097C40 = 0;
             }
-            if (g_ModCharselPs1Bal) {
+            if (g_ModCharselPs1Bal) { // (every character: Classic = PS1)
                 MOD_STATUS_FLAGS |= MOD_FLAG_PS1_BALANCE;
             }
             if (g_ModCharselDub == 2 && !MOD_CHARSEL_NO_PS1_DUB(id)) {
@@ -994,7 +1010,7 @@ static const ModSoundTrack g_ModSoundTracks[] MOD_RO = {
     {_S("Beginning Remix 2"), MU_MOD_SOUND_28},                // SD28
     {_S("Bloody Tears Remix 1"), MU_MOD_RICHTER_ENTRANCE},     // SD2A
     {_S("Bloody Tears Remix 2"), MU_MOD_SKELETON_LEADER},      // SD2B
-    {_S("Maria Battle"), MU_MOD_MARIA_BOSS},                   // SD23
+    {_S("Guardian"), MU_MOD_MARIA_BOSS},                       // SD23
     {_S("I Am the Wind"), MU_STAFF_CREDITS},                   // SD1D
 };
 #endif

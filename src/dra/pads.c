@@ -56,6 +56,10 @@ void InitializePads(void) {
     ResetPadsRepeat();
 }
 
+#if defined(MOD_SATURN)
+#include "../../mods/sotn-ultimate/src/menu/pads_mod_button_setup.h"
+#endif
+
 void ReadPads(void) {
     u32 padData;
     u32 rawPadRead;
@@ -76,6 +80,11 @@ void ReadPads(void) {
 #endif
         if (!(i & 1)) {
             pad->pressed = padData & 0xFFFF;
+#if defined(MOD_SATURN)
+            if (i == 0) {
+                pad->pressed = ModPadRemap(pad->pressed);
+            }
+#endif
         } else {
             pad->pressed = padData >> 0x10;
         }

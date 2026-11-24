@@ -10,6 +10,12 @@ void PlayerStepGodspeedSprint(void) {
     }
     // Keep the tap window open so a quick re-tap restarts the sprint
     g_GodspeedTapTimer = 8;
+    // the afterimages always show while it lasts (nothing else turns them
+    // on for it; an attack's status turns them off), and stay: without a
+    // button press their fade counter runs out after a moment, so hold it
+    // at its start, as NO3's cutscene does (user report 2026-11-16)
+    EnableAfterImage();
+    ForceAfterImageOn();
     // Saturn animation 0xDF plays every walk cycle frame for 2 ticks; anim 13
     // alternates 3 and 2
     if (PLAYER.ext.player.anim == 13 && PLAYER.poseTimer > 2) {
@@ -27,6 +33,11 @@ void PlayerStepGodspeedSprint(void) {
     if (ret == 0) {
         DecelerateX(FIX(0.15625));
         if (CheckMoveDirection() == 0) {
+            // stopping: the walk's stop animation, as the Saturn's
+            // (func_8010E570 picks it by g_Player.prev_step, the frame's
+            // starting step: the sprint's gave the plain stand; user report
+            // 2026-11-16)
+            g_Player.prev_step = Player_Walk;
             func_8010E570(0);
         } else if (PLAYER.step_s == 0) {
             SetSpeedX(GODSPEED_SPEED);

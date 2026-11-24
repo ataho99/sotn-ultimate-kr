@@ -1633,8 +1633,10 @@ void MarEntityCountdown(Entity* self) {
         prim->v0 = prim->v1 = 0x40;
         prim->v2 = prim->v3 = 0x49;
         prim->drawMode = DRAW_UNK_100 | DRAW_UNK02;
-        self->flags =
-            FLAG_KEEP_ALIVE_OFFCAMERA | FLAG_POS_CAMERA_LOCKED | FLAG_HAS_PRIMS;
+        // (FLAG_UNK_20000: it stays through a room change, as the Beasts
+        // entity does)
+        self->flags = FLAG_KEEP_ALIVE_OFFCAMERA | FLAG_POS_CAMERA_LOCKED |
+                      FLAG_HAS_PRIMS | FLAG_UNK_20000;
         self->posX.i.hi = PLAYER.posX.i.hi;
         self->posY.i.hi = PLAYER.posY.i.hi - 40;
         self->step++;

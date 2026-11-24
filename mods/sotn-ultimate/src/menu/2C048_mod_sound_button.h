@@ -12,7 +12,7 @@
 #define MOD_RO __attribute__((section(".rodata")))
 #include "../../../../src/st/sel/mod_sel_soundmode_gfx.h"
 #define MOD_MENU_BTN_X(i) (0x10 + ((i) - 1) * 0x29) // 094_18: six buttons, x step 0x29 (094_17 0x34)
-#define MOD_MENU_BTN_Y(i) (0x1C + ((i) - 1) * 0x1C) // y step 0x1C (094_17 0x20)
+#define MOD_MENU_BTN_Y(i) (0x14 + ((i) - 1) * 0x20) // 095: even rows (user 2026-11-24, plan A of M6): y 20..180, 32 px step, buttons 31 px high: no overlap, 1 px gap (094_18 was 0x1C + 0x1C step, 3 px overlap)
 #define MOD_SOUND_BTN_TPAGE 0xF // 4bpp, x 960 y 0
 #define MOD_SOUND_BTN_V 96
 static void ModSoundBtnUpload(void) {

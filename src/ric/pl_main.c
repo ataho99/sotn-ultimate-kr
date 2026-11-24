@@ -86,6 +86,13 @@ extern u8 hud_it[];
 extern u_long* g_FontImage[];
 extern u_long* g_HudImage[];
 // Similar to AluInit
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+// Ultimate's stairs stance facing down (generated: mods/sotn-ultimate/
+// tools/gen_ric_stairs.py, which puts facing up in sprite 0xC3's own slot;
+// RIC2.BIN gets the coat's, build_ric2.py)
+#include "gen/mod_ric_stairs.h"
+extern u8* richter_sprites[];
+#endif
 void RicInit(s16 initParam) {
     Entity* e;
     s16 radius;
@@ -101,6 +108,10 @@ void RicInit(s16 initParam) {
 
     g_CurrentEntity = &PLAYER;
     DestroyEntity(g_CurrentEntity);
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+    richter_sprites[0xC4] = g_RicStairSpr;
+    spritebank0[212] = g_RicStairFrame;
+#endif
     PLAYER.posX.val = FIX(32);
     PLAYER.posY.val = FIX(32);
     PLAYER.animSet = ANIMSET_OVL(0x10);
@@ -291,6 +302,19 @@ static void CheckStageCollision(bool arg0) {
     if ((*vram_ptr & 8) && (PLAYER.velocityX < 0)) {
         PLAYER.posX.i.lo = 0;
     }
+#if defined(MOD_MARIA_SAT)
+    // Saturn 060A54F0 (as DRA's, src/dra/692E8.c): on a slope or at a
+    // ledge, the bit her side-on poses go by (user report 2026-11-19: she
+    // stood front-on on stairs)
+    if (*vram_ptr & TOUCHING_ANY_SLOPE) {
+        *vram_ptr |= IN_AIR_OR_EDGE;
+    }
+    if (!(g_Player.colFloor[1].effects & EFFECT_SOLID) ||
+        !(g_Player.colFloor[2].effects & EFFECT_SOLID) ||
+        !(g_Player.colFloor[3].effects & EFFECT_SOLID)) {
+        *vram_ptr |= IN_AIR_OR_EDGE;
+    }
+#endif
 }
 
 #if !defined(MOD_MARIA_SAT)
@@ -810,7 +834,12 @@ void RicMain(void) {
             }
         } else {
             RicSetInvincibilityFrames(1, 16);
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+            // (16, or longer after a cancelled stagger: pl_steps.c)
+            g_Player.timers[PL_T_4] = g_Player.timers[PL_T_INVINCIBLE];
+#else
             g_Player.timers[PL_T_4] = 0x10;
+#endif
             PLAYER.palette = PAL_FLAG(PAL_RICHTER);
         }
     }

@@ -87,4 +87,17 @@ void EntityBackgroundBlock(Entity* self) {
     }
 
     AnimateEntity(init->animFrames, self);
+#if defined(MOD_SATURN)
+    // the mist door's grille (params 11): Richter and both Marias walk
+    // through the grate in Ultimate (src/menu/game_handlers_mod_access.h):
+    // hidden there, not destroyed, so a switch to Classic in their pause
+    // menu shows it at once with its collision (user, 2026-11-19)
+    if (self->params == 11 && MOD_RIC_ULTIMATE()) {
+        // (and the animation from its start: its one frame is set only when
+        // the animation starts, so a Classic frame shows it again)
+        self->animCurFrame = 0;
+        self->pose = 0;
+        self->poseTimer = 0;
+    }
+#endif
 }

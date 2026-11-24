@@ -411,6 +411,11 @@ s16 AllocPrimitives(u8 type, s32 count);
 #if defined(MOD_ULTIMATE_MENU)
 #include "../../mods/sotn-ultimate/src/menu/game_handlers_mod_balance.h"
 #endif
+#if defined(MOD_SATURN)
+#include "../../mods/sotn-ultimate/src/menu/game_handlers_mod_access.h"
+// the new voice configs' ids (the Game Over taunts; defines only)
+#include "mod_xa_music.h"
+#endif
 
 #if defined(MOD_SATURN)
 void ModSysOptTick(void);
@@ -425,7 +430,22 @@ void HandlePlay(void) {
 #if defined(MOD_SATURN)
     ModApplyBalance();
     ModApplyDubText();
+    ModCastleAccess();
     ModSysOptTick(); // the cheats (BIN/ARC_F2.BIN, sysopt.c)
+    // Richter's / the Marias' infinite HP, hearts and MP (src/menu/charmenu.c Extra settings): refilled every frame
+    {
+        u8 c = g_ModDub.cheats; // (Alucard's ModSysOptTick clears it: his own cheats are his menu's)
+
+        if (c & 1) {
+            g_Status.hp = g_Status.hpMax;
+        }
+        if (c & 2) {
+            g_Status.hearts = g_Status.heartsMax;
+        }
+        if (c & 4) {
+            g_Status.mp = g_Status.mpMax;
+        }
+    }
 #endif
 
     switch (g_GameStep) {
@@ -972,7 +992,27 @@ void HandleGameOver(void) {
             func_psp_091040A0(D_psp_09156F28);
         }
 #endif
-#if defined(VERSION_US)
+#if defined(VERSION_US) && defined(MOD_SATURN) && defined(MOD_VO_GO_DEATH_3)
+        // Saturn port: the JP/PSP Game Over taunts the US release dropped,
+        // with the PSP's recordings (mods/sotn-ultimate/tools/psp_dub.py
+        // EXTRA): Alucard dying in Richter's, the Succubus' or (reverse)
+        // Death's fight, else 1 in 8 once he has met Maria
+        if (g_PlayableCharacter != PLAYER_ALUCARD) {
+            PlaySfx(MU_LAND_OF_BENEDICTION);
+        } else if (g_StageId == STAGE_BO6) {
+            PlaySfx(MOD_VO_GO_RICHTER_1 + rand() % 3);
+        } else if (g_StageId == STAGE_DRE) {
+            PlaySfx(MOD_VO_GO_SUCCUBUS);
+        } else if (g_StageId == STAGE_RBO2) {
+            PlaySfx(MOD_VO_GO_DEATH_1 + rand() % 3);
+        } else if (TimeAttackController(TIMEATTACK_EVENT_FIRST_MARIA_MEET,
+                                        TIMEATTACK_GET_RECORD) &&
+                   (rand() & 7) == 0) {
+            PlaySfx(MOD_VO_GO_MARIA);
+        } else {
+            PlaySfx(MU_LAND_OF_BENEDICTION);
+        }
+#elif defined(VERSION_US)
         PlaySfx(MU_LAND_OF_BENEDICTION);
 #else
         if (g_PlayableCharacter != PLAYER_ALUCARD) {

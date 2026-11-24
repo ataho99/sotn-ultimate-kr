@@ -1,0 +1,85 @@
+키	분류	영문(현재 표시)	일판 원문	한글	비고
+cm:ric	메뉴(8px)	RICHTER	－	리히터	상태화면 이름
+cm:mar	메뉴(8px)	MARIA	－	마리아	상태화면 이름
+cm:cmds	메뉴(8px)	Commands	－	커맨드	일시정지 메인 1행
+cm:system	메뉴(8px)	System	－	시스템	일시정지 메인 2행
+cm:sysbtn	메뉴(8px)	Button settings	－	버튼 설정	System 목록(cfg:str16 과 같음)
+cm:syswin	메뉴(8px)	Window color	－	윈도우 컬러	System 목록(cfg:str35 과 같음)
+cm:syssnd	메뉴(8px)	Sound	－	사운드	System 목록(cfg:str32 과 같음)
+cm:n_psp	메뉴(8px)	PSP	－	PSP	값(xset:psp 과 같음)
+cm:n_ps1	메뉴(8px)	PS1	－	PS1	값(xset:ps1 과 같음)
+cm:n_jp	메뉴(8px)	JP	－	JP	값(더빙)
+cm:ch_hp	메뉴(8px)	Inf. HP	－	무한 체력	Extra 팝업 치트(알카드 xset:c6 과 같음)
+cm:ch_heart	메뉴(8px)	Inf. Hearts	－	무한 하트	Extra 팝업 치트(알카드 xset:c1 과 같음)
+cm:ch_mp	메뉴(8px)	Inf. MP	－	무한 MP	Extra 팝업 치트(알카드 xset:c0 과 같음, 새턴 마리아만)
+cm:on	메뉴(8px)	ON	－	ON	치트 값(xset:on 과 같음)
+cm:off	메뉴(8px)	OFF	－	OFF	치트 값(xset:off 과 같음)
+cm:l_attack	메뉴(8px)	Attack	－	공격	버튼 설정
+cm:l_jump	메뉴(8px)	Jump	－	점프	버튼 설정
+cm:l_itemcrash	메뉴(8px)	Item crash	－	서브 크래시	버튼 설정
+cm:l_crash	메뉴(8px)	Crash	－	크래시	버튼 설정
+cm:l_dashr	메뉴(8px)	Dash right	－	오른 대시	버튼 설정+PSP마리아 기본기
+cm:l_dashl	메뉴(8px)	Dash left	－	왼 대시	버튼 설정+PSP마리아 기본기
+cm:l_shot	메뉴(8px)	Shot	－	발사	버튼 설정
+cm:l_kick	메뉴(8px)	Kick	－	발차기	버튼 설정
+cm:l_backdash	메뉴(8px)	Backdash	－	후방 대시	버튼 설정+새턴마리아 격투기
+cm:cn_dashr	설명줄(12px)	Dash right	－	오른쪽 대시	커맨드 목록 이름(PSP마리아)
+cm:cn_dashl	설명줄(12px)	Dash left	－	왼쪽 대시	커맨드 목록 이름(PSP마리아)
+cm:cn_backdash	설명줄(12px)	Backdash	－	후방 대시	커맨드 목록 이름(새턴마리아)
+cm:assign	설명줄(12px)	Assign the function to each button．	－	각 버튼에 기능을 할당한다．	버튼 설정 힌트
+cm:extra	메뉴(8px)	Extra settings	－	추가 설정	System 목록 4행·Extra 팝업(cfg:str38 과 같음)
+cm:dub	메뉴(8px)	Dub	－	더빙	Extra 팝업 행
+cm:voices	설명줄(12px)	Character voices	－	추가 기능 설정	Extra 팝업 설명
+cm:costume	메뉴(8px)	Costume	－	의상	Extra 팝업 행
+cm:version	메뉴(8px)	Version	－	버전	Extra 팝업 행
+cm:saturn	메뉴(8px)	Saturn	－	STN	Version 값(xset:sat 와 같음)
+cm:balance	메뉴(8px)	Balance	－	밸런스	Extra 팝업 행
+cm:classic	메뉴(8px)	Classic	－	클래식	밸런스 값
+cm:ultimate	메뉴(8px)	Ultimate	－	얼티밋	밸런스 값
+cm:c_blade	설명줄(12px)	Blade dash	－	블레이드 대시	리히터·PSP마리아 기본기
+cm:c_high	설명줄(12px)	High jump	－	하이점프	기본기
+cm:c_slide	설명줄(12px)	Slide	－	슬라이드	기본기
+cm:c_skick	설명줄(12px)	Slide kick	－	슬라이드 발차기	기본기
+cm:d_high	설명줄(12px)	Leap high into the air	－	높이 뛰어오른다	High jump 설명
+cm:d_slide	설명줄(12px)	Slide along the ground	－	지면을 미끄러지며 나아간다	Slide 설명
+cm:d_icrash	설명줄(12px)	Item crash with its subweapon	－	서브웨폰으로 크래시를 발동한다	크래시 설명
+cm:d_blade	설명줄(12px)	Dash forward with the whip	－	채찍을 휘두르며 돌진한다	리히터 기본기
+cm:d_skick	설명줄(12px)	Jump early in a slide to kick	－	슬라이드 중 일찍 점프해 발차기한다	Slide kick 설명
+cm:n_dagger	설명줄(12px)	Dagger crash	－	단검 크래시	리히터 크래시
+cm:n_axe	설명줄(12px)	Axe crash	－	액스 크래시	리히터 크래시
+cm:n_hydro	설명줄(12px)	Hydro storm	－	하이드로 스톰	리히터 크래시
+cm:n_cross	설명줄(12px)	Cross crash	－	십자가 크래시	리히터 크래시
+cm:n_bible	설명줄(12px)	Bible crash	－	성서 크래시	리히터 크래시
+cm:n_stop	설명줄(12px)	Stopwatch crash	－	시계 크래시	리히터 크래시
+cm:n_rebound	설명줄(12px)	Rebound crash	－	리바운드 크래시	리히터 크래시
+cm:n_vib	설명줄(12px)	Vibhuti crash	－	비부티 크래시	리히터 크래시
+cm:n_agunea	설명줄(12px)	Agunea crash	－	아구네아 크래시	리히터 크래시
+cm:d_dashr	설명줄(12px)	Dash to the right	－	오른쪽으로 대시한다	PSP마리아 기본기
+cm:d_dashl	설명줄(12px)	Dash to the left	－	왼쪽으로 대시한다	PSP마리아 기본기
+cm:d_dashatk	설명줄(12px)	A dashing attack	－	돌진하며 공격한다	PSP마리아 기본기
+cm:n_cardinal	설명줄(12px)	Cardinal crash	－	홍관조 크래시	PSP마리아 소환
+cm:n_cat	설명줄(12px)	Cat crash	－	캣 크래시	PSP마리아 소환
+cm:n_turtle	설명줄(12px)	Turtle crash	－	터틀 크래시	PSP마리아 소환
+cm:n_dragon	설명줄(12px)	Dragon crash	－	드래곤 크래시	PSP마리아 소환
+cm:n_doll	설명줄(12px)	Doll crash	－	인형 크래시	PSP마리아 소환
+cm:n_gknuckle	설명줄(12px)	Guardian knuckle	－	가디언 너클	새턴마리아 특기
+cm:d_gknuckle	설명줄(12px)	Summons the Guardian Knuckle	－	가디언 너클을 소환한다	새턴마리아 특기 설명
+cm:n_genbu	설명줄(12px)	Genbu	－	현무	새턴마리아 특기
+cm:d_genbu	설명줄(12px)	Summons the Black Tortoise	－	현무를 소환한다	새턴마리아 특기 설명
+cm:n_byakko	설명줄(12px)	Byakko	－	백호	새턴마리아 특기
+cm:d_byakko	설명줄(12px)	Summons the White Tiger	－	백호를 소환한다	새턴마리아 특기 설명
+cm:n_seiryuu	설명줄(12px)	Seiryuu	－	청룡	새턴마리아 특기
+cm:d_seiryuu	설명줄(12px)	Summons the Azure Dragon	－	청룡을 소환한다	새턴마리아 특기 설명
+cm:n_suzaku	설명줄(12px)	Suzaku	－	주작	새턴마리아 특기
+cm:d_suzaku	설명줄(12px)	Summons the Vermilion Bird	－	주작을 소환한다	새턴마리아 특기 설명
+cm:n_four	설명줄(12px)	Four beasts	－	사신	새턴마리아 특기
+cm:d_four	설명줄(12px)	Hold the last Up then Down	－	마지막 위를 누른 채 아래를 입력한다	새턴마리아 특기 설명
+cm:n_charge	설명줄(12px)	Charge shot	－	차지 발사	새턴마리아 차지샷
+cm:d_charge	설명줄(12px)	Charge longer for a stronger shot	－	오래 모을수록 강한 탄을 쏜다	새턴마리아 차지샷 설명
+cm:n_upper	설명줄(12px)	Uppercut	－	어퍼컷	새턴마리아 격투기
+cm:d_upper	설명줄(12px)	A rising uppercut	－	올려치는 어퍼컷	새턴마리아 격투기 설명
+cm:n_dive	설명줄(12px)	Dive kick	－	다이브 발차기	새턴마리아 격투기
+cm:d_dive	설명줄(12px)	In the air after both jumps	－	두 번 점프한 뒤 공중에서	새턴마리아 격투기 설명
+cm:d_kickrun	설명줄(12px)	Kick while running	－	달리면서 발차기한다	새턴마리아 격투기 설명
+cm:d_backdash	설명줄(12px)	Leap backward	－	뒤로 뛰어 물러난다	새턴마리아 격투기 설명
+cm:s_guardian	메뉴(8px)	Guardian	－	가디언	사운드 모드 곡명 SD23(개명)

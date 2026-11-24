@@ -47,7 +47,7 @@ void EntityMaria(Entity* self) {
 #endif
 #if !defined(VERSION_HD)
         /* Has player seen Maria Holy Glasses Cutscene? */
-        if (g_CastleFlags[MET_MARIA_IN_CEN] != 0) {
+        if (CEN_MARIA_DONE()) {
             DestroyEntity(self);
             return;
         }

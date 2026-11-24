@@ -108,6 +108,13 @@ void func_us_801A269C(Entity* self) {
             }
             break;
         case 3:
+#if defined(MOD_SATURN)
+            // Saturn port: Richter / the Marias have no dialogue here, both
+            // bosses start once faded in (not after the lock's 256 frames)
+            if (g_PlayableCharacter != PLAYER_ALUCARD) {
+                D_us_80180AAC = 1;
+            }
+#endif
             if (D_us_80180AAC) {
                 self->hitboxState = 3;
                 SetStep(2);

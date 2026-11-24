@@ -54,6 +54,15 @@ static char richter_mist_label[] =
 void EntityMistDoor(Entity* self) {
     Entity* messageBox;
 
+#if defined(MOD_SATURN)
+    // Richter and both Marias: no grate here (game_handlers_mod_access.h
+    // takes the mist tiles out), so no hint box either; Ultimate balance
+    // only (Classic: the retail grate and box)
+    if (MOD_RIC_ULTIMATE()) {
+        DestroyEntity(self);
+        return;
+    }
+#endif
     if (!self->step) {
         InitializeEntity(g_EInitInteractable);
         self->hitboxState = 1;

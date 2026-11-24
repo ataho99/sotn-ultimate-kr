@@ -130,7 +130,8 @@ function ric2SymsOf(): Ric2Syms {
         return out;
     };
     return {
-        ric: read("build/us/ric.map", ["richter_sprites", "spritebank0", "spritebank1"], true),
+        ric: read("build/us/ric.map", ["richter_sprites", "spritebank0", "spritebank1", "g_RicStairSpr",
+            "g_RicStairFrame"], true),
         bo6: read("build/us/bobo6.map", ["richter_sprites", "D_us_801A39B0", "D_us_801A43A4", "D_us_8019E9A0"], false),
         top: read("build/us/sttop.map", ["richter_sprites", "g_ModTopRic2"], false),
         sel: read("build/us/stsel.map", ["D_8018C718", "D_8018C92C", "D_8018CB4C", "D_8018D5D4"], false),
@@ -644,7 +645,7 @@ async function main(): Promise<void> {
 
     const hollow = path.join(out, "hollow.bin");
     fs.writeFileSync(hollow, img);
-    const name = "SOTN Ultimate (PS1 Version) v1.4";
+    const name = "SOTN Ultimate (PS1 Version) v1.5";
     const patch = path.join(out, name + ".builder.xdelta");
     const usSize = fs.statSync(us).size;
     execFileSync("xdelta3", ["-e", "-f", "-9", "-S", "none", "-B", String(usSize), "-s", us, hollow, patch]);

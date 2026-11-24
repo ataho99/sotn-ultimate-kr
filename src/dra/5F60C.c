@@ -278,7 +278,8 @@ void InitStatsAndGear(bool isDeathTakingItems) {
         // Richter's stats table
 #if defined(MOD_SATURN)
         // Saturn InitStatsAndGear (src/saturn/game_2a.c): 100 HP in a
-        // Richter game, 50 at the prologue (Saturn balance)
+        // Richter game, 50 at the prologue and in a Classic game (the
+        // Saturn Maria's MarFxInit then gives her her own 200)
         g_Status.hp = g_Status.hpMax =
             g_StageId != STAGE_ST0 && !MOD_PS1_BALANCE() ? 100 : 50;
 #else
@@ -312,14 +313,25 @@ void InitStatsAndGear(bool isDeathTakingItems) {
         if (g_StageId == STAGE_NO3) {
             TimeAttackController(
                 TIMEATTACK_EVENT_FIRST_MARIA_MEET, TIMEATTACK_SET_RECORD);
+#if !defined(MOD_SATURN)
+            // Saturn port (user, 2026-11-15): the Succubus, Minotaur &
+            // Werewolf and Death are fought by Richter and the Marias too
+            // (no dialog: dre e_succubus.c); the Maria / Richter fights stay
+            // off. (Classic balance: retail's marks, set by
+            // game_handlers_mod_access.h ModCastleAccess)
             TimeAttackController(
                 TIMEATTACK_EVENT_SUCCUBUS_DEFEAT, TIMEATTACK_SET_RECORD);
             TimeAttackController(TIMEATTACK_EVENT_MINOTAUR_WEREWOLF_DEFEAT,
                                  TIMEATTACK_SET_RECORD);
+#endif
             TimeAttackController(
                 TIMEATTACK_EVENT_SAVE_RICHTER, TIMEATTACK_SET_RECORD);
+#if !defined(MOD_SATURN)
             TimeAttackController(
                 TIMEATTACK_EVENT_DEATH_DEFEAT, TIMEATTACK_SET_RECORD);
+#else
+            MOD_STATUS_FLAGS |= MOD_FLAG_BOSSES_ON; // (no old records)
+#endif
         }
         g_Status.timerHours = 0;
         g_Status.timerMinutes = 0;
@@ -722,7 +734,12 @@ void DrawRichterHud(void) {
     prim->drawMode = DRAW_ABSPOS;
     prim = prim->next;
 
+#if defined(MOD_SATURN)
+    // (to y 116: the tube is open down to y 115, its cap at 116)
+    SetTexturedPrimRect(prim, 4, 113, 9, 3, 64, 89);
+#else
     SetTexturedPrimRect(prim, 4, 112, 9, 3, 64, 89);
+#endif
     prim->tpage = 0x1B;
     prim->clut = 0x105;
     prim->priority = 0x1F0;
@@ -1121,7 +1138,13 @@ void DrawRichterHudSubweapon(void) {
     }
 
     prim = prim->next;
+#if defined(MOD_SATURN)
+    // the HP bar fills its tube: y 24 to 115 (92 rows; retail left the
+    // bottom row empty)
+    temp_s4 = (g_PlayerHud.displayHP * 0x5C) / g_Status.hpMax;
+#else
     temp_s4 = (g_PlayerHud.displayHP * 0x5B) / g_Status.hpMax;
+#endif
     prim->y0 = prim->y1 = prim->y2 - temp_s4;
     prim = prim->next;
     SetPrimRect(prim, g_PlayerHud.unk14 + 0xE4, 0x70, 9, 3);
@@ -1306,6 +1329,10 @@ bool StatusPause(s32 arg0) {
 }
 
 // original name: status_disp_init
+#if defined(MOD_SATURN_MARIA)
+#include "../../mods/sotn-ultimate/src/menu/5F60C_mod_hud_swap.h"
+#endif
+
 void DrawHud(void) {
     Primitive* prim;
     s32 i;

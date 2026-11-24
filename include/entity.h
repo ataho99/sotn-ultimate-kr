@@ -96,6 +96,9 @@ typedef struct {
     /* 0x8C */ struct Primitive* firstDissolvePrim;
     /* 0x90 */ s16 textOutlineBrightness;
     /* 0x92 */ s16 textFillBrightness;
+#if defined(VERSION_US) && !defined(NO_MOD_ULTIMATE) // game.h MOD_SATURN
+    /* 0x94 */ s16 modRows;
+#endif
 } ET_StagePopup;
 
 typedef struct {

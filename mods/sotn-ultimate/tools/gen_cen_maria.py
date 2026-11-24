@@ -330,6 +330,19 @@ NEW_POST = [
 ]
 # (the US disc keeps these four as Japanese recordings, XA files 0x50-0x51
 # and 0x13-0x14 of the voice stream: the Saturn's lines; PS1 id = Saturn + 2)
+# The PS1 dub with the PSP boss (CENP.BIN only; user, 2026-11-13): the PSP
+# English takes of the same ids (src/dra sound_mod_music.h routes 0x3C1-0x3C3
+# to the PSP table then) with the PSP script's text; 0x3C4 has no PSP take
+# and is cut, as the PSP script does. Maria's "I know." before it stays the
+# PS1's.
+PSP_PRE = [
+    (1, 0x3C1, ["Then for all our", "sakes, show me that", "you will!"]),
+]
+PSP_POST = [
+    (1, 0x3C2, ["You're stronger than", "I am. You can save", "Richter. Will you?",
+                "Please..."]),
+    (0, 0x3C3, ["I can't promise that.", "But I will stop him."]),
+]
 
 
 def tokens(path):
@@ -372,16 +385,16 @@ def say(portrait, voice, lines, first=False):
     return t
 
 
-def scripts():
+def scripts(new_pre=NEW_PRE, new_post=NEW_POST):
     tok = tokens(os.path.join(ROOT, "src/st/cen/gen/cutscene_data.h"))
     k = tok.index("PLAY_SOUND(0x3cc)") - 1  # SCRIPT_UNKNOWN_11() before it
     assert tok[k] == "SCRIPT_UNKNOWN_11()" and tok[k - 1] == "LINE_BREAK()"
     end = tok.index("CLOSE_DIALOG()")
     head = tok[:k - 1]  # up to Maria's "I know."
     # pre: ... "I know." then her new line in the same box
-    pre = head + ["LINE_BREAK()", "SCRIPT_UNKNOWN_11()", "PLAY_SOUND(0x%x)" % NEW_PRE[0][1],
+    pre = head + ["LINE_BREAK()", "SCRIPT_UNKNOWN_11()", "PLAY_SOUND(0x%x)" % new_pre[0][1],
                   "WAIT_FOR_SOUND()", "SET_SPEED(2)"]
-    for n, line in enumerate(NEW_PRE[0][2]):
+    for n, line in enumerate(new_pre[0][2]):
         if n:
             pre += ["LINE_BREAK()", "SET_WAIT(4)"]
         pre += ["'%s'" % ("\\'" if c == "'" else c) for c in line]
@@ -391,7 +404,7 @@ def scripts():
     # here. Take these with you." (its own box now) and the rest
     post = ["PLAY_SOUND(0x10)", "SCRIPT_UNKNOWN_11()", "SET_POS(60,28)",
             "LOAD_PORTRAIT(0x80182cc0,0)", "LOAD_PORTRAIT(0x80181f40,1)"]
-    for portrait, voice, lines in NEW_POST:
+    for portrait, voice, lines in new_post:
         post += say(portrait, voice, lines)
     post += ["SET_PORTRAIT(1,0)", "SCRIPT_UNKNOWN_11()"] + tok[k + 1:]
     return pre, post
@@ -542,6 +555,16 @@ def main():
     w("u8 g_MbScriptPost[] MOD_RO = {")
     w("    " + ", ".join(post))
     w("};")
+    pre, post = scripts(PSP_PRE, PSP_POST)
+    w("#if defined(MOD_CENP)")
+    w("// the PS1 dub with the PSP boss: the PSP lines (PSP_PRE / PSP_POST)")
+    w("u8 g_MbScriptPrePsp[] MOD_RO = {")
+    w("    " + ", ".join(pre))
+    w("};")
+    w("u8 g_MbScriptPostPsp[] MOD_RO = {")
+    w("    " + ", ".join(post))
+    w("};")
+    w("#endif")
     w("#endif")
     w("// clang-format on")
     open(OUT, "w").write("\n".join(L) + "\n")

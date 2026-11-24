@@ -47,11 +47,15 @@ if [ ! -f "$OUT/st/cen/gen/maria_spr.h" ] || [ ! -f "$OUT/st/cen/gen/blueprints.
     ./sotn.sh extract-assets "$OUT/assets.yaml" >/dev/null
     ./sotn.sh build-assets "$OUT/assets.yaml" >/dev/null
 fi
-# the Saturn fight's two scripts (the PS1 scene split around the fight)
-awk '/^u8 g_MbScriptPre\[\]/{p=1} p{print} p && /^};/{n++; if (n == 2) exit}' \
+# the Saturn fight's two scripts (the PS1 scene split around the fight) and
+# the PS1 dub's PSP-line copies (g_MbScriptPrePsp / PostPsp): the four
+# g_MbScript* arrays only, without the generated file's #if lines
+awk '/^u8 g_MbScript/{p=1} p{print} p && /^};/{p=0; n++; if (n == 4) exit}' \
     mods/sotn-ultimate/src/maria_saturn/mod_maria_boss_data.h > "$OUT/st/cen_psp/mb_scripts.h"
-grep -q "g_MbScriptPost" "$OUT/st/cen_psp/mb_scripts.h" ||
-    { echo "FAIL build_cenp: scripts not found in mod_maria_boss_data.h"; exit 1; }
+for s in g_MbScriptPre g_MbScriptPost g_MbScriptPrePsp g_MbScriptPostPsp; do
+    grep -q "^u8 $s\[\]" "$OUT/st/cen_psp/mb_scripts.h" ||
+        { echo "FAIL build_cenp: $s not found in mod_maria_boss_data.h"; exit 1; }
+done
 # The KO trial (build_ko_trial.sh exports MOD_KO=1). CEN's own
 # sources below go through cpp (the trial's -DMOD_KO wrapper on PATH, and
 # KO_DEFS here as well), but the boss + glue are compiled by gcc, whose

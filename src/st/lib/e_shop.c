@@ -1543,7 +1543,11 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
 
     s_6 = 0;
     ptr = pix;
+#if defined(MOD_PTBR)
+    for (i = 0; i < (size * FontHeight) * 3; i++) {
+#else
     for (i = 0; i < (size * FontHeight) * 2; i++) {
+#endif
         *ptr++ = 0;
     }
     while (true) {
@@ -1708,7 +1712,11 @@ void* func_us_801B0C40(u8* pix, const char* str, s32 x, s32 y, s32 size) {
         }
 #endif
         s_6++;
+#if defined(MOD_PTBR)
+        y += FontHeight - 1;
+#else
         y += FontHeight;
+#endif
         if (*str < 8) {
             str++;
         }
@@ -2113,6 +2121,9 @@ void func_us_801B15C0(Entity* self) {
     const char* ptr;
     s16 pad;
 
+#if defined(MOD_PTBR)
+    ModPtbrLibText();
+#endif
     switch (self->step) {
     case 0:
         InitializeEntity(g_EInitCommon);
@@ -5822,10 +5833,17 @@ void func_us_801B8234(Entity* self) {
                     prim->u0 = prim->u2 = (i - 9) * 0x70 + 0x80;
                     prim->u1 = prim->u3 = prim->u0 + 0x70;
                     prim->v0 = prim->v1 = 0x26;
+#if defined(MOD_PTBR)
+                    prim->v2 = prim->v3 = prim->v0 + 0xB8;
+                    prim->x0 = prim->x1 = prim->x2 = prim->x3 = 0x80;
+                    prim->y0 = prim->y1 = 0x26;
+                    prim->y2 = prim->y3 = 0xDE;
+#else
                     prim->v2 = prim->v3 = prim->v0 + 0xB0;
                     prim->x0 = prim->x1 = prim->x2 = prim->x3 = 0x80;
                     prim->y0 = prim->y1 = 0x26;
                     prim->y2 = prim->y3 = 0xD6;
+#endif
                     prim->priority = 0x1FC;
                     prim->drawMode = DRAW_HIDE;
                 } else if (i == 10) {
@@ -5842,11 +5860,19 @@ void func_us_801B8234(Entity* self) {
                     prim->tpage = 0x10;
                     prim->clut = PAL_UNK_1A1;
                     prim->u0 = 0;
+#if defined(MOD_PTBR)
+                    prim->v0 = MOD_LIB_DESC_Y - 0x100;
+                    prim->v1 = 0x2E;
+                    prim->u1 = 0xF0;
+                    prim->x0 = 0x18;
+                    prim->y0 = 0xB0;
+#else
                     prim->v0 = 0xC0;
                     prim->v1 = 0x20;
                     prim->u1 = 0xF0;
                     prim->x0 = 0x18;
                     prim->y0 = 0xB4;
+#endif
                     prim->priority = 0x12;
                     prim->drawMode = DRAW_HIDE;
 #endif
@@ -5929,6 +5955,14 @@ void func_us_801B8234(Entity* self) {
             } else {
                 s3 = D_us_80180FB4[LIB_BIT(self->params)];
             }
+#if defined(MOD_PTBR)
+            if (MOD_PTBR_TEXT_PT()) {
+                s3 = LIB_BIT(self->params) == MOD_LIB_DESC_PSP_BIT &&
+                             MOD_PSP_DUB_ON()
+                         ? g_ModPtbrLibDescPsp
+                         : g_ModPtbrLibDesc[LIB_BIT(self->params)];
+            }
+#endif
             func_us_801B0C40(pix, s3, 0, MOD_LIB_DESC_Y, 0x6E);
 #else
             s3 = D_us_80180FB4[self->params];
@@ -6552,3 +6586,7 @@ void func_us_801B8A00(Entity* self) {
         return;
     }
 }
+
+#if defined(MOD_PTBR)
+#include "mod_ptbr_lib_text.h"
+#endif

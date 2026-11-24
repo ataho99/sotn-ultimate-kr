@@ -23,7 +23,11 @@ some Librarian / Shaft / Maria extras) keep the PS1 audio.
 
 PSP 0x531 (380e2 "...Did you not?", Dracula in the final scene) has no PS1
 slot: it gets a new mod config after the Saturn music ones (MOD_VO_DID_YOU_NOT,
-volume of the line before it).
+volume of the line before it). So do the Game Over taunts (PSP 0x391 the
+Succubus, 0x3CE Maria, 0x3DA-0x3DC Richter, 0x52E-0x530 Death: the JP/PSP
+HandleGameOver plays them, the US one plays music instead), which
+src/dra/game_handlers.c plays again; every dub gets the PSP's English take
+there except the JP one (the Japanese take).
 
 Writes build/us/psp_dub/dub.json, read by mods/sotn-ultimate/tools/repack_xa.py --dub:
 the replacement stream (raw mono sectors) and the new length (unk228, in
@@ -120,6 +124,16 @@ VOICE_OVERRIDE = {
 KEEP_JSON = os.path.join(ROOT, "build/us/psp_script/keep_ps1.json")
 EXTRA = [  # (define, PSP id, config whose volume it takes)
     ("MOD_VO_DID_YOU_NOT", 0x531, 0x427),
+    # the Game Over taunts (file: src/dra_psp/63C08.c at3FileNames); volume of
+    # the PS1 slot each lines up with (PSP id + 2)
+    ("MOD_VO_GO_SUCCUBUS", 0x391, 0x393),   # 100a
+    ("MOD_VO_GO_MARIA", 0x3CE, 0x3D0),      # 210a
+    ("MOD_VO_GO_RICHTER_1", 0x3DA, 0x3DC),  # 251a
+    ("MOD_VO_GO_RICHTER_2", 0x3DB, 0x3DD),  # 252a
+    ("MOD_VO_GO_RICHTER_3", 0x3DC, 0x3DE),  # 253a
+    ("MOD_VO_GO_DEATH_1", 0x52E, 0x530),    # sins1x
+    ("MOD_VO_GO_DEATH_2", 0x52F, 0x531),    # sins1y
+    ("MOD_VO_GO_DEATH_3", 0x530, 0x532),    # snis1z
 ]
 
 

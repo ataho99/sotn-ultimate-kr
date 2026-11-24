@@ -40,6 +40,10 @@
 #ifndef OFF_BIN_NO3RIDE
 #define OFF_BIN_NO3RIDE 0 // same first-compile case (BIN/NO3RIDE.BIN)
 #endif
+// Richter's / the Marias' pause menu code (src/menu/charmenu.c, 4 sectors):
+// after ARC_F2.BIN's MOD_ARC_F_LEN bytes, which are all g_LbaBinAlucard reads
+// (a new file in BIN/ would move the retail ones: the directory is full)
+#define OFF_BIN_CHARMENU (OFF_BIN_ARC_F2 + MOD_ARC_F_LEN / 0x800)
 // a bank in BIN/NO3RIDE.BIN: SD_ZKNO3.VH (4 sectors) + VB (53)
 #define MOD_NO3RIDE_SECTORS 57
 #ifndef OFF_BIN_MONSTER2
@@ -86,33 +90,56 @@ static s32 ModJpSfx(s32 psp) {
 // common hit sounds (src/st/collision.h; 30-40, the Saturn's): at 65, or her
 // shots cut them off. Seiryuu's sound (0x889) is a loop for her: channels
 // 22/23, which her dragon releases (src/ric). Death 0x6FF / grab 0x6F6 are
-// 90 in retail too; she never plays 0x705 (collision.h)
-// (the priorities fit a byte: 4-byte rows, for DRA room)
+// 90 in retail too; she never plays 0x705 (collision.h).
+// The PSP Maria (column psp; user report 2026-11-13) had the same clash: her
+// 16 voice clips sit in Richter's voice slots (src/maria_psp/mar2.c
+// g_Mar2SfxSlot), three of them in 0x706-0x708 (30-40, cut by any sound),
+// and her hits (30-40) tied with her moves' sounds (10-40): her voice 90 on
+// its own channels (ModMarSfxPrio), the hits and the rest retail
 static const struct {
     u16 id;
     u8 retail;
     u8 maria;
+    u8 psp;
 } g_ModMarSfxPrio[] = {
-    // id, retail, Saturn Maria
-    {0x6F9, 80, 90}, {0x6FA, 80, 90}, {0x6FB, 80, 90}, // grunts
-    {0x6FC, 80, 90}, {0x702, 81, 90},                  // kick, hurt
-    {0x703, 81, 90}, {0x704, 81, 90},                  // hurt
-    {0x678, 40, 65}, {0x62D, 30, 65}, {0x62E, 32, 65}, // her hits
-    {0x6FD, 80, 60}, {0x6FE, 80, 60}, {0x700, 80, 60}, // shot, fire, ball
-    {0x6F4, 80, 60}, {0x6F5, 80, 60},                  // lunge, beasts end
-    {0x6F7, 50, 60}, {0x887, 90, 70}, {0x888, 90, 70}, // flap, Genbu, Byakko
-    {0x889, 90, 70}, {0x88A, 90, 70},                  // Seiryuu, its roar
-    {0x707, 40, 85}, {0x617, 30, 85},                  // slide skid, scrape
+    // id, retail, Saturn Maria, PSP Maria
+    {0x6F9, 80, 90, 90}, {0x6FA, 80, 90, 90},
+    {0x6FB, 80, 90, 90},                      // grunts
+    {0x6FC, 80, 90, 90}, {0x702, 81, 90, 90}, // kick, hurt
+    {0x703, 81, 90, 90}, {0x704, 81, 90, 90}, // hurt
+    {0x678, 40, 65, 40}, {0x62D, 30, 65, 30},
+    {0x62E, 32, 65, 32}, // her hits
+    {0x6FD, 80, 60, 90}, {0x6FE, 80, 60, 90},
+    {0x700, 80, 60, 90},                      // shot, fire, ball
+    {0x6F4, 80, 60, 80}, {0x6F5, 80, 60, 80}, // lunge, beasts end
+    {0x6F7, 50, 60, 50}, {0x887, 90, 70, 90},
+    {0x888, 90, 70, 90},                      // flap, Genbu, Byakko
+    {0x889, 90, 70, 90}, {0x88A, 90, 70, 90}, // Seiryuu, its roar
+    {0x707, 40, 85, 90}, {0x617, 30, 85, 30}, // slide skid, scrape
+    {0x701, 80, 80, 90}, {0x705, 80, 80, 90}, // PSP voice slots
+    {0x706, 30, 30, 90}, {0x708, 40, 40, 90}, // (Richter's sounds)
 };
+// 0: retail (Richter, Alucard), 1: the Saturn Maria, 2: the PSP Maria
 static void ModMarSfxPrio(s32 maria) {
     s32 i;
 
     for (i = 0; i < LEN(g_ModMarSfxPrio); i++) {
         g_SfxData[g_ModMarSfxPrio[i].id - SFX_START].unk6 =
-            maria ? g_ModMarSfxPrio[i].maria : g_ModMarSfxPrio[i].retail;
+            maria == 2 ? g_ModMarSfxPrio[i].psp
+            : maria    ? g_ModMarSfxPrio[i].maria
+                       : g_ModMarSfxPrio[i].retail;
     }
     g_SfxData[0x889 - SFX_START].mode =
-        maria ? SFX_MODE_CHANNELS_22_23 : SFX_MODE_CHANNELS_12_19;
+        maria == 1 ? SFX_MODE_CHANNELS_22_23 : SFX_MODE_CHANNELS_12_19;
+    // the PSP Maria's voice clips (vab 1 slots 0x6F9-0x708) on channels 20/21:
+    // on the shared channel her lines muted every hit and torch sound while
+    // she spoke (only one effect plays there during music). A new line cuts
+    // the last, like a voice; 20/21 otherwise carry only the rain loop, the
+    // prologue's Death ambience and the Succubus reveal
+    for (i = 0x6F9; i <= 0x708; i++) {
+        g_SfxData[i - SFX_START].mode =
+            maria == 2 ? SFX_MODE_CHANNELS_20_21 : SFX_MODE_CHANNELS_12_19;
+    }
 }
 #endif
 // the Saturn-only bestiary pictures (bits 146.., MOD_LIB_RETAIL_ENEMIES in

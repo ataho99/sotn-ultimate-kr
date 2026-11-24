@@ -308,6 +308,11 @@ extern AnimationFrame ric_anim_press_up[];
 extern AnimationFrame ric_anim_stop_run[];
 extern AnimationFrame ric_anim_stand[];
 extern AnimationFrame ric_anim_stand_relax[];
+#if defined(MOD_SATURN) && !defined(MOD_MARIA_SAT)
+extern AnimationFrame ric_anim_stairs_up[];
+extern AnimationFrame ric_anim_stairs_down[];
+AnimationFrame* RicStairsAnim(void);
+#endif
 extern AnimationFrame ric_anim_walk[];
 extern AnimationFrame ric_anim_crouch_from_stand2[];
 extern AnimationFrame ric_anim_crouch[];

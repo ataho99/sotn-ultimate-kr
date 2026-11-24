@@ -1073,8 +1073,11 @@ void EntityRelicOrb(Entity* self) {
     case 0:
 #if defined(MOD_GODSPEED) && defined(STAGE_IS_TOP)
         // Saturn port: the Castle Keep's God Speed Shoes are relic 30, whose
-        // flags live outside g_Status.relics (include/game.h)
-        if (MOD_RELIC_FLAGS(relicId) & RELIC_FLAG_FOUND) {
+        // flags live outside g_Status.relics (include/game.h); only Alucard
+        // gets them (Richter and both Marias already run: user, 2026-11-13)
+        if ((MOD_RELIC_FLAGS(relicId) & RELIC_FLAG_FOUND) ||
+            (relicId == RELIC_GODSPEED_SHOES &&
+             g_PlayableCharacter != PLAYER_ALUCARD)) {
             DestroyEntity(self);
             return;
         }

@@ -1,0 +1,480 @@
+{
+ "_note": "English retranslation of the Japanese script, from the 'Akumajou Dracula X: Gekka no Yasoukyoku' translation patch v1.0 (2009) by Gemini (hacking), throughhim413 (translation) and Tom (editing); used with throughhim413's permission (2026-11). Keys: the Japanese disc's voice ids (PS1 US id - 2, as the PSP's). Each line: its boxes as the patch shows them (\\n = its line break). Shown with the Japanese dub (tools/psp_script.py).",
+ "lines": {
+  "0x356": [
+   "Begone!\nThis world was not meant for the\nlikes of you!"
+  ],
+  "0x357": [
+   "My own powers did not bring about my\nresurrection.\nIt was greed, the greed of you men\nwhich summoned me back.\nAnd is justice not defined by the\nmighty?"
+  ],
+  "0x358": [
+   "Such a selfish claim!\nHumanity is guided by our shared\nprinciples. We only want to come\ntogether, and move forward."
+  ],
+  "0x359": [
+   "Oh, but the truth is that humanity\nalso bears burgeoning desires within\nthem, which leads them to submit to\ntheir religious creeds, yes?"
+  ],
+  "0x35A": [
+   "Mere power is not what leads mankind.\nRespect and generosity: these are\nwhat truly guide humanity!"
+  ],
+  "0x35B": [
+   "Preposterous.\nWhich one of our claims is true?\nI shall give you the answer, along\nwith death's embrace!"
+  ],
+  "0x35D": [
+   "Oh, if it isn't Lord Alucard...\nWhat could possibly have brought\nyou here?"
+  ],
+  "0x35E": [
+   "That, you already know...\nNow stand aside."
+  ],
+  "0x35F": [
+   "I presume you are still befriending\nhumans, yes?\nI dare not ask you to rejoin us...\nBut do not raise your arms against\nus, at the very least."
+  ],
+  "0x360": [
+   "I cannot meet that request."
+  ],
+  "0x361": [
+   "Then I am left with no choice...\nI shall withdraw from here.\nJust use this opportunity to\nreconsider things..."
+  ],
+  "0x362": [
+   "You... wield a dark sort of power,\ndon't you?\nYou appear to be human, but...\nWhat could possibly have brought\nyou to this castle?",
+   "..."
+  ],
+  "0x363": [
+   "I've come to destroy it..."
+  ],
+  "0x364": [
+   "As have I...\nI'll assume that you speak the truth.\nI'm Maria. And you are?",
+   "..."
+  ],
+  "0x365": [
+   "Alucard."
+  ],
+  "0x366": [
+   "Straight to the point, I see. Oh, no\nmatter.\nShould you survive, I'm sure we'll\nmeet again.\nNow then, if you'll excuse me..."
+  ],
+  "0x367": [
+   "We meet again, Alucard."
+  ],
+  "0x368": [
+   "Did you say your name was Maria?"
+  ],
+  "0x369": [
+   "You're still not quite the social type.\nBy the way, does anything here seem\nstrange to you?\nThe layout of the castle is\ndifferent, compared to my last visit.",
+   "..."
+  ],
+  "0x36A": [
+   "Dracula's castle was spawned out of\nchaos.\nIt is not bound to a single form."
+  ],
+  "0x36B": [
+   "That means everything I thought I\nknew won't be of much help...\nI suppose there's no use dwelling on\nit.\nThank you, and farewell for now."
+  ],
+  "0x36C": [
+   "Impressive!\nYou certainly didn't need my help.",
+   "..."
+  ],
+  "0x36D": [
+   "What do you want?\nYou didn't come here to simply chat\nwith me like that."
+  ],
+  "0x36E": [
+   "I suppose not.\nRichter Belmont... You know of him?"
+  ],
+  "0x36F": [
+   "One of the Belmonts?"
+  ],
+  "0x370": [
+   "One year ago, he vanished without a\ntrace.\nI'm sure that he came here, though.\nIf you find out anything, I hope\nyou'll inform me."
+  ],
+  "0x371": [
+   "Very well."
+  ],
+  "0x372": [
+   "Thank you. I didn't expect you to be\nso kind.\nAnyway, I'm counting on you."
+  ],
+  "0x373": [
+   "So?\nHave you seen Richter?"
+  ],
+  "0x374": [
+   "I can't be sure he was the man you\nare searching for, but I did meet a\nBelmont..."
+  ],
+  "0x375": [
+   "Really!?\nI knew it! He came here after all."
+  ],
+  "0x376": [
+   "And yet... He fought against me...\nNot only that, he claimed to be the\nlord of this castle..."
+  ],
+  "0x377": [
+   "That can't be.\nBut, if that were true, there must be\nsome sort of explanation.\nI'm sorry. I, I must go."
+  ],
+  "0x378": [
+   "!!\nMother!"
+  ],
+  "0x379": [
+   "That voice... Alucard!\nIt that you?"
+  ],
+  "0x37A": [
+   "Mother!\nI'm coming to save you!"
+  ],
+  "0x37B": [
+   "You mustn't, Alucard.\nYou mustn't come!"
+  ],
+  "0x37C": [
+   "But Mother!"
+  ],
+  "0x37D": [
+   "It's all right!\nIf by giving my life, I can bring\nhappiness to others, then...\nI will gladly offer it."
+  ],
+  "0x37E": [
+   "But, it just isn't right..."
+  ],
+  "0x37F": [
+   "Forgive me, Alucard.\nFor causing you so much pain...\nBut please, carve these last\nwords of mine into your heart...\nAnd keep on living..."
+  ],
+  "0x380": [
+   "Mother..."
+  ],
+  "0x381": [
+   "You must hate the humans...\nAnd you must kill them."
+  ],
+  "0x383": [
+   "They're burdened by their sins...\nThese people long for death.\nPlease... You can start by killing the\nones here..."
+  ],
+  "0x385": [
+   "What's wrong?\nAlucard...?"
+  ],
+  "0x386": [
+   "She could never have said something\nlike that..."
+  ],
+  "0x387": [
+   "What are you saying?\nKill them, and they will be much\nbetter off..."
+  ],
+  "0x388": [
+   "I've no doubt that you are not my\nmother!\nWho the hell are you!?"
+  ],
+  "0x38A": [
+   "So, you were able to break my spell...\nAnd I like it."
+  ],
+  "0x38B": [
+   "Unforgivable...!\nYou don't even deserve to die."
+  ],
+  "0x38C": [
+   "I'll take my time and enjoy making\nyou into my slave...\nCome to me, my boy..."
+  ],
+  "0x38D": [
+   "The, the scent of this blood...\nWhy does it smell like a creature of\nthe night...?\nCould it be...?",
+   "..."
+  ],
+  "0x38E": [
+   "This strength, this beauty...\nYes, there's no doubt about it.\nYou are the Count's..."
+  ],
+  "0x38F": [
+   "To die in the world of dreams would\ncause your soul to pass away.\nInstead, your soul should remain\nsplit away. Here, you will wander,\neternally."
+  ],
+  "0x393": [
+   "!!\nWho's there?"
+  ],
+  "0x394": [
+   "Release the gates of hell!\nCome, my servants!"
+  ],
+  "0x395": [
+   "The smell of this blood...\nYou! It can't be!"
+  ],
+  "0x396": [
+   "It's time to swat the crafty little fly\nwho's been defiling my castle!"
+  ],
+  "0x39C": [
+   "I've no doubt...\nHe was a Belmont.\nYet he claims to be the lord of this\ncastle?"
+  ],
+  "0x39D": [
+   "So, you have finally come this far...\nI will say this only once more.\nFor your father's sake, lower your\nweapons."
+  ],
+  "0x39E": [
+   "Ever since I arrived, I've had no\nsuch plans."
+  ],
+  "0x39F": [
+   "I am truly sorry to hear that.\nFor the sake of my master, I will\nclaim your soul!"
+  ],
+  "0x3A1": [
+   "It's been a while, old man..."
+  ],
+  "0x3A2": [
+   "Well, well, Lord Alucard...\nWhat business brings you here?"
+  ],
+  "0x3A3": [
+   "To be frank, I need your help."
+  ],
+  "0x3A4": [
+   "Forgive me for saying so, but if I\nwere to cooperate with one who\nopposes Lord Dracula, then..."
+  ],
+  "0x3A5": [
+   "I understand.\nOf course, you won't go\nuncompensated..."
+  ],
+  "0x3A6": [
+   "I see.\nIn that case, feel free to tell me\nwhatever you might need..."
+  ],
+  "0x3B8": [
+   "Alucard?"
+  ],
+  "0x3B9": [
+   "That voice... Maria?"
+  ],
+  "0x3BA": [
+   "I'm sorry.\nIt was... exactly as you said it would\nbe..."
+  ],
+  "0x3BB": [
+   "Then, he really is a Belmont..."
+  ],
+  "0x3BC": [
+   "I don't believe that he was acting of\nhis own free will...\nBut still, even with my powers...\nI'm not strong enough to stop him."
+  ],
+  "0x3BD": [
+   "Regardless, he must be stopped."
+  ],
+  "0x3BE": [
+   "I know."
+  ],
+  "0x3CA": [
+   "Oh, that's right!\nTake these with you."
+  ],
+  "0x3CB": [
+   "What are these?"
+  ],
+  "0x3CC": [
+   "If you wear them, you should be able\nto see through the wicked illusions\nthat surround you."
+  ],
+  "0x3CD": [
+   "I see.\nWe can only pray that he will be able\nto make it through all of this alive."
+  ],
+  "0x3D1": [
+   "I've been waiting for you."
+  ],
+  "0x3D2": [
+   "Answer me!\nWhy would a Belmont want to\nresurrect Dracula?"
+  ],
+  "0x3D4": [
+   "I expected to find you here...\nBut why would a Belmont scheme to\nresurrect Dracula?"
+  ],
+  "0x3D5": [
+   "The Count is reborn but once every\n100 years.\nAnd my mission had already been\ncompleted...\nBut still, something in my blood\nimplored me to fight him again!\nI realized that if I continued to\nrevive him, our battles could go\non forever!"
+  ],
+  "0x3D6": [
+   "If you truly believe those words,\nthen so be it."
+  ],
+  "0x3E8": [
+   "It's over... Belmont."
+  ],
+  "0x3E9": [
+   "So it is...\nThe ancient struggle between\nhumans and vampires is finally\ncoming to a close...",
+   "..."
+  ],
+  "0x3EA": [
+   "With nothing to hunt, there's no\nlonger any need for hunters...\nPerhaps, I already knew deep down\ninside that there was no longer a\nplace for me here..."
+  ],
+  "0x3ED": [
+   "Ugh... So, I've failed...\nStill, this isn't over yet.\nThe Count's revival is at hand!"
+  ],
+  "0x3EF": [
+   "Thank you, Alucard.\nYou saved Richter..."
+  ],
+  "0x3F0": [
+   "Alucard...!?\nYou can't be the same one who with\nfought alongside my ancestor Ralph\nwhen he defeated Dracula...!?"
+  ],
+  "0x3F1": [
+   "That's not important right now...\nThe one who was controlling you...\nIs he in that castle?"
+  ],
+  "0x3F2": [
+   "Yes, so it seems..."
+  ],
+  "0x3F3": [
+   "Maria.\nTake Richter and leave this castle.\nI'll handle the rest."
+  ],
+  "0x3F4": [
+   "Okay...\nI understand."
+  ],
+  "0x3F6": [
+   "What have I been doing...?\nDamn it... How could I let this\nhappen!?"
+  ],
+  "0x3FB": [
+   "But be careful, Alucard.\nI pray that God will be with you..."
+  ],
+  "0x3FC": [
+   "I'm impressed that you made it this\nfar, but I should expect no less\nfrom the Master's son."
+  ],
+  "0x3FD": [
+   "You are Shaft, I take?"
+  ],
+  "0x3FE": [
+   "Correct."
+  ],
+  "0x3FF": [
+   "Why did you set up Belmont as the\nlord of this castle?"
+  ],
+  "0x400": [
+   "Since ancient times, the holy power\nof the vampire hunters has allowed\nthem to annihilate the wicked...\nAnd yet, what if the hunters were to\nturn against each other?"
+  ],
+  "0x401": [
+   "None could stand against the power\nof the Belmonts.\nIt may be matched, but never\ndestroyed."
+  ],
+  "0x402": [
+   "Exactly...\nAnd so I used him as a puppet to\nrule this castle, eliminating those\nwho would interfere with the ritual."
+  ],
+  "0x403": [
+   "Unfortunately, that is as far as\nyou'll go."
+  ],
+  "0x404": [
+   "Oh, I wonder about that...\nFor you see, the final sacrifice has\njust arrived.\nThe mortal half of you will perish\nhere!"
+  ],
+  "0x406": [
+   "So, it was you who'd been controlling\nBelmont."
+  ],
+  "0x407": [
+   "Correct.\nI am Shaft, the priest of the\ndarkness...\nI vow to guide this world into\ndestruction and chaos."
+  ],
+  "0x411": [
+   "As soon as you cast aside your own\nbody, you lost whatever place in this\nworld you once had.\nGo, and venture into the darkness\nthat you desired."
+  ],
+  "0x415": [
+   "I, impossible!"
+  ],
+  "0x417": [
+   "Ugh! R, regardless...\nMy goal has been achieved...\nMy Lord, Count Dracula!\nPurge this corrupt world with\ndestruction and chaos!"
+  ],
+  "0x419": [
+   "Father..."
+  ],
+  "0x41B": [
+   "Oh, I wondered who it was...\nIt has been far too long, my son."
+  ],
+  "0x41C": [
+   "I had hoped that we would not meet\nagain...\nBut now that it has come to this, I\ncannot allow you to go any further."
+  ],
+  "0x41D": [
+   "Are you still adamant about\nremaining on the side of those\nhumans...?\nSurely, you have not forgotten\nwhat they did to your mother."
+  ],
+  "0x41E": [
+   "I could never forget...\nYet even so, Mother never wished\nfor revenge against mankind."
+  ],
+  "0x41F": [
+   "Once again, you're spouting the\nsame old nonsense. Very well.\nI will drain the lowly-born blood from\nyour body, so that you can finally\nrejoin our glorious house."
+  ],
+  "0x420": [
+   "In my mother's name...\nDracula, I will defeat you once again."
+  ],
+  "0x422": [
+   "Go back where you belong!\nYou've caused my mother enough\nsuffering, already..."
+  ],
+  "0x423": [
+   "H, How...?\nHow could I possibly have lost...?"
+  ],
+  "0x424": [
+   "Power, you see, allows you to\nsurpass any limitations when you've\ngot something to protect...\nWhen you were robbed of the woman\nwho loved you, and you stopped\nloving in return...\nYou'd already lost everything, at\nthat moment..."
+  ],
+  "0x425": [
+   "I see... Ironic, isn't it...?\nThe very reason I sought power in\nthe first place... was the root of my\nown destruction...",
+   "..."
+  ],
+  "0x426": [
+   "Alucard, would you tell me...\nLisa's final words?"
+  ],
+  "0x427": [
+   "She told me not to hate people for\nwhat they do...\nShe said that if I could not bring\nmyself to forgive them, in the end, I\nwould only be walking the path to my\nown destruction.\nShe said that I should not raise\na hand against the people of this\nworld...\nAnd, Father...\nShe also said that she would always\nlove you, forever..."
+  ],
+  "0x428": [
+   "Lisa...\nSo I... was mistaken...?"
+  ],
+  "0x42B": [
+   "Mankind's battles will never truly\nend.\nHowever, theirs is a battle to keep\non living.\nHe was born to a fate of inevitable\nbattle, and perhaps in the midst of\nthis battle, he forgot how to live.\nFather, just like you, he followed\nthe same path to destruction... \nFarewell, my cursed birthplace.\nI pray that I will not see you again."
+  ],
+  "0x42C": [
+   "It seems you're safe."
+  ],
+  "0x42D": [
+   "Alucard!\nWhat became of Richter?"
+  ],
+  "0x42E": [
+   "Unfortunately..."
+  ],
+  "0x42F": [
+   "I see...\nThank you, for stopping him...\nIt's painful, but this too was fate.",
+   "..."
+  ],
+  "0x430": [
+   "With this, your journey is over."
+  ],
+  "0x431": [
+   "No, it's not over yet.\nThere was something causing his\nmadness, and until I learn the truth..."
+  ],
+  "0x432": [
+   "I see...\nI can only pray that you have a\nsuccessful journey.\nFarewell."
+  ],
+  "0x433": [
+   "Goodbye.\nAlucard, I wish you the best."
+  ],
+  "0x443": [
+   "It's all right.\nAs I am now, there's nothing I can do\nto heal his wounded heart...\nAnd, I can't help but feel that we will\nmeet again...\nWhen that time comes, I'm certain..."
+  ],
+  "0x444": [
+   "I see..."
+  ],
+  "0x445": [
+   "Well then, shall we go?\nEveryone is waiting."
+  ],
+  "0x447": [
+   "It seems you're safe."
+  ],
+  "0x448": [
+   "Alucard!\nThank goodness, you're all right."
+  ],
+  "0x44D": [
+   "I'm sorry.\nBecause of me, you had to fight\nagainst your father once again..."
+  ],
+  "0x44E": [
+   "Don't let it concern you.\nIt was my fate alone. I had no choice\nbut to defeat him."
+  ],
+  "0x44F": [
+   "Hearing that from you means a lot to\nme."
+  ],
+  "0x450": [
+   "However, you must never forget\nthis: the one with the power to\ndestroy this world is not him...\nHuman beings alone possess this\npower."
+  ],
+  "0x451": [
+   "I understand.\nI will remember those words."
+  ],
+  "0x452": [
+   "Alucard.\nWhat are you planning to do from\nnow on?"
+  ],
+  "0x453": [
+   "The cursed blood that flows within\nme has no place in this world...\nI should find a place where I don't\nattract attention.",
+   "..."
+  ],
+  "0x454": [
+   "I see."
+  ],
+  "0x455": [
+   "Well then, this is farewell.\nWe shall not meet again.",
+   "..."
+  ],
+  "0x456": [
+   "Alucard..."
+  ],
+  "0x457": [
+   "Are you sure about this, Maria?\nYou're not going to go after him...?"
+  ],
+  "0x458": [
+   "I'm sorry...\nI just can't just leave him like this."
+  ],
+  "0x459": [
+   "It's all right.\nAfter all, this is the path you've\nchosen.\nI want you to live with no regrets."
+  ],
+  "0x45A": [
+   "Thank you...\nPlease, take care of yourself."
+  ],
+  "0x45B": [
+   "Yeah...\nMaria, you too. Take care."
+  ],
+  "0x501": [
+   "I'll take you to a wonderful place."
+  ],
+  "0x502": [
+   "Allow me to show you the way..."
+  ]
+ }
+}
