@@ -20,11 +20,11 @@ A fork of SOTN Ultimate that adds Korean; gameplay and look stay as in the origi
 | 원문 추출 · 용어집 (P5) | 완료 — 원문 1,715행, 용어는 일본판 기준 |
 | 번역 · 삽입 (P6) | 완료(v0.9 범위) — 메뉴·장비·아이템·유물·주문·대사·저장 문구 한글 |
 | **배포 (P7)** | **v0.9.3 베타** — 웹 패처(재료 검사 → 조립 → 지문 확인) |
-| 원작 추종 · 원작 합류 (P8–P9) | 예정 |
+| 얼티밋 업데이트 반영 (P8) | 진행 중 — 얼티밋 v1.5 반영 |
 
 - 번역은 원문에서 새로 했습니다. 기존 PS1 한글패치 문장은 쓰지 않았고, 제작진은 크레딧에 「참고」로 밝힙니다.
 - 글꼴: [MGalmuri](https://github.com/MonadABXY/mgalmuri-font)(OFL) · [Galmuri](https://github.com/quiple/galmuri)(OFL) · 그림 속 한글(지역 이름 카드 새 그림)은 코트라 손글씨체(KOTRA) **〔작업 중 · 다음 판〕**.
-- 작업 브랜치: `ko` · 원작 추종 브랜치: `sotn-ultimate`
+- 작업 브랜치: `ko` · 얼티밋 업데이트 반영 브랜치: `sotn-ultimate`
 
 ### 작업 중 (다음 판 · 릴리스 전)
 
