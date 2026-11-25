@@ -11,8 +11,21 @@
 // (InitMainMenuUI).
 #define MOD_RO __attribute__((section(".rodata")))
 #include "../../../../src/st/sel/mod_sel_soundmode_gfx.h"
-#define MOD_MENU_BTN_X(i) (0x10 + ((i) - 1) * 0x29) // 094_18: six buttons, x step 0x29 (094_17 0x34)
-#define MOD_MENU_BTN_Y(i) (0x14 + ((i) - 1) * 0x20) // 095: even rows (user 2026-11-24, plan A of M6): y 20..180, 32 px step, buttons 31 px high: no overlap, 1 px gap (094_18 was 0x1C + 0x1C step, 3 px overlap)
+// 095_36: the "Drama mode" (6th) line is a RUNTIME switch, one byte in SEL's rodata that the assembling tool sets when the
+// user's drama CD material is in: marker "DRMFLAG" + the flag byte (0 = the five-line menu of SOTN Ultimate v1.5, 1 = six
+// lines with Drama mode). The Drama code and picture are always in; the flag only picks the menu's line count and the
+// button positions. Read through a volatile pointer so the compiler cannot fold the constant.
+#ifndef MOD_DRAMA_DEFAULT
+#define MOD_DRAMA_DEFAULT 0
+#endif
+const u8 g_ModDramaFlag[8] MOD_RO = {'D', 'R', 'M', 'F', 'L', 'A', 'G', MOD_DRAMA_DEFAULT};
+#define MOD_DRAMA_ON() (*(volatile const u8*)&g_ModDramaFlag[7] != 0)
+// positions, index = the prim number i (0 = the hidden first prim, 1..6 = the lines; the old macro's formula at i = 0 kept): flag 0 = the Ultimate v1.5 five-line staircase (x step 0x34 from 0x10,
+// y step 0x20 from 0x1C); flag 1 = the six-line staircase (x step 0x29 from 0x10, y step 0x20 from 0x14, 094_18 / 095 plan A)
+static const s16 g_ModBtnX[2][7] MOD_RO = {{-0x24, 0x10, 0x44, 0x78, 0xAC, 0xE0, 0}, {-0x19, 0x10, 0x39, 0x62, 0x8B, 0xB4, 0xDD}};
+static const s16 g_ModBtnY[2][7] MOD_RO = {{-4, 0x1C, 0x3C, 0x5C, 0x7C, 0x9C, 0}, {-0xC, 0x14, 0x34, 0x54, 0x74, 0x94, 0xB4}};
+#define MOD_MENU_BTN_X(i) ((s32)g_ModBtnX[MOD_DRAMA_ON()][i])
+#define MOD_MENU_BTN_Y(i) ((s32)g_ModBtnY[MOD_DRAMA_ON()][i])
 #define MOD_SOUND_BTN_TPAGE 0xF // 4bpp, x 960 y 0
 #define MOD_SOUND_BTN_V 96
 static void ModSoundBtnUpload(void) {

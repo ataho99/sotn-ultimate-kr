@@ -904,11 +904,13 @@ void func_801AD490(void) {
         MOD_SOUND_BTN_W, MOD_SOUND_BTN_H, 0, MOD_SOUND_BTN_V,
         g_MainMenuCursor == MOD_MENU_SOUND ? 0x203 : 0x200, MOD_SOUND_BTN_TPAGE,
         1, 0x80);
-    func_801B27A8(
-        MOD_MENU_BTN_X(MOD_MENU_DRAMA), MOD_MENU_BTN_Y(MOD_MENU_DRAMA),
-        MOD_DRAMA_BTN_W, MOD_DRAMA_BTN_H, 0, 0,
-        g_MainMenuCursor == MOD_MENU_DRAMA ? 0x203 : 0x200, MOD_DRAMA_BTN_TPAGE,
-        1, 0x80);
+    if (MOD_DRAMA_ON()) {
+        func_801B27A8(
+            MOD_MENU_BTN_X(MOD_MENU_DRAMA), MOD_MENU_BTN_Y(MOD_MENU_DRAMA),
+            MOD_DRAMA_BTN_W, MOD_DRAMA_BTN_H, 0, 0,
+            g_MainMenuCursor == MOD_MENU_DRAMA ? 0x203 : 0x200, MOD_DRAMA_BTN_TPAGE,
+            1, 0x80);
+    }
 #endif
 
     for (i = 0; i < NUM_MENU_OPTIONS; i++) {
@@ -952,11 +954,11 @@ const char* D_80180454[] = {
 #if defined(MOD_SATURN)
 // (not in D_80180454: SEL's .data must not move, psp_script.py patches it)
 static const char* const g_ModMenuSoundHelp MOD_RO = "− Sound Mode −";
-static const char* const g_ModMenuDramaHelp MOD_RO = "− Drama CD −";
+static const char* const g_ModMenuDramaHelp MOD_RO = "− Drama Mode −";
 #endif
 
 #if defined(MOD_SATURN)
-#define MOD_MENU_LAST MOD_MENU_DRAMA
+#define MOD_MENU_LAST (MOD_DRAMA_ON() ? MOD_MENU_DRAMA : MOD_MENU_SOUND) // 095_36: the flag byte (2C048_mod_sound_button.h)
 #else
 #define MOD_MENU_LAST 4
 #endif
@@ -1568,6 +1570,10 @@ void Update(void) {
                 g_GameEngineStep = Upd_Eng_ModSound;
                 break;
             case MOD_MENU_DRAMA:
+                if (!MOD_DRAMA_ON()) {
+                    g_api.PlaySfx(SFX_UI_ERROR); // the line is not on this menu
+                    break;
+                }
                 g_api.PlaySfx(SFX_UI_CONFIRM);
                 ModSndSelect(1);
                 ModSoundInit();

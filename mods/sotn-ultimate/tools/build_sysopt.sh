@@ -91,6 +91,24 @@ VERSION=us mipsel-linux-gnu-cpp -Iinclude -Iinclude/psxsdk -Isrc/dra -lang-c \
     mipsel-linux-gnu-as -Iinclude -march=r3000 -mtune=r3000 -no-pad-sections \
         -O1 -G0 -o "$OUT/holder.o"
 
+# 095_39: the Alucard easy controls (src/easy/*.c: the L1/R1 spells, the R2 transformation ring) live in ARC_F2 too
+# 099: r1_easy is not part of ARC_F2 any more (it is the new resident area, build_newarea.sh)
+for src in; do
+VERSION=us mipsel-linux-gnu-cpp -Iinclude -Iinclude/psxsdk -Isrc/dra -lang-c \
+    -undef -Wall -fno-builtin -Dmips -D__GNUC__=2 -D__OPTIMIZE__ -D__mips__ -D__mips \
+    -Dpsx -D__psx__ -D__psx -D_PSYQ -D__EXTENSIONS__ -D_MIPSEL -D_LANGUAGE_C \
+    -DLANGUAGE_C -DNO_LOGS -DHACKS -DUSE_INCLUDE_ASM -D_internal_version_us -DSOTN_STR $SYSOPT_DEFS \
+    mods/sotn-ultimate/src/easy/$src.c | tools/sotn_str/target/release/sotn_str process |
+    iconv --from-code=UTF-8 --to-code=Shift-JIS |
+    bin/cc1-psx-26 -G0 -w -funsigned-char -fpeephole -ffunction-cse \
+        -fpcc-struct-return -fcommon -fverbose-asm -msoft-float -g -quiet \
+        -mcpu=3000 -fgnu-linker -mgas -gcoff -O2 |
+    python3 tools/maspsx/maspsx.py --expand-div --aspsx-version=2.34 |
+    mipsel-linux-gnu-as -Iinclude -march=r3000 -mtune=r3000 -no-pad-sections \
+        -O1 -G0 -o "$OUT/$src.o"
+done
+mipsel-linux-gnu-nm --defined-only "$OUT/sysopt.o" "$OUT/holder.o" | awk 'NF == 3 {print $3}' | sort -u > "$OUT/defined.txt"
+
 # DRA's functions / statics they call (this build's addresses)
 : > "$OUT/syms.txt"
 # v1.5 auto list covers sysopt.o and holder.o; KO manual list had the same DRA names plus cheat helpers, see M2 report
@@ -98,7 +116,7 @@ VERSION=us mipsel-linux-gnu-cpp -Iinclude -Iinclude/psxsdk -Isrc/dra -lang-c \
 # (ModHdEntry, ModHdOrig0/1, ModStairsA/B: computed by the python block below, not in dra.elf), so those are dropped here; and the
 # python block reads HandleDamage and func_80109990 from syms.txt although sysopt.o does not call them, so they are added by name.
 for s in $({ mipsel-linux-gnu-nm -u "$OUT/sysopt.o" "$OUT/holder.o" | awk 'NF == 2 {print $2}'; echo HandleDamage; echo func_80109990; } \
-            | grep -v -x -E 'ModHdEntry|ModHdOrig0|ModHdOrig1|ModStairsA|ModStairsB' | sort -u); do
+            | grep -v -x -E 'ModHdEntry|ModHdOrig0|ModHdOrig1|ModStairsA|ModStairsB' | sort -u | grep -v -x -F -f "$OUT/defined.txt"); do
     a=$(mipsel-linux-gnu-nm build/us/dra.elf | awk -v s="$s" '$3==s{print $1}')
     if [ -z "$a" ]; then # (main SDK functions: config/symbols.us.txt)
         a=$(awk -v s="$s" '$1==s{sub(/;/,"",$3); sub(/^0x/,"",$3); print $3}' config/symbols.us.txt)
@@ -142,8 +160,8 @@ SECTIONS {
     . = $ADDR;
     .text : { *(.text) }
     .rodata : { *(.rodata*) *(.rdata) }
-    .data : { *(.data) *(.sdata) }
-    .bss : { *(.bss) *(.sbss) *(COMMON) }
+    .data : { *(.data) *(.sdata) *(.bss) *(.sbss) *(COMMON) } /* 095_39: the easy controls' zero statics are file data (the .bss check below needs it empty) */
+    .bss : { }
     /DISCARD/ : { *(.reginfo) *(.pdr) *(.mdebug*) *(.comment) *(.gnu*) *(.MIPS*) }
 }
 EOF

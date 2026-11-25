@@ -186,6 +186,70 @@ bool CheckBackForwardInput(void) {
     return 0;
 }
 
+#if defined(MOD_SATURN)
+// 097: the six spell commands are "R1 held (the tick's MOD_EASY_R1 bit) + a face button + the posture"; the casting is the game's own
+// (CastSpell, Perform*, LearnSpell). steps: 1 = standing / walking (MOD_CAST_STEP), 2 = crouching, 4 = not while g_Player.unk72.
+// The face button is used up when the spell goes off (as the retail commands' last button was).
+void PerformDarkMetamorphosis(void);
+void PerformSummonSpirit(void);
+void PerformHellfire(void);
+void PerformTetraSpirit(void);
+void PerformSoulSteal(void);
+void PerformSwordBrothers(void);
+static bool CheckEasy(u32 btn, s32 spell, void (*perform)(void), s32 steps) {
+    if (!(g_Player.padPressed & MOD_EASY_R1) || !(g_Player.padTapped & btn) || (g_Player.unk46 & 0x8000) ||
+        ((steps & 4) && g_Player.unk72)) {
+        return 0;
+    }
+    if (!(((steps & 1) && MOD_CAST_STEP()) || ((steps & 2) && PLAYER.step == Player_Crouch)) || !CastSpell(spell)) {
+        return 0;
+    }
+    perform();
+    LearnSpell(spell);
+    g_Player.padTapped &= ~btn;
+    g_Player.padPressed &= ~btn;
+    return 1;
+}
+
+bool CheckDarkMetamorphosisInput(void) {
+    return CheckEasy(PAD_TRIANGLE, SPELL_DARK_METAMORPHOSIS, PerformDarkMetamorphosis, 1);
+}
+
+bool CheckSummonSpiritInput(void) {
+    return CheckEasy(PAD_CROSS, SPELL_SUMMON_SPIRIT, PerformSummonSpirit, 2);
+}
+
+bool CheckHellfireInput(void) {
+    return CheckEasy(PAD_SQUARE, SPELL_HELLFIRE, PerformHellfire, 1 | 2 | 4);
+}
+
+bool CheckTetraSpiritInput(void) {
+    return CheckEasy(PAD_TRIANGLE, SPELL_TETRA_SPIRIT, PerformTetraSpirit, 2);
+}
+
+bool CheckSoulStealInput(void) {
+    return CheckEasy(PAD_CIRCLE, SPELL_SOUL_STEAL, PerformSoulSteal, 1);
+}
+
+bool CheckSwordBrothersInput(void) {
+    ButtonComboState* c = &g_ButtonCombo[COMBO_SWORD_BROTHERS];
+
+    if (c->buttonsCorrect == COMBO_COMPLETE) { // the familiars' state, as the retail check leaves it
+        if (--c->timer == 0) {
+            c->buttonsCorrect = 0;
+            g_Player.unk70 = 1;
+        }
+        return 0;
+    }
+    if (CheckEasy(PAD_CIRCLE, SPELL_SWORD_BROTHERS, PerformSwordBrothers, 2)) {
+        c->buttonsCorrect = COMBO_COMPLETE;
+        c->timer = 20;
+        g_Player.unk70 = 1;
+        return 1;
+    }
+    return 0;
+}
+#else
 bool CheckDarkMetamorphosisInput(void) {
     s32 directionsPressed;
     s32 up_forward;
@@ -798,6 +862,8 @@ bool CheckSwordBrothersInput(void) {
     }
     return 0;
 }
+
+#endif
 
 void CheckSpecialMoveInputs(void) {
     s32 result;

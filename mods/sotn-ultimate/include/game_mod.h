@@ -250,6 +250,58 @@
 // Alucard's Muramasa counter): MarPsxInit converts that (back = the Doll, as a
 // PSP new game) and sets the bit
 #define MOD_FLAG_MARIA_SUB2 0x10
+// 097: easy controls: the tick (ARC_F2 r1_easy.c) puts this bit, the physical L3 (PAD_L3 = 0x0200 in the PS1 layout; 0x0002 is R2 = the wolf, never use it; the tick clears a real stick
+// click first), into g_pads[0].pressed while R1 is held; DRA's spell checks (704D0.c) read it from g_Player.padPressed
+#define MOD_EASY_R1 0x0200
+// 099: the new resident area (memory map: 0x801F3000..0x801FAFFF, 32 KB, filled upward from the bottom; the ARC_KO.BIN chain loads it at every game load,
+// like ARC_F2.BIN, so its state resets the same way). Header (16 B): +0 magic, +4 version, +8 entry of the easy tick, +12 reserved. The marker is
+// written by ARC_F2's glue on the first tick and checked every frame: if it changes, something overwrote the area's top.
+#define MOD_NEWAREA_BASE 0x801F3000
+#define MOD_NEWAREA_LIMIT 0x8000
+#define MOD_NEWAREA_MAGIC 0x4B4F5231 // 'KOR1'
+#define MOD_NEWAREA_MARKER_ADDR 0x801FAFFC
+#define MOD_NEWAREA_MARKER 0x4B4F5245 // 'KORE'
+#define MOD_NEWAREA_ALERT_ADDR 0x801FAFF8 // set to 0xDEAD0001 by the glue when the marker is found changed (readable from the emulator)
+// 099b: the area's 32 B header: +0 magic, +4 version, +8 easy tick, +12 cheat tick, +16 popup draw (u32 entries, 0 = none), the code from +32
+#define MOD_NEWAREA_CODE (MOD_NEWAREA_BASE + 32)
+#define MOD_NEWAREA_SLOT_TICK 2
+#define MOD_NEWAREA_SLOT_CHEAT 3
+#define MOD_NEWAREA_SLOT_POP 4
+// the cheats' bit numbers in g_CheatMask (ARC_F2's sysopt.c) and the popup's layout (shared with the new area: src/easy/newarea_cheat.c / newarea_pop.c)
+#define CHEAT_MP 0
+#define CHEAT_HEARTS 1
+#define CHEAT_MPREGEN 2
+#define CHEAT_STAIRS 3
+#define CHEAT_FOOD 4
+#define CHEAT_INVINC 5
+#define CHEAT_HP 6
+#define CHEAT_GOLD 7
+#define CHEAT_JUMP 8
+#define CHEAT_MOON 9
+#define MOD_SYS_NOPT 4    // the Player Select options, rows 0 to 3 of the popup
+#define MOD_SYS_NCHEAT 10 // the cheats, rows NOPT and after
+#define MOD_SYS_VALUE_DX 112
+// each option: the flag bits it owns, and per choice (the Player Select's order, src/st/sel/2C048.c) their value and its name
+typedef struct {
+    u8 mask;
+    u8 n;
+    u8 val[3];
+    u8 name[3];
+} SysOptRow;
+// what the popup's draw needs from ARC_F2's statics (passed in, never read by address)
+typedef struct {
+    s32 top;       // the first row shown
+    s32 popn;      // rows of the open popup
+    s32 locks;     // the locked options (bit per option)
+    s32 cheatMask; // g_CheatMask
+    const SysOptRow* rows;
+} ModPopArgs;
+typedef struct {
+    s32 eat;      // the cross, used up by a form's special: hidden from the game until released
+    s32 ringPrim; // the ring's first prim (-1: none)
+    s32 sel;      // 100: the place chosen while the ring was open (index + 1, 0: none)
+    s32 anim;     // 100: the ring's open / close step 0..3
+} ModEasyState;
 #define MOD_PSP_XA_FIRST 0x358 // first / last voice id with a PSP version
 #define MOD_PSP_XA_LAST 0x532
 // The third dub, "JP" (Player Select "Dub" row: PSP / PS1 / JP): the

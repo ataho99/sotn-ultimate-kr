@@ -1425,7 +1425,7 @@ def c5_cells():
         if chg:
             fail("5", "%s changes existing engtab_253 entries %s" % (os.path.basename(ENG_BUILD_PATH), "".join(chg)))
     # ARC_KO layout defines the build asserts
-    for name, val in (("KO_GLYPH_BASE", 0xF040), ("KO_ARC_SIZE", 34816), ("KO_EQUIP_BASE", 0x8009F500),
+    for name, val in (("KO_GLYPH_BASE", 0xF040), ("KO_ARC_SIZE", 43008), ("KO_EQUIP_BASE", 0x8009F500),
                       ("KO_EQUIP_SIZE", 0xB00), ("KO_SHEET2_ADDR", 0x8009F100), ("KO_PROMO_TBL_SLOTS", 112)):
         v = dra_define(dra, name)
         if v != val:

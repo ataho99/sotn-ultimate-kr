@@ -1194,7 +1194,7 @@ static void ModSoundDraw(void) {
     ModPanelFrame(MOD_SOUND_PANEL_X, MOD_SOUND_PANEL_Y, MOD_SOUND_PANEL_HALF,
                   MOD_SOUND_PANEL_H);
     if (g_ModSndDrama) {
-        ModGothic("drama cd", MOD_CHARSEL_CENTRE_X - 64, MOD_SOUND_PANEL_Y + 10,
+        ModGothic("drama mode", MOD_CHARSEL_CENTRE_X - 80, MOD_SOUND_PANEL_Y + 10,
                   0x200);
     } else {
         ModGothic("sound mode", MOD_CHARSEL_CENTRE_X - 80,

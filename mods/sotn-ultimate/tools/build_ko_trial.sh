@@ -50,9 +50,14 @@ REALCPP=$(PATH="$(echo "$PATH" | tr ':' '\n' | grep -v ko_wrappers | paste -sd: 
 # (gen_ps1jp_banks.py + game_mod.h MOD_FIELD_*_BANKS); 0 = the banks of 094_02 (PSP / JP / retail by Dub)
 FV_DEFS=""
 if [ "${KO_FIELD_VOICE:-0}" = 1 ]; then FV_DEFS="-DMOD_FIELD_JP_VOICE"; fi
+# KO_DRAMA (095_36, ko_data/빌드레시피.env): only the DEFAULT of the one flag byte in SEL (g_ModDramaFlag, marker "DRMFLAG" + byte;
+# 0 = five-line file select menu, 1 = six lines with Drama mode). The Drama code and picture are always built in; the assembling
+# tool sets the byte on the disc image when the user's drama CD material is in.
+DR_DEFS="-DMOD_DRAMA_DEFAULT=${KO_DRAMA:-0}"
+echo "KO_DRAMA=${KO_DRAMA:-0} (flag byte default ${KO_DRAMA:-0})"
 cat > "$KO_WRAPPERS/mipsel-linux-gnu-cpp" <<EOF
 #!/usr/bin/env bash
-exec "$REALCPP" "\$@" -DMOD_KO -DMOD_KO_EQUIP $FV_DEFS # KO trial: equipment_ko.h/accessories_ko.h gate (config_us.h); OFF builds never define it
+exec "$REALCPP" "\$@" -DMOD_KO -DMOD_KO_EQUIP $FV_DEFS $DR_DEFS # KO trial: equipment_ko.h/accessories_ko.h gate (config_us.h); OFF builds never define it
 EOF
 chmod +x "$KO_WRAPPERS/mipsel-linux-gnu-cpp"
 export PATH="$KO_WRAPPERS:$PATH"
@@ -201,6 +206,8 @@ python3 mods/sotn-ultimate/tools/gen_menu_text.py
 python3 mods/sotn-ultimate/tools/gen_ko_equip.py
 python3 mods/sotn-ultimate/tools/gen_ko_cfg.py # System (config) screen strings -> src/dra/gen/us/ko_cfg_str.h
 python3 mods/sotn-ultimate/tools/gen_ko_sub.py # familiar voice subtitles -> src/servant/ko_sub_str.h (094_15)
+python3 mods/sotn-ultimate/tools/gen_ko_sub8.py # 100: the same lines as 8px rows + aux cells -> mods/sotn-ultimate/src/easy/sub_str.h (the new resident area)
+python3 mods/sotn-ultimate/tools/gen_ring_art.py # 100: the transformation ring's release icon -> mods/sotn-ultimate/src/easy/ring_art.h
 python3 mods/sotn-ultimate/tools/gen_ko_sound.py # Sound Mode strings -> mods/sotn-ultimate/src/menu/mod_sound_ko_str.h (094_12)
 python3 mods/sotn-ultimate/tools/gen_ko_save.py # save-room texts -> src/dra/gen/us/ko_save_str.h
 python3 mods/sotn-ultimate/tools/gen_ko_shop.py # Librarian shop label words / document names / descriptions -> src/st/lib/gen/ko_shop_str.h (0.9.4)
@@ -555,6 +562,8 @@ python3 mods/sotn-ultimate/tools/gen_ko_font8.py --patch
 # after Alucard's sprites in build/us/ARC_F2.BIN (mods/sotn-ultimate/src/menu/sysopt.c),
 # against DRA's addresses (checked again after make disk below)
 bash mods/sotn-ultimate/tools/build_sysopt.sh
+# 099: the new resident area (r1_easy at 0x801F3000+16) -> build/us/mod/newarea/newarea.bin, placed by the ARC_KO step below
+bash mods/sotn-ultimate/tools/build_newarea.sh
 # v1.5 port: Richter's / the Marias' pause menu drawing (Ultimate balance), read into g_Pix[1] when it opens
 # the Richter / Maria pause menu in Korean: strings from 번역_리히터마리아메뉴.tsv (8px plate cells + info bar font)
 .venv/bin/python mods/sotn-ultimate/tools/gen_ko_cm.py
@@ -866,7 +875,7 @@ sheet = bytes.fromhex('f080f05ef046f067f052f141f1ab f081f0abf1ccf0a9f0b0f0caf071
 # 67B + 1B compiler NUL = 104B. Sheet starts at +36 (KO_STR_BASE+36).
 assert ro[:34] == exp and ro[34:36] == bytes(2) and ro[36:103] == sheet and ro[103:] == bytes(1) and len(ro) == 104, (ro.hex(), len(ro))
 ro = ro + bytes(104 - len(ro))
-assert arc_size == 34816, arc_size
+assert arc_size == 43008, arc_size
 assert eq_base == 0x8009F500 and eq_size == 0xB00, (hex(eq_base), hex(eq_size))
 assert len(raw) + len(blob) + len(ro) == 24280, (len(raw), len(blob), len(ro))
 gap_end = eq_base - 0x80099000  # 25856: tail base offset in ARC (RAM 0x8009F500)
@@ -941,6 +950,10 @@ blk8 = open(KO_8PBLK, 'rb').read()
 assert hashlib.sha256(blk8).hexdigest() == 'c1692763d58a381e6e1249f494ef23b80f40689855b0261a7ebf25dbac0f7095', hashlib.sha256(blk8).hexdigest()
 assert len(blk8) <= 4096, len(blk8)
 img = img + bytes(bundle) + bytes(2048 - len(bundle)) + bytes(blk8) + bytes(4096 - len(blk8))
+# 099b: blocks 17-18 = the new resident area's first two sectors (cd.c's copy puts them at 0x801F3000 / 0x801F3800: KO_8P_BASE + 0x1000); header + code, zero padded
+newarea = open('build/us/mod/newarea/newarea.bin', 'rb').read()
+assert 32 < len(newarea) <= 8192 and newarea[:4] == bytes.fromhex('31524f4b'), len(newarea) # 100: four sectors (blocks 17-20 -> 0x801F3000..0x801F4FFF)
+img = img + newarea + bytes(8192 - len(newarea))
 assert len(img) == arc_size, (len(img), arc_size)
 # 094_12 Sound Mode text (gen_ko_sound.py): strings live in the A-gap zero runs (resident from the title on), SEL only holds
 # their addresses (SEL has no room). Every run must still be zero (nothing else uses it).
@@ -998,35 +1011,56 @@ python3 - <<'PYEOF'
 import struct
 exe, arc = 'build/us/main.exe', 'build/us/ARC_KO.BIN'
 blob = open(arc, 'rb').read()
-assert len(blob) == 34816, (arc, len(blob))
+assert len(blob) == 43008, (arc, len(blob))
+blob34 = blob[:34816]  # 099: the 17-sector part (the new area's sector is appended last)
 b = bytearray(open(exe, 'rb').read())
 tsize = struct.unpack('<I', b[0x1C:0x20])[0]
 if len(b) == 563200 and tsize == 0x89000:
-    b = b + blob
+    b = b + blob34
     struct.pack_into('<I', b, 0x1C, 0x91800)
     open(exe, 'wb').write(bytes(b))
     print('main.exe: 598016, t_size 0x91800')
 elif len(b) == 587776 and tsize == 0x8F000 and bytes(b[-24576:]) == bytes(blob[:24576]):
-    b = b[:-24576] + blob
+    b = b[:-24576] + blob34
     struct.pack_into('<I', b, 0x1C, 0x91800)
     open(exe, 'wb').write(bytes(b))
     print('main.exe: re-extended 587776->598016, t_size 0x91800')
 elif len(b) == 591872 and tsize == 0x90000:
     # 14-sector tail (any bytes: tail TUs changed) replaced
     # by the 17-sector blob.
-    b = b[:-28672] + blob
+    b = b[:-28672] + blob34
     struct.pack_into('<I', b, 0x1C, 0x91800)
     open(exe, 'wb').write(bytes(b))
     print('main.exe: 14-sector tail replaced (591872->598016, t_size 0x91800)')
-elif len(b) == 598016 and tsize == 0x91800 and bytes(b[-34816:]) == blob:
-    print('main.exe: already extended (598016, t_size 0x91800)')
+elif len(b) == 598016 and tsize == 0x91800 and bytes(b[-34816:]) == blob34:
+    print('main.exe: 17-sector tail already in (598016, t_size 0x91800)')
 elif len(b) == 598016 and tsize == 0x91800:
-    b = b[:-34816] + blob
+    b = b[:-34816] + blob34
     open(exe, 'wb').write(bytes(b))
     print('main.exe: stale tail refreshed (598016, t_size 0x91800)')
+elif len(b) == 606208 and tsize == 0x93800:
+    # 099 rerun (the build runs twice when the disc geometry moved): fold the tail back to the 17-sector geometry, the 099 stage below grows it again
+    b = b[:-43008] + blob34
+    struct.pack_into('<I', b, 0x1C, 0x91800)
+    open(exe, 'wb').write(bytes(b))
+    print('main.exe: 099 rerun, folded back to 598016 / t_size 0x91800')
 else:
     assert False, (len(b), hex(tsize))
-open('build/us/DUMMY.BIN', 'wb').write(bytes(563200))  # 275 sectors (earlier geometry; a 273-sector disc shrank every checked literal by 2)
+# 100: the tail grows by four sectors (the new resident area's): 598016 -> 606208, t_size 0x91800 -> 0x93800
+b = bytearray(open(exe, 'rb').read())
+tsize = struct.unpack('<I', b[0x1C:0x20])[0]
+if len(b) == 598016 and tsize == 0x91800:
+    b = b[:-34816] + blob
+    struct.pack_into('<I', b, 0x1C, 0x93800)
+    open(exe, 'wb').write(bytes(b))
+    print('main.exe: 100 tail +4 sectors (606208, t_size 0x93800)')
+elif len(b) == 606208 and tsize == 0x93800:
+    b = b[:-43008] + blob
+    open(exe, 'wb').write(bytes(b))
+    print('main.exe: 100 tail refreshed (606208, t_size 0x93800)')
+else:
+    assert False, ('099 tail', len(b), hex(tsize))
+open('build/us/DUMMY.BIN', 'wb').write(bytes(563200))  # 275 sectors = retail SLUS's size: it holds SLUS's old slot, so the files after it keep their LBA (SLUS itself is last now, any size; 099's +1 sector there moves nothing)
 mf = 'config/disk.us.lba'
 lines = open(mf).read().splitlines()
 slus = [l for l in lines if l.startswith('SLUS_000.67;1')][0]
@@ -1037,6 +1071,8 @@ rest.append(slus)
 open(mf, 'w').write('\n'.join(rest) + '\n')
 print('manifest: DUMMY.BIN at slot #2, SLUS_000.67 last')
 PYEOF
+# 095_39: main.exe is retail again outside the KO tail: undo what the earlier builds (095_37 / 095_38) patched into it in place
+python3 mods/sotn-ultimate/tools/patch_exe_r1.py --restore
 # Richter in the coat in the endings: build/us/SELRIC2.BIN (SEL.BIN + the
 # RIC2 art); made again below from the final SEL
 (cd mods/sotn-ultimate/tools && python3 build_selric2.py)
@@ -1088,6 +1124,16 @@ while read -r s _ a; do
     fi
 done < build/us/mod/mar2/mod_syms.txt
 echo "OK   MARIA2 DRA symbols ($(wc -l < build/us/mod/mar2/mod_syms.txt))"
+# 099: the same for the new resident area (r1_easy linked at 0x801F3010 against dra.elf symbols; the main exe's ones do not move)
+while read -r s _ a; do
+    a=${a%;}
+    want=$(mipsel-linux-gnu-nm build/us/dra.elf | awk -v s="$s" '$3==s{print "0x" $1}')
+    if [ -n "$want" ] && [ "$want" != "$a" ]; then
+        echo "FAIL newarea linked against $s $a (DRA has $want): run the build again"
+        exit 1
+    fi
+done < build/us/mod/newarea/syms.txt
+echo "OK   newarea DRA symbols ($(wc -l < build/us/mod/newarea/syms.txt)), $(stat -c %s build/us/mod/newarea/newarea.bin) B of $((0x8000))"
 # the same for the System screen options' code in ARC_F2.BIN
 # (syms.txt also holds the cheats' derived values: ModHdEntry = HandleDamage, ModStairsA/B = func_80109990 + 0x2D2 / + 0x35E,
 # and the two instruction words ModHdOrig0/1, which are not addresses: build_sysopt.sh already checked them against the built DRA)

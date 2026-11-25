@@ -1751,6 +1751,23 @@ void MenuSpellsDraw(MenuContext* ctx) {
             charNum -= 2;
         }
 #endif
+#if defined(MOD_SATURN)
+        {
+            // the spell commands are "R1 + face button" now (704D0.c CheckEasy): crouching ones lead with the down arrow
+            // (the arrow glyph is read from Hellfire's combo, its 2nd char)
+            static const u8 faceBtn[8] = {TRIANGLE, CROSS, SQUARE, TRIANGLE, CROSS, CIRCLE, CROSS, CIRCLE};
+            s32 ex = startXCoord;
+            if ((0x8A >> spell) & 1) { // Summon, Tetra, Sword Brothers
+                MenuDrawChar(g_SpellDefs[SPELL_HELLFIRE].combo[1], ex, yCoord, ctx);
+                MenuDrawChar(CH('+'), ex + 8, yCoord, ctx);
+                ex += 16;
+            }
+            MenuDrawChar(CH('R'), ex, yCoord, ctx);
+            MenuDrawChar(CH('1'), ex + 8, yCoord, ctx);
+            MenuDrawChar(CH('+'), ex + 16, yCoord, ctx);
+            MenuDrawChar(faceBtn[spell], ex + 24, yCoord, ctx);
+        }
+#else
         if (spell != SPELL_WING_SMASH) {
             MenuDrawStr(g_SpellDefs[spell].combo, startXCoord, yCoord, ctx);
             MenuDrawChar(CH('+'), startXCoord + (charNum * 8), yCoord, ctx);
@@ -1815,6 +1832,7 @@ void MenuSpellsDraw(MenuContext* ctx) {
             MenuDrawChar(
                 CH('?'), startXCoord + 24 + (charNum * 8), yCoord, ctx);
         }
+#endif
         MenuDrawStr(g_MenuStr[13], 292, yCoord, ctx);
         MenuDrawInt(g_SpellDefs[spell].mpUsage, 316, yCoord, ctx);
     }
@@ -2019,6 +2037,7 @@ void MenuSystemDraw(MenuContext* ctx) {
             kx[k] = 0x20;
             ky[k] = y + k * 0x10;
         }
+        *(volatile u32*)KO_EQ_OVSIG_ADDR = 0; /* 098d: force the cells' upload (the relic list leaves the rows overwritten, the signature unchanged) */
         KO_EqOvDraw(kn, kx, ky, kc, ctx);
     }
 #else

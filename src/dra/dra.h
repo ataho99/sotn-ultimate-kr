@@ -745,7 +745,7 @@ extern const char* g_MenuStr[110];
 // glyphs + blob slot + strings slot + gap + ko_equip tail + JP bundle 1 +
 // 8px block 2, zero-padded). Multiple of 2048 so the loader callback copies
 // a fixed CD_BLOCK_LEN per block.
-#define KO_ARC_SIZE 34816 // glyph area 28672 + bundle 2048 + 8px 4096 (17 sectors)
+#define KO_ARC_SIZE 43008 // glyph area 28672 + bundle 2048 + 8px 4096 + the new resident area's 4 sectors 8192 (21 sectors; block 17 lands at 0x801F3000, 18 at 0x801F3800, 19 at 0x801F4000, 20 at 0x801F4800)
 #endif
 #if defined(MOD_SATURN)
 extern EnemyDef g_EnemyDefs[426];

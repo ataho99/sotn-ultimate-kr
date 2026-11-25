@@ -105,8 +105,8 @@ __asm__(".text\n"
 #endif
 
 #define ROW 6     // the row, after the retail six (16 px apart: y 0x90); ROW + 1 = the Cheats row (094_12)
-#define NOPT 4    // the Player Select options, rows 0 to 3 of the popup
-#define NCHEAT 10 // the cheats, rows NOPT and after
+#define NOPT MOD_SYS_NOPT    // the Player Select options, rows 0 to 3 of the popup
+#define NCHEAT MOD_SYS_NCHEAT // the cheats, rows NOPT and after
 #define ROWS (NOPT + NCHEAT)
 // 094_12: two popups, no scrolling: the options (rows 0..NOPT-1) and the cheats
 // (rows NOPT..ROWS-1), g_PopMode 0 / 1
@@ -128,8 +128,9 @@ __asm__(".text\n"
 #define POP_Y(n) (188 - POP_H(n)) // ends at 188: the info bar starts at 193
 #define POP_W 168 // the right margin as wide as the left one
 // v1.5 non-PTBR window was POP_X 172 POP_Y 124 POP_W 168 POP_H 64; merged POP_Y(NOPT) = 124 and POP_H(NOPT) = 64 match, PTBR width differs, see M2 report
-#define VALUE_DX 112
+#define VALUE_DX MOD_SYS_VALUE_DX
 
+#if !defined(MOD_SYSOPT_KO) /* 095_39: the English labels are only drawn by the non-KO path; the KO build has its own (g_SysOptLabelKo) */
 static const char g_SysOptName[7][8] = {
     _S("PS1"), _S("Saturn"), _S("PSP"), _S("JP"),
     _S("STN"), // 0.9.4: the Dub row's "Saturn" overflows its box -> "STN" (index 4)
@@ -140,6 +141,7 @@ static const char* const g_SysOptLabel[ROWS] = {
     _S("Inf. MP"), _S("Inf. Hearts"), _S("Fast MP regen"), _S("Fast stairs"),
     _S("Full heal"), _S("Invincible"), _S("Inf. HP"), _S("Inf. Gold"),
     _S("Inf. jump"), _S("Moon jump")};
+#endif
 #if defined(MOD_PTBR)
 #include "mod_ptbr_sysopt.h"
 #define SYSOPT_NAME()                                                          \
@@ -152,12 +154,7 @@ static const char* const g_SysOptLabel[ROWS] = {
 #endif
 // each option: the flag bits it owns, and per choice (the Player Select's
 // order, src/st/sel/2C048.c) their value and its name
-typedef struct {
-    u8 mask;
-    u8 n;
-    u8 val[3];
-    u8 name[3];
-} SysOptRow;
+// (SysOptRow: game_mod.h)
 static const SysOptRow g_SysOptRows[NOPT] = {
     {MOD_FLAG_BOSS_RIC_SATURN, 2, {0, MOD_FLAG_BOSS_RIC_SATURN}, {0, 1}},
     {MOD_FLAG_MARIA_BOSS_PSP, 2, {0, MOD_FLAG_MARIA_BOSS_PSP}, {1, 2}},
@@ -174,16 +171,7 @@ static const SysOptRow g_SysOptRows[NOPT] = {
 // game load. ModSysOptTick runs every frame of play (DRA's HandlePlay, through
 // the same kind of stub as the menu's three entries) and is a no-op when
 // this file is not the one loaded (Richter / Maria games).
-#define CHEAT_MP 0
-#define CHEAT_HEARTS 1
-#define CHEAT_MPREGEN 2
-#define CHEAT_STAIRS 3
-#define CHEAT_FOOD 4
-#define CHEAT_INVINC 5
-#define CHEAT_HP 6
-#define CHEAT_GOLD 7
-#define CHEAT_JUMP 8
-#define CHEAT_MOON 9
+// (the cheats' bit numbers CHEAT_*: game_mod.h)
 #define CHEAT_ON(c) ((g_CheatMask >> (c)) & 1)
 static s32 g_CheatMask = 0;
 
@@ -204,67 +192,41 @@ static void CodeWord(u32* p, u32 v) {
     }
 }
 
-static void CodeHalf(u16* p, u16 v) {
-    if (*p != v) {
-        *p = v;
-        FlushCache();
+// ---- 099b: the easy tick, the cheats' tick and the Korean popup's draw live in the new resident area (MOD_NEWAREA_BASE, src/easy/*.c; loaded by the ARC_KO chain
+// right after this file). NewFn(slot) = the entry the area's 32 B header holds in that slot, or 0 when the area is not there (yet) / its marker was overwritten.
+// The state they need stays here (g_EasyState, g_CheatMask, the popup's statics) and is passed in, so it resets with every game load as before.
+static ModEasyState g_EasyState = {0, -1, 0, 0};
+static u32 NewFn(s32 slot) {
+    volatile u32* h = (volatile u32*)MOD_NEWAREA_BASE;
+    volatile u32* mk = (volatile u32*)MOD_NEWAREA_MARKER_ADDR;
+
+    if (h[0] != MOD_NEWAREA_MAGIC) {
+        return 0; // not loaded (yet)
     }
+    if (*mk == 0) {
+        *mk = MOD_NEWAREA_MARKER; // first call since the load
+    } else if (*mk != MOD_NEWAREA_MARKER) {
+        *(volatile u32*)MOD_NEWAREA_ALERT_ADDR = 0xDEAD0001; // the area's top was overwritten: stop using it
+        return 0;
+    }
+    return h[slot];
 }
 
 void ModSysOptTick(void) {
-    u32* hd = (u32*)&ModHdEntry;
-    s32 m = g_CheatMask;
+    void (*easy)(ModEasyState*) = (void (*)(ModEasyState*))NewFn(MOD_NEWAREA_SLOT_TICK);
+    void (*cheat)(s32) = (void (*)(s32))NewFn(MOD_NEWAREA_SLOT_CHEAT);
 
+    if (easy) {
+        easy(&g_EasyState);
+    }
     g_ModDub.cheats = 0; // (Richter's / the Marias' cheats, DRA HandlePlay: none in his game)
-
-    if (m & (1 << CHEAT_HP) && g_Status.hp > 0) {
-        g_Status.hp = g_Status.hpMax;
-    }
-    if (m & (1 << CHEAT_MP)) {
-        g_Status.mp = g_Status.mpMax;
-    }
-    if (m & (1 << CHEAT_HEARTS)) {
-        g_Status.hearts = g_Status.heartsMax;
-    }
-    if (m & (1 << CHEAT_GOLD)) {
-        g_Status.gold = 9999999;
-    }
-    // the retail regen is 1 MP per 64 frames (HUD update): 8 times as fast
-    if (m & (1 << CHEAT_MPREGEN) && !(g_GameTimer & 7) &&
-        !(g_Status.D_80097BF8 & 1)) {
-        g_Status.mp++;
-        if (g_Status.mp > g_Status.mpMax) {
-            g_Status.mp = g_Status.mpMax;
-        }
-    }
-    // potions, food: the heal waiting for the next player update (healKind
-    // 1; the Healing Mail's trickle is 2) becomes a full heal
-    if (m & (1 << CHEAT_FOOD) && g_Player.healKind == 1 &&
-        g_Player.healAmount) {
-        g_Player.healAmount = g_Status.hpMax;
-    }
-    // invincible: HandleDamage returns 0 at once ("jr ra; move v0, zero");
-    // off: the built words back (also after a game load left it patched)
-    if (m & (1 << CHEAT_INVINC)) {
-        CodeWord(hd, 0x03E00008);
-        CodeWord(hd + 1, 0x00001021);
+    if (cheat) {
+        cheat(g_CheatMask);
     } else {
+        // the area is not there: the invincible patch must still come off (a game load can leave HandleDamage patched)
+        u32* hd = (u32*)&ModHdEntry;
         CodeWord(hd, (u32)&ModHdOrig0);
         CodeWord(hd + 1, (u32)&ModHdOrig1);
-    }
-    // stairs: no slowdown
-    CodeHalf((u16*)&ModStairsA, m & (1 << CHEAT_STAIRS) ? 0x1000 : 0x1482);
-    CodeHalf((u16*)&ModStairsB, m & (1 << CHEAT_STAIRS) ? 0x1000 : 0x1482);
-    // jumps: the double jump (Leap Stone) is allowed again in the air; the
-    // moon jump holds the rise while Cross is held
-    if (PLAYER.step == Player_Jump || PLAYER.step == Player_Fall) {
-        if (m & (1 << CHEAT_JUMP)) {
-            g_Player.unk44 &= ~1;
-        }
-        if (m & (1 << CHEAT_MOON) && (g_Player.padPressed & PAD_CROSS) &&
-            PLAYER.velocityY > FIX(-3)) {
-            PLAYER.velocityY = FIX(-3);
-        }
     }
 }
 
@@ -497,52 +459,7 @@ static void PopInput(MenuContext* pop) {
 // from the xset: rows of 번역_설정화면.tsv). One call draws up to 16 names (a row's label and value);
 // locked rows are drawn apart, grey (D_8013784C), as the English text was
 #define KO_EQUIP_SEL 0x8009F500 // src/dra/dra.h (build_sysopt.sh checks it)
-typedef void (*KoDrawFn)(const char**, const s32*, const s32*, s32, MenuContext*);
-static const char* const g_SysOptLabelKo[ROWS] = {
-    ko_xset_r0, ko_xset_r1, ko_xset_r2, ko_xset_r3, ko_xset_c0, ko_xset_c1,
-    ko_xset_c2, ko_xset_c3, ko_xset_c4, ko_xset_c5, ko_xset_c6, ko_xset_c7,
-    ko_xset_c8, ko_xset_c9};
-// as g_SysOptName: PS1, Saturn (new: 새턴), PSP, JP (never shown), STN, OFF, ON
-static const char* const g_SysOptNameKo[7] = {
-    ko_xset_ps1, ko_xset_sat, ko_xset_psp, ko_xset_psp,
-    ko_xset_stn, ko_xset_off, ko_xset_on};
-
-static void PopDrawKo(MenuContext* ctx, s32 x, s32 y, s32 locks) {
-    const char* names[2 * NCHEAT];
-    s32 xs[2 * NCHEAT];
-    s32 ys[2 * NCHEAT];
-    const SysOptRow* row;
-    s32 r, n, pass, locked, ry;
-
-    for (pass = 0; pass < 2; pass++) {
-        n = 0;
-        for (r = g_PopTop; r < g_PopTop + POPN; r++) {
-            locked = r < NOPT ? (locks >> r) & 1 : 0;
-            if (locked != pass) {
-                continue;
-            }
-            ry = y + (r - g_PopTop) * 16;
-            names[n] = g_SysOptLabelKo[r];
-            xs[n] = x;
-            ys[n] = ry;
-            n++;
-            if (r < NOPT) {
-                row = &g_SysOptRows[r];
-                names[n] = g_SysOptNameKo[row->name[SysOptCur(row)]];
-            } else {
-                names[n] = g_SysOptNameKo[CHEAT_ON(r - NOPT) ? 6 : 5];
-            }
-            xs[n] = x + VALUE_DX;
-            ys[n] = ry;
-            n++;
-        }
-        if (n) {
-            D_8013784C = pass;
-            ((KoDrawFn)KO_EQUIP_SEL)(names, xs, ys, n, ctx);
-        }
-    }
-    D_8013784C = 0;
-}
+// 099b: the 8px popup tables and PopDrawKo are in the new resident area (src/easy/newarea_pop.c)
 #endif
 
 // MenuSystemDraw's cursor box: runs every frame the System window is drawn
@@ -596,7 +513,20 @@ void ModSysOptSound(MenuContext* ctx) {
     }
     locks = SysOptLocks();
 #if defined(MOD_SYSOPT_KO)
-    PopDrawKo(ctx, x, y, locks);
+    {
+        void (*pop)(MenuContext*, s32, s32, ModPopArgs*) = (void (*)(MenuContext*, s32, s32, ModPopArgs*))NewFn(MOD_NEWAREA_SLOT_POP);
+
+        if (pop) {
+            ModPopArgs pa;
+
+            pa.top = g_PopTop;
+            pa.popn = POPN;
+            pa.locks = locks;
+            pa.cheatMask = g_CheatMask;
+            pa.rows = g_SysOptRows;
+            pop(ctx, x, y, &pa);
+        }
+    }
 #else
     for (r = g_PopTop; r < g_PopTop + POPN; r++, y += 16) {
         D_8013784C = r < NOPT ? (locks >> r) & 1 : 0;

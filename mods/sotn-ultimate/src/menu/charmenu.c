@@ -1249,6 +1249,11 @@ static const char* CmdCombo(const char* s) {
 #endif
 #endif
 
+#if defined(MOD_CHARMENU_KO)
+static const char* const g_KoCmdNote[3] = {kc_t_hold, kc_t_slide, kc_t_run};
+static const u8 g_KoCmdNoteW[3] = {4, 6, 5}; // cells: (홀드) (슬라이드) (달리기)
+#endif
+
 // MenuSpellsDraw for them (DRA's window dispatcher calls in here)
 void CmCmdDraw(MenuContext* ctx) {
     const CmdList* l = Cmds();
@@ -1265,17 +1270,32 @@ void CmCmdDraw(MenuContext* ctx) {
                         func_800F548C(0x80 + (i & 7)), 0x1A1, 6, true, 0);
         }
         x = l->x;
-        MenuDrawStr(CmdCombo(r->combo), x, y, ctx);
-        x += CmdLen((const u8*)CmdCombo(r->combo)) * 8;
+#if defined(MOD_CHARMENU_KO)
+        // the notation column's three words in Korean (the 8px Hangul renderer; 8 px a cell is assumed)
+        if (r->combo == g_CHold || r->combo == g_CSlide || r->combo == g_CRun) {
+            c = r->combo == g_CHold ? 0 : r->combo == g_CSlide ? 1 : 2;
+            STR8(0, g_KoCmdNote[c], x, y, ctx);
+            x += g_KoCmdNoteW[c] * 8;
+        } else
+#endif
+        {
+            MenuDrawStr(CmdCombo(r->combo), x, y, ctx);
+            x += CmdLen((const u8*)CmdCombo(r->combo)) * 8;
+        }
         if (x != l->x) {
             MenuDrawChar(CH('+'), x, y, ctx);
             x += 8;
         }
         x = CmdBtn(r->btn, x, y, ctx);
         if (r->btn2 != NB) {
+#if defined(MOD_CHARMENU_KO)
+            MenuDrawChar(CH('/'), x, y, ctx); // "or" as a slash (#3598)
+            CmdBtn(r->btn2, x + 8, y, ctx);
+#else
             MenuDrawChar(CH('o'), x, y, ctx);
             MenuDrawChar(CMD_OR_2, x + 8, y, ctx);
             CmdBtn(r->btn2, x + 16, y, ctx);
+#endif
         }
         if (r->kind == K_MP) {
             MenuDrawStr(g_MenuStr[13], 284, y, ctx);

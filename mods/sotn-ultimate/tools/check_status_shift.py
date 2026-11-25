@@ -61,10 +61,16 @@ for path, sha in sorted(retail.items()):
             tail = open("build/us/ARC_KO.BIN", "rb").read()
             import struct as _st
             tsize = _st.unpack("<I", built[0x1C:0x20])[0]
-            head_ok = (built[:0x1C] == orig[:0x1C]
-                       and built[0x20:len(orig)] == orig[0x20:]
-                       and tsize in (0x8F000, 0x90000, 0x91800))
-            if (len(tail) == len(built) - len(orig) and len(tail) in (24576, 28672, 34816)
+            # 095_38: the exe also carries the Alucard easy-controls blob over two stretches of unused Psy-Q library code
+            # (tools/patch_exe_r1.py): those two stretches are the ONLY allowed differences from retail
+            o2 = bytearray(orig)
+            for lo_a, hi_a in ((0x80025F08, 0x800264A0), (0x8002683C, 0x80026D4C)):
+                o2[0x800 + lo_a - 0x80010000:0x800 + hi_a - 0x80010000] = built[0x800 + lo_a - 0x80010000:0x800 + hi_a - 0x80010000]
+            orig_cmp = bytes(o2)
+            head_ok = (built[:0x1C] == orig_cmp[:0x1C]
+                       and built[0x20:len(orig_cmp)] == orig_cmp[0x20:]
+                       and tsize in (0x8F000, 0x90000, 0x91800, 0x92000, 0x92800, 0x93800))
+            if (len(tail) == len(built) - len(orig) and len(tail) in (24576, 28672, 34816, 36864, 38912, 43008)
                     and head_ok and built[len(orig):] == tail):
                 print(f"OK   {name}: trial boot-resident font (+{len(tail)}B)")
                 checked += 1
