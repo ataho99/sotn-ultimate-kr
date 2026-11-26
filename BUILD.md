@@ -9,7 +9,7 @@
 | 결과 이미지 `SOTN_Ultimate_v1.5_KR_v0.9.5.bin` (한글판 v0.9.5 · 파일 이름에만 판 번호가 붙고 내용 지문은 같음) | sha1 `494ea1c5836e8b3b8e073af0c030d4dfa0e1349e` · 706,112,736B · 300,218섹터 |
 | 델타 `u2c_to_t45.vcdiff` (xdelta 3.2.2, `-9`, 보조 압축 없음 `-S none`) | 3,396,005B |
 | 꾸러미 합계 (델타 + 표·지문 6종) | 5,364,401B |
-| 웹 패처 `docs/index.html` | sha1 `203aa1e160e7c579368fc872c9eaaa54b3e8bb91` · 4,635,726B |
+| 웹 패처 `docs/index.html` | sha1 `bd2f3fe9bd1aae3beb5c2ec85faa99457090fcf6` · 6,243,704B |
 | 바탕 재료 1 (얼티밋 공식 v1.5) | 715,485,456B · 304,203섹터 · md5 `bff57a70f92e84b0812b57a85450c35c` · sha1 `aa57e6ed98238039c69360b6d8be554ddd9fe7e0` · crc32 `2fc60a99` |
 | 재료 2 (일본 PS1 v1.2) T1 | 545,440,560B · 231,905섹터 · sha1 `e6bcec4d2b150db09352d1ccaccff8ceebeddcf5` |
 | 재료 2 T2 (ape) | 29,138,516B · sha1 `c027bd93b557481f41a64b7d2f247769d05f5f71` |
