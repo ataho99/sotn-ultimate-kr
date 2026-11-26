@@ -1,13 +1,15 @@
-# SOTN Ultimate 한국어화 — v0.9.5 베타
+# SOTN Ultimate 한국어화 — v0.9.5a 베타
 
 [SOTN Ultimate](https://github.com/renanbianchi/sotn-ultimate)에 한국어를 넣는 비공식 포크입니다. 원작자의 작업이 아닙니다. 계획은 [ROADMAP.md](ROADMAP.md) 에 있습니다.
 
 게임 플레이와 원판의 느낌은 그대로 두고, 번역과 함께 원판에 있었을 법한 것만 더합니다. 새로 넣는 메뉴·화면도 원판 그림 조각과 화면 틀을 다시 써서 만듭니다.
 
-A fork of SOTN Ultimate that adds Korean; gameplay and look stay as in the original, and additions reuse the game's own art and screens. **v0.9.5 (beta, built on Ultimate v1.5)** is installed from a single web page — you supply your own discs; this repository and the page contain no game data. The original mod is by renanbianchi; this fork is unofficial.
+A fork of SOTN Ultimate that adds Korean; gameplay and look stay as in the original, and additions reuse the game's own art and screens. **v0.9.5a (beta, built on Ultimate v1.5)** is installed from a single web page — you supply your own discs; this repository and the page contain no game data. The original mod is by renanbianchi; this fork is unofficial.
 
 **웹 패처: https://ataho99.github.io/sotn-ultimate-kr/** (크롬·엣지 최신판, 설치 없음 · GitHub Pages 는 `ko` 브랜치의 `docs/` 폴더에서 게시)
 
+> 0.9.5a 는 0.9.5 의 수정판입니다(음식 이름이 외계어로 나오던 문제). 0.9.5 를 이미 만드셨다면 릴리스의 xdelta 파일 하나로 갱신하거나, 웹 패처로 새로 만드세요.
+>
 > 0.9.4 는 따로 내지 않고 0.9.5 에 합쳐 냅니다. 이전 버전을 쓰던 분도 웹 패처로 같은 방법으로 새로 만드세요(버전 간 패치 파일은 따로 없습니다).
 
 **[💖 후원](https://litt.ly/smash99)** — 작업 후원입니다. 게임 파일은 배포하지 않습니다.
@@ -29,7 +31,7 @@ A fork of SOTN Ultimate that adds Korean; gameplay and look stay as in the origi
 | 준비 · 원작 재현 · 조사 · 설계 · 한글 출력 시험 (P0–P4) | 완료 — 원작 v1.4 기준 |
 | 원문 추출 · 용어집 (P5) | 완료 — 원문 1,715행, 용어는 일본판 기준 |
 | 번역 · 삽입 (P6) | 완료(v0.9 범위) — 메뉴·장비·아이템·유물·주문·대사·저장 문구 한글 |
-| **배포 (P7)** | **v0.9.5 베타** — 웹 패처(재료 검사 → 조립 → 지문 확인) |
+| **배포 (P7)** | **v0.9.5a 베타** — 웹 패처(재료 검사 → 조립 → 지문 확인) |
 | 얼티밋 업데이트 반영 (P8) | 진행 중 — 얼티밋 v1.5 반영 |
 
 - 번역은 원문에서 새로 했습니다. 기존 PS1 한글패치 문장은 쓰지 않았고, 제작진은 크레딧에 「참고」로 밝힙니다.
@@ -58,7 +60,7 @@ v0.9.3 대비 주요 항목입니다.
 
 ---
 
-# 한글판 v0.9.5 사용·제작 안내
+# 한글판 v0.9.5a 사용·제작 안내
 
 
 ## ⚠ 법적 고지
@@ -73,7 +75,7 @@ v0.9.3 대비 주요 항목입니다.
 1. **재료를 준비합니다.** 아래 「재료」 표의 고정 이름 파일 5개를 한 폴더에 둡니다. 전부 필수이고, 판본이 다르면 패처가 진행하지 않습니다.
 2. **웹 패처 페이지를 엽니다.** 크롬·엣지(최신판) 권장 — 그 밖의 브라우저는 지원 대상이 아닙니다.
 3. **재료를 고릅니다**(「폴더 선택」 또는 「파일 선택」) **→ 「한글 이미지 만들기」.** 재료 검사 → 조립 → 결과 지문 확인까지 자동입니다. 실패하면 `REJECT <종류>: <사유>` 가 나옵니다(아래 「리젝트」).
-4. **`SOTN_Ultimate_v1.5_KR_v0.9.5.bin` 과 `.cue` 를 저장해 같은 폴더에 두고 `.cue` 를 에뮬레이터에서 엽니다.** 저장 뒤 「임시 파일 지우기」를 누르면 브라우저 안의 작업 사본이 지워집니다. 이상한 곳은 이슈로 제보해 주세요.
+4. **`SOTN_Ultimate_v1.5_KR_v0.9.5a.bin` 과 `.cue` 를 저장해 같은 폴더에 두고 `.cue` 를 에뮬레이터에서 엽니다.** 저장 뒤 「임시 파일 지우기」를 누르면 브라우저 안의 작업 사본이 지워집니다. 이상한 곳은 이슈로 제보해 주세요.
 
 ### 재료 (고정 이름 · 왜 필요한가)
 
@@ -224,7 +226,7 @@ PSP 수록판 = 「드라큘라 X 크로니클」 수록판. 이후 이식(한 �
                                    ▼
 [사용자] 재료 5개 ─► 웹 패처 (docs/index.html): 재료 검사 → 조립 → 델타 적용 → 지문 확인
                                    ▼
-                      SOTN_Ultimate_v1.5_KR_v0.9.5.cue / .bin
+                      SOTN_Ultimate_v1.5_KR_v0.9.5a.cue / .bin
 ```
 
 상세는 `BUILD.md`(제작·검증)와 `ko_patcher/web/README.md`(웹 패처)를 보세요.
