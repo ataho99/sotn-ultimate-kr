@@ -7,7 +7,7 @@
 #                   endian, FF 00 end): drawn by DRA's KO_EQUIP_SEL, the same call as the Extra settings popup
 #   설명줄(12px) -> kc_<key>[] the info bar font (func_800F99B8): Hangul F0xx, letters raw, space 0x20,
 #                   other ASCII refused (full-width forms only)
-# Fail closed: every Hangul needs a glyph code, and for 8px labels a cell in the 8px plate (ko_8p_block_249).
+# Fail closed: every Hangul needs a glyph code, and for 8px labels a cell in the 8px plate (ko_8p_block_250).
 import io
 import os
 import struct
@@ -26,7 +26,7 @@ OUT = os.path.join(REPO, "mods/sotn-ultimate/src/menu/charmenu_ko_str.h")
 
 def main():
     mp = C.rd(P4 + FP.P["map_name"])
-    pb = open(P4 + "ko_8p_block_249.bin", "rb").read()
+    pb = open(P4 + "ko_8p_block_250.bin", "rb").read()
     pn = struct.unpack("<H", pb[:2])[0]
     plate = set(struct.unpack("<%dH" % pn, pb[2:2 + pn * 2]))
     out = ["// gen_ko_cm.py: Richter / Maria pause menu strings (do not edit)"]

@@ -647,7 +647,7 @@ extern const char* g_MenuStr[110];
 // file at the disc end) and cd.c's CdFile_KoGlyphs chain loads it to
 // KO_GLYPH_BLOCK_ADDR (A-gap). The 66590.c wrapper and the blob renderer
 // (MenuDrawKoHook at KO_BLOB_ADDR) both read the block.
-#define KO_GLYPH_COUNT 952 /* v14g = v14f + 1 Hangul cell F3F7 (켬, Extra settings; gen_ko_glyph_add.py GLYPH_PREV_TAG=v14f GLYPH_NO_REUSE=1); v14f = v14e + 1 Hangul cell F3F6 (gen_ko_glyph_f.py); v14e = v14d + 91 Hangul cells F3CB.. (gen_ko_glyph_e.py; 10 cells kept free below KO_POP_TEXT 0x5640 = 960 cells); v14d = v14c + 40 ASCII cells F373.. (gen_ko_glyph_lat.py d; check_ko_glyph.py fails if a cell was skipped); v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
+#define KO_GLYPH_COUNT 958 /* v14h = v14g + 6 Hangul cells F3F8..F3FD (꿀낄뎌떤앉픔, gen_ko_glyph_h.py); v14g = v14f + 1 Hangul cell F3F7 (켬, Extra settings; gen_ko_glyph_add.py GLYPH_PREV_TAG=v14f GLYPH_NO_REUSE=1); v14f = v14e + 1 Hangul cell F3F6 (gen_ko_glyph_f.py); v14e = v14d + 91 Hangul cells F3CB.. (gen_ko_glyph_e.py; 10 cells kept free below KO_POP_TEXT 0x5640 = 960 cells); v14d = v14c + 40 ASCII cells F373.. (gen_ko_glyph_lat.py d; check_ko_glyph.py fails if a cell was skipped); v14c (+16 Latin cells F360..F36F, +롯쓸됐 F370..F372); v14a: MGalmuri12 12x15 1bpp 23 B cells; 800 cells = 18400 B fit the original 23280 B block */
 #define KO_GLYPH_CELL_BYTES 23
 #define KO_GLYPH_12COL 1 /* MGalmuri12 "an na" 12-col 23 B direct path + a (kind0) */
 /* cutscene 1-byte promotion table: 112 x u16 (byte 0x80+i -> glyph code), in the
@@ -745,7 +745,7 @@ extern const char* g_MenuStr[110];
 // glyphs + blob slot + strings slot + gap + ko_equip tail + JP bundle 1 +
 // 8px block 2, zero-padded). Multiple of 2048 so the loader callback copies
 // a fixed CD_BLOCK_LEN per block.
-#define KO_ARC_SIZE 43008 // glyph area 28672 + bundle 2048 + 8px 4096 + the new resident area's 4 sectors 8192 (21 sectors; block 17 lands at 0x801F3000, 18 at 0x801F3800, 19 at 0x801F4000, 20 at 0x801F4800)
+#define KO_ARC_SIZE 51200 // glyph area 28672 + bundle 2048 + 8px 4096 + the new resident area's 8 sectors 16384 (25 sectors; block 17 lands at 0x801F3000, then every 0x800 up to block 24 at 0x801F6800)
 #endif
 #if defined(MOD_SATURN)
 extern EnemyDef g_EnemyDefs[426];

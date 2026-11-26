@@ -517,6 +517,7 @@ fi
 # boss Richter in that coat: build/us/BO6RIC2.BIN (BO6.BIN + the RIC2 sheet)
 .venv/bin/python mods/sotn-ultimate/tools/build_bo6ric2.py
 # ... and the kneeling Richter after Shaft's orb (TOP): g_ModTopRic2
+rm -f build/us/TOP.BIN && quiet ninja build/us/TOP.BIN # (the second pass after a disc geometry change would fill the already filled g_ModTopRic2 again)
 (cd mods/sotn-ultimate/tools && python3 build_topric2.py)
 # the Saturn's playable Maria: build/us/MARIA.BIN (src/ric + -DMOD_MARIA_SAT);
 # her packed graphics only when the generator or Saturn data changed (slow)
@@ -612,12 +613,12 @@ PYEOF
 # KO_8P.BIN (equipment-name 8px block, 2 sectors) spliced
 # into the 17d3 zero tail at LBA 0x492CA (after the 58-sector EXE at
 # 0x49290-0x492C9; readback-asserted, emu-verified -- not manifest-packed).
-# Source: P4시험/ko_8p_block_249.bin (gen_ko_8p.py v246 = 371 cells, + gen_ko_8p_ext.py: v247 385 cells (+ the Extra settings popup 14) -> v248 390 cells (+ 추 U R O F: 추가 설정 row, SATURN, ON/OFF); 371 cells = the 283-cell block 243 [260H + 8 name-ASCII + 15
+# Source: P4시험/ko_8p_block_250.bin (gen_ko_8p.py v246 = 371 cells, + gen_ko_8p_ext.py: v247 385 cells (+ the Extra settings popup 14) -> v248 390 cells (+ 추 U R O F: 추가 설정 row, SATURN, ON/OFF); 371 cells = the 283-cell block 243 [260H + 8 name-ASCII + 15
 # desc-ASCII reserve; Mgalmuri8 @8px, 1:1, sha-pinned).
 python3 - <<'PYEOF'
 import hashlib, io
-b = io.open(__import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_249.bin', 'rb').read()
-assert hashlib.sha256(b).hexdigest() == 'c1692763d58a381e6e1249f494ef23b80f40689855b0261a7ebf25dbac0f7095', hashlib.sha256(b).hexdigest()
+b = io.open(__import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_250.bin', 'rb').read()
+assert hashlib.sha256(b).hexdigest() == '9953bedeba6b547ff733d71dae3d7b89f9d583198e33a878fd743e35e5d2b738', hashlib.sha256(b).hexdigest()
 assert len(b) <= 4096, len(b)
 open('build/us/KO_8P.BIN', 'wb').write(bytes(b) + bytes(4096 - len(b)))
 print('KO_8P.BIN: block %d -> 4096 (2 sectors)' % len(b))
@@ -805,8 +806,8 @@ echo "ko_equip_jp: sel/ov/enter at $EQ_SEL/$EQ_OV/$EQ_ENTER, core $corevma size 
 # v12e (v12c Korean restored in F12A..F28A, English 32 moved
 # to free-code cells) + engtab250. Same 776x30 size, ARC offsets unchanged.
 # v14g (gen_ko_glyph_add.py): v14f + 1 Hangul cell F3F7 (켬, the Extra settings popup; 952 cells). v14f (gen_ko_glyph_f.py): v14e + 1 Hangul cell F3F6 (951 in all, limit 960); v14e (gen_ko_glyph_e.py): v14d + 91 more cells (950); KO_SHA = the block's sha256 (check_ko_glyph.py prints it).
-export KO_BLK=${KO_WK}/P4시험/ko_glyph_block_mgalmuri12_v14g.bin
-export KO_SHA=e8013d637b19c70a23d646e5cb66b988a9ea3e5fe74f166e756bc07f485f5f90
+export KO_BLK=${KO_WK}/P4시험/ko_glyph_block_mgalmuri12_v14h.bin
+export KO_SHA=8c267e791d396c1f17ec4d20d7d09027a996dad2c53a18cd537856191ec07625
 # name tag / popup advance table lookup (src/st/ko_font_params.h) is per overlay. KO_NAME_FIXED_OVERLAYS (switches, one
 # `#define KO_NAME_FIXED 1` as first line of the files): sel(cutscene.c) no3(cutscene.c, popup.c) no4(cutscene.c, popup.c) mad(popup.c: MAD.BIN must keep its retail size, check_status_shift).
 # If a later build reports `FAIL stXXX: overlay ends ... past 0x801e0000`, add the define to that overlay's
@@ -875,7 +876,7 @@ sheet = bytes.fromhex('f080f05ef046f067f052f141f1ab f081f0abf1ccf0a9f0b0f0caf071
 # 67B + 1B compiler NUL = 104B. Sheet starts at +36 (KO_STR_BASE+36).
 assert ro[:34] == exp and ro[34:36] == bytes(2) and ro[36:103] == sheet and ro[103:] == bytes(1) and len(ro) == 104, (ro.hex(), len(ro))
 ro = ro + bytes(104 - len(ro))
-assert arc_size == 43008, arc_size
+assert arc_size == 51200, arc_size
 assert eq_base == 0x8009F500 and eq_size == 0xB00, (hex(eq_base), hex(eq_size))
 assert len(raw) + len(blob) + len(ro) == 24280, (len(raw), len(blob), len(ro))
 gap_end = eq_base - 0x80099000  # 25856: tail base offset in ARC (RAM 0x8009F500)
@@ -945,15 +946,15 @@ img = img + tail
 KO_BUNDLE = 'src/dra/gen/us/ko_jp_bundle.bin'
 bundle = open(KO_BUNDLE, 'rb').read()
 assert 1 <= len(bundle) <= 2048, len(bundle)
-KO_8PBLK = __import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_249.bin'
+KO_8PBLK = __import__('os').environ['KO_WK'] + '/P4시험/ko_8p_block_250.bin'
 blk8 = open(KO_8PBLK, 'rb').read()
-assert hashlib.sha256(blk8).hexdigest() == 'c1692763d58a381e6e1249f494ef23b80f40689855b0261a7ebf25dbac0f7095', hashlib.sha256(blk8).hexdigest()
+assert hashlib.sha256(blk8).hexdigest() == '9953bedeba6b547ff733d71dae3d7b89f9d583198e33a878fd743e35e5d2b738', hashlib.sha256(blk8).hexdigest()
 assert len(blk8) <= 4096, len(blk8)
 img = img + bytes(bundle) + bytes(2048 - len(bundle)) + bytes(blk8) + bytes(4096 - len(blk8))
 # 099b: blocks 17-18 = the new resident area's first two sectors (cd.c's copy puts them at 0x801F3000 / 0x801F3800: KO_8P_BASE + 0x1000); header + code, zero padded
 newarea = open('build/us/mod/newarea/newarea.bin', 'rb').read()
-assert 32 < len(newarea) <= 8192 and newarea[:4] == bytes.fromhex('31524f4b'), len(newarea) # 100: four sectors (blocks 17-20 -> 0x801F3000..0x801F4FFF)
-img = img + newarea + bytes(8192 - len(newarea))
+assert 32 < len(newarea) <= 16384 and newarea[:4] == bytes.fromhex('31524f4b'), len(newarea) # 100: eight sectors (blocks 17-24 -> 0x801F3000..0x801F6FFF)
+img = img + newarea + bytes(16384 - len(newarea))
 assert len(img) == arc_size, (len(img), arc_size)
 # 094_12 Sound Mode text (gen_ko_sound.py): strings live in the A-gap zero runs (resident from the title on), SEL only holds
 # their addresses (SEL has no room). Every run must still be zero (nothing else uses it).
@@ -1011,7 +1012,7 @@ python3 - <<'PYEOF'
 import struct
 exe, arc = 'build/us/main.exe', 'build/us/ARC_KO.BIN'
 blob = open(arc, 'rb').read()
-assert len(blob) == 43008, (arc, len(blob))
+assert len(blob) == 51200, (arc, len(blob))
 blob34 = blob[:34816]  # 099: the 17-sector part (the new area's sector is appended last)
 b = bytearray(open(exe, 'rb').read())
 tsize = struct.unpack('<I', b[0x1C:0x20])[0]
@@ -1038,26 +1039,32 @@ elif len(b) == 598016 and tsize == 0x91800:
     b = b[:-34816] + blob34
     open(exe, 'wb').write(bytes(b))
     print('main.exe: stale tail refreshed (598016, t_size 0x91800)')
-elif len(b) == 606208 and tsize == 0x93800:
+elif len(b) == 610304 and tsize == 0x94800:
+    # 101 -> 102 (the area grew 6 -> 8 sectors): fold the 6-sector tail (47104 B ARC_KO) back to the 17-sector geometry
+    b = b[:-47104] + blob34
+    struct.pack_into('<I', b, 0x1C, 0x91800)
+    open(exe, 'wb').write(bytes(b))
+    print('main.exe: 101 rerun (610304 / 0x94800), folded back to 598016 / t_size 0x91800')
+elif len(b) == 614400 and tsize == 0x95800:
     # 099 rerun (the build runs twice when the disc geometry moved): fold the tail back to the 17-sector geometry, the 099 stage below grows it again
-    b = b[:-43008] + blob34
+    b = b[:-51200] + blob34
     struct.pack_into('<I', b, 0x1C, 0x91800)
     open(exe, 'wb').write(bytes(b))
     print('main.exe: 099 rerun, folded back to 598016 / t_size 0x91800')
 else:
     assert False, (len(b), hex(tsize))
-# 100: the tail grows by four sectors (the new resident area's): 598016 -> 606208, t_size 0x91800 -> 0x93800
+# 100: the tail grows by eight sectors (the new resident area's): 598016 -> 614400, t_size 0x91800 -> 0x95800
 b = bytearray(open(exe, 'rb').read())
 tsize = struct.unpack('<I', b[0x1C:0x20])[0]
 if len(b) == 598016 and tsize == 0x91800:
     b = b[:-34816] + blob
-    struct.pack_into('<I', b, 0x1C, 0x93800)
+    struct.pack_into('<I', b, 0x1C, 0x95800)
     open(exe, 'wb').write(bytes(b))
-    print('main.exe: 100 tail +4 sectors (606208, t_size 0x93800)')
-elif len(b) == 606208 and tsize == 0x93800:
-    b = b[:-43008] + blob
+    print('main.exe: 100 tail +8 sectors (614400, t_size 0x95800)')
+elif len(b) == 614400 and tsize == 0x95800:
+    b = b[:-51200] + blob
     open(exe, 'wb').write(bytes(b))
-    print('main.exe: 100 tail refreshed (606208, t_size 0x93800)')
+    print('main.exe: 100 tail refreshed (614400, t_size 0x95800)')
 else:
     assert False, ('099 tail', len(b), hex(tsize))
 open('build/us/DUMMY.BIN', 'wb').write(bytes(563200))  # 275 sectors = retail SLUS's size: it holds SLUS's old slot, so the files after it keep their LBA (SLUS itself is last now, any size; 099's +1 sector there moves nothing)
@@ -1289,7 +1296,9 @@ d = open(sys.argv[1], 'rb').read()
 cnt = int(re.search(r"#define KO_GLYPH_COUNT (\d+)", open('src/dra/dra.h', encoding='utf-8').read()).group(1))
 a = d.find(bytes.fromhex('c00f8224'))
 b = d.find(cnt.to_bytes(2, 'little') + bytes.fromhex('a22c'))
-ok = a >= 0 and b >= 0 and abs(a - b) < 128
+# raw image offsets -> payload offsets (2048 of every 2352 B sector): the pair can straddle a sector boundary when DRA's code moves (EDC/ECC bytes in between)
+log = lambda o: (o // 2352) * 2048 + max(0, min(2048, o % 2352 - 24))
+ok = a >= 0 and b >= 0 and abs(log(a) - log(b)) < 128
 sys.exit(0 if ok else 1)
 PYEOF
 then

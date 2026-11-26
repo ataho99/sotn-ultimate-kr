@@ -7,7 +7,8 @@
 #define KO_EQUIP_SEL 0x8009F500 // src/dra/dra.h (build_newarea.sh checks it)
 #define NOPT MOD_SYS_NOPT
 #define NCHEAT MOD_SYS_NCHEAT
-#define ROWS (NOPT + NCHEAT)
+#define NACT MOD_SYS_NACT
+#define ROWS (NOPT + NCHEAT + NACT)
 #define VALUE_DX MOD_SYS_VALUE_DX
 extern s32 D_8013784C; // menu.c: 1 = grey text
 
@@ -15,7 +16,8 @@ typedef void (*KoDrawFn)(const char**, const s32*, const s32*, s32, MenuContext*
 static const char* const g_SysOptLabelKo[ROWS] = {
     ko_xset_r0, ko_xset_r1, ko_xset_r2, ko_xset_r3, ko_xset_c0, ko_xset_c1,
     ko_xset_c2, ko_xset_c3, ko_xset_c4, ko_xset_c5, ko_xset_c6, ko_xset_c7,
-    ko_xset_c8, ko_xset_c9};
+    ko_xset_c8, ko_xset_c9, ko_xset_a0, ko_xset_a1, ko_xset_a2, ko_xset_a3,
+    ko_xset_a4, ko_xset_a5, ko_xset_a6, ko_xset_a7};
 // as the option names: PS1, Saturn (new: 새턴), PSP, JP (never shown), STN, OFF, ON
 static const char* const g_SysOptNameKo[7] = {
     ko_xset_ps1, ko_xset_sat, ko_xset_psp, ko_xset_psp,
@@ -52,6 +54,9 @@ void PopDrawKo(MenuContext* ctx, s32 x, s32 y, ModPopArgs* a) {
             xs[n] = x;
             ys[n] = ry;
             n++;
+            if (r >= NOPT + NCHEAT) { // an instant action: the label only
+                continue;
+            }
             if (r < NOPT) {
                 row = &a->rows[r];
                 names[n] = g_SysOptNameKo[row->name[SysOptCur(row)]];

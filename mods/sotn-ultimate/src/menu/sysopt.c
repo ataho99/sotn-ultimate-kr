@@ -389,15 +389,32 @@ static void SysOptLang(void) {
 
 static void PopInput(MenuContext* pop) {
     const SysOptRow* row;
-    s32 v;
+    s32 v, t;
 
     v = g_PopRow - POPBASE;
-    MenuHandleCursorInput(&v, POPN, 0); // Up / Down, wraps inside this popup
+    MenuHandleCursorInput(&v, g_PopMode ? NCHEAT + MOD_SYS_NACT : POPN, 0); // Up / Down, wraps inside this popup (the cheat popup scrolls over the toggles and the actions)
     g_PopRow = v + POPBASE;
-    g_PopTop = POPBASE;
+    t = g_PopTop - POPBASE;
+    if (v < t) {
+        t = v;
+    }
+    if (v >= t + POPN) {
+        t = v - POPN + 1;
+    }
+    g_PopTop = POPBASE + t;
     if (g_PopMode && g_PopRow >= NOPT) {
-        // a cheat: Left / Right / X flips it
-        if (g_pads[0].tapped & (PAD_LEFT | PAD_RIGHT | SYSOPT_SELECT)) {
+        if (g_PopRow - NOPT >= NCHEAT) {
+            // an instant action (the new area's CheatAct): X runs it once
+            if (g_pads[0].tapped & SYSOPT_SELECT) {
+                void (*act)(s32) = (void (*)(s32))NewFn(MOD_NEWAREA_SLOT_ACT);
+
+                if (act) {
+                    act(g_PopRow - NOPT - NCHEAT);
+                    g_api.PlaySfx(SFX_UI_MOVE);
+                }
+            }
+        } else if (g_pads[0].tapped & (PAD_LEFT | PAD_RIGHT | SYSOPT_SELECT)) {
+            // a cheat: Left / Right / X flips it
             g_CheatMask ^= 1 << (g_PopRow - NOPT);
             g_api.PlaySfx(SFX_UI_MOVE);
         }

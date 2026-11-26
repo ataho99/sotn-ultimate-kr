@@ -990,7 +990,13 @@ void UpdateCd(void) {
             // VB from the next sector; every familiar has one, gen_psp_sfx.py).
             // The Pixie and the Nosedevil (5, 6) are silent in the US PS1:
             // their PSP voices in the PS1 dub too
+#if defined(MOD_FIELD_JP_VOICE)
+            // Japanese field voices: the Pixie's and the Nosedevil's retail banks (SD_FAIR2 / SD_DEVI2) hold the Japanese clips already, so they
+            // are no longer replaced by the PSP dub's English ones
+            if (MOD_FIELD_PSP_BANKS()) {
+#else
             if (MOD_FIELD_PSP_BANKS() || g_LoadOvlIdx >= 5) {
+#endif
                 g_LbaServantVh.loc =
                     OFF_BIN_SFX_PSP - 1 + g_ModPspServantSfx[g_LoadOvlIdx];
                 g_LbaServantVb.loc =

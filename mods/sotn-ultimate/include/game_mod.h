@@ -267,6 +267,8 @@
 #define MOD_NEWAREA_SLOT_TICK 2
 #define MOD_NEWAREA_SLOT_CHEAT 3
 #define MOD_NEWAREA_SLOT_POP 4
+#define MOD_NEWAREA_SLOT_SUB 5  // SubCmd (the familiars' subtitle)
+#define MOD_NEWAREA_SLOT_ACT 6  // CheatAct (the cheat popup's instant actions)
 // the cheats' bit numbers in g_CheatMask (ARC_F2's sysopt.c) and the popup's layout (shared with the new area: src/easy/newarea_cheat.c / newarea_pop.c)
 #define CHEAT_MP 0
 #define CHEAT_HEARTS 1
@@ -280,6 +282,7 @@
 #define CHEAT_MOON 9
 #define MOD_SYS_NOPT 4    // the Player Select options, rows 0 to 3 of the popup
 #define MOD_SYS_NCHEAT 10 // the cheats, rows NOPT and after
+#define MOD_SYS_NACT 8    // the instant actions after the cheats (CheatAct in the new area): the popup scrolls over NCHEAT + NACT rows
 #define MOD_SYS_VALUE_DX 112
 // each option: the flag bits it owns, and per choice (the Player Select's order, src/st/sel/2C048.c) their value and its name
 typedef struct {

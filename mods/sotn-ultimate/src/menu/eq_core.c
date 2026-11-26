@@ -29,7 +29,7 @@ void KO_8pLoad(void) {
 // menu opens. The draw gate uploads only when this passes.
 s32 KO_8pValid(void) {
     u16 n = ((u16*)KO_8P_BASE)[0];
-    if (n == 394) {
+    if (n == 399) {
         return 1;
     }
     return 0;

@@ -61,7 +61,7 @@ def main():
                 b.append(0x00 if is_name else 0x20)
             elif is_h(ch):
                 assert ch in mp, ("no glyph code", ch, key)
-                assert 0xF040 <= mp[ch] <= 0xF3F7, (ch, hex(mp[ch]), key)
+                assert 0xF040 <= mp[ch] <= 0xF3FD, (ch, hex(mp[ch]), key)
                 b += bytes([mp[ch] >> 8, mp[ch] & 0xFF])
             else:
                 assert is_name and 0x20 < ord(ch) < 0x7F, ("char not allowed in this kind", ch, key, kind)

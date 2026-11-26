@@ -432,6 +432,13 @@ void HandlePlay(void) {
     ModApplyDubText();
     ModCastleAccess();
     ModSysOptTick(); // the cheats (BIN/ARC_F2.BIN, sysopt.c)
+    if (g_PlayableCharacter != PLAYER_ALUCARD) { // Richter / Maria: their overlay covers ARC_F2 (its glue is not there); the new area's own tick feeds their one-key moves (newarea_rm.c)
+        u32* ka = (u32*)0x801F3000;
+
+        if (ka[0] == 0x4B4F5231 && ka[2] != 0) {
+            ((void (*)(s32))ka[2])(0);
+        }
+    }
     // Richter's / the Marias' infinite HP, hearts and MP (src/menu/charmenu.c Extra settings): refilled every frame
     {
         u8 c = g_ModDub.cheats; // (Alucard's ModSysOptTick clears it: his own cheats are his menu's)

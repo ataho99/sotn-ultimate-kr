@@ -15,6 +15,7 @@ extern s32 g_WingSmashButtonCounter;
 extern s32 g_WingSmashButtonTimer;
 extern s32 IsRelicActive(s32 relic);
 extern void SubFollow(void); // newarea_sub.c: the familiars' subtitle follows the familiar
+extern void RmTick(void);    // newarea_rm.c: Richter's / Maria's one-key moves
 
 // ---- the ring's looks, switchable for the mock-ups (the choice is the user's eye)
 #ifndef RING_SLOW
@@ -59,6 +60,11 @@ void R1Tick(ModEasyState* st) {
     Pad* p = &g_pads[0];
     s32 k, b, hide, add, pr, r1, s;
 
+    if (g_PlayableCharacter != PLAYER_ALUCARD) { // Richter / Maria: their own short tick (the ring, the spells and the slow motion are Alucard's)
+        RmTick();
+        SubFollow();
+        return;
+    }
     pr = p->pressed & ~MOD_EASY_R1; // a real L3 (stick click) is not "R1 held"
     r1 = pr & PAD_R1;
     st->eat &= pr;
@@ -77,7 +83,9 @@ void R1Tick(ModEasyState* st) {
     }
     hide = st->eat | PAD_L1 | PAD_R1 | PAD_R2;
     if (pr & PAD_R2) {
-        hide |= PAD_UP | PAD_DOWN | PAD_LEFT | PAD_RIGHT;
+        if (!(g_Player.status & PLAYER_STATUS_MIST_FORM)) { // (once the form is taken the held ring key must not freeze the mist: the directions go to the game)
+            hide |= PAD_UP | PAD_DOWN | PAD_LEFT | PAD_RIGHT;
+        }
         for (k = 0; k < 4; k++) {
             if (!(p->tapped & g_Ring[k].dir)) {
                 continue;

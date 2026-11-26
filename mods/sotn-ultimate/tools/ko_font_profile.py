@@ -54,8 +54,8 @@ PROFILES = {
         glyph_px=12,           # 12-col cell, advance 12
         ascii_adv={".": 4, ",": 4, "!": 4},  # KO_ENG_ADV (ko_font_params.h): engtab cells, per-glyph advance (px)
         cell_bytes=23,         # 12 cols x 15 rows 1bpp, 180 bits (KO_GLYPH_12COL on)
-        blk_name="ko_glyph_block_mgalmuri12_v14g.bin",  # v14f + 1 Hangul cell F3F7 (켬; gen_ko_glyph_add.py)
-        map_name="ko_glyph_map_v14g.tsv",
+        blk_name="ko_glyph_block_mgalmuri12_v14h.bin",  # v14g + 6 Hangul cells F3F8..F3FD (꿀낄뎌떤앉픔, song subtitles; gen_ko_glyph_h.py)
+        map_name="ko_glyph_map_v14h.tsv",
     ),
 }
 ACTIVE = os.environ.get("KO_FONT_PROFILE", "mgalmuri12")
