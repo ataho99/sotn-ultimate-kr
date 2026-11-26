@@ -25,6 +25,14 @@ extern s32 g_HandId;
 // Similar to BottomCornerText which exists in many overlays
 // This one seems to process 2 characters at a time, weird.
 void func_97000_8017AB54(u8* str, u8 lowerLeft) {
+#if defined(MOD_KO)
+    // The food's "got" name: the resident Hangul popup (eq_popt.c KO_PopupText at KO_POP_TEXT 0x8009E640, same call the
+    // stage overlays make from popup.h). The US 8px copy below drew the F0xx..F3xx Hangul pairs as 8px glyph indexes
+    // (garbled) and read a pair whose low byte is 0xFF (e.g. 사과 = F0AB F0FF) as the FF escape: it ran past the name's
+    // FF 00 and overran toPrint[64] (stack smash -> jump to an odd address, a hard freeze a few tickets in).
+    ((void (*)(u8*, u8))0x8009E640)(str, lowerLeft);
+}
+#else
     u8 toPrint[64];
     Primitive* prim;
     s32 i;
@@ -184,6 +192,7 @@ void func_97000_8017AB54(u8* str, u8 lowerLeft) {
     }
     g_unkGraphicsStruct.BottomCornerTextTimer = 0x130;
 }
+#endif
 
 // Function that tests if a food is successfully eaten (collected)
 s32 func_97000_8017AF2C(Entity* self, s32 arg1) {
