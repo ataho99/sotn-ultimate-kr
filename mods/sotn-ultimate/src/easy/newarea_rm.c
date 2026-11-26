@@ -110,8 +110,8 @@ void RmTick(void) {
         cb[0].timer = 20;
         p->pressed |= PAD_SQUARE;
         p->tapped |= PAD_SQUARE;
-    } else if (k == 3) { // subweapon: the chord Up + attack, the game's own check
-        p->pressed |= PAD_UP;
+    } else if (k == 3) { // subweapon: the chord Up + attack, the game's own check (the overlay derives its tapped bits from the pressed ones: both are set)
+        p->pressed |= PAD_UP | PAD_SQUARE;
         p->tapped |= PAD_SQUARE;
     } else if (sat && k >= 5) {
         RmForceSpecial(k - 5);

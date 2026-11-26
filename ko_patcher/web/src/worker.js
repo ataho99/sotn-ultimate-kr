@@ -455,7 +455,7 @@ async function run(msg) {
 
   if (!(self.navigator && navigator.storage && navigator.storage.getDirectory)) throw new Error('이 브라우저는 임시 저장소(OPFS)를 지원하지 않습니다. 크롬·엣지 최신판을 사용하세요.');
   var root = await navigator.storage.getDirectory();
-  var outName = fp.files.m1_bin.replace('.bin', '_KR_v0.9.3.bin');
+  var outName = fp.files.m1_bin.replace('.bin', '_KR_v0.9.5.bin');
   var names = ['u2c.tmp', outName];
   for (var i = 0; i < names.length; i++) { try { await root.removeEntry(names[i]); } catch (e) { } }
   var hU, hO;

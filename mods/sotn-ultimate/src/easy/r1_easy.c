@@ -38,7 +38,7 @@ extern u16 D_801374F8[]; // DRA's icon-slot caches (4AEA4.c): -1 makes the next 
 extern u16 D_80137538[];
 extern s32 D_8003C73C;
 typedef struct {
-    s16 dir;
+    u16 dir; // (unsigned: PAD_LEFT is 0x8000, a signed field would sign-extend and every test against it would also see the bits above)
     s8 dx;
     s8 dy;
     u8 relic;
@@ -54,6 +54,10 @@ static const RingForm g_Ring[4] = {
 #define RING_SLOT_FORM 0x1C
 #define RING_SLOT_REL 0x1B
 static void RingDraw(ModEasyState* st, s32 pr);
+
+// The directions held when R2 went down (bit 16 only keeps the variable in .data: the area has no .bss). Those are not a choice: the ring takes a direction only once it was let go of and pressed again
+// (the game re-reads a hidden held direction as a new press, so without this a held left / up chose the wolf / bat the frame after R2).
+static u32 g_RingBlk = 0x10000;
 
 // 099: linked at MOD_NEWAREA_BASE + 16 (the new resident area, build_newarea.sh); no statics: the state is the caller's (ARC_F2's ModEasyState)
 void R1Tick(ModEasyState* st) {
@@ -82,16 +86,21 @@ void R1Tick(ModEasyState* st) {
         }
     }
     hide = st->eat | PAD_L1 | PAD_R1 | PAD_R2;
+    if (!(pr & PAD_R2)) {
+        g_RingBlk = 0x10000 | (pr & (PAD_UP | PAD_DOWN | PAD_LEFT | PAD_RIGHT));
+    } else {
+        g_RingBlk &= 0x10000 | pr;
+    }
     if (pr & PAD_R2) {
         if (!(g_Player.status & PLAYER_STATUS_MIST_FORM)) { // (once the form is taken the held ring key must not freeze the mist: the directions go to the game)
             hide |= PAD_UP | PAD_DOWN | PAD_LEFT | PAD_RIGHT;
         }
         for (k = 0; k < 4; k++) {
-            if (!(p->tapped & g_Ring[k].dir)) {
+            if (!(p->tapped & g_Ring[k].dir) || (g_RingBlk & g_Ring[k].dir)) {
                 continue;
             }
             if (k < 3) {
-                if (!IsRelicActive(g_Ring[k].relic)) {
+                if ((g_Player.status & PLAYER_STATUS_MIST_FORM) || !IsRelicActive(g_Ring[k].relic)) { // (in the mist form a ring direction is not a choice: the right one would take the mist off again)
                     continue;
                 }
                 add |= g_Settings.buttonMask[g_Ring[k].act];
@@ -103,6 +112,9 @@ void R1Tick(ModEasyState* st) {
                 add |= g_Settings.buttonMask[(s & 1) ? 6 : ((s & 4) ? 4 : 5)]; // the form's own button, again, takes it off
             }
             st->sel = k + 1;
+            if (k == 2) {
+                hide &= ~g_Ring[k].dir; // the mist's own direction goes to the game from its first tick on (not eaten as the choice)
+            }
         }
     }
     RingDraw(st, pr);
