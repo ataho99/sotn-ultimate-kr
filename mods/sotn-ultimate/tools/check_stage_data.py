@@ -141,6 +141,14 @@ for name, retail_path in STAGES.items():
         # word-aligned cover of the range (the check walks words)
         edited.append((off & ~3, off + size))
     for bp in KO_BOSS:
+        if bp.get("find"):
+            # speaker name plates: located by pattern in the built BIN (the KO code moves most of them)
+            if "bo" + bp["ovl"] == name:
+                nw = bytes.fromhex(bp["new"])
+                hits = [m.start() for m in re.finditer(re.escape(nw), built) if m.start() % 4 == 0]
+                if len(hits) == 1:
+                    edited.append((hits[0] & ~3, hits[0] + len(nw)))
+            continue
         if "bo" + bp["ovl"] == name:
             edited.append((bp["off"] & ~3, bp["off"] + len(bytes.fromhex(bp["old"]))))
     if os.environ.get("MOD_KO") == "1":

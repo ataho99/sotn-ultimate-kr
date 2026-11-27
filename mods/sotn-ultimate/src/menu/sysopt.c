@@ -195,7 +195,7 @@ static void CodeWord(u32* p, u32 v) {
 // ---- 099b: the easy tick, the cheats' tick and the Korean popup's draw live in the new resident area (MOD_NEWAREA_BASE, src/easy/*.c; loaded by the ARC_KO chain
 // right after this file). NewFn(slot) = the entry the area's 32 B header holds in that slot, or 0 when the area is not there (yet) / its marker was overwritten.
 // The state they need stays here (g_EasyState, g_CheatMask, the popup's statics) and is passed in, so it resets with every game load as before.
-static ModEasyState g_EasyState = {0, -1, 0, 0};
+static ModEasyState g_EasyState = {0, -1, 0, 0, 0, 0};
 static u32 NewFn(s32 slot) {
     volatile u32* h = (volatile u32*)MOD_NEWAREA_BASE;
     volatile u32* mk = (volatile u32*)MOD_NEWAREA_MARKER_ADDR;

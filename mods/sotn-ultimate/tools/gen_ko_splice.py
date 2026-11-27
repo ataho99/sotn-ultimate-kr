@@ -736,6 +736,57 @@ def splice_boss(tsv, mp, plan, allow):
                 label, st[3], st[0], st[1], st[2], [hex(e) for e in entries]))
 
 
+# Speaker name plates of the asm boss overlays (retail .data/.rodata strings, not compiled from source): the retail
+# US names are mixed case (Alucard ...), the stage overlays' are upper case; the mod unifies them to upper case
+# (#3778). Same length (letter count + the 0xFF end), so the plan entry is a plain same-size byte edit (raw: no script
+# structure to verify). Charset: capital 0x21 + n, small 0x41 + n.
+BOSS_NAME_PLATES = {
+    "bo2": ["Alucard", "Richter"], "bo5": ["Alucard", "Maria"], "bo6": ["Alucard", "Richter", "Shaft"],
+    "rbo2": ["Alucard", "Death"], "rbo6": ["Alucard", "Dracula"],
+}
+
+
+def _plate(name, caps):
+    out = [0x21 + ord(name[0].upper()) - 65]
+    for c in name[1:]:
+        out.append(0x21 + ord(c.upper()) - 65 if caps else 0x41 + ord(c.lower()) - 97)
+    return bytes(out) + b"\xff"
+
+
+def boss_name_caps(plan, allow):
+    """asm boss overlays: mixed case speaker names -> upper case (plan entries, raw)"""
+    for ovl in sorted(BOSS_NAME_PLATES):
+        if ovl not in EO.BOSS_SCRIPTS:
+            continue
+        binp = EO.BOSS_SCRIPTS[ovl][0]
+        path = os.path.join(REPO, "disks", "us", binp)
+        if not os.path.exists(path):
+            continue
+        retail = open(path, "rb").read()
+        name = binp.rsplit("/", 1)[-1]
+        for n in BOSS_NAME_PLATES[ovl]:
+            old, new = _plate(n, False), _plate(n, True)
+            hits = [m.start() for m in re.finditer(re.escape(old), retail)]
+            hits = [h for h in hits if h % 4 == 0]
+            assert len(hits) == 1, ("%s: speaker name %s found %d times (expected 1)" % (binp, n, len(hits)))
+            off = hits[0]
+            plan.append({"ovl": ovl, "bin": name, "off": off, "old": old.hex(), "new": new.hex(), "entries": [], "raw": 1, "find": 1})
+            print("%s@0x%X: speaker name %s -> upper case" % (binp, off, n))
+
+
+def plan_offset(b, p):
+    """where plan entry p sits in the linked BIN b: its own offset, or for a "find" entry (the speaker name plates are
+    rodata strings: the mod's KO code moves them, so the retail offset is not valid) the one word aligned place that
+    holds its old bytes (or, already applied, its new bytes)"""
+    if not p.get("find"):
+        return p["off"]
+    for pat in (bytes.fromhex(p["old"]), bytes.fromhex(p["new"])):
+        hits = [m.start() for m in re.finditer(re.escape(pat), bytes(b)) if m.start() % 4 == 0]
+        if len(hits) == 1:
+            return hits[0]
+    sys.exit("ko boss splice: %s speaker name plate %s not found exactly once" % (p["bin"], p["old"]))
+
+
 def apply_boss():
     """--apply-boss: write the planned KO bytes into the linked boss BINs"""
     if not os.path.exists(BOSS_PLAN):
@@ -746,7 +797,7 @@ def apply_boss():
     for p in plan:
         path = os.path.join(REPO, "build", "us", p["bin"])
         b = bytearray(open(path, "rb").read())
-        old, new, o = bytes.fromhex(p["old"]), bytes.fromhex(p["new"]), p["off"]
+        old, new, o = bytes.fromhex(p["old"]), bytes.fromhex(p["new"]), plan_offset(b, p)
         cur = bytes(b[o:o + len(old)])
         if cur == new:
             continue
@@ -904,6 +955,7 @@ def main():
     json.dump(edits, open(EDITS_PATH, "w"), indent=2)
     plan = []
     splice_boss(tsv, mp, plan, allow)
+    boss_name_caps(plan, allow)
     json.dump(plan, open(BOSS_PLAN, "w"), indent=0)
     json.dump(allow, open(ALLOW_PATH, "w"), indent=2)
     print("TOTAL EN=%d KO=%d" % (total_en, total_ko))

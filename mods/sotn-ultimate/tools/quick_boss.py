@@ -33,6 +33,7 @@ def main(work, names):
     tsv, mp = S.load_tsv(), S.load_map()
     plan, allow = [], {}
     S.splice_boss(tsv, mp, plan, allow)            # the plan gen_ko_splice.py writes to ko_boss_splice.json
+    S.boss_name_caps(plan, allow)
     old_plan_path = os.path.join(ROOT, "build/us/ko_boss_splice.json")
     if os.path.exists(old_plan_path):
         same = json.load(open(old_plan_path)) == json.loads(json.dumps(plan))
@@ -56,7 +57,7 @@ def main(work, names):
         for p in plan:                                # == gen_ko_splice.apply_boss, on the copy
             if p["bin"] != n + ".BIN":
                 continue
-            old, new, o = bytes.fromhex(p["old"]), bytes.fromhex(p["new"]), p["off"]
+            old, new, o = bytes.fromhex(p["old"]), bytes.fromhex(p["new"]), S.plan_offset(b, p)
             cur = bytes(b[o:o + len(old)])
             if cur == new:
                 continue

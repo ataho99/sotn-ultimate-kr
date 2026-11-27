@@ -304,6 +304,8 @@ typedef struct {
     s32 ringPrim; // the ring's first prim (-1: none)
     s32 sel;      // 100: the place chosen while the ring was open (index + 1, 0: none)
     s32 anim;     // 100: the ring's open / close step 0..3
+    s32 post;     // #3782: game frames of slow motion left after a form took effect
+    s32 form;     // #3782: the form bits (status & 7) of the last tick
 } ModEasyState;
 #define MOD_PSP_XA_FIRST 0x358 // first / last voice id with a PSP version
 #define MOD_PSP_XA_LAST 0x532

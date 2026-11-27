@@ -268,6 +268,8 @@ def check(root):
     plan = os.path.join(root, "build", "us", "ko_boss_splice.json")
     if os.path.exists(plan):
         for p in json.load(open(plan)):
+            if p.get("raw"):
+                continue  # same-size name plate edit (#3778), no script structure
             e = verify_bytes(bytes.fromhex(p["old"]), bytes.fromhex(p["new"]),
                              [0] + p.get("entries", []), "%s@0x%X" % (p["bin"], p["off"]))
             errs += e

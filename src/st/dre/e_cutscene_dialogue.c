@@ -188,7 +188,7 @@ static bool dialogue_started;
 // This array is in Data, but the strings within it are rodata. That rodata
 // lives between the jump tables in this file, so we have to import the rodata,
 // and also the data.
-static const char* actor_names[] = {_S("Alucard"), _S("Lisa"), _S("Succubus")};
+static const char* actor_names[] = {_S("ALUCARD"), _S("LISA"), _S("SUCCUBUS")}; // upper case like the other stage overlays (#3778)
 #ifdef MOD_KO
 static const u8 ko_name_0[] = {0xF0, 0x6F, 0xF2, 0x06, 0xF0, 0xB2};
 static const u8 ko_name_1[] = {0xF0, 0x50, 0xF0, 0xAB};

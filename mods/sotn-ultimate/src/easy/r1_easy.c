@@ -19,7 +19,13 @@ extern void RmTick(void);    // newarea_rm.c: Richter's / Maria's one-key moves
 
 // ---- the ring's looks, switchable for the mock-ups (the choice is the user's eye)
 #ifndef RING_SLOW
-#define RING_SLOW 2     // the frame wait while the ring is open: 2 = half speed, 3 = a third, 0 = off (D_8003C73C is VSync's argument in DRA's frame loop)
+#define RING_SLOW 3     // the frame wait while the ring is open: 2 = half speed, 3 = a third, 0 = off (D_8003C73C is VSync's argument in DRA's frame loop)
+#endif
+#ifndef RING_POST_SLOW
+#define RING_POST_SLOW 10 // #3782: game frames the slow motion goes on after a form took effect (at 1/3 speed one frame = 50 ms: 6 = 0.3 s, 8 = 0.4 s, 10 = 0.5 s); 0 = off
+#endif
+#ifndef RING_POST_REL
+#define RING_POST_REL 1  // #3782: 1 = the release (back to Alucard) gets the slow motion after it too, 0 = only the three forms
 #endif
 #ifndef RING_FOLD
 #define RING_FOLD 1     // open / close: 1 = the icons spread out from / fold into the centre, 0 = they grow / shrink in place
@@ -120,10 +126,28 @@ void R1Tick(ModEasyState* st) {
     RingDraw(st, pr);
     SubFollow();
 #if RING_SLOW
-    D_8003C73C = ((pr & PAD_R2) && !(pr & PAD_START)) ? RING_SLOW : 0; // the frame loop's VSync(D_8003C73C): all game time, same ratio
+    // the slow motion = the frame loop waits RING_SLOW vertical blanks per game frame (VSync(D_8003C73C): all game time, same ratio; the music and
+    // the sound effects run on in real time). It stays on while the ring is open and for RING_POST_SLOW game frames after the form changed
+    // (the ring's choice, or the release) so closing the ring and the change do not jump back to full speed at once.
+    s = g_Player.status & 7;
+    if (s != st->form) {
+        if (RING_POST_SLOW && (st->sel || (pr & PAD_R2) || st->post > 0) && (s || RING_POST_REL)) {
+            st->post = RING_POST_SLOW;
+        }
+        st->form = s;
+    }
+    D_8003C73C = (((pr & PAD_R2) && !(pr & PAD_START)) || st->post > 0) ? RING_SLOW : 0;
+    if (st->post > 0) {
+        st->post--;
+    }
 #endif
-    p->pressed = (pr & ~hide) | add | (r1 ? MOD_EASY_R1 : 0);
-    p->tapped = (p->tapped & ~hide) | add;
+    // L1 is the game's own button of whatever the button set-up gives it (mist by default); the mod hides it from the game (above), so with the default
+    // set-up L1 does nothing (no mist, no backdash). Players who set the backdash to L1 (time attack) keep their backdash (#3781, #3798): the hidden L1 comes
+    // back as that action's own mask, held and tapped like the real press, and only when buttonMask[3] (the backdash, the triangle by default) IS L1.
+    k = ((g_Settings.buttonMask[3] & PAD_L1) && (pr & PAD_L1)) ? g_Settings.buttonMask[3] : 0;
+    b = ((g_Settings.buttonMask[3] & PAD_L1) && (p->tapped & PAD_L1)) ? g_Settings.buttonMask[3] : 0;
+    p->pressed = (pr & ~hide) | add | k | (r1 ? MOD_EASY_R1 : 0);
+    p->tapped = (p->tapped & ~hide) | add | b;
 }
 
 // Our own art goes into one more equip-icon slot (4 bit 16x16 at x 0x280 + (slot & 7) * 4, y 0x180 + (slot / 8) * 16), its palette into g_Clut like LoadEquipIcon
