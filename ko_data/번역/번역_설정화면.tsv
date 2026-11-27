@@ -43,6 +43,14 @@ xset:c6	메뉴(8px)	Inf. HP	－	무한 체력	Extra settings 치트 7
 xset:c7	메뉴(8px)	Inf. Gold	－	무한 골드	Extra settings 치트 8
 xset:c8	메뉴(8px)	Inf. jump	－	무한 점프	Extra settings 치트 9
 xset:c9	메뉴(8px)	Moon jump	－	문점프	Extra settings 치트 10(슨상 확정 11-21 19:01)
+xset:a0	메뉴(8px)	Gold 999999	－	골드 999999	Extra settings 치트 실행 1행
+xset:a1	메뉴(8px)	All relics	－	마도기 전부	Extra settings 치트 실행 2행
+xset:a2	메뉴(8px)	All spells	－	마법 전부	Extra settings 치트 실행 3행
+xset:a3	메뉴(8px)	All items x9	－	아이템 전부 9개	Extra settings 치트 실행 4행
+xset:a4	메뉴(8px)	All equipment x9	－	장비 전부 9개	Extra settings 치트 실행 5행
+xset:a5	메뉴(8px)	Stats 99	－	능력치 99	Extra settings 치트 실행 6행
+xset:a6	메뉴(8px)	Level up	－	레벨 상승	Extra settings 치트 실행 7행
+xset:a7	메뉴(8px)	Familiar level up	－	사역마 레벨 상승	Extra settings 치트 실행 8행
 xset:on	메뉴(8px)	ON	－	ON	Extra settings 값
 xset:off	메뉴(8px)	OFF	－	OFF	Extra settings 값
 xset:ps1	메뉴(8px)	PS1	－	PS1	Extra settings 값(더빙)
@@ -50,7 +58,7 @@ xset:psp	메뉴(8px)	PSP	－	PSP	Extra settings 값(더빙)
 xset:stn	메뉴(8px)	STN	－	STN	Extra settings 값(더빙 줄, 슨상 07:3x 「기니까 STN으로 줄여」 — SATURN 은 길어서 되돌림; 캐릭터 선택 화면 Dub 칸도 STN)
 xset:sat	메뉴(8px)	Saturn	－	STN	Extra settings 값(더빙 외 행, 슨상 11-22 「이것도 선택 STN 영문으로」)
 xset:bar	설명줄(12px)	Boss versions, game balance and voices	－	추가 기능 설정	Extra settings 안내줄(094_12: 슨상 11-22 18:04 A)
-xset:bar2	설명줄(12px)	(Cheats)	－	치트 기능 설정	치트 행 안내줄(094_12: 슨상 11-22 18:04 A)
+xset:bar2	설명줄(12px)	(Cheats)	－	치트 설정 세이브에 남습니다	치트 행 안내줄(094_12: 슨상 11-22 18:04 A)
 cfg:fam0	메뉴(8px)	Bat	こうもり	박쥐	사역마 목록 화면 이름(8px, 0.9.4 094_20)
 cfg:fam1	메뉴(8px)	Ghost	ゴースト	고스트	사역마 목록 화면 이름(8px, 0.9.4 094_20)
 cfg:fam2	메뉴(8px)	Faerie	ようせい	요정	사역마 목록 화면 이름(8px, 0.9.4 094_20)

@@ -1105,6 +1105,22 @@ if [ "$MOD_PSP_DUB" = 1 ]; then
     python3 mods/sotn-ultimate/tools/psp_script.py --check
     python3 mods/sotn-ultimate/tools/prologue_scroll.py --check
 fi
+# 3877: SEL's zero-filled bss tail runs past 0x801E0000 (the map blueprint buffer): fill it with the blueprint's own top bytes
+# so loading SEL restores them (patch_sel_maptail.py). After the last SEL patch, before SELRIC2 is made from it.
+out=$(python3 mods/sotn-ultimate/tools/patch_sel_maptail.py --apply)
+echo "$out"
+if echo "$out" | grep -q patched; then
+    VERSION=us quiet ./sotn.sh disk
+fi
+python3 mods/sotn-ultimate/tools/patch_sel_maptail.py --check
+# 3877: the new game's opening movie writes over the blueprint's top again after SEL loaded: DRA's ModRestoreMapTop puts it back from a
+# run-length table at the start of g_ModDraPad (the DRA room pad), which patch_dra_maptop.py writes from the disc's F_MAP.BIN.
+out=$(python3 mods/sotn-ultimate/tools/patch_dra_maptop.py --apply)
+echo "$out"
+if echo "$out" | grep -q patched; then
+    VERSION=us quiet ./sotn.sh disk
+fi
+python3 mods/sotn-ultimate/tools/patch_dra_maptop.py --check
 # SELRIC2 from the final SEL (relinked and patched above)
 out=$(cd mods/sotn-ultimate/tools && python3 build_selric2.py)
 echo "$out"

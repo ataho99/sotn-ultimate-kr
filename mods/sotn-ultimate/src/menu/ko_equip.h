@@ -22,6 +22,17 @@
 #define KO_EQ_OVSIG (*(volatile u32*)0x8009EEDC)
 #define KO_EQ_EPOCH (*(volatile u32*)0x8009EEE0)
 
+// 3877: per-name draw cache. KO_EqDraw rebuilt every name's cell indexes every frame (KO_8pFind scans the whole 399-code table
+// per character, twice per frame): with the equipment lower window full the loop no longer fits in a frame. The cache holds the
+// last computed idx string per name (up to 10 cells + 0xFF, in a 16-byte row) and the idx byte of the space cell (+0xC0, 0xFF =
+// none: the draw advances 4 px for it), valid while the list signature (KO_EQ_SELSIG / OVSIG, which already gates the VRAM upload)
+// is unchanged. It lives in RAM that the disc does not load: the new resident area's loaded part ends at 0x801F7000 (8 sectors,
+// KO_ARC_SIZE), memory map 0x801F7000..0x801FAFFF is free runtime RAM. Every caller passes at most 8 names; 12 rows fit.
+// Set 0x000 = selector (isSel 1), set 0x200 = overview (isSel 0).
+#define KO_EQ_CACHE_N 12
+#define KO_EQ_CACHE_SEL 0x801F9000
+#define KO_EQ_CACHE_OV 0x801F9200
+
 extern void func_800F98AC(const char* str, u32 y);
 extern void func_800F66BC(
     const char* str, s32 x, s32 y, MenuContext* ctx, s32 disableTexShade);
@@ -38,7 +49,7 @@ u32 KO_EqSig(const char** names, s32 count);
 s32 KO_EqParseName(const char* str, s32* idx, s32 cap);
 void KO_8pExpand(s32 cell, u8* dst);
 void KO_8pUpload(s32* cells, s32 nCells, s32 isSel);
-void KO_8pDrawIdx(const char* idx, const s32* spc, s32 x, s32 y, MenuContext* ctx);
+void KO_8pDrawIdx(const char* idx, s32 spIdx, s32 x, s32 y, MenuContext* ctx);
 void KO_EqDraw(const char** names, const s32* xs, const s32* ys, s32 count,
                MenuContext* ctx, s32 isSel);
 

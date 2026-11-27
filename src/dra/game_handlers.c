@@ -271,7 +271,39 @@ void func_800E493C(void) {
     }
 }
 
+#if defined(MOD_KO)
+// 3877: the castle map blueprint (CASTLE_MAP_PTR 0x801E0000) lost its first 4,780 bytes to the movie decoder's image buffer: the Korean
+// SEL overlay is bigger than the retail one, so the buffer's tail runs past 0x801E0000 and the new game's opening movie (played in the
+// Video Playback state, then left through this function) wrote decoded frames over the blueprint's top rows. The blueprint top is put
+// back here: run-length coded bytes (the build writes them into the start of g_ModDraPad, tools/patch_dra_maptop.py; header 'R' '1',
+// u16 length, then (count, value) pairs). Not patched (the placeholder pad) -> nothing happens. Idempotent: the region holds the
+// blueprint (read only there) in every state that leaves through here.
+extern const u8 g_ModDraPad[];
+static void ModRestoreMapTop(void) {
+    const u8* s = g_ModDraPad;
+    u8* d = (u8*)0x801E0000;
+    u8* e;
+    u8 n;
+    u8 v;
+    if (s[0] != 0x52 || s[1] != 0x31) {
+        return;
+    }
+    e = d + (s[2] | (s[3] << 8));
+    s += 4;
+    while (d < e) {
+        n = *s++;
+        v = *s++;
+        while (n--) {
+            *d++ = v;
+        }
+    }
+}
+#endif
+
 void func_800E4970(void) {
+#if defined(MOD_KO)
+    ModRestoreMapTop();
+#endif
     SetGameState(Game_NowLoading);
     g_GameStep = NowLoading_2;
     ClearBackbuffer();

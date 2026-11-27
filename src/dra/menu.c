@@ -2129,9 +2129,16 @@ void func_800F86E4(void) {
 
 #if defined(VERSION_US)
 void func_800F8754(MenuContext* ctx, s32 x, s32 y) {
+#if defined(MOD_KO)
+    // 3877: the retail "no spells -> dim" switch belongs to the Spells row (drawn after the Equip row in the retail order), but the Korean
+    // build draws the Equip row first: with no spell learned (a new game) the Equip row got the dim palette (US MenuDrawImg: 0x15E while
+    // D_8013784C == 1) and showed black. The rows below set the switch themselves.
+    D_8013784C = 0;
+#else
     if (D_801375DC == 0) {
         D_8013784C = 1;
     }
+#endif
 
 #define MOD_HEAD_X(us, pt) (us)
 #if defined(MOD_KO)

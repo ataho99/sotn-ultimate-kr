@@ -83,3 +83,6 @@ cm:d_dive	설명줄(12px)	In the air after both jumps	－	두 번 점프한 뒤 
 cm:d_kickrun	설명줄(12px)	Kick while running	－	달리면서 발차기한다	새턴마리아 격투기 설명
 cm:d_backdash	설명줄(12px)	Leap backward	－	뒤로 뛰어 물러난다	새턴마리아 격투기 설명
 cm:s_guardian	메뉴(8px)	Guardian	－	가디언	사운드 모드 곡명 SD23(개명)
+cm:t_hold	메뉴(8px)	(hold)	－	(홀드)	커맨드 표기 열(차지 발사). #3598
+cm:t_slide	메뉴(8px)	(slide)	－	(슬라이드)	커맨드 표기 열(슬라이드 발차기). #3598
+cm:t_run	메뉴(8px)	(run)	－	(달리기)	커맨드 표기 열(달리며 발차기). #3598

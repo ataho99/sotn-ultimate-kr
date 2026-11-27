@@ -16,7 +16,7 @@ u32 KO_EqSig(const char** names, s32 count);
 s32 KO_EqParseName(const char* str, s32* idx, s32 cap);
 void KO_8pExpand(s32 cell, u8* dst);
 void KO_8pUpload(s32* cells, s32 nCells, s32 isSel);
-void KO_8pDrawIdx(const char* idx, const s32* spc, s32 x, s32 y, MenuContext* ctx);
+void KO_8pDrawIdx(const char* idx, s32 spIdx, s32 x, s32 y, MenuContext* ctx);
 
 // 8px block (KO_8P.BIN layout: u16 count, count x u16 codes (LE; F0xx
 // hangul or ascii<0x80), count x 8B cells (1bpp MSB, pixel0 = 0x80,
@@ -203,97 +203,88 @@ void KO_8pUpload(s32* cells, s32 nCells, s32 isSel) {
 
 // Unified draw (isSel=1: groups 0,1,2; isSel=0: groups 3,4).
 // Same union/sig gating as ko_equip12b; row 2 never touched here.
+// 3877: the cell indexes of every name are computed only when the list signature (names pointers + count + epoch, the same gate
+// the VRAM upload uses) changed, and kept as idx rows in the cache (ko_equip.h); every frame just draws the cached rows. Before, the
+// whole table search (KO_8pFind, 399 codes per character, twice) ran every frame and the equipment screen no longer fit in one frame.
+// Every caller passes at most 8 names (the 7 / 8 button rows, 8 overview names, 7 familiar names); the cache has 12 rows.
 void KO_EqDraw(const char** names, const s32* xs, const s32* ys, s32 count,
                MenuContext* ctx, s32 isSel) {
     s32 cells[KO_EQ_SEL_CELLS]; // 64 covers both unions (41 for overview)
     s32 pi[12];
-    char idx[12];
-    s32 spc[12];
+    u8* cidx = (u8*)(isSel ? KO_EQ_CACHE_SEL : KO_EQ_CACHE_OV);
+    u8* irow;
+    volatile u32* sigp = isSel ? &KO_EQ_SELSIG : &KO_EQ_OVSIG;
     s32 spaceCix;
+    s32 spCell;
     s32 cap = isSel ? KO_EQ_SEL_CELLS : KO_EQ_OV_CELLS;
     s32 nCells = 0;
     s32 i;
+    s32 j;
     s32 k;
+    s32 f;
     s32 pn;
+    s32 cix;
     s32 grp;
     s32 col;
     u32 sig;
     if (count <= 0) {
         return;
     }
-    spaceCix = KO_8pFind(0x20);
-    for (i = 0; i < count; i++) {
-        pn = KO_EqParseName(names[i], pi, 10);
-        for (k = 0; k < pn; k++) {
-            s32 f;
-            s32 cell = -1;
-            s32 cix = pi[k];
-            if (cix < 0) {
-                cix = spaceCix; // unseen -> blank (space cell)
-            }
-            if (cix < 0) {
-                continue; // block missing: char dropped from union
-            }
-            for (f = 0; f < nCells; f++) {
-                if (cells[f] == cix) {
-                    cell = f;
-                    break;
-                }
-            }
-            if (cell < 0) {
-                if (nCells >= cap) {
-                    continue; // overflow: char dropped from union
-                }
-                cell = nCells;
-                cells[nCells] = cix;
-                nCells++;
-            }
-        }
-    }
     sig = KO_EqSig(names, count);
-    if (isSel) {
-        if (sig != KO_EQ_SELSIG) {
-            if (KO_8pValid()) {
-                KO_8pUpload(cells, nCells, 1);
-                KO_EQ_SELSIG = sig;
+    if (sig != *sigp) {
+        spaceCix = KO_8pFind(0x20);
+        spCell = -1;
+        for (i = 0; i < count; i++) {
+            irow = cidx + (i << 4);
+            j = 0;
+            pn = KO_EqParseName(names[i], pi, 10);
+            for (k = 0; k < pn; k++) {
+                cix = pi[k];
+                if (cix < 0) {
+                    cix = spaceCix; // unseen -> blank (space cell)
+                }
+                if (cix < 0) {
+                    continue; // block missing: char dropped from union
+                }
+                for (f = 0; f < nCells; f++) {
+                    if (cells[f] == cix) {
+                        break;
+                    }
+                }
+                if (f == nCells) {
+                    if (nCells >= cap) {
+                        continue; // overflow: char dropped from union (keeps alignment of the rest)
+                    }
+                    cells[nCells++] = cix;
+                }
+                if (cix == spaceCix) {
+                    spCell = f;
+                }
+                irow[j++] = (u8)f; // the union cell number for now; turned into the idx byte below
+            }
+            irow[j] = 0xFF; // j <= 10 (pn is capped at 10): j cells + the end mark fit the 16-byte row
+        }
+        if (KO_8pValid()) {
+            KO_8pUpload(cells, nCells, isSel);
+            *sigp = sig;
+        }
+        // the union is final: cell number -> idx byte ((group << 5) | column)
+        for (i = 0; i < count; i++) {
+            irow = cidx + (i << 4);
+            for (j = 0; irow[j] != 0xFF; j++) {
+                KO_8pRC(irow[j], &grp, &col, isSel);
+                irow[j] = (u8)((grp << 5) | col);
             }
         }
-    } else {
-        if (sig != KO_EQ_OVSIG) {
-            if (KO_8pValid()) {
-                KO_8pUpload(cells, nCells, 0);
-                KO_EQ_OVSIG = sig;
-            }
+        // the space cell's idx byte (the draw advances 4 px for it, 8 for the rest); 0xFF = no space cell
+        cidx[0xC0] = 0xFF;
+        if (spCell >= 0) {
+            KO_8pRC(spCell, &grp, &col, isSel);
+            cidx[0xC0] = (u8)((grp << 5) | col);
         }
     }
     for (i = 0; i < count; i++) {
-        s32 j = 0;
-        pn = KO_EqParseName(names[i], pi, 10);
-        for (k = 0; k < pn; k++) {
-            s32 f;
-            s32 cell = -1;
-            s32 cix = pi[k];
-            if (cix < 0) {
-                cix = spaceCix; // (the same cell as above; the code is the room DrawSync took)
-            }
-            if (cix < 0) {
-                continue;
-            }
-            for (f = 0; f < nCells; f++) {
-                if (cells[f] == cix) {
-                    cell = f;
-                    break;
-                }
-            }
-            if (cell < 0) {
-                continue; // union overflow: drop char, keep alignment
-            }
-            KO_8pRC(cell, &grp, &col, isSel);
-            idx[j++] = (char)((grp << 5) | col);
-            spc[j - 1] = (cix == spaceCix);
-        }
-        idx[j] = (char)0xFF;
-        KO_8pDrawIdx(idx, spc, xs[i], ys[i], ctx);
+        KO_8pDrawIdx((const char*)(cidx + (i << 4)), cidx[0xC0], xs[i], ys[i], ctx);
     }
 }
 
@@ -304,13 +295,12 @@ void KO_EqDraw(const char** names, const s32* xs, const s32* ys, s32 count,
 // uploaded contiguously at 0x180: col>=16 drew from tpage 7 (X 0x1C0) and
 // came out blank. u = col*8 stays linear within the same page.
 void KO_8pDrawIdx(
-    const char* idx, const s32* spc, s32 x, s32 y, MenuContext* ctx) {
+    const char* idx, s32 spIdx, s32 x, s32 y, MenuContext* ctx) {
     s32 g;
     s32 col;
     s32 u;
     s32 v;
     s32 ch;
-    s32 n = 0;
     while (true) {
         ch = *idx++;
         if (ch == 0xFF) {
@@ -322,7 +312,7 @@ void KO_8pDrawIdx(
         v = KO_8pRow(g) * 16;
         MenuDrawImg(ctx, x, y, 8, 8, u, v, 0x1A1, 6, 1,
                     0x40);
-        x += spc[n++] ? 4 : 8;
+        x += (ch == spIdx) ? 4 : 8;
     }
 }
 
