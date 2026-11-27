@@ -32,4 +32,4 @@
 `REJECT 없음` · `REJECT 지문다름` · `REJECT 적용실패` · `REJECT 불일치` · (그 밖의 오류) `REJECT 오류`
 
 ## 합격 기준
-크롬(헤드리스)에서 깨끗한 재료 → 출력 sha1 == `3948d1e3cbd9f2aebf2d294b77aa0d8cdd91006e` (706,112,736 B). 출력 이름은 `SOTN_Ultimate_v1.5_KR_v0.9.5a.bin/.cue`. 종단 시험 결과: sha1 일치, 외부 요청 0건.
+크롬(헤드리스)에서 깨끗한 재료 → 출력 sha1 == `9ed31aaba85b1d1c4c50147bbb7e4516b92c3e1e` (706,112,736 B). 출력 이름은 `SOTN_Ultimate_v1.5_KR_v0.9.5b.bin/.cue`. 종단 시험 결과: sha1 일치, 외부 요청 0건.
