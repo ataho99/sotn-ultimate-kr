@@ -22,53 +22,7 @@ const char D_801A7B80[] = "SELECT ！！";
 s32 ModPtbrLoad(s32 block);
 #endif
 
-#if defined(MOD_KO)
-// The title screen's "ULTIMATUM" light sweep. The letters are painted with CLUT0 indices 172..243 (9 phases x 8 tones, the same colours in every phase; texture
-// F_TITLE0.BIN, CLUT0 at VRAM (512, 240)); every SW_PERIOD frames of the title a soft light band crosses the word from the left to the right in SW_LEN frames by
-// rewriting those 72 entries (VRAM (512 + 172, 240), 72 x 1) with each phase's tones lifted toward white by the band's profile; one frame after it the plain
-// colours are restored. Stateless: the band's position is a function of g_Timer. The version line (244..246), "by smash99" (252, 253) and the side lines keep
-// their colours.
-#define SW_PERIOD 300
-#define SW_LEN 36
-#define SW_BAND 34  /* half width of the band in letter pixels */
-#define SW_BOOST 100 /* percent lifted toward white at the band's centre */
-static u16 D_ModSwBuf[72];
-static const u16 D_ModSwTone[8] = {0x7fde, 0x7b9b, 0x7338, 0x6ad4, 0x5a50, 0x49cc, 0x3949, 0x28e6};
-
-static void ModTitleSweep(void) {
-    RECT rc;
-    s32 t, p, k, pos, xc, d, b, c, v, ch, x;
-
-    t = g_Timer % SW_PERIOD;
-    if (t > SW_LEN + 1) {
-        return;
-    }
-    pos = t > SW_LEN ? -1000 : (t * (179 + 2 * SW_BAND)) / SW_LEN - SW_BAND;
-    for (p = 0; p < 9; p++) {
-        xc = (p * 2 + 1) * 179 / 18;
-        d = xc - pos;
-        if (d < 0) {
-            d = -d;
-        }
-        b = d >= SW_BAND ? 0 : (SW_BAND - d) * SW_BOOST / SW_BAND;
-        for (k = 0; k < 8; k++) {
-            v = D_ModSwTone[k];
-            c = 0;
-            for (ch = 0; ch < 3; ch++) {
-                x = (v >> (ch * 5)) & 31;
-                x = x + (31 - x) * b / 100;
-                c |= x << (ch * 5);
-            }
-            D_ModSwBuf[p * 8 + k] = c;
-        }
-    }
-    rc.x = 512 + 172;
-    rc.y = 240;
-    rc.w = 72;
-    rc.h = 1;
-    LoadImage(&rc, (u_long*)D_ModSwBuf);
-}
-#endif
+// 3960: the title's "ULTIMATUM" word and its light sweep are gone (the word was painted into F_TITLE0.BIN; ko_assets/title46 has it cleared and the version / Presented lines moved up 12 rows).
 
 void HandleTitleScreen(void) {
     Primitive* prim;
@@ -190,9 +144,6 @@ void HandleTitleScreen(void) {
         break;
 
     case 2:
-#if defined(MOD_KO)
-        ModTitleSweep();
-#endif
         prim = &g_PrimBuf[D_801BB010];
         for (i = 0; prim != NULL; prim = prim->next, i++) {
             if (i < 3) {

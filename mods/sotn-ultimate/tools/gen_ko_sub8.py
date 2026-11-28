@@ -30,6 +30,7 @@ PLATE_MAP = P4 + "ko_8p_map_250.tsv"
 V11B = P4 + "ko_glyph_block_mgalmuri8_v11.bin"
 V11M = P4 + "ko_glyph_map_mgalmuri8_v11.tsv"
 GMAP = P4 + FP.P["map_name"]
+TSV_FLD = KO_WK + "/번역/번역_필드음성.tsv"  # optional: player / boss field voices: stage hex (FF = any), ids hex;hex, colour 0 player / 1 enemy, entity slot hex (FF = fixed spot), frames, Korean text (one row)
 TSV_LYR = KO_WK + "/번역/번역_노래자막.tsv"  # optional: song subtitles (track 0 Nocturne PS1 / 1 Nocturne PSP / 2 I Am the Wind, line no, Korean text); an empty or missing line shows nothing
 SEGS = [(0, KO_WK + "/recipe/song_seg_nocturne_ps1.csv"), (1, KO_WK + "/recipe/song_seg_nocturne_psp.csv"), (2, KO_WK + "/recipe/song_seg_staff_ps1.csv")]  # the vocal phrases (demucs stem energy: start / end seconds only)
 REPO = os.environ.get("SOTN_KR", os.getcwd())
@@ -93,6 +94,13 @@ def main():
         rows = np.where(a.any(axis=1))[0]
         assert len(rows) and rows.max() - rows.min() < 8, ("Galmuri7 glyph empty/too tall", ch)
         t = int(rows.min())
+        h = int(rows.max()) - t + 1
+        if h <= 3:
+            # 3952: a shallow glyph (the ellipsis: one row of dots) keeps the baseline, not the first ink row: its bottom ink row goes on row 6,
+            # where the plate's period sits (the Hangul cells are cut from their first ink row and span rows 0-6)
+            c = np.zeros((8, 8), dtype=np.uint8)
+            c[6 - h + 1:7, :] = a[t:t + h, 0:8]
+            return np.packbits(c, axis=1).reshape(8).tobytes()
         return np.packbits(a[t:t + 8, 0:8], axis=1).reshape(8).tobytes()
 
     def cell_of(ch):
@@ -165,6 +173,30 @@ def main():
         ents.append("{0x%s, %s_0, %s_1, %d}" % (vid, k, k, frames))
     out.append("typedef struct { u16 id; const char* r0; const char* r1; u16 frames; } KoSub8Line;")
     out.append("static const KoSub8Line g_KoSub8Lines[%d] = {%s};" % (len(ents), ", ".join(ents)))
+
+    # the field voices (player / boss): one row per line, a line per (stage, id set)
+    fld = []
+    if os.path.exists(TSV_FLD):
+        for l in io.open(TSV_FLD, encoding="utf-8").read().splitlines()[1:]:
+            q = l.split(chr(9))
+            if len(q) >= 6 and q[5].strip():
+                fld.append(q)
+    fents = []
+    for fi, q in enumerate(fld):
+        stage, ids, colr, slot, frames, text = q[0].strip(), q[1].strip(), int(q[2]), q[3].strip(), int(q[4]), q[5].strip()
+        assert len(text) <= 23, ("field line: one row of <= 23 cells", text)
+        idl = [int(x, 16) for x in ids.split(";") if x]
+        assert idl and colr in (0, 2, 3, 4, 5), q   # speaker colour: 0 player, 2 Maria/NPC, 3 mob, 4 boss, 5 Dracula/Shaft (1 = familiar: its own table)
+        out.append('static const char ko_fld_%d[] = "%s";' % (fi, "".join("\\x%02X" % x for x in encode(text))))
+        out.append("static const u16 ko_fld_%d_ids[%d] = {%s};" % (fi, len(idl), ", ".join("0x%X" % x for x in idl)))
+        fents.append("{0x%s, %d, %d, 0x%s, %d, ko_fld_%d_ids, ko_fld_%d}" % (stage, colr, len(idl), slot, frames, fi, fi))
+    out.append("typedef struct { u8 stage; u8 col; u8 n; u8 slot; u16 frames; const u16* ids; const char* r0; } KoFieldLine;")
+    if not fents:  # (an empty array is not C89) one entry no stage ever matches
+        out.append("static const u16 ko_fld_none_ids[1] = {0};")
+        out.append('static const char ko_fld_none[] = "";')
+        fents.append("{0xFE, 0, 0, 0xFF, 0, ko_fld_none_ids, ko_fld_none}")
+    out.append("static const KoFieldLine g_KoFieldLines[%d] = {%s};" % (len(fents), ", ".join(fents)))
+    print("field voice lines: %d" % len(fld))
     # the songs: the vocal phrases' start / end frames (60 per second) and, when a lyric file gives it, the line's Korean text
     lyr = {}
     rows_lyr = {}   # track -> [(start s, end s, text)] : the lyric file's own rows (a line may be split: ids like 6-1, 6-2), when it has any

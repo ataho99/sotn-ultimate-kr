@@ -196,8 +196,14 @@ void PerformHellfire(void);
 void PerformTetraSpirit(void);
 void PerformSoulSteal(void);
 void PerformSwordBrothers(void);
+extern s32 D_800ACE00[]; // 692E8.c: the logical bit of each button-config action
+// 3958: the face button is the PHYSICAL one (the spell list draws R1 + the shape): tested in the pad's own tapped bits, not in g_Player.padTapped (which holds
+// the config's logical buttons: with the circle action moved to L2, R1 + circle did not cast and R1 + L2 did). On a cast every action bound to that
+// physical button is used up (its logical bit, tapped and held), so an attack on the same button does not go off with the spell.
 static bool CheckEasy(u32 btn, s32 spell, void (*perform)(void), s32 steps) {
-    if (!(g_Player.padPressed & MOD_EASY_R1) || !(g_Player.padTapped & btn) || (g_Player.unk46 & 0x8000) ||
+    s32 i;
+
+    if (!(g_Player.padPressed & MOD_EASY_R1) || !(g_pads[0].tapped & btn) || (g_Player.unk46 & 0x8000) ||
         ((steps & 4) && g_Player.unk72)) {
         return 0;
     }
@@ -206,8 +212,12 @@ static bool CheckEasy(u32 btn, s32 spell, void (*perform)(void), s32 steps) {
     }
     perform();
     LearnSpell(spell);
-    g_Player.padTapped &= ~btn;
-    g_Player.padPressed &= ~btn;
+    for (i = 0; i < 8; i++) {
+        if (g_Settings.buttonMask[i] & btn) {
+            g_Player.padTapped &= ~D_800ACE00[i];
+            g_Player.padPressed &= ~D_800ACE00[i];
+        }
+    }
     return 1;
 }
 

@@ -1,14 +1,14 @@
-# SOTN Ultimate 한국어화 — v0.9.5c 베타
+# SOTN Ultimate 한국어화 — v0.9.5d 베타
 
 [SOTN Ultimate](https://github.com/renanbianchi/sotn-ultimate)에 한국어를 넣는 비공식 포크입니다. 원작자의 작업이 아닙니다. 계획은 [ROADMAP.md](ROADMAP.md) 에 있습니다.
 
 게임 플레이와 원판의 느낌은 그대로 두고, 번역과 함께 원판에 있었을 법한 것만 더합니다. 새로 넣는 메뉴·화면도 원판 그림 조각과 화면 틀을 다시 써서 만듭니다.
 
-A fork of SOTN Ultimate that adds Korean; gameplay and look stay as in the original, and additions reuse the game's own art and screens. **v0.9.5c (beta, built on Ultimate v1.5)** is installed from a single web page — you supply your own discs; this repository and the page contain no game data. The original mod is by renanbianchi; this fork is unofficial.
+A fork of SOTN Ultimate that adds Korean; gameplay and look stay as in the original, and additions reuse the game's own art and screens. **v0.9.5d (beta, built on Ultimate v1.5)** is installed from a single web page — you supply your own discs; this repository and the page contain no game data. The original mod is by renanbianchi; this fork is unofficial.
 
 **웹 패처: https://ataho99.github.io/sotn-ultimate-kr/** (크롬·엣지 최신판, 설치 없음 · GitHub Pages 는 `ko` 브랜치의 `docs/` 폴더에서 게시)
 
-> 0.9.5c 는 0.9.5b 의 수정판입니다(지도 위쪽 회색 블록, 장비 화면 느려짐, 새 게임 메뉴 글자색). 0.9.5b 를 이미 만드셨다면 릴리스의 xdelta 파일 하나로 갱신하거나, 웹 패처로 새로 만드세요.
+> 0.9.5d 는 0.9.5c 의 수정판입니다(필드 음성 자막, 치트 목록 첫 글자 빈칸, 스펠 단축(R1) 버튼 기준, 타이틀 정리). 0.9.5c 를 이미 만드셨다면 릴리스의 xdelta 파일 하나로 갱신하거나, 웹 패처로 새로 만드세요.
 >
 > 0.9.4 는 따로 내지 않고 0.9.5 에 합쳐 냅니다. 이전 버전을 쓰던 분도 웹 패처로 같은 방법으로 새로 만드세요(버전 간 패치 파일은 따로 없습니다).
 
@@ -31,7 +31,7 @@ A fork of SOTN Ultimate that adds Korean; gameplay and look stay as in the origi
 | 준비 · 원작 재현 · 조사 · 설계 · 한글 출력 시험 (P0–P4) | 완료 — 원작 v1.4 기준 |
 | 원문 추출 · 용어집 (P5) | 완료 — 원문 1,715행, 용어는 일본판 기준 |
 | 번역 · 삽입 (P6) | 완료(v0.9 범위) — 메뉴·장비·아이템·유물·주문·대사·저장 문구 한글 |
-| **배포 (P7)** | **v0.9.5c 베타** — 웹 패처(재료 검사 → 조립 → 지문 확인) |
+| **배포 (P7)** | **v0.9.5d 베타** — 웹 패처(재료 검사 → 조립 → 지문 확인) |
 | 얼티밋 업데이트 반영 (P8) | 진행 중 — 얼티밋 v1.5 반영 |
 
 - 번역은 원문에서 새로 했습니다. 기존 PS1 한글패치 문장은 쓰지 않았고, 제작진은 크레딧에 「참고」로 밝힙니다.
@@ -48,7 +48,7 @@ v0.9.3 대비 주요 항목입니다.
 | 리히터 · 마리아 직접 발동 | R1 + □ · ✕ · ○ 로 블레이드 대시 · 하이 점프 · 서브웨폰을 한 번에. 새턴 마리아는 R1 + 버튼 4종, R2 + 버튼 4종으로 필살기. PSP 마리아(L2)는 **작업 중** |
 | 사역마 음성 자막 | 8픽셀 한글 자막이 사역마 몸 아래에서 따라다님 |
 | 노래 자막 | 노래 재생 중 12px 한글 두 줄, 글자마다 꽃잎처럼 나타나고 사라지는 효과(가사 자막 삽입: 야상곡 PS1·PSP판, I Am the Wind) |
-| 타이틀 화면 | 새 로고(ULTIMATUM) · Presented by smash99 줄 · 버전 줄 · 가끔 로고 위로 빛이 지나가는 효과 |
+| 타이틀 화면 | 한글 로고 · 버전 줄 · Presented by smash99 줄 |
 | 사운드 모드 | 한글 곡명 33곡 · 곡 설명 29곡 |
 | 지역 이름 카드 | 새 그림(영문 줄 + 구분선 + 한글 줄, 한글은 코트라 손글씨체) |
 | 추가 설정(Extra settings) | 스크롤 메뉴 · 치트 10종 · 8px 한글 팝업 |
@@ -60,7 +60,7 @@ v0.9.3 대비 주요 항목입니다.
 
 ---
 
-# 한글판 v0.9.5c 사용·제작 안내
+# 한글판 v0.9.5d 사용·제작 안내
 
 
 ## ⚠ 법적 고지
@@ -75,7 +75,7 @@ v0.9.3 대비 주요 항목입니다.
 1. **재료를 준비합니다.** 아래 「재료」 표의 고정 이름 파일 5개를 한 폴더에 둡니다. 전부 필수이고, 판본이 다르면 패처가 진행하지 않습니다.
 2. **웹 패처 페이지를 엽니다.** 크롬·엣지(최신판) 권장 — 그 밖의 브라우저는 지원 대상이 아닙니다.
 3. **재료를 고릅니다**(「폴더 선택」 또는 「파일 선택」) **→ 「한글 이미지 만들기」.** 재료 검사 → 조립 → 결과 지문 확인까지 자동입니다. 실패하면 `REJECT <종류>: <사유>` 가 나옵니다(아래 「리젝트」).
-4. **`SOTN_Ultimate_v1.5_KR_v0.9.5c.bin` 과 `.cue` 를 저장해 같은 폴더에 두고 `.cue` 를 에뮬레이터에서 엽니다.** 저장 뒤 「임시 파일 지우기」를 누르면 브라우저 안의 작업 사본이 지워집니다. 이상한 곳은 이슈로 제보해 주세요.
+4. **`SOTN_Ultimate_v1.5_KR_v0.9.5d.bin` 과 `.cue` 를 저장해 같은 폴더에 두고 `.cue` 를 에뮬레이터에서 엽니다.** 저장 뒤 「임시 파일 지우기」를 누르면 브라우저 안의 작업 사본이 지워집니다. 이상한 곳은 이슈로 제보해 주세요.
 
 ### 재료 (고정 이름 · 왜 필요한가)
 
@@ -226,7 +226,7 @@ PSP 수록판 = 「드라큘라 X 크로니클」 수록판. 이후 이식(한 �
                                    ▼
 [사용자] 재료 5개 ─► 웹 패처 (docs/index.html): 재료 검사 → 조립 → 델타 적용 → 지문 확인
                                    ▼
-                      SOTN_Ultimate_v1.5_KR_v0.9.5c.cue / .bin
+                      SOTN_Ultimate_v1.5_KR_v0.9.5d.cue / .bin
 ```
 
 상세는 `BUILD.md`(제작·검증)와 `ko_patcher/web/README.md`(웹 패처)를 보세요.

@@ -69,8 +69,8 @@ for path, sha in sorted(retail.items()):
             orig_cmp = bytes(o2)
             head_ok = (built[:0x1C] == orig_cmp[:0x1C]
                        and built[0x20:len(orig_cmp)] == orig_cmp[0x20:]
-                       and tsize in (0x8F000, 0x90000, 0x91800, 0x92000, 0x92800, 0x93800, 0x94800, 0x95800))
-            if (len(tail) == len(built) - len(orig) and len(tail) in (24576, 28672, 34816, 36864, 38912, 43008, 47104, 51200)
+                       and tsize in (0x8F000, 0x90000, 0x91800, 0x92000, 0x92800, 0x93800, 0x94800, 0x95800, 0x97000))
+            if (len(tail) == len(built) - len(orig) and len(tail) in (24576, 28672, 34816, 36864, 38912, 43008, 47104, 51200, 57344)
                     and head_ok and built[len(orig):] == tail):
                 print(f"OK   {name}: trial boot-resident font (+{len(tail)}B)")
                 checked += 1

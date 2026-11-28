@@ -206,7 +206,9 @@ void KO_8pUpload(s32* cells, s32 nCells, s32 isSel) {
 // 3877: the cell indexes of every name are computed only when the list signature (names pointers + count + epoch, the same gate
 // the VRAM upload uses) changed, and kept as idx rows in the cache (ko_equip.h); every frame just draws the cached rows. Before, the
 // whole table search (KO_8pFind, 399 codes per character, twice) ran every frame and the equipment screen no longer fit in one frame.
-// Every caller passes at most 8 names (the 7 / 8 button rows, 8 overview names, 7 familiar names); the cache has 12 rows.
+// The callers pass at most 8 names (the 7 / 8 button rows, 8 overview names, 7 familiar names) except the Korean Extra settings / Cheats popup (PopDrawKo:
+// label + value per row, up to 20 names); the cache has 31 rows (KO_EQ_CACHE_N), the space cell's byte sits after them (KO_EQ_SPIDX). (3958: it was at row 12's place, +0xC0,
+// so the 13th name's first cell was overwritten by the space cell's idx and drawn blank.)
 void KO_EqDraw(const char** names, const s32* xs, const s32* ys, s32 count,
                MenuContext* ctx, s32 isSel) {
     s32 cells[KO_EQ_SEL_CELLS]; // 64 covers both unions (41 for overview)
@@ -277,14 +279,14 @@ void KO_EqDraw(const char** names, const s32* xs, const s32* ys, s32 count,
             }
         }
         // the space cell's idx byte (the draw advances 4 px for it, 8 for the rest); 0xFF = no space cell
-        cidx[0xC0] = 0xFF;
+        cidx[KO_EQ_SPIDX] = 0xFF;
         if (spCell >= 0) {
             KO_8pRC(spCell, &grp, &col, isSel);
-            cidx[0xC0] = (u8)((grp << 5) | col);
+            cidx[KO_EQ_SPIDX] = (u8)((grp << 5) | col);
         }
     }
     for (i = 0; i < count; i++) {
-        KO_8pDrawIdx((const char*)(cidx + (i << 4)), cidx[0xC0], xs[i], ys[i], ctx);
+        KO_8pDrawIdx((const char*)(cidx + (i << 4)), cidx[KO_EQ_SPIDX], xs[i], ys[i], ctx);
     }
 }
 

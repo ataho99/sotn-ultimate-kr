@@ -24,12 +24,13 @@
 
 // 3877: per-name draw cache. KO_EqDraw rebuilt every name's cell indexes every frame (KO_8pFind scans the whole 399-code table
 // per character, twice per frame): with the equipment lower window full the loop no longer fits in a frame. The cache holds the
-// last computed idx string per name (up to 10 cells + 0xFF, in a 16-byte row) and the idx byte of the space cell (+0xC0, 0xFF =
+// last computed idx string per name (up to 10 cells + 0xFF, in a 16-byte row) and the idx byte of the space cell (+KO_EQ_SPIDX, after the last row, 0xFF =
 // none: the draw advances 4 px for it), valid while the list signature (KO_EQ_SELSIG / OVSIG, which already gates the VRAM upload)
-// is unchanged. It lives in RAM that the disc does not load: the new resident area's loaded part ends at 0x801F7000 (8 sectors,
-// KO_ARC_SIZE), memory map 0x801F7000..0x801FAFFF is free runtime RAM. Every caller passes at most 8 names; 12 rows fit.
+// is unchanged. It lives in RAM that the disc does not load: the new resident area's loaded part ends at 0x801F8800 (11 sectors,
+// KO_ARC_SIZE), memory map 0x801F8800..0x801FAFFF is free runtime RAM (the caches below start at 0x801F9000). The equipment callers pass at most 8 names, the Korean popup up to 20 (3958); 31 rows fit.
 // Set 0x000 = selector (isSel 1), set 0x200 = overview (isSel 0).
-#define KO_EQ_CACHE_N 12
+#define KO_EQ_CACHE_N 31 // 16-byte rows 0x000..0x1EF
+#define KO_EQ_SPIDX 0x1F0 // the space cell's idx byte (3958: was 0xC0 = row 12's first byte)
 #define KO_EQ_CACHE_SEL 0x801F9000
 #define KO_EQ_CACHE_OV 0x801F9200
 

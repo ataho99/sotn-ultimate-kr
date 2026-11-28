@@ -876,7 +876,7 @@ sheet = bytes.fromhex('f080f05ef046f067f052f141f1ab f081f0abf1ccf0a9f0b0f0caf071
 # 67B + 1B compiler NUL = 104B. Sheet starts at +36 (KO_STR_BASE+36).
 assert ro[:34] == exp and ro[34:36] == bytes(2) and ro[36:103] == sheet and ro[103:] == bytes(1) and len(ro) == 104, (ro.hex(), len(ro))
 ro = ro + bytes(104 - len(ro))
-assert arc_size == 51200, arc_size
+assert arc_size == 57344, arc_size
 assert eq_base == 0x8009F500 and eq_size == 0xB00, (hex(eq_base), hex(eq_size))
 assert len(raw) + len(blob) + len(ro) == 24280, (len(raw), len(blob), len(ro))
 gap_end = eq_base - 0x80099000  # 25856: tail base offset in ARC (RAM 0x8009F500)
@@ -953,8 +953,8 @@ assert len(blk8) <= 4096, len(blk8)
 img = img + bytes(bundle) + bytes(2048 - len(bundle)) + bytes(blk8) + bytes(4096 - len(blk8))
 # 099b: blocks 17-18 = the new resident area's first two sectors (cd.c's copy puts them at 0x801F3000 / 0x801F3800: KO_8P_BASE + 0x1000); header + code, zero padded
 newarea = open('build/us/mod/newarea/newarea.bin', 'rb').read()
-assert 32 < len(newarea) <= 16384 and newarea[:4] == bytes.fromhex('31524f4b'), len(newarea) # 100: eight sectors (blocks 17-24 -> 0x801F3000..0x801F6FFF)
-img = img + newarea + bytes(16384 - len(newarea))
+assert 32 < len(newarea) <= 22528 and newarea[:4] == bytes.fromhex('31524f4b'), len(newarea) # 3877: eleven sectors (blocks 17-27 -> 0x801F3000..0x801F87FF; was eight, 100)
+img = img + newarea + bytes(22528 - len(newarea))
 assert len(img) == arc_size, (len(img), arc_size)
 # 094_12 Sound Mode text (gen_ko_sound.py): strings live in the A-gap zero runs (resident from the title on), SEL only holds
 # their addresses (SEL has no room). Every run must still be zero (nothing else uses it).
@@ -1012,7 +1012,7 @@ python3 - <<'PYEOF'
 import struct
 exe, arc = 'build/us/main.exe', 'build/us/ARC_KO.BIN'
 blob = open(arc, 'rb').read()
-assert len(blob) == 51200, (arc, len(blob))
+assert len(blob) == 57344, (arc, len(blob))
 blob34 = blob[:34816]  # 099: the 17-sector part (the new area's sector is appended last)
 b = bytearray(open(exe, 'rb').read())
 tsize = struct.unpack('<I', b[0x1C:0x20])[0]
@@ -1051,20 +1051,26 @@ elif len(b) == 614400 and tsize == 0x95800:
     struct.pack_into('<I', b, 0x1C, 0x91800)
     open(exe, 'wb').write(bytes(b))
     print('main.exe: 099 rerun, folded back to 598016 / t_size 0x91800')
+elif len(b) == 620544 and tsize == 0x97000:
+    # 3877 rerun (area 8 -> 11 sectors, tail 57344 B): fold back the same way
+    b = b[:-57344] + blob34
+    struct.pack_into('<I', b, 0x1C, 0x91800)
+    open(exe, 'wb').write(bytes(b))
+    print('main.exe: 3877 rerun, folded back to 598016 / t_size 0x91800')
 else:
     assert False, (len(b), hex(tsize))
-# 100: the tail grows by eight sectors (the new resident area's): 598016 -> 614400, t_size 0x91800 -> 0x95800
+# 100 / 3877: the tail grows by the new resident area's sectors (eleven since 3877): 598016 -> 620544, t_size 0x91800 -> 0x97000
 b = bytearray(open(exe, 'rb').read())
 tsize = struct.unpack('<I', b[0x1C:0x20])[0]
 if len(b) == 598016 and tsize == 0x91800:
     b = b[:-34816] + blob
-    struct.pack_into('<I', b, 0x1C, 0x95800)
+    struct.pack_into('<I', b, 0x1C, 0x97000)
     open(exe, 'wb').write(bytes(b))
-    print('main.exe: 100 tail +8 sectors (614400, t_size 0x95800)')
-elif len(b) == 614400 and tsize == 0x95800:
-    b = b[:-51200] + blob
+    print('main.exe: 3877 tail +11 sectors (620544, t_size 0x97000)')
+elif len(b) == 620544 and tsize == 0x97000:
+    b = b[:-57344] + blob
     open(exe, 'wb').write(bytes(b))
-    print('main.exe: 100 tail refreshed (614400, t_size 0x95800)')
+    print('main.exe: 3877 tail refreshed (620544, t_size 0x97000)')
 else:
     assert False, ('099 tail', len(b), hex(tsize))
 open('build/us/DUMMY.BIN', 'wb').write(bytes(563200))  # 275 sectors = retail SLUS's size: it holds SLUS's old slot, so the files after it keep their LBA (SLUS itself is last now, any size; 099's +1 sector there moves nothing)
