@@ -372,6 +372,9 @@ async function loadPkg(b64) {
 }
 
 /* ---------- 재료 판별 (이름 무관 — 크기·내용으로, 확장자는 참고만) ---------- */
+var KR_RESULT_SIZES = [706112736, 706126848]; /* 한글 결과 이미지 크기: v0.9.5 · 0.9.5a · 0.9.5b · 0.9.5c = 706112736, 0.9.5d = 706126848 */
+var KR_RESULT_SHA1 = { '494ea1c5836e8b3b8e073af0c030d4dfa0e1349e': 'v0.9.5', '3948d1e3cbd9f2aebf2d294b77aa0d8cdd91006e': 'v0.9.5a', '9ed31aaba85b1d1c4c50147bbb7e4516b92c3e1e': 'v0.9.5b', '56a8b5bea109dff02e460ec048402189f75a03fd': 'v0.9.5c', 'ec9b5739af6906a16346ee613523aa53c0d5e91c': 'v0.9.5d' };
+var KR_NOTE = '이건 이전 한글 패치 결과물입니다(재료가 아닙니다). 1번에는 얼티밋 공식 v1.5 원본 이미지를 넣어 주세요.';
 var CLS_KEYS = ['m1_cue', 'm1_bin', 'm2_cue', 'm2_t1', 'm2_t2'];
 var CLS_LABEL = { m1_cue: '1번 cue', m1_bin: '1번 이미지(bin)', m2_cue: '2번 cue', m2_t1: '2번 T1(bin)', m2_t2: '2번 T2(ape)' };
 var CUE_MAX = 65536;
@@ -388,7 +391,7 @@ function cueParse(t) {
 }
 /* infos: [{name, size, head(앞 4바이트 문자열), text(64KB 이하일 때만)}] — 해시 없음 */
 function classifyInfos(infos, fp) {
-  var rows = [], cand = {}, i, k;
+  var rows = [], cand = {}, i, k, sawKr = false;
   for (i = 0; i < CLS_KEYS.length; i++) cand[CLS_KEYS[i]] = [];
   var looseBin = [], looseCue = [], looseApe = [];
   var m1Size = fp.m1_sectors * SECT, t1Size = fp.m2_t1_size || 0;
@@ -409,7 +412,7 @@ function classifyInfos(infos, fp) {
       else { looseApe.push(i); r.det = 'ape (크기 ' + f.size + ' — 기대 ' + fp.m2_t2_size + '와 다름)'; }
       continue;
     }
-    if (fp.result_size && f.size === fp.result_size) { r.det = '무시 — 한글 결과 이미지 크기(재료 아님)'; continue; }
+    if ((fp.result_size && f.size === fp.result_size) || KR_RESULT_SIZES.indexOf(f.size) >= 0) { sawKr = true; r.det = '무시 — 이전 한글 패치 결과 이미지입니다(재료 아님). 1번에는 얼티밋 공식 v1.5 원본 이미지를 넣어 주세요'; continue; }
     if (f.size === m1Size) { cand.m1_bin.push(i); r.how = '크기 일치 (' + fp.m1_sectors + ' 섹터)'; continue; }
     if (t1Size && f.size === t1Size) { cand.m2_t1.push(i); r.how = '크기 일치'; continue; }
     if (f.size >= (1 << 20) && (ext === 'bin' || ext === 'img' || ext === 'iso' || f.size % SECT === 0)) {
@@ -437,7 +440,7 @@ function classifyInfos(infos, fp) {
     k = CLS_KEYS[i];
     var c = cand[k];
     if (c.length === 1) { map[k] = c[0]; rows[c[0]].key = k; rows[c[0]].det = CLS_LABEL[k] + (rows[c[0]].how ? ' — ' + rows[c[0]].how : ''); }
-    else if (c.length === 0) { zero = true; problems.push(CLS_LABEL[k] + ': 해당하는 파일이 없습니다 — ' + fp.need[k]); }
+    else if (c.length === 0) { zero = true; problems.push(CLS_LABEL[k] + ': 해당하는 파일이 없습니다 — ' + fp.need[k] + (k === 'm1_bin' && sawKr ? ' (고른 파일 중 ' + KR_NOTE + ')' : '')); }
     else {
       c.forEach(function (j) { rows[j].bad = true; rows[j].det = CLS_LABEL[k] + ' 후보 (' + c.length + '개 중복)'; });
       problems.push(CLS_LABEL[k] + ': 후보가 ' + c.length + '개입니다 — 하나만 남기세요 (' + c.map(function (j) { return baseName(infos[j].name); }).join(', ') + ')');
@@ -477,7 +480,7 @@ function checkMaterials(m, fp) {
   if (nsec !== fp.m1_sectors) throw rej('지문다름', '1번 이미지 섹터 수 ' + nsec + ' != 기대 ' + fp.m1_sectors + '. 얼티밋 공식 방법·' + fp.m1_version + '로 만든 이미지가 필요합니다.');
   log('1번 이미지 지문 확인 중…');
   var h1 = hashFile(m.m1_bin, '1번 이미지 지문');
-  if (h1 !== fp.m1_sha1) throw rej('지문다름', '1번 이미지 sha1 ' + h1.slice(0, 12) + '… != 기대 ' + fp.m1_sha1.slice(0, 12) + '…. 얼티밋 공식 방법·' + fp.m1_version + '로 만든 이미지가 필요합니다.');
+  if (h1 !== fp.m1_sha1) throw rej('지문다름', '1번 이미지 sha1 ' + h1.slice(0, 12) + '… != 기대 ' + fp.m1_sha1.slice(0, 12) + '…. ' + (KR_RESULT_SHA1[h1] ? '(' + KR_RESULT_SHA1[h1] + ' 한글 패치 결과물과 같은 파일) ' + KR_NOTE : '얼티밋 공식 방법·' + fp.m1_version + '로 만든 이미지가 필요합니다.'));
   if (countTracks(m.m1_cue) !== fp.m1_tracks) throw rej('지문다름', fp.files.m1_cue + ' 트랙 수 != 기대 ' + fp.m1_tracks + '. ' + fp.need.m1_cue);
   if (m.m2_t1.size !== fp.m2_t1_size) throw rej('지문다름', '2번 T1 크기 ' + m.m2_t1.size + ' != 기대 ' + fp.m2_t1_size + '. ' + fp.need.m2_t1);
   log('2번(일본 PS1) T1 지문 확인 중…');
